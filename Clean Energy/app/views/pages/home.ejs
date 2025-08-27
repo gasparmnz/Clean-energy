@@ -1,79 +1,173 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home | CLEAN ENERGY</title>
+  <title>Biomassa Hub - Produtos</title>
   <link rel="stylesheet" href="/css/home.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    
-  </style>
 </head>
 <body>
-  <header class="header">
-    <section class="header-top">
-      <img class ="logo"src="../imagem/logo.png">
-  
-    </section>
-
-    <nav role="navigation">
-      <div id="menuToggle">
-        <input type="checkbox" id="menu-checkbox" />
-        <label for="menu-checkbox">
-          <span></span>
-          <span></span>
-          <span></span>
-        </label>
-        <ul id="menu">
-          <li><a href="/home">Home</a></li>
-          <li><a href="/">Fácil acesso</a></li>
-          <li><a href="/relatorios">Relatórios de sustentabilidade</a></li>
-          <li><a href="/cadastro_empresa">Cadastro de energia Biomassa</a></li>
-          <li><a href="/sobre_nos">Sobre nós</a></li>
-        </ul>
-      </div>
+  <header>
+    <h1>Biomassa Hub</h1>
+    <nav>
+      <a href="#">Início</a>
+      <a href="#">Regiões</a>
+      <a href="#">Sobre</a>
+      <a href="#">Contato</a>
     </nav>
   </header>
 
   <main>
-  <section class="home-section">
-    <figure>
-      <img src="../imagem/Biomassas.png" alt="Energia limpa conectada">
-    </figure>
-    <article>
-      <h3>SOBRE NÓS</h3>
-      <h2>Por que escolher a Clean Energy?</h2>
-      <p><strong>Energia que poupa o planeta:</strong> Nosso projeto propõe uma solução  para enfrentar a falta de informações acessíveis sobre o uso da biomassa, uma fonte de energia limpa e abundante no Brasil, mas ainda pouco explorada em pequena escala.</p>
-      <p><strong>Eficiência imbatível:</strong> Aplicamos um cadastro empresarial fazendo com que sua empresa cresca no mercado da biomassa.</p>
-    </article>
-  </section>
+    <section aria-labelledby="filtro-titulo">
+      <h2 id="filtro-titulo">Filtrar matérias-primas</h2>
+      <form>
+        <fieldset>
+          <legend>Filtros</legend>
 
-  <section class="home-section">
-    <figure>
-      <img src="../imagem/empresarial.png" alt="Eficiência energética">
-    </figure>
-    <article>
-      <h3>OBJETIVOS E COMPROMISSOS</h3>
-      <h2>Marketing empresarial:</h2>
-      <p>Nosso site será de extremo valor para empresas e usuários que desejam se tornar ou ter uma melhor comunicação com ONGs ou entender melhor como a energia biomassa poderá ser utilizada e seus retornos em dados e informações, isso permitirá que a ODS de número 7 se torne um passo mais próximo de ser realizado no futuro próximo das corporações.</p>
-    </article>
-  </section>
+          <label>
+            Região
+            <select>
+              <option value="">Todas</option>
+              <option>São Paulo</option>
+              <option>Rio de Janeiro</option>
+              <option>Minas Gerais</option>
+            </select>
+          </label>
 
-  <section class="home-section">
-    <figure>
-      <img src="../imagem/engy.png" alt="Eficiência energética">
-    </figure>
-    <article>
-      <h3>ECONOMIA E RESULTADOS</h3>
-      <h2>Economize e ganhe com energia limpa</h2>
-      <p><strong>Redução de custos:</strong> Com a utilização inteligente da biomassa, sua empresa pode economizar significativamente em energia elétrica ao mesmo tempo que colabora com o meio ambiente.</p>
-      <p><strong>Ganhos sustentáveis:</strong> A energia renovável agrega valor à marca, atrai consumidores conscientes e posiciona seu negócio como agente de transformação verde.</p>
-    </article>
-  </section>
-</main>
+          <label>
+            Tipo
+            <select>
+              <option value="">Todos</option>
+              <option>Lenha</option>
+              <option>Pellets</option>
+              <option>Cavaco</option>
+              <option>Bagaço</option>
+            </select>
+          </label>
 
-  <%- include('../partial/footer.ejs') %>
+          <label>
+            Preço mín.
+            <input type="number" placeholder="R$ 0">
+          </label>
+
+          <label>
+            Preço máx.
+            <input type="number" placeholder="">
+          </label>
+
+          <button type="submit">🔍</button>
+        </fieldset>
+      </form>
+    </section>
+
+    <section>
+      <h2>Matéria-prima disponível em São Paulo</h2>
+      <ul>
+        <li>
+          <article>
+            <figure>
+              <img src="/imagem/Lenha.png" alt="Lenha">
+              <figcaption>
+                <h3>Lenha tratada</h3>
+                <p>R$ 250 / tonelada</p>
+                <p>Disponível em Campinas - SP</p>
+              </figcaption>
+            </figure>
+          </article>
+        </li>
+        <li>
+          <article>
+            <figure>
+              <img src="/imagem/Lenha.png" alt="Lenha">
+              <figcaption>
+                <h3>Lenha tratada</h3>
+                <p>R$ 250 / tonelada</p>
+                <p>Disponível em Campinas - SP</p>
+              </figcaption>
+            </figure>
+          </article>
+        </li>
+        <li>
+          <article>
+            <figure>
+              <img src="/imagem/Lenha.png" alt="Lenha">
+              <figcaption>
+                <h3>Lenha tratada</h3>
+                <p>R$ 250 / tonelada</p>
+                <p>Disponível em Campinas - SP</p>
+              </figcaption>
+            </figure>
+          </article>
+        </li>
+        <li>
+          <article>
+            <figure>
+              <img src="/imagem/cana.png" alt="Pellets">
+              <figcaption>
+                <h3>Bagaço de cana</h3>
+                <p>R$ 150 / tonelada</p>
+                <p>Disponível em Sorocaba - SP</p>
+              </figcaption>
+            </figure>
+          </article>
+        </li>
+        <li>
+          <article>
+            <figure>
+              <img src="/imagem/cana.png" alt="Pellets">
+              <figcaption>
+                <h3>Bagaço de cana</h3>
+                <p>R$ 150 / tonelada</p>
+                <p>Disponível em Sorocaba - SP</p>
+              </figcaption>
+            </figure>
+          </article>
+        </li>
+        <li>
+          <article>
+            <figure>
+              <img src="/imagem/cana.png" alt="Pellets">
+              <figcaption>
+                <h3>Bagaço de cana</h3>
+                <p>R$ 150 / tonelada</p>
+                <p>Disponível em Sorocaba - SP</p>
+              </figcaption>
+            </figure>
+          </article>
+        </li>
+        
+      </ul>
+    </section>
+
+    <section>
+      <h2>Matéria-prima disponível no Rio de Janeiro</h2>
+      <ul>
+        <li>
+          <article>
+            <figure>
+              <img src="/imagem/Lenha.png" alt="Cavaco de madeira">
+              <figcaption>
+                <h3>Cavaco de madeira</h3>
+                <p>R$ 310 / tonelada</p>
+                <p>Disponível em Nova Iguaçu - RJ</p>
+              </figcaption>
+            </figure>
+          </article>
+        </li>
+        <li>
+          <article>
+            <figure>
+              <img src="/imagem/Lenha.png" alt="Bagaço de cana">
+              <figcaption>
+                <h3>Bagaço de cana</h3>
+                <p>R$ 150 / tonelada</p>
+                <p>Disponível em Campos - RJ</p>
+              </figcaption>
+            </figure>
+          </article>
+        </li>
+      </ul>
+    </section>
+  </main>
 </body>
 </html>

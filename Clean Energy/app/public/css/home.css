@@ -1,187 +1,139 @@
-html, body {
+body {
+  font-family: Arial, sans-serif;
   margin: 0;
-  padding: 0;
-  font-family: 'Inter', Arial, sans-serif;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+  background-color: #f9f9f9;
+  color: #333;
 }
 
-.header {
-  position: relative; 
-  width: 100%;
-  background-color: #4f8a6e;
+header {
+  background: #2e7d32;
   color: white;
-}
-
-.header-top {
-  padding: 20px;
-}
-
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  margin: 0;
-}
-
-.logo-icon {
-  font-size: 36px;
-  margin-right: 10px;
-}
-
-.header-bottom {
+  padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px;
-  background-color: white;
-  font-size: 16px;
-  font-weight: bold;
-  color: black;
 }
 
-.header-bottom a {
+header nav a {
+  color: white;
+  margin-left: 1rem;
   text-decoration: none;
-  color: black;
-}
-
-.menu-icon,
-.user-icon {
-  margin-right: 8px;
+  font-weight: bold;
 }
 
 main {
-  flex: 1;
-  padding: 20px;
+  padding: 2rem;
 }
 
-#menuToggle {
-  display: block;
-  position: relative;
+
+form fieldset {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 50px;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  gap: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-#menu-checkbox {
+form legend {
   display: none;
 }
 
-#menuToggle label {
-  display: block;
-  width: 40px;
+form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  color: #333;
+}
+
+form input,
+form select {
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  padding: 0.3rem;
+  background: transparent;
+
+}
+
+form button {
+  background: #ff4d6d;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 50%;
   cursor: pointer;
-  z-index: 3;
+  transition: 0.2s;
 }
 
-#menuToggle label span {
-  display: block;
-  width: 30px;
-  height: 4px;
-  margin: 5px 0;
-  background: #fff;
-  transition: all 0.3s ease;
-  border-radius: 2px;
+form button:hover {
+  background: #e63950;
 }
 
-#menu {
-  position: absolute;
-  top: 60px;
-  left: 0;
-  width: 220px;
-  background: #ededed;
+
+section {
+  margin-top: 2rem;
+}
+
+h2 {
+  margin-bottom: 1rem;
+  color: #1b5e20;
+}
+
+ul {
   list-style: none;
   padding: 0;
-  margin: 0;
-  max-height: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+  justify-content: center;
+}
+
+article {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   overflow: hidden;
-  transition: max-height 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  border-radius: 4px;
-  z-index: 2;
+  transition: transform 0.2s;
 }
 
-#menu li {
-  padding: 12px 20px;
+article:hover {
+  transform: scale(1.03);
 }
 
-#menu li a {
-  text-decoration: none;
-  color: #333;
-}
-
-#menu-checkbox:checked ~ ul {
-  max-height: 500px;
-}
-
-#menu-checkbox:checked + label span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
-#menu-checkbox:checked + label span:nth-child(2) {
-  opacity: 0;
-}
-#menu-checkbox:checked + label span:nth-child(3) {
-  transform: rotate(-45deg) translate(6px, -6px);
-}
-.home-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 40px; 
-  padding: 40px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.home-section figure {
-  flex: 1 1 40%;
+figure {
   margin: 0;
-  display: flex;
-  justify-content: center;
 }
 
-.home-section img {
+figure img {
   width: 100%;
-  height: auto;
-  max-width: 400px;
-  border-radius: 12px;
+  height: 160px;
+  object-fit: cover;
 }
 
-.home-section article {
-  flex: 1 1 50%;
-  max-width: 500px;
+figcaption {
+  padding: 0.8rem;
 }
 
-.home-section h2 {
-  color: #4f8a6e;
-  font-size: 28px;
+figcaption h3 {
+  margin: 0;
+  font-size: 1.1rem;
 }
 
-.home-section h3 {
-  color: #2c3e50;
-  margin-bottom: 10px;
+figcaption p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  color: #555;
 }
 
-.home-section p {
-  line-height: 1.6;
-  color: #333;
-  text-align: justify;
-}
-
-
-@media (max-width: 768px) {
-  .home-section {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .home-section article,
-  .home-section figure {
-    max-width: 100%;
-  }
-}
-
-nav ul li a.active {
-  color: #4f8a6e;
-  font-weight: bold;
-  border-bottom: 3px solid #4f8a6e;
+footer {
+  background: #2e7d32;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
 }
