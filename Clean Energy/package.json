@@ -1,0 +1,21 @@
+{
+  "name": "clean-energy",
+  "version": "1.0.0",
+  "description": "Clean Energy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "JS",
+    "node",
+    "validator"
+  ],
+  "author": "Matheus Gaspar Menezes",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1"
+  }
+}
