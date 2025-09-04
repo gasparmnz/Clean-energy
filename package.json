@@ -1,5 +1,19 @@
 {
   "dependencies": {
-    "ejs": "^3.1.10"
-  }
+    "ejs": "^3.1.10",
+    "express": "^5.1.0"
+  },
+  "name": "clean-energy",
+  "version": "1.0.0",
+  "description": "TCC clean energy",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "JS",
+    "express"
+  ],
+  "author": "Matheus Gaspar Menezes",
+  "license": "ISC"
 }
