@@ -11,7 +11,7 @@
     <h1>Biomassa Hub</h1>
     <nav>
       <a href="#">Início</a>
-      <a href="#">Regiões</a>
+      <a href="/produtos">Produtos</a>
       <a href="#">Sobre</a>
       <a href="#">Contato</a>
     </nav>
@@ -71,79 +71,25 @@
     <section>
       <h2>Matéria-prima disponível em São Paulo</h2>
       <ul class="produtos-scroll">
-        <li>
-          <article>
-            <figure>
-              <img src="/imagem/Lenha.png" alt="Lenha" />
-              <figcaption>
-                <h3>Lenha tratada</h3>
-                <p>R$ 250,00 / tonelada</p>
-                <p>Disponível em Campinas - SP</p>
-              </figcaption>
-            </figure>
-          </article>
-        </li>
-        <li>
-          <article>
-            <figure>
-              <img src="/imagem/cascadearroz.png" alt="cascadearroz" />
-              <figcaption>
-                <h3>Casca de arroz</h3>
-                <p>R$ 1275,00 / tonelada</p>
-                <p>Disponível em Guarulhos - SP</p>
-              </figcaption>
-            </figure>
-          </article>
-        </li>
-        <li>
-          <article>
-            <figure>
-              <img src="/imagem/cana.png" alt="Bagaço de cana" />
-              <figcaption>
-                <h3>Bagaço de cana</h3>
-                <p>R$ 150 / tonelada</p>
-                <p>Disponível em Socorro - SP</p>
-              </figcaption>
-            </figure>
-          </article>
-        </li>
-        <li>
-          <article>
-            <figure>
-              <img src="/imagem/palhademilho.png" alt="palhademilho" />
-              <figcaption>
-                <h3>Palha de milho</h3>
-                <p>R$ 150 / tonelada</p>
-                <p>Disponível em Campos do Jordão - SP</p>
-              </figcaption>
-            </figure>
-          </article>
-        </li>
-        <li>
-          <article>
-            <figure>
-              <img src="/imagem/cana.png" alt="Bagaço de cana" />
-              <figcaption>
-                <h3>Bagaço de cana</h3>
-                <p>R$ 150 / tonelada</p>
-                <p>Disponível em Barueri - SP</p>
-              </figcaption>
-            </figure>
-          </article>
-        </li>
-        <li>
-          <article>
-            <figure>
-              <img src="/imagem/serragem.png" alt="serragem" />
-              <figcaption>
-                <h3>Serragem</h3>
-                <p>R$ 150 / tonelada</p>
-                <p>Disponível em Sorocaba - SP</p>
-              </figcaption>
-            </figure>
-          </article>
-        </li>
-      </ul>
+  <% produtos.forEach(produto => { %>
+    <li>
+      <article>
+        <figure>
+          <a href="/item/<%= produto.id %>">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+          </a>
+          <figcaption>
+            <h3><%= produto.nome %></h3>
+            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>Disponível em <%= produto.local %></p>
+            <a href="/item/<%= produto.id %>">Ver detalhes</a>
+          </figcaption>
+        </figure>
+      </article>
+    </li>
+  <% }) %>
+</ul>
+
     </section>
 
     <section>
