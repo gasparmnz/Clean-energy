@@ -57,7 +57,7 @@ const produtos2 = [
     id: 101,
     nome: "Resíduos de café",
     preco: 650,
-    local: "RJ",
+    local: "Rio de janeiro - RJ",
     imagem: "residuosdecafe.png",
     descricao: "Resíduos de café reciclados, ideais para produção de energia limpa e fertilização do solo."
   },
@@ -65,12 +65,20 @@ const produtos2 = [
     id: 102,
     nome: "Palha de milho",
     preco: 250,
-    local: "São Paulo - SP",
+    local: "São Gonçalo - RJ",
     imagem: "palhademilho.png",
     descricao: "Palha de milho seca e versátil, ideal para ração, cobertura do solo e produção de energia renovável."
   },
   {
     id: 103,
+    nome: "Lixo Orgânico",
+    preco: 450,
+    local: "Nova Iguaçu - RJ",
+    imagem: "lixo organico.png",
+    descricao: "O lixo orgânico pode ser usado na produção de biomassa, um tipo de matéria orgânica de origem vegetal ou animal."
+  },
+  {
+    id: 104,
     nome: "Lenha tratada",
     preco: 250,
     local: "Campinas - SP",
