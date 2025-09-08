@@ -6,25 +6,10 @@ body {
   color: #333;
 }
 
-header {
-  background: #2e7d32;
-  color: white;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-header nav a {
-  color: white;
-  margin-left: 1rem;
-  text-decoration: none;
-  font-weight: bold;
-}
-
 main {
   padding: 2rem;
+  padding: 2rem;
+  margin-top: 100px;
 }
 
 form {
