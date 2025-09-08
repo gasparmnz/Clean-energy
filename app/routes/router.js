@@ -63,7 +63,7 @@ const produtos2 = [
   },
   {
     id: 102,
-    nome: "palhademilho",
+    nome: "Palha de milho",
     preco: 250,
     local: "São Paulo - SP",
     imagem: "palhademilho.png",
