@@ -87,13 +87,38 @@ const produtos2 = [
   },
 ];
 
-router.get('/', function(req, res) {
+router.get('/', (req, res) => {
   res.render('pages/produtos', { produtos, produtos2 });
 });
 
-router.get('/home', function(req, res) {
+router.get('/home', (req, res) => {
   res.render('pages/home');
 });
+//cadastro//
+router.get('/cadastro', (req, res) => {
+  res.render('pages/cadastro');
+});
+
+router.post('/cadastro', (req, res) => {
+  const { documento, nome, email, senha } = req.body;
+
+  console.log('Cadastro recebido:', { documento, nome, email, senha });
+
+  res.redirect('/');
+});
+//login//
+router.get('/login', (req, res) => {
+  res.render('pages/login');
+});
+
+router.post('/login', (req, res) => {
+  const { email, senha } = req.body;
+
+  console.log('Login recebido:', { email, senha });
+
+  res.redirect('/');
+});
+
 
 router.get('/item/:id', function(req, res) {
   const id = parseInt(req.params.id);
@@ -105,6 +130,7 @@ router.get('/item/:id', function(req, res) {
 
   res.render('pages/item', { produto });
 });
+
 
 
 module.exports = router;

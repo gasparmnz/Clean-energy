@@ -1,0 +1,121 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+main {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
+
+section {
+  background: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Botões de troca */
+.toggle-buttons {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.toggle-buttons button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #28530b;
+  background: #fff;
+  color: #28530b;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.toggle-buttons button.active {
+  background: #28530b;
+  color: #fff;
+}
+
+.toggle-buttons button:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+.toggle-buttons button:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+/* Formulário */
+form fieldset {
+  border: none;
+}
+
+form legend {
+  font-size: 1.2em;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+form label {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+form input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.btn-submit {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: #28530b;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.btn-submit:hover {
+  background: #28530b;
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  section {
+    padding: 15px;
+  }
+
+  .toggle-buttons button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  form input {
+    padding: 8px;
+  }
+
+  .btn-submit {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
