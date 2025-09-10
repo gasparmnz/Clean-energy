@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página de Perfil</title>
+  <link rel="stylesheet" href="/css/perfil.css">
+</head>
+<body>
+     <%- include('../partial/header.ejs') %>
+<main>
+  <aside class="sidebar">
+    <section class="user-info">
+      <img src="/imagem/avatar.png" alt="Foto do usuário" class="avatar">
+      <p class="username">Usuário</p>
+      <a href="#" class="edit-profile">Editar Perfil</a>
+    </section>
+    <nav class="sidebar-nav">
+      <ul>
+        <li><a href="#">Minha Conta</a></li>
+        <li><a href="/meus_produtos">Meus Produtos</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+<section class="content">
+
+      <nav class="top-nav">
+        <ul>
+          <li><a href="#" class="filter active" data-filter="all">Tudo</a></li>
+          <li><a href="#" class="filter" data-filter="finalizado">Finalizado</a></li>
+          <li><a href="#" class="filter" data-filter="cancelado">Cancelado</a></li>
+        </ul>
+      </nav>
+
+      <article class="orders">
+        <div class="order" data-status="finalizado">Ainda não a pedidos</div>
+        <div class="order" data-status="cancelado">Ainda não a pedidos</div>
+        <div class="order" data-status="all">Ainda não a pedidos</div>
+      </article>
+    </section>
+  </main>
+
+  <script src="/js/script.js"></script>

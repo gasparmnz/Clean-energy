@@ -18,3 +18,28 @@ document.addEventListener("DOMContentLoaded", () => {
     inputDocumento.placeholder = "Digite seu CNPJ";
   });
 });
+
+
+const filters = document.querySelectorAll('.filter');
+const orders = document.querySelectorAll('.order');
+
+filters.forEach(filter => {
+  filter.addEventListener('click', e => {
+    e.preventDefault();
+
+
+    filters.forEach(f => f.classList.remove('active'));
+ 
+    filter.classList.add('active');
+
+    const filterValue = filter.dataset.filter;
+
+    orders.forEach(order => {
+      if (filterValue === 'all') {
+        order.style.display = 'block';
+      } else {
+        order.style.display = order.dataset.status === filterValue ? 'block' : 'none';
+      }
+    });
+  });
+});
