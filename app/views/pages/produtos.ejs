@@ -105,6 +105,75 @@
   <% }) %>
       </ul>
     </section>
+
+    <section>
+      <h2>Matéria-prima disponível em Curitiba</h2>
+      <ul class="produtos-scroll">
+        <% produtos3.forEach(produto => { %>
+    <li>
+      <article>
+        <figure>
+          <a href="/item/<%= produto.id %>">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+          </a>
+          <figcaption>
+            <h3><%= produto.nome %></h3>
+            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>Disponível em <%= produto.local %></p>
+            <a href="/item/<%= produto.id %>">Ver detalhes</a>
+          </figcaption>
+        </figure>
+      </article>
+    </li>
+  <% }) %>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Matéria-prima disponível Florianópolis</h2>
+      <ul class="produtos-scroll">
+        <% produtos4.forEach(produto => { %>
+    <li>
+      <article>
+        <figure>
+          <a href="/item/<%= produto.id %>">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+          </a>
+          <figcaption>
+            <h3><%= produto.nome %></h3>
+            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>Disponível em <%= produto.local %></p>
+            <a href="/item/<%= produto.id %>">Ver detalhes</a>
+          </figcaption>
+        </figure>
+      </article>
+    </li>
+  <% }) %>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Matéria-prima disponível em Salvador</h2>
+      <ul class="produtos-scroll">
+        <% produtos5.forEach(produto => { %>
+    <li>
+      <article>
+        <figure>
+          <a href="/item/<%= produto.id %>">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+          </a>
+          <figcaption>
+            <h3><%= produto.nome %></h3>
+            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>Disponível em <%= produto.local %></p>
+            <a href="/item/<%= produto.id %>">Ver detalhes</a>
+          </figcaption>
+        </figure>
+      </article>
+    </li>
+  <% }) %>
+      </ul>
+    </section>
   </main>
   <%- include('../partial/footer.ejs') %>
 </body>

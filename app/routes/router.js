@@ -84,17 +84,62 @@ const produtos2 = [
     local: "Campinas - SP",
     imagem: "Lenha.png",
     descricao: "Lenha tratada com baixa umidade, ideal para geração de energia."
+  }
+];
+
+const produtos3 = [
+  {
+    id: 201,
+    nome: "Lenha tratada",
+    preco: 250,
+    local: "Campinas - SP",
+    imagem: "Lenha.png",
+    descricao: "Lenha tratada com baixa umidade, ideal para geração de energia."
+  },
+  {
+    id: 202,
+    nome: "Lixo orgânico",
+    preco: 450,
+    local: "Pinhais - CWB",
+    imagem: "lixo organico.png",
+    descricao: "O lixo orgânico pode ser usado na produção de biomassa, um tipo de matéria orgânica de origem vegetal ou animal."
+  },
+];
+
+const produtos4 = [
+  {
+    id: 301,
+    nome: "Lenha tratada",
+    preco: 250,
+    local: "Campinas - SP",
+    imagem: "Lenha.png",
+    descricao: "Lenha tratada com baixa umidade, ideal para geração de energia."
+  },
+];
+
+const produtos5 = [
+  {
+    id: 401,
+    nome: "Lenha tratada",
+    preco: 250,
+    local: "Campinas - SP",
+    imagem: "Lenha.png",
+    descricao: "Lenha tratada com baixa umidade, ideal para geração de energia."
   },
 ];
 
 router.get('/', (req, res) => {
-  res.render('pages/produtos', { produtos, produtos2 });
+  res.render('pages/produtos', { produtos, produtos2, produtos3, produtos4, produtos5 });
 });
 
 router.get('/home', (req, res) => {
   res.render('pages/home');
 });
-//cadastro//
+
+router.get('/adicione_produto', (req, res) => {
+  res.render('pages/adicione_produto');
+});
+
 router.get('/cadastro', (req, res) => {
   res.render('pages/cadastro');
 });
