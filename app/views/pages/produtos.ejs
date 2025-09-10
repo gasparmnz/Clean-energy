@@ -174,6 +174,29 @@
   <% }) %>
       </ul>
     </section>
+
+    <section>
+      <h2>Matéria-prima disponível em Fortaleza</h2>
+      <ul class="produtos-scroll">
+        <% produtos6.forEach(produto => { %>
+    <li>
+      <article>
+        <figure>
+          <a href="/item/<%= produto.id %>">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+          </a>
+          <figcaption>
+            <h3><%= produto.nome %></h3>
+            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>Disponível em <%= produto.local %></p>
+            <a href="/item/<%= produto.id %>">Ver detalhes</a>
+          </figcaption>
+        </figure>
+      </article>
+    </li>
+  <% }) %>
+      </ul>
+    </section>
   </main>
   <%- include('../partial/footer.ejs') %>
 </body>

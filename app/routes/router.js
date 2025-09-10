@@ -128,8 +128,19 @@ const produtos5 = [
   },
 ];
 
+const produtos6 = [
+  {
+    id: 401,
+    nome: "Lenha tratada",
+    preco: 250,
+    local: "Campinas - SP",
+    imagem: "Lenha.png",
+    descricao: "Lenha tratada com baixa umidade, ideal para geração de energia."
+  },
+];
+
 router.get('/', (req, res) => {
-  res.render('pages/produtos', { produtos, produtos2, produtos3, produtos4, produtos5 });
+  res.render('pages/produtos', { produtos, produtos2, produtos3, produtos4, produtos5, produtos6 });
 });
 
 router.get('/home', (req, res) => {
