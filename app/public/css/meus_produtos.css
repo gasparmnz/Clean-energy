@@ -1,0 +1,146 @@
+:root{
+  --verde: #488D6A;
+  --preto: #222;
+  --cinza: #e6e6e6;
+  --container-max: 1200px;
+}
+
+*{
+  box-sizing: border-box;
+}
+
+body, html{
+  margin: 0;
+  height: 100%;
+  font-family: "Inter", Arial, sans-serif;
+  color: var(--preto);
+  background: #fff;
+}
+
+main{
+  max-width: var(--container-max);
+  margin: 0 auto;
+  height: 100vh; /* ocupa toda a altura da tela */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  text-align: center;
+}
+
+h1{
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  margin: 0 0 2rem 0;
+  flex-shrink: 0;
+}
+
+ol.steps{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* ocupa o espaço restante */
+  justify-content: space-around; /* espaço igual entre passos */
+  width: 100%;
+}
+
+.step{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+  flex: 1; /* cada passo ocupa 1/3 da altura */
+}
+
+.step article{
+  max-width: 400px;     
+}
+
+.step h2{
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  margin: 0 0 0.5rem 0;
+}
+
+.step p{
+  margin: 0;
+  color: #555;
+  line-height: 1.4;
+  font-size: 1rem;
+}
+
+.icon-figure{
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-figure .bx{
+  font-size: 50px;
+  color: var(--verde);
+}
+
+.visually-hidden{
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.acoes{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-shrink: 0;
+  margin-top: 1rem;
+}
+
+.acoes a{
+  text-decoration: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 700;
+  display: inline-block;
+  text-align: center;
+  min-width: 120px;
+}
+
+.voltar{
+  background: #efefef;
+  color: #111;
+  border: 1px solid #ddd;
+}
+
+.comecar{
+  background: var(--verde);
+  color: #fff;
+  border: none;
+}
+
+.voltar:hover{ background: #e0e0e0 }
+.comecar:hover{ background: #367555 }
+
+@media (max-width: 640px){
+  ol.steps{
+    gap: 1rem;
+  }
+
+  .icon-figure .bx{
+    font-size: 40px;
+  }
+
+  .acoes{
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .acoes a{
+    width: 100%;
+  }
+}
