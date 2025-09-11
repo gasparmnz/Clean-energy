@@ -167,12 +167,17 @@ router.get('/cadastro', (req, res) => {
   res.render('pages/cadastro');
 });
 
+router.get('/produtoscomconta', (req, res) => {
+  res.render('pages/produtoscomconta', { produtos, produtos2, produtos3, produtos4, produtos5, produtos6 });
+});
+
+
 router.post('/cadastro', (req, res) => {
   const { documento, nome, email, senha } = req.body;
 
   console.log('Cadastro recebido:', { documento, nome, email, senha });
 
-  res.redirect('/');
+  res.redirect('/produtoscomconta');
 });
 //login//
 router.get('/login', (req, res) => {
@@ -184,7 +189,7 @@ router.post('/login', (req, res) => {
 
   console.log('Login recebido:', { email, senha });
 
-  res.redirect('/');
+  res.redirect('/produtoscomconta');
 });
 
 

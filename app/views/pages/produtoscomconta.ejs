@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Biomassa Hub - Produtos</title>
+  <link rel="stylesheet" href="/css/produtos.css" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partial/header1.ejs') %>
+  <main>
+ 
+    <section aria-labelledby="filtro-titulo" class="form-filtro-completo">
+      <h2 id="filtro-titulo"></h2>
+      <form>
+        <fieldset>
+
+          <label>
+            Região
+            <select>
+              <option value="">Todas</option>
+              <option>São Paulo</option>
+              <option>Rio de Janeiro</option>
+              <option>Minas Gerais</option>
+            </select>
+          </label>
+
+          <label>
+            Tipo
+            <select>
+              <option value="">Todos</option>
+              <option>Lenha</option>
+              <option>Pellets</option>
+              <option>Cavaco</option>
+              <option>Bagaço</option>
+            </select>
+          </label>
+
+          <label>
+            Preço mín.
+            <input type="number" placeholder="R$ 0" />
+          </label>
+
+          <label>
+            Preço máx.
+            <input type="number" placeholder="" />
+          </label>
+
+          <button type="submit" aria-label="Pesquisar">🔍</button>
+        </fieldset>
+      </form>
+    </section>
+
+  
+    <section class="form-pesquisa-simples" aria-label="Pesquisa simples">
+      <form>
+        <input type="text" placeholder="Pesquisar matérias-primas" aria-label="Pesquisar matérias-primas" />
+        <button type="submit" aria-label="Pesquisar">🔍</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Matéria-prima disponível em São Paulo</h2>
+      <ul class="produtos-scroll">
+  <% produtos.forEach(produto => { %>
+    <li>
+      <article>
+        <figure>
+          <a href="/item/<%= produto.id %>">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+          </a>
+          <figcaption>
+            <h3><%= produto.nome %></h3>
+            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>Disponível em <%= produto.local %></p>
+            <a href="/item/<%= produto.id %>">Ver detalhes</a>
+          </figcaption>
+        </figure>
+      </article>
+    </li>
+  <% }) %>
+</ul>
+
+    </section>
+
+    <section>
+      <h2>Matéria-prima disponível no Rio de Janeiro</h2>
+      <ul class="produtos-scroll">
+        <% produtos2.forEach(produto => { %>
+    <li>
+      <article>
+        <figure>
+          <a href="/item/<%= produto.id %>">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+          </a>
+          <figcaption>
+            <h3><%= produto.nome %></h3>
+            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>Disponível em <%= produto.local %></p>
+            <a href="/item/<%= produto.id %>">Ver detalhes</a>
+          </figcaption>
+        </figure>
+      </article>
+    </li>
+  <% }) %>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Matéria-prima disponível em Curitiba</h2>
+      <ul class="produtos-scroll">
+        <% produtos3.forEach(produto => { %>
+    <li>
+      <article>
+        <figure>
+          <a href="/item/<%= produto.id %>">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+          </a>
+          <figcaption>
+            <h3><%= produto.nome %></h3>
+            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>Disponível em <%= produto.local %></p>
+            <a href="/item/<%= produto.id %>">Ver detalhes</a>
+          </figcaption>
+        </figure>
+      </article>
+    </li>
+  <% }) %>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Matéria-prima disponível Florianópolis</h2>
+      <ul class="produtos-scroll">
+        <% produtos4.forEach(produto => { %>
+    <li>
+      <article>
+        <figure>
+          <a href="/item/<%= produto.id %>">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+          </a>
+          <figcaption>
+            <h3><%= produto.nome %></h3>
+            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>Disponível em <%= produto.local %></p>
+            <a href="/item/<%= produto.id %>">Ver detalhes</a>
+          </figcaption>
+        </figure>
+      </article>
+    </li>
+  <% }) %>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Matéria-prima disponível em Salvador</h2>
+      <ul class="produtos-scroll">
+        <% produtos5.forEach(produto => { %>
+    <li>
+      <article>
+        <figure>
+          <a href="/item/<%= produto.id %>">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+          </a>
+          <figcaption>
+            <h3><%= produto.nome %></h3>
+            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>Disponível em <%= produto.local %></p>
+            <a href="/item/<%= produto.id %>">Ver detalhes</a>
+          </figcaption>
+        </figure>
+      </article>
+    </li>
+  <% }) %>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Matéria-prima disponível em Fortaleza</h2>
+      <ul class="produtos-scroll">
+        <% produtos6.forEach(produto => { %>
+    <li>
+      <article>
+        <figure>
+          <a href="/item/<%= produto.id %>">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+          </a>
+          <figcaption>
+            <h3><%= produto.nome %></h3>
+            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>Disponível em <%= produto.local %></p>
+            <a href="/item/<%= produto.id %>">Ver detalhes</a>
+          </figcaption>
+        </figure>
+      </article>
+    </li>
+  <% }) %>
+      </ul>
+    </section>
+  </main>
+  <%- include('../partial/footer.ejs') %>
+</body>
+</html>
