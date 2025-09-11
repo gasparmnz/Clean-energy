@@ -177,7 +177,7 @@ router.post('/cadastro', (req, res) => {
 
   console.log('Cadastro recebido:', { documento, nome, email, senha });
 
-  res.redirect('/produtoscomconta');
+  res.redirect('/perfil');
 });
 //login//
 router.get('/login', (req, res) => {
@@ -189,7 +189,7 @@ router.post('/login', (req, res) => {
 
   console.log('Login recebido:', { email, senha });
 
-  res.redirect('/produtoscomconta');
+  res.redirect('/perfil');
 });
 
 
