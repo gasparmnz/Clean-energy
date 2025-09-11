@@ -159,6 +159,10 @@ router.get('/meus_produtos', (req, res) => {
   res.render('pages/meus_produtos');
 });
 
+router.get('/cadastrar_produto', (req, res) => {
+  res.render('pages/cadastrar_produto');
+});
+
 router.get('/cadastro', (req, res) => {
   res.render('pages/cadastro');
 });
