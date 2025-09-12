@@ -326,17 +326,39 @@ router.get('/perfil', (req, res) => {
 router.get('/meus_produtos', (req, res) => {
   res.render('pages/meus_produtos');
 });
+
  
 router.get('/cadastro', (req, res) => {
   res.render('pages/cadastro');
 });
  
+
+
+router.get('/cadastrar_produto', (req, res) => {
+  res.render('pages/cadastrar_produto');
+});
+
+router.get('/cadastro', (req, res) => {
+  res.render('pages/cadastro');
+});
+
+router.get('/produtoscomconta', (req, res) => {
+  res.render('pages/produtoscomconta', { produtos, produtos2, produtos3, produtos4, produtos5, produtos6 });
+});
+
+
+
 router.post('/cadastro', (req, res) => {
   const { documento, nome, email, senha } = req.body;
  
   console.log('Cadastro recebido:', { documento, nome, email, senha });
+
  
   res.redirect('/');
+
+
+  res.redirect('/perfil');
+
 });
 //login//
 router.get('/login', (req, res) => {
@@ -347,15 +369,24 @@ router.post('/login', (req, res) => {
   const { email, senha } = req.body;
  
   console.log('Login recebido:', { email, senha });
+
  
   res.redirect('/');
+
+
+  res.redirect('/perfil');
+
 });
  
  
 router.get('/item/:id', function(req, res) {
   const id = parseInt(req.params.id);
   const produto = [...produtos, ...produtos2, ...produtos3, ...produtos4, ...produtos5, ...produtos6].find(p => p.id === id);
+
  
+
+
+
   if (!produto) {
     return res.status(404).send("Produto não encontrado");
   }

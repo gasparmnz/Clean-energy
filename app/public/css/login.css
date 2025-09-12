@@ -119,3 +119,18 @@ form input {
     padding: 10px;
   }
 }
+.register-link {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.register-link a {
+  color: #2a5d1d;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
