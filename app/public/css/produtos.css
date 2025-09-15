@@ -143,6 +143,15 @@ form {
   scrollbar-width: none;
 }
 
+main section {
+  margin-bottom: 2rem;
+}
+
+main section h2 {
+  margin-bottom: 1rem;
+}
+
+
 @media (min-width: 768px) {
 
   .produtos-scroll {
