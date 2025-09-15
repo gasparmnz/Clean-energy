@@ -1,7 +1,9 @@
 {
   "dependencies": {
     "ejs": "^3.1.10",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "validador": "^0.1.6"
   },
   "name": "clean-energy",
   "version": "1.0.0",
