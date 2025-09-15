@@ -331,6 +331,10 @@ router.get('/listaprodutos', (req, res) => {
   res.render('pages/listaprodutos');
 });
 
+router.get('/sobre_nos', (req, res) => {
+  res.render('pages/sobre_nos');
+});
+
 router.get('/cadastrar_produto', (req, res) => {
   res.render('pages/cadastrar_produto');
 });
