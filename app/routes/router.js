@@ -618,7 +618,7 @@ router.post("/login", (req, res) => {
   );
 
   if (usuarioEncontrado) {
-    return res.redirect("/produtoscomconta");
+    return res.redirect("/perfil");
   } else {
     return res.render("pages/login", {
       erro: "*Não reconhecemos estas credenciais. Tente novamente.",
