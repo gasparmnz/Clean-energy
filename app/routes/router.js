@@ -4,6 +4,8 @@ const { body, validationResult } = require("express-validator");
 const usuarios = []; /* ARRAY QUE ARMAZENA OS E-MAILS E SENHAS DO USUARIO */
 /* O Correto seria um banco de dados, isso aqui é apenas uma simulação*/
 
+var {validarCPF} = require("../helpers/validacao");
+
 /* produtos */
 const produtos = [
   {
@@ -458,11 +460,14 @@ router.post(
     .isLength({ min: 3, max: 50 })
     .withMessage("*O Nome deve conter entre 3 e 50 caracteres!"),
 
-  body("cpf")
-    .notEmpty()
-    .withMessage("*Campo obrigatório!")
-    .matches(/^\d{11}$/)
-    .withMessage("*O CPF deve conter exatamente 11 números!"),
+    body("cpf")
+    .custom((value) => {
+        if (validarCPF(value)){
+            return true;
+        } else {
+            throw new Error("CPF inválido!");
+        }
+    }),
 
   body("email")
     .notEmpty()
