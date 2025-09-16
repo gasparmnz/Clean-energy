@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Cadastro</title>
     <link rel="stylesheet" href="/css/cadastro.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
   </head>
   <body>
     <main>
@@ -28,14 +29,14 @@
           </button>
         </nav>
 
-        <!-- Form Usuario comum (visivel por padrao)-->
+        <!-- Form Usuário Comum -->
         <form
           id="formFarmacia"
-          class="quadrado"
           method="POST"
           action="/cadastroUsuario"
         >
           <h3>Cadastro como Pessoa Física</h3>
+
           <article class="input-icon">
             <input
               type="text"
@@ -78,10 +79,6 @@
               value="<%= valoresPessoaFisica.senha %>"
               class="<%= erroValidacaoPessoaFisica.senha %>"
             />
-            <i
-              class="bi bi-eye-slash-fill olhofechado"
-              onclick="mostrarSenha('senha2', this)"
-            ></i>
             <span class="msgErro"><%= msgErroPessoaFisica.senha %></span>
           </article>
 
@@ -94,32 +91,28 @@
               value="<%= valoresPessoaFisica.confirmarSenha %>"
               class="<%= erroValidacaoPessoaFisica.confirmarSenha %>"
             />
-            <i
-              class="bi bi-eye-slash-fill olhofechado"
-              onclick="mostrarSenha('confirmarSenha2', this)"
-            ></i>
-            <span class="msgErro"
-              ><%= msgErroPessoaFisica.confirmarSenha %></span
-            >
+           
+            <span class="msgErro"><%= msgErroPessoaFisica.confirmarSenha %></span>
           </article>
 
-          <h1 class="login">
-            Já possui uma conta? Faça seu <a href="/login">login</a>
-          </h1>
-
-          <button type="submit" class="cadastrar-profissional">
+          <button type="submit" class="btn-cadastrar">
             Cadastrar Pessoa Física
           </button>
+
+          <p class="login">
+            Já possui uma conta? Faça seu <a href="/login">login</a>
+          </p>
         </form>
 
-        <!-- FORM Empresa (escondido) -->
+        <!-- Form Empresa -->
         <form
           id="formProfissional"
-          class="quadrado hidden"
+          class="hidden"
           method="POST"
           action="/cadastroEmpresa"
         >
           <h3>Cadastro como Empresa</h3>
+
           <article class="input-icon">
             <input
               type="text"
@@ -162,10 +155,7 @@
               value="<%= valoresEmpresa.senha %>"
               class="<%= erroValidacaoEmpresa.senha %>"
             />
-            <i
-              class="bi bi-eye-slash-fill olhofechado"
-              onclick="mostrarSenha('senha', this)"
-            ></i>
+  
             <span class="msgErro"><%= msgErroEmpresa.senha %></span>
           </article>
 
@@ -178,29 +168,25 @@
               value="<%= valoresEmpresa.confirmarSenha %>"
               class="<%= erroValidacaoEmpresa.confirmarSenha %>"
             />
-            <i
-              class="bi bi-eye-slash-fill olhofechado"
-              onclick="mostrarSenha('confirmarSenha', this)"
-            ></i>
             <span class="msgErro"><%= msgErroEmpresa.confirmarSenha %></span>
           </article>
 
-          <h1 class="login">
-            Já possui uma conta? Faça seu <a href="/login">login</a>
-          </h1>
-
-          <button type="submit" class="cadastrar-profissional">
+          <button type="submit" class="btn-cadastrar">
             Cadastrar Empresa
           </button>
+
+          <p class="login">
+            Já possui uma conta? Faça seu <a href="/login">login</a>
+          </p>
         </form>
       </section>
     </main>
-    <script src="/js/script.js"></script>
 
-    <!-- SCRIPT para mudar o formulario ao clicar nos botoes -->
+    <script src="/js/script.js"></script>
     <script>
       const formularioAtivo =
         "<%= typeof formularioAtivo !== 'undefined' ? formularioAtivo : 'farmacia' %>";
+
       function mostrarFormulario(tipo) {
         const formFarmacia = document.getElementById("formFarmacia");
         const formProfissional = document.getElementById("formProfissional");
