@@ -24,7 +24,7 @@ section {
   background: #fff;
   padding: 25px;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Botões de troca */
@@ -133,4 +133,17 @@ form input {
 
 .register-link a:hover {
   text-decoration: underline;
+}
+
+/* =============== CLASS que o vitao colocou ============*/
+
+/* mensagens de erro(caso tenha) */
+span.msgErro {
+  color: red;
+  font-size: 0.9em;
+  margin-left: 10px;
+}
+.input-icon input.erro {
+  border-color: red;
+  box-shadow: 0 0 5px #e74c3c;
 }
