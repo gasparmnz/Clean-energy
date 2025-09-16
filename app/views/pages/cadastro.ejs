@@ -1,41 +1,226 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro</title>
-  <link rel="stylesheet" href="/css/cadastro.css">
-</head>
-<body>
-  <main>
-    
-    <section>
-      <nav class="toggle-buttons" aria-label="Escolher tipo de cadastro">
-        <button type="button" id="btnFisica" class="active">Pessoa Física</button>
-        <button type="button" id="btnEmpresa">Empresa</button>
-      </nav>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="/css/cadastro.css" />
+  </head>
+  <body>
+    <main>
+      <section>
+        <nav class="toggle-buttons" aria-label="Escolher tipo de cadastro">
+          <button
+            type="button"
+            id="btnFarmacia"
+            class="ativo"
+            onclick="mostrarFormulario('farmacia')"
+          >
+            Pessoa Física
+          </button>
 
-      <form id="formCadastro" action="/cadastro" method="POST">
-        <fieldset>
-          <legend>Cadastro</legend>
+          <button
+            type="button"
+            id="btnProfissional"
+            onclick="mostrarFormulario('empresa')"
+          >
+            Empresa
+          </button>
+        </nav>
 
-          <label id="labelDocumento" for="documento">CPF</label>
-          <input type="text" id="documento" name="documento" placeholder="Digite seu CPF" required>
+        <!-- Form Usuario comum (visivel por padrao)-->
+        <form
+          id="formFarmacia"
+          class="quadrado"
+          method="POST"
+          action="/cadastroUsuario"
+        >
+          <h3>Cadastro como Pessoa Física</h3>
+          <article class="input-icon">
+            <input
+              type="text"
+              name="nome"
+              placeholder="Digite seu nome completo"
+              value="<%= valoresPessoaFisica.nome %>"
+              class="<%= erroValidacaoPessoaFisica.nome %>"
+            />
+            <span class="msgErro"><%= msgErroPessoaFisica.nome %></span>
+          </article>
 
-          <label for="nome">Nome</label>
-          <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+          <article class="input-icon">
+            <input
+              type="text"
+              name="cpf"
+              placeholder="Digite seu CPF"
+              value="<%= valoresPessoaFisica.cpf %>"
+              class="<%= erroValidacaoPessoaFisica.cpf %>"
+            />
+            <span class="msgErro"><%= msgErroPessoaFisica.cpf %></span>
+          </article>
 
-          <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+          <article class="input-icon">
+            <input
+              type="email"
+              name="email"
+              placeholder="E-mail"
+              value="<%= valoresPessoaFisica.email %>"
+              class="<%= erroValidacaoPessoaFisica.email %>"
+            />
+            <span class="msgErro"><%= msgErroPessoaFisica.email %></span>
+          </article>
 
-          <label for="senha">Senha</label>
-          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+          <article class="input-icon">
+            <input
+              type="password"
+              id="senha2"
+              name="senha"
+              placeholder="Senha"
+              value="<%= valoresPessoaFisica.senha %>"
+              class="<%= erroValidacaoPessoaFisica.senha %>"
+            />
+            <i
+              class="bi bi-eye-slash-fill olhofechado"
+              onclick="mostrarSenha('senha2', this)"
+            ></i>
+            <span class="msgErro"><%= msgErroPessoaFisica.senha %></span>
+          </article>
 
-          <button type="submit" class="btn-submit">Cadastrar</button>
-        </fieldset>
-      </form>
-    </section>
-  </main>
-  <script src="/js/script.js"></script>
-</body>
+          <article class="input-icon">
+            <input
+              type="password"
+              id="confirmarSenha2"
+              name="confirmarSenha"
+              placeholder="Confirmar Senha"
+              value="<%= valoresPessoaFisica.confirmarSenha %>"
+              class="<%= erroValidacaoPessoaFisica.confirmarSenha %>"
+            />
+            <i
+              class="bi bi-eye-slash-fill olhofechado"
+              onclick="mostrarSenha('confirmarSenha2', this)"
+            ></i>
+            <span class="msgErro"
+              ><%= msgErroPessoaFisica.confirmarSenha %></span
+            >
+          </article>
+
+          <h1 class="login">
+            Já possui uma conta? Faça seu <a href="/login">login</a>
+          </h1>
+
+          <button type="submit" class="cadastrar-profissional">
+            Cadastrar Pessoa Física
+          </button>
+        </form>
+
+        <!-- FORM Empresa (escondido) -->
+        <form
+          id="formProfissional"
+          class="quadrado hidden"
+          method="POST"
+          action="/cadastroEmpresa"
+        >
+          <h3>Cadastro como Empresa</h3>
+          <article class="input-icon">
+            <input
+              type="text"
+              name="nome"
+              placeholder="Nome da empresa"
+              value="<%= valoresEmpresa.nome %>"
+              class="<%= erroValidacaoEmpresa.nome %>"
+            />
+            <span class="msgErro"><%= msgErroEmpresa.nome %></span>
+          </article>
+
+          <article class="input-icon">
+            <input
+              type="text"
+              name="cnpj"
+              placeholder="CNPJ"
+              value="<%= valoresEmpresa.cnpj %>"
+              class="<%= erroValidacaoEmpresa.cnpj %>"
+            />
+            <span class="msgErro"><%= msgErroEmpresa.cnpj %></span>
+          </article>
+
+          <article class="input-icon">
+            <input
+              type="email"
+              name="email"
+              placeholder="E-mail"
+              value="<%= valoresEmpresa.email %>"
+              class="<%= erroValidacaoEmpresa.email %>"
+            />
+            <span class="msgErro"><%= msgErroEmpresa.email %></span>
+          </article>
+
+          <article class="input-icon">
+            <input
+              type="password"
+              id="senha"
+              name="senha"
+              placeholder="Senha"
+              value="<%= valoresEmpresa.senha %>"
+              class="<%= erroValidacaoEmpresa.senha %>"
+            />
+            <i
+              class="bi bi-eye-slash-fill olhofechado"
+              onclick="mostrarSenha('senha', this)"
+            ></i>
+            <span class="msgErro"><%= msgErroEmpresa.senha %></span>
+          </article>
+
+          <article class="input-icon">
+            <input
+              type="password"
+              id="confirmarSenha"
+              name="confirmarSenha"
+              placeholder="Confirmar Senha"
+              value="<%= valoresEmpresa.confirmarSenha %>"
+              class="<%= erroValidacaoEmpresa.confirmarSenha %>"
+            />
+            <i
+              class="bi bi-eye-slash-fill olhofechado"
+              onclick="mostrarSenha('confirmarSenha', this)"
+            ></i>
+            <span class="msgErro"><%= msgErroEmpresa.confirmarSenha %></span>
+          </article>
+
+          <h1 class="login">
+            Já possui uma conta? Faça seu <a href="/login">login</a>
+          </h1>
+
+          <button type="submit" class="cadastrar-profissional">
+            Cadastrar Empresa
+          </button>
+        </form>
+      </section>
+    </main>
+    <script src="/js/script.js"></script>
+
+    <!-- SCRIPT para mudar o formulario ao clicar nos botoes -->
+    <script>
+      const formularioAtivo =
+        "<%= typeof formularioAtivo !== 'undefined' ? formularioAtivo : 'farmacia' %>";
+      function mostrarFormulario(tipo) {
+        const formFarmacia = document.getElementById("formFarmacia");
+        const formProfissional = document.getElementById("formProfissional");
+
+        const btnFarmacia = document.getElementById("btnFarmacia");
+        const btnProfissional = document.getElementById("btnProfissional");
+
+        if (tipo === "farmacia") {
+          formFarmacia.classList.remove("hidden");
+          formProfissional.classList.add("hidden");
+          btnFarmacia.classList.add("ativo");
+          btnProfissional.classList.remove("ativo");
+        } else {
+          formProfissional.classList.remove("hidden");
+          formFarmacia.classList.add("hidden");
+          btnProfissional.classList.add("ativo");
+          btnFarmacia.classList.remove("ativo");
+        }
+      }
+      mostrarFormulario(formularioAtivo);
+    </script>
+  </body>
 </html>

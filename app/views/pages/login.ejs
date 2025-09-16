@@ -1,34 +1,58 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <link rel="stylesheet" href="/css/login.css">
-</head>
-<body>
-  <main>
-    <section>
-      <form id="formLogin" action="/login" method="POST">
-        <fieldset>
-          <legend>Login</legend>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/login.css" />
+  </head>
+  <body>
+    <main>
+      <section>
+        <form action="/login" method="POST" class="quadrado">
+          <h2>Dados de acesso</h2>
 
-          <label for="email">E-mail</label>
-          <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+          <article class="input-icon">
+            <i class="bi bi-envelope icones-gerais"></i>
+            <input
+              type="text"
+              id="usuarioDigitado"
+              name="usuarioDigitado"
+              placeholder="Digite seu email"
+              value="<%= valores?.usuarioDigitado || '' %>"
+              class="<%= erro ? 'erro' : '' %>"
+            />
+          </article>
 
-          <label for="senha">Senha</label>
-          <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+          <article class="input-icon">
+            <i class="bi bi-lock icones-gerais"></i>
+            <input
+              type="password"
+              id="senhaDigitada"
+              name="senhaDigitada"
+              placeholder="Digite sua senha"
+              value="<%= valores?.senhaDigitada || '' %>"
+              class="<%= erro ? 'erro' : '' %>"
+            />
+            <i
+              class="bi bi-eye-slash-fill olhofechado"
+              onclick="mostrarSenha('senhaDigitada', this)"
+            ></i>
+          </article>
 
-          <p class="register-link">
-            Ainda não possui conta? <a href="/cadastro">Cadastre-se</a>
-          </p>
+          <% if (erro) { %>
+          <span class="msgErro"><%= erro %></span>
+          <% } %>
 
-          <button type="submit" class="btn-submit">Entrar</button>
-        </fieldset>
-      </form>
-    </section>
-  </main>
-  <script src="/js/script.js"></script>
-</body>
+          <h1 class="login">
+            Ainda não possui uma conta?
+            <a href="/cadastroCliente">Cadastre-se</a> já!
+          </h1>
+
+          <button type="submit" id="btnClique" class="juntar">Acessar</button>
+        </form>
+      </section>
+    </main>
+    <script src="/js/script.js"></script>
+  </body>
 </html>
-
