@@ -4,10 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carrinho</title>
-  <link rel="stylesheet" href="carrinho.css">
+  <link rel="stylesheet" href="/css/carrinho.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+  <%- include('../partial/header1.ejs') %>
   <main>
     <h2>Meu Carrinho</h2>
 
@@ -15,7 +16,7 @@
       <!-- Produto 1 -->
       <article class="produto-card" data-nome="Resíduos de café" data-preco="700" data-max="5">
         <div class="produto-top">
-          <img src="residuosdecafe.png" alt="Resíduos de café">
+          <img src="/imagem/residuosdecafe.png" alt="Resíduos de café">
           <div class="produto-info">
             <h3>Resíduos de café</h3>
             <p class="localizacao"><i class="fas fa-map-marker-alt"></i> Rio de Janeiro - RJ</p>
@@ -35,7 +36,7 @@
       <!-- Produto 2 -->
       <article class="produto-card" data-nome="Resíduos de Biomassa" data-preco="1200" data-max="8">
         <div class="produto-top">
-          <img src="residuosbiomassa.png" alt="Resíduos de Biomassa">
+          <img src="/imagem/cana.png" alt="Resíduos de Biomassa">
           <div class="produto-info">
             <h3>Resíduos de Biomassa</h3>
             <p class="localizacao"><i class="fas fa-map-marker-alt"></i> São Paulo - SP</p>
@@ -117,5 +118,6 @@
 
     atualizarResumo();
   </script>
+  <%- include('../partial/footer.ejs') %>
 </body>
 </html>
