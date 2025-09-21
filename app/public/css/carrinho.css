@@ -1,0 +1,190 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+  color: #333;
+  line-height: 1.5;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h2, h3 {
+  color: #222;
+  margin-bottom: 8px;
+}
+
+main > h2 {
+  margin-bottom: 20px;
+}
+
+/* LISTA DE PRODUTOS */
+.produtos {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.produto-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.produto-top {
+  display: flex;
+  gap: 16px;
+}
+
+.produto-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.produto-info {
+  flex: 1;
+}
+
+.produto-info p {
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.localizacao {
+  font-size: 0.85rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.localizacao i {
+  color: #488D6A;
+}
+
+.preco {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 6px 0;
+}
+
+/* CONTROLES DE QUANTIDADE */
+.quantidade-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.quantidade-btn {
+  padding: 4px 10px;
+  font-size: 15px;
+  background: #488D6A;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.quantidade-btn:hover {
+  background: #376d52;
+}
+
+.quantidade-num {
+  min-width: 20px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* BOTÃO REMOVER */
+.btn-remover {
+  align-self: flex-end;
+  padding: 6px 14px;
+  background: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+.btn-remover:hover {
+  background: #b52a37;
+}
+
+/* RESUMO DO PEDIDO */
+.resumo {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.resumo h2 {
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+}
+
+.resumo-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+}
+
+.resumo-lista li {
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+.total {
+  font-weight: bold;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.btn-comprar {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: #488D6A;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn-comprar:hover {
+  background: #3a6f55;
+}
+
+/* RESPONSIVIDADE */
+@media (min-width: 768px) {
+  .produto-card {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

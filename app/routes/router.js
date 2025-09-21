@@ -368,6 +368,11 @@ router.get("/meus_produtos", (req, res) => {
 router.get("/listaprodutos", (req, res) => {
   res.render("pages/listaprodutos");
 });
+
+router.get("/carrinho", (req, res) => {
+  res.render("pages/carrinho");
+});
+
 router.get("/sobre_nos", (req, res) => {
   res.render("pages/sobre_nos");
 });
