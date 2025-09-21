@@ -1,26 +1,39 @@
-<link rel="stylesheet" href="/css/header1.css">
+<link rel="stylesheet" href="/css/header.css">
 <header class="header">
-    <a href="/produtoscomconta" class="logo">logo</a>
- 
-    <input type="checkbox" id="check">
-    <label for="check" class="icons">
-      <i class="bx bx-menu" id="menu-icon"></i>
-      <i class="bx bx-x" id="close-icon"></i>
-    </label>
- 
-    <nav class="navbar">
-      <a href="/" style="--i:0;">Produtos</a>
-      <a href="/sobre_nos" style="--i:1;">Sobre nós</a>
-      <a href="#" style="--i:2;">Contato</a>
-      <a href="/login" style="--i:3;">Torne-se vendedor</a>
-      <a href="#" style="--i:4;">Como funciona</a>
-    </nav>
- 
-    <div class="login-container">
-       <a href="#">
-        <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
-      </a>
-      <span><a href="/login">LOGIN</a> | <a href="/cadastro">CADASTRE-SE</a></span>
-     
-    </div>
-  </header>
+  <a href="/produtoscomconta" class="logo">logo</a>
+
+  <input type="checkbox" id="check">
+  <label for="check" class="icons">
+    <i class="bx bx-menu" id="menu-icon"></i>
+    <i class="bx bx-x" id="close-icon"></i>
+  </label>
+
+  <nav class="navbar">
+    <a href="/" style="--i:0;">Produtos</a>
+    <a href="/sobre_nos" style="--i:1;">Sobre nós</a>
+    <a href="#" style="--i:2;">Contato</a>
+    <a href="/login" style="--i:3;">Torne-se vendedor</a>
+    <a href="#" style="--i:4;">Como funciona</a>
+  </nav>
+
+  <div class="login-container">
+    <a href="#">
+      <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
+    </a>
+
+    
+    <span class="login-links">
+      <a href="/login">LOGIN</a> | <a href="/cadastro">CADASTRE-SE</a>
+    </span>
+
+    
+    <div class="dropdown">
+   <img id="dropdownBtn" src="/imagem/avatar.png" alt="Usuário" class="avatar">
+  <div id="dropdownMenu" class="dropdown-content">
+    <a href="/login">Login</a>
+    <a href="/cadastro">Cadastre-se</a>
+  </div>
+</div>
+  </div>
+  <script src="/js/script.js"></script>
+</header>

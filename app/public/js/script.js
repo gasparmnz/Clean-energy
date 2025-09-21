@@ -43,3 +43,18 @@ filters.forEach(filter => {
     });
   });
 });
+
+
+const dropdownBtn = document.getElementById("dropdownBtn");
+const dropdownMenu = document.getElementById("dropdownMenu");
+
+
+dropdownBtn.addEventListener("click", (e) => {
+  e.stopPropagation(); 
+  dropdownMenu.classList.toggle("show");
+});
+
+
+document.addEventListener("click", () => {
+  dropdownMenu.classList.remove("show");
+});
