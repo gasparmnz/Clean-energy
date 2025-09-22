@@ -359,6 +359,10 @@ router.get("/home", (req, res) => {
 router.get("/adicione_produto", (req, res) => {
   res.render("pages/adicione_produto");
 });
+
+router.get("/minhascompras", (req, res) => {
+  res.render("pages/minhascompras");
+});
 router.get("/perfil", (req, res) => {
   res.render("pages/perfil");
 });
