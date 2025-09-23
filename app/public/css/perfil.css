@@ -21,6 +21,7 @@ body {
 main {
   display: flex;
   min-height: 100vh;
+  flex: 1;
 }
 
 /* Sidebar */
@@ -136,3 +137,112 @@ main {
     gap: 10px;
   }
 }
+/* =========================
+   Formulário de Perfil
+   ========================= */
+.perfil-form {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 900px;         /* deixa o card mais largo */
+  width: 100%;              /* ocupa toda a largura possível */
+  margin: 20px auto;        /* centraliza */
+}
+
+.perfil-form h2 {
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+  color: var(--primary-color);
+}
+
+.perfil-form p {
+  font-size: 1rem;
+  margin-bottom: 25px;
+  color: #666;
+}
+
+/* Inputs em grid para ficar mais bonito */
+.perfil-form form {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* duas colunas */
+  gap: 20px;
+}
+
+.perfil-form label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.perfil-form input[type="text"],
+.perfil-form input[type="email"],
+.perfil-form input[type="tel"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.perfil-form input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.perfil-form output {
+  display: block;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #444;
+}
+
+/* Campo sexo ocupa linha inteira */
+.perfil-form fieldset {
+  grid-column: span 2;
+  border: none;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.perfil-form legend {
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.perfil-form button {
+  grid-column: span 2;
+  background: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.perfil-form button:hover {
+  background: #366b51;
+}
+
+/* =========================
+   Responsividade
+   ========================= */
+@media (max-width: 768px) {
+  .perfil-form {
+    padding: 20px;
+  }
+  .perfil-form form {
+    grid-template-columns: 1fr; /* no mobile fica 1 coluna */
+  }
+  .perfil-form fieldset {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+

@@ -8,39 +8,62 @@
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
-     <%- include('../partial/header1.ejs') %>
-<main>
-  <aside class="sidebar">
-    <section class="user-info">
-      <img src="/imagem/avatar.png" alt="Foto do usuário" class="avatar">
-      <p class="username">Usuário</p>
-      <a href="#" class="edit-profile">Editar Perfil</a>
-    </section>
-    <nav class="sidebar-nav">
-      <ul>
-        <li><a href="#">Minha Conta</a></li>
-        <li><a href="/listaprodutos">Meus Produtos</a></li>
-        <li><a href="/minhascompras">Minhas compras</a></li>
-      </ul>
-    </nav>
-  </aside>
+  <%- include('../partial/header1.ejs') %>
 
-<section class="content">
-
-      <nav class="top-nav">
+  <main>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <section class="user-info">
+        <img src="/imagem/avatar.png" alt="Foto do usuário" class="avatar">
+        <p class="username">Usuário</p>
+        <a href="#" class="edit-profile">Editar Perfil</a>
+      </section>
+      <nav class="sidebar-nav">
         <ul>
-          <li><a href="#" class="filter active" data-filter="all">Tudo</a></li><br>
-          <li><a href="#" class="filter" data-filter="finalizado">Finalizado</a></li><br>
-          <li><a href="#" class="filter" data-filter="cancelado">Cancelado</a></li>
+          <li><a href="#">Minha Conta</a></li>
+          <li><a href="/listaprodutos">Meus Produtos</a></li>
+          <li><a href="/minhascompras">Minhas compras</a></li>
         </ul>
       </nav>
+    </aside>
 
-      <article class="orders">
-        <div class="order" data-status="finalizado">Ainda não a pedidos</div>
-        <div class="order" data-status="cancelado">Ainda não a pedidos</div>
-        <div class="order" data-status="all">Ainda não a pedidos</div>
-      </article>
+
+    <section class="content">
+      
+      <section class="perfil-form">
+        <h2>Meu Perfil</h2><br>
+        
+        <form>
+          <label for="nome-usuario">Nome de usuário</label>
+          <output id="nome-usuario">Usuário</output>
+
+          <label for="nome">Nome</label>
+          <input type="text" id="nome" name="nome" value="Usuário">
+
+          <label for="email">Email</label>
+          <input type="email" id="email" value="usu********@gmail.com">
+
+          <label for="telefone">Número de telefone</label>
+          <input type="tel" id="telefone" value="*********19">
+
+          <fieldset>
+            <legend>Sexo</legend>
+            <label><input type="radio" name="sexo" checked> Masculino</label>
+            <label><input type="radio" name="sexo"> Feminino</label>
+            <label><input type="radio" name="sexo"> Outros</label>
+          </fieldset>
+
+          <label for="cpf">CPF/CNPJ</label>
+          <output id="cpf">***.***.*18-70 / **.***.***/0001-42</output>
+
+          <button type="submit">Salvar</button>
+        </form>
+      </section>
+
     </section>
   </main>
 
   <script src="/js/script.js"></script>
+  <%- include('../partial/footer.ejs') %>
+</body>
+</html>

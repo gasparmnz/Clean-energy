@@ -10,7 +10,21 @@
 </head>
 <body>
   <%- include('../partial/header1.ejs') %>
-
+   <!-- Sidebar -->
+    <br><br><br><aside class="sidebar">
+      <section class="user-info">
+        <img src="/imagem/avatar.png" alt="Foto do usuário" class="avatar">
+        <p class="username">Usuário</p>
+        <a href="#" class="edit-profile">Editar Perfil</a>
+      </section>
+      <nav class="sidebar-nav">
+        <ul>
+          <li><a href="/perfil">Minha Conta</a></li>
+          <li><a href="/listaprodutos">Meus Produtos</a></li>
+          <li><a href="/minhascompras">Minhas compras</a></li>
+        </ul>
+      </nav>
+    </aside>
   <main class="container mt-5 flex-grow-1">
     <br><br><br><h2 class="mb-4">Minhas Compras</h2>
     <nav class="table-responsive">

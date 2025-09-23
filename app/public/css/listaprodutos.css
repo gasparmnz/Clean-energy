@@ -173,3 +173,46 @@ img {
     max-width: 40px;
   }
 }
+/* Sidebar */
+.sidebar {
+  background-color: var(--sidebar-bg);
+  width: 220px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.user-info {
+  text-align: center;
+}
+
+.user-info .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.username {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.edit-profile {
+  font-size: 0.9rem;
+  color: gray;
+  text-decoration: none;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar-nav a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+}
