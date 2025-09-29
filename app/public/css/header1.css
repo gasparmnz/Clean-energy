@@ -43,10 +43,14 @@ body {
 .header:hover::after { left: 100%; }
  
 .logo {
-     font-size: 3rem;
-     color: whitesmoke;
-     
-     }
+  display: flex;
+  align-items: center;  /* centraliza a imagem verticalmente */
+}
+
+.logo img {
+  height: 55px;  /* aumenta a logo */
+  width: auto;
+}
  
 .navbar {
   display: flex;

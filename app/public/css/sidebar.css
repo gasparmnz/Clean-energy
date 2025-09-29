@@ -2,16 +2,21 @@
    Sidebar
    ========================= */
 .sidebar {
-  background-color: var(--sidebar-bg);
-  width: 220px;
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  align-items: center; /* mantém avatar/nome centralizados */
+  width: 250px;        /* força largura fixa adequada */
+  padding: 20px;
+  background-color: var(--sidebar-bg);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
 }
 
 .user-info {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* centraliza tudo horizontalmente */
+  gap: 4px;              /* define exatamente o espaço entre os elementos */
+  margin-bottom: 20px;
 }
 
 .user-info .avatar {
@@ -21,7 +26,7 @@
 }
 
 .username {
-  margin-top: 10px;
+  margin: 0;
   font-weight: bold;
 }
 
@@ -29,19 +34,36 @@
   font-size: 0.9rem;
   color: gray;
   text-decoration: none;
+  margin: 0; /* remove qualquer margem extra */
 }
 
+/* Navegação da sidebar */
 .sidebar-nav ul {
   list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;       /* força ocupar toda largura possível da sidebar */
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
+}
+
+.sidebar-nav li {
+  width: 100%;
 }
 
 .sidebar-nav a {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;  /* ajusta padding lateral para perto da borda */
   text-decoration: none;
   color: var(--text-color);
   font-weight: 500;
+}
+
+/* Remove ou ajuste esse valor min-width muito pequeno */
+.sidebar {
+  min-width: 220px;
 }
 
 /* =========================
@@ -56,6 +78,13 @@
   }
   .sidebar-nav ul {
     flex-direction: row;
+    gap: 10px;
+  }
+  .content {
+    padding: 10px;
+  }
+  .top-nav ul {
+    flex-wrap: wrap;
     gap: 10px;
   }
 }
