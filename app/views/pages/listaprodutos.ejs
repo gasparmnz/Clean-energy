@@ -9,61 +9,59 @@
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
-  <br><%- include('../partial/header1.ejs') %>
+  <%- include('../partial/header1.ejs') %>
 
   <main>
     <!-- Sidebar -->
-    <br><br><br><aside class="sidebar">
-      <section class="user-info">
-        <img src="/imagem/avatar.png" alt="Foto do usuário" class="avatar">
-        <p class="username">Usuário</p>
-        <a href="#" class="edit-profile">Editar Perfil</a>
-      </section>
-      <nav class="sidebar-nav">
-        <ul>
-          <li><a href="/perfil">Minha Conta</a></li>
-          <li><a href="/listaprodutos">Meus Produtos</a></li>
-          <li><a href="/minhascompras">Minhas compras</a></li>
-        </ul>
-      </nav>
-    </aside>
+    <%- include('../partial/sidebar.ejs') %>
 
-    <nav class="container mt-5">
-      <h2 class="mb-4">Lista de Produtos</h2>
-      <a href="/cadastrar_produto" class="btn btn-success mb-3">Novo Produto</a>
-      <nav class="table-responsive">
-        <table class="table table-bordered align-middle text-center">
-          <thead class="table-light">
-            <tr>
-              <th>ID do Produto</th>
-              <th>Nome do Produto</th>
-              <th>Endereço</th>
-              <th>Preço (R$)</th>
-              <th>Quantidade Disponível</th>
-              <th>Imagem</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>001</td>
-              <td>Bagaço de Cana</td>
-              <td>Rua das Flores, 123 - São Paulo</td>
-              <td>1500,00</td>
-              <td>20 Toneladas</td>
-              <td>
-                <img src="https://via.placeholder.com/50" alt="Produto" class="rounded img-fluid">
-              </td>
-              <td class="acoes">
-                <button class="btn btn-warning btn-sm">Editar</button>
-                <button class="btn btn-info btn-sm">Detalhes</button>
-                <button class="btn btn-danger btn-sm">Excluir</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </nav>
-    </nav>
+    <!-- Conteúdo principal -->
+
+    <section class="content">
+      <section class="back-button-container">
+  <button class="btn-voltar-plain" onclick="history.back()">
+    <i class='bx bx-left-arrow-alt'></i> Voltar
+  </button>
+</section>
+      <section class="container mt-5">
+
+       
+        <h2 class="mb-4">Lista de Produtos</h2>
+        <a href="/cadastrar_produto" class="btn btn-success mb-3">Novo Produto</a>
+        <nav class="table-responsive">
+          <table class="table table-bordered align-middle text-center">
+            <thead class="table-light">
+              <tr>
+                <th>ID do Produto</th>
+                <th>Nome do Produto</th>
+                <th>Endereço</th>
+                <th>Preço (R$)</th>
+                <th>Quantidade Disponível</th>
+                <th>Imagem</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>001</td>
+                <td>Bagaço de Cana</td>
+                <td>Rua das Flores, 123 - São Paulo</td>
+                <td>1500,00</td>
+                <td>20 Toneladas</td>
+                <td>
+                  <img class="mini" src="https://via.placeholder.com/50" alt="Produto" class="rounded img-fluid">
+                </td>
+                <td class="acoes">
+                  <button class="btn btn-warning btn-sm">Editar</button>
+                  <button class="btn btn-info btn-sm">Detalhes</button>
+                  <button class="btn btn-danger btn-sm">Excluir</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </nav>
+      </section>
+    </section>
   </main>
 
   <%- include('../partial/footer.ejs') %>

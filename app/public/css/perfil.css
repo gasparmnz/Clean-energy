@@ -14,24 +14,22 @@
 
 body {
   background-color: var(--bg-color);
-  color: var(--text-color);
-  padding-top: 110px;
+  color: var(--text-color);  
 }
 
 main {
   display: flex;
+  flex-direction: row;  /* importante! */
   min-height: 100vh;
+  margin-top: 87px;
   flex: 1;
 }
-
-/* Sidebar */
 .sidebar {
-  background-color: var(--sidebar-bg);
-  width: 220px;
+  background-color: var(--sidebar-bg); /* #fff */
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+  min-width: 220px;
+  height: auto;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
 }
 
 .user-info {
@@ -67,6 +65,31 @@ main {
   color: var(--text-color);
   font-weight: 500;
 }
+
+/* =========================
+   Responsividade Sidebar
+   ========================= */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px;
+  }
+  .sidebar-nav ul {
+    flex-direction: row;
+    gap: 10px;
+  }
+  .content {
+    padding: 10px;
+  }
+  .top-nav ul {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+
 
 /* Conteúdo principal */
 .content {
@@ -113,28 +136,25 @@ main {
   width: 80px;
   height: 80px;
 }
+.btn-voltar-plain {
+  all: unset; /* Remove todos os estilos herdados, inclusive do Bootstrap */
+  cursor: pointer; /* Mantém o cursor de botão */
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px; /* Ajuste do texto */
+  color: #1d3557; /* Cor do texto e da seta */
+}
+
+.btn-voltar-plain i {
+  font-size: 18px; /* Ajusta tamanho da seta */
+  vertical-align: middle;
+}
 
 /* Responsividade */
 @media (max-width: 768px) {
   main {
     flex-direction: column;
-  }
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 10px;
-  }
-  .sidebar-nav ul {
-    flex-direction: row;
-    gap: 10px;
-  }
-  .content {
-    padding: 10px;
-  }
-  .top-nav ul {
-    flex-wrap: wrap;
-    gap: 10px;
   }
 }
 /* =========================
