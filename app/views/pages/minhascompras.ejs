@@ -10,56 +10,63 @@
 </head>
 <body>
   <%- include('../partial/header1.ejs') %>
-   <!-- Sidebar -->
-    <br><br><br><aside class="sidebar">
-      <section class="user-info">
-        <img src="/imagem/avatar.png" alt="Foto do usuário" class="avatar">
-        <p class="username">Usuário</p>
-        <a href="#" class="edit-profile">Editar Perfil</a>
-      </section>
-      <nav class="sidebar-nav">
-        <ul>
-          <li><a href="/perfil">Minha Conta</a></li>
-          <li><a href="/listaprodutos">Meus Produtos</a></li>
-          <li><a href="/minhascompras">Minhas compras</a></li>
-        </ul>
+ 
+
+ 
+ 
+
+
+ <main class="page-layout">
+
+  <%- include('../partial/sidebar.ejs') %>
+<section class="main-content-wrapper">
+    <!-- Botão voltar -->
+    <section class="back-button-container">
+      <button class="btn-voltar-plain" onclick="history.back()">
+        <i class='bx bx-left-arrow-alt'></i> Voltar
+      </button>
+    </section>
+  <!-- Card branco -->
+  <section class="content">
+    <section class="container mt-5">
+      <h2 class="mb-4">Minhas Compras</h2>
+      <nav class="table-responsive">
+        <table class="table table-bordered align-middle text-center">
+          <thead class="table-light">
+            <tr>
+              <th>ID do Produto</th>
+              <th>Nome do Produto</th>
+              <th>Endereço</th>
+              <th>Preço (R$)</th>
+              <th>Quantidade Comprada</th>
+              <th>Imagem</th>
+              <th>Ações</th>
+              <th>Status da Compra</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>001</td>
+              <td>Bagaço de Cana</td>
+              <td>Rua das Flores, 123 - São Paulo</td>
+              <td>1500,00</td>
+              <td>1 Toneladas</td>
+              <td><img class="mini" src="https://via.placeholder.com/50" alt="Produto"></td>
+              <td class="acoes">
+                <button class="btn btn-warning btn-sm">Rastrear</button>
+                <button class="btn btn-info btn-sm">Detalhes</button>
+                <button class="btn btn-danger btn-sm">Cancelar</button>
+              </td>
+              <td>Em Andamento...</td>
+            </tr>
+          </tbody>
+        </table>
       </nav>
-    </aside>
-  <main class="container mt-5 flex-grow-1">
-    <br><br><br><h2 class="mb-4">Minhas Compras</h2>
-    <nav class="table-responsive">
-      <table class="table table-bordered align-middle text-center">
-        <thead class="table-light">
-          <tr>
-            <th>ID do Produto</th>
-            <th>Nome do Produto</th>
-            <th>Endereço</th>
-            <th>Preço (R$)</th>
-            <th>Quantidade Comprada</th>
-            <th>Imagem</th>
-            <th>Ações</th>
-            <th>Status da Compra</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>001</td>
-            <td>Bagaço de Cana</td>
-            <td>Rua das Flores, 123 - São Paulo</td>
-            <td>1500,00</td>
-            <td>1 Toneladas</td>
-            <td><img src="https://via.placeholder.com/50" alt="Produto" class="rounded img-fluid"></td>
-            <td class="acoes">
-              <button class="btn btn-warning btn-sm">Rastrear</button>
-              <button class="btn btn-info btn-sm">Detalhes</button>
-              <button class="btn btn-danger btn-sm">Cancelar</button>
-            </td>
-            <td>Em Andamento...</td>
-          </tr>
-        </tbody>
-      </table>
-    </nav>
-  </main>
+    </section>
+  </section>
+</section>
+</main>
+
 
   <%- include('../partial/footer.ejs') %>
 </body>

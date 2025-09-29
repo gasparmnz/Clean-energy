@@ -1,26 +1,113 @@
 /* Reset e estrutura */
-html, body {
-  height: 100%;
+:root {
+  --primary-color: #488D6A;
+  --text-color: #222;
+  --bg-color: #f9f9f9;
+  --sidebar-bg: #fff;
+}
+
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: "Inter", sans-serif;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f7fa;
-  color: #333;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh; /* altura mínima da tela */
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  
 }
+
 
 /* Main cresce e empurra o footer */
 main {
-  flex: 1;
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* desktop: sidebar à esquerda */
+  min-height: 100vh;
+  flex: 1;
+  margin-top: 87px; /* para não ficar atrás do header */
 }
 
+.content {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.sidebar {
+  background-color: var(--sidebar-bg);
+  padding: 20px;
+  min-width: 220px;
+  height: auto;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.user-info {
+  text-align: center;
+}
+
+.user-info .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.username {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.edit-profile {
+  font-size: 0.9rem;
+  color: gray;
+  text-decoration: none;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar-nav a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+/* =========================
+   Responsividade Sidebar
+   ========================= */
+@media (max-width: 768px) {
+  main {
+    flex-direction: column; /* sidebar sobe, conteúdo desce */
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px;
+  }
+
+  .sidebar-nav ul {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .content {
+    padding: 15px;
+  }
+  
+}
+
+/* =========================
+   Container e tabela
+   ========================= */
 .container {
   max-width: 1100px;
   margin: 40px auto;
@@ -56,6 +143,7 @@ h2::after {
   overflow: hidden;
   border-collapse: separate;
   border-spacing: 0;
+  width: 100%;
 }
 
 .table thead {
@@ -80,7 +168,7 @@ h2::after {
   transition: background-color 0.2s ease-in-out;
 }
 
-img {
+img.mini {
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   max-width: 50px;
@@ -131,6 +219,20 @@ img {
   background-color: #c1121f;
   transform: scale(1.05);
 }
+.btn-voltar-plain {
+  all: unset; /* Remove todos os estilos herdados, inclusive do Bootstrap */
+  cursor: pointer; /* Mantém o cursor de botão */
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px; /* Ajuste do texto */
+  color: #1d3557; /* Cor do texto e da seta */
+}
+
+.btn-voltar-plain i {
+  font-size: 18px; /* Ajusta tamanho da seta */
+  vertical-align: middle;
+}
 
 /* Ações */
 .acoes {
@@ -140,7 +242,9 @@ img {
   flex-wrap: wrap;
 }
 
-/* Responsividade */
+/* =========================
+   Responsividade Container
+   ========================= */
 @media (max-width: 768px) {
   .container {
     padding: 15px;
@@ -161,6 +265,13 @@ img {
     font-size: 12px;
     padding: 8px;
   }
+
+  /* tabela vira scroll horizontal no mobile */
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
 }
 
 @media (max-width: 480px) {
@@ -169,50 +280,8 @@ img {
     align-items: center;
   }
 
-  img {
+  img.mini {
     max-width: 40px;
   }
 }
-/* Sidebar */
-.sidebar {
-  background-color: var(--sidebar-bg);
-  width: 220px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
 
-.user-info {
-  text-align: center;
-}
-
-.user-info .avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-
-.username {
-  margin-top: 10px;
-  font-weight: bold;
-}
-
-.edit-profile {
-  font-size: 0.9rem;
-  color: gray;
-  text-decoration: none;
-}
-
-.sidebar-nav ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.sidebar-nav a {
-  text-decoration: none;
-  color: var(--text-color);
-  font-weight: 500;
-}
