@@ -51,12 +51,15 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 14px;
+  font-size: 18px;
   color: #1d3557;
+}
+.btn-voltar-plain:hover {
+  color: #32598f;
 }
 
 .btn-voltar-plain i {
-  font-size: 18px;
+  font-size: 22px;
   vertical-align: middle;
 }
 
