@@ -1,15 +1,39 @@
 <link rel="stylesheet" href="/css/sidebar.css">
-<aside class="sidebar">
-  <section class="user-info">
+
+<aside class="sidebar" role="complementary" aria-label="Barra lateral do usuário">
+  <div class="user-info">
     <img src="/imagem/avatar.png" alt="Foto do usuário" class="avatar">
     <p class="username">Usuário</p>
-    <a href="#" class="edit-profile">Editar Perfil</a>
-  </section>
-  <nav class="sidebar-nav">
+  </div>
+
+  <nav class="sidebar-nav" aria-label="Navegação do usuário">
     <ul>
-      <li><a href="/perfil">Minha Conta</a></li>
-      <li><a href="/listaprodutos">Meus Produtos</a></li>
-      <li><a href="/minhascompras">Minhas compras</a></li>
+      <li>
+        <a href="/perfil">
+          <span class="two-line">
+            <span class="l1">Minha</span>
+            <span class="l2">Conta</span>
+          </span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/listaprodutos">
+          <span class="two-line">
+            <span class="l1">Meus</span>
+            <span class="l2">Produtos</span>
+          </span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/minhascompras">
+          <span class="two-line">
+            <span class="l1">Minhas</span>
+            <span class="l2">Compras</span>
+          </span>
+        </a>
+      </li>
     </ul>
   </nav>
 </aside>

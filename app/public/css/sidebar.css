@@ -1,21 +1,28 @@
-/* =========================
-   Sidebar
-   ========================= */
+:root{
+  --sidebar-bg: #ffffff;
+  --text-color: #21343a; 
+  --accent: #488d6a;
+  --accent-dark: #2f6b4e;
+}
+
+
 .sidebar {
   display: flex;
   flex-direction: column;
-  align-items: center; /* mantém avatar/nome centralizados */
-  width: 250px;        /* força largura fixa adequada */
+  align-items: center;
+  width: 250px;
   padding: 20px;
   background-color: var(--sidebar-bg);
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  min-width: 220px;
+  z-index: 10;
 }
 
 .user-info {
   display: flex;
   flex-direction: column;
-  align-items: center;  /* centraliza tudo horizontalmente */
-  gap: 4px;              /* define exatamente o espaço entre os elementos */
+  align-items: center;
+  gap: 6px;
   margin-bottom: 20px;
 }
 
@@ -23,29 +30,25 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .username {
   margin: 0;
-  font-weight: bold;
+  font-weight: 700;
+  color: var(--text-color);
+  font-size: 0.95rem;
 }
 
-.edit-profile {
-  font-size: 0.9rem;
-  color: gray;
-  text-decoration: none;
-  margin: 0; /* remove qualquer margem extra */
-}
 
-/* Navegação da sidebar */
 .sidebar-nav ul {
   list-style: none;
   padding: 0;
   margin: 0;
-  width: 100%;       /* força ocupar toda largura possível da sidebar */
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px; 
 }
 
 .sidebar-nav li {
@@ -55,36 +58,116 @@
 .sidebar-nav a {
   display: block;
   width: 100%;
-  padding: 10px 15px;  /* ajusta padding lateral para perto da borda */
+  padding: 10px 14px;
   text-decoration: none;
   color: var(--text-color);
-  font-weight: 500;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: background-color .18s ease, color .18s ease, transform .08s ease;
+  white-space: nowrap; 
 }
 
-/* Remove ou ajuste esse valor min-width muito pequeno */
-.sidebar {
-  min-width: 220px;
+
+.two-line {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
 }
 
-/* =========================
-   Responsividade Sidebar
-   ========================= */
+
+.two-line .l1,
+.two-line .l2 {
+  display: inline-block;
+  line-height: 1;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a:focus {
+  background: rgba(72,141,106,0.06);
+  color: var(--accent-dark);
+  outline: none;
+}
+
 @media (max-width: 768px) {
   .sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
     width: 100%;
     flex-direction: row;
-    justify-content: space-around;
-    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0;
+    background-color: #fff;
+    border-top: 2px solid var(--accent);
+    box-shadow: 0 -6px 18px rgba(0,0,0,0.06);
+    z-index: 1000;
   }
+
+
+  .user-info {
+    display: none;
+  }
+
+
   .sidebar-nav ul {
     flex-direction: row;
-    gap: 10px;
+    justify-content: space-around;
+    width: 100%;
+    margin: 0;
+    padding: 0 6px;
+    gap: 45px;
   }
-  .content {
-    padding: 10px;
+
+  .sidebar-nav li {
+    flex: 1;
+    text-align: center;
   }
-  .top-nav ul {
-    flex-wrap: wrap;
-    gap: 10px;
+
+  
+  .sidebar-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 8px 0;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: transparent;
+    white-space: normal; 
   }
+
+ 
+  .two-line {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .two-line .l1 {
+    font-size: 0.88rem;
+  }
+  .two-line .l2 {
+    font-size: 0.82rem;
+  }
+
+  .sidebar-nav a:hover,
+  .sidebar-nav a:focus {
+    color: var(--accent-dark);
+    background: rgba(72,141,106,0.06);
+    border-radius: 8px;
+  }
+
+}
+
+
+.has-bottom-nav {
+  padding-bottom: 80px; 
+}
+
+.sidebar-nav a:focus-visible {
+  outline: 2px solid rgba(72,141,106,0.22);
+  outline-offset: 2px;
 }
