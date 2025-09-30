@@ -158,6 +158,31 @@
     .details-user {
         margin-top: 15px;
     }
+
+    
+.back-button-container {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.btn-voltar-plain {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 18px;
+  color: #1d3557;
+}
+.btn-voltar-plain:hover {
+    color: #32598f;
+}
+
+.btn-voltar-plain i {
+  font-size: 22px;
+  vertical-align: middle;
+}
+
    @media (min-width:769px)  {
       .header {
           padding: 1.3rem 5%;

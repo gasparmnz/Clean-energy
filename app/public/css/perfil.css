@@ -142,12 +142,16 @@ main {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 14px; /* Ajuste do texto */
+  font-size: 18px; /* Ajuste do texto */
   color: #1d3557; /* Cor do texto e da seta */
 }
+.btn-voltar-plain:hover {
+  color: #32598f;
+}
+
 
 .btn-voltar-plain i {
-  font-size: 18px; /* Ajusta tamanho da seta */
+  font-size: 22px; /* Ajusta tamanho da seta */
   vertical-align: middle;
 }
 

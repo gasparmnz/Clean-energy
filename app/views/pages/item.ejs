@@ -10,6 +10,11 @@
 <body>
 <%- include('../partial/header1.ejs') %>
   <main>
+     <section class="back-button-container">
+  <button class="btn-voltar-plain" onclick="history.back()">
+    <i class='bx bx-left-arrow-alt'></i> Voltar
+  </button>
+</section>
     <section class="item">
       <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
 
