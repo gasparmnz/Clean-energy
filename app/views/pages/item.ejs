@@ -11,7 +11,7 @@
 <body>
   <%- include('../partial/header1.ejs') %>
   
-  <!-- Botão de voltar fixo no canto superior esquerdo -->
+  
   <nav class="back-navigation" aria-label="Navegação de retorno">
     <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
       <i class='bx bx-arrow-back'></i>
@@ -20,9 +20,9 @@
   </nav>
 
   <main class="product-main">
-    <!-- Seção principal do produto -->
+  
     <article class="product-container">
-      <!-- Galeria de imagens -->
+
       <section class="product-gallery" aria-label="Galeria do produto">
         <figure class="product-image-wrapper">
           <img src="/imagem/<%= produto.imagem %>" 
@@ -32,7 +32,6 @@
         </figure>
       </section>
 
-      <!-- Detalhes do produto -->
       <section class="product-info" aria-label="Informações do produto">
         <header class="product-header">
           <h1 class="product-title"><%= produto.nome %></h1>
@@ -66,7 +65,6 @@
           </a>
         </section>
 
-        <!-- Avaliação do usuário -->
         <section class="user-rating" aria-label="Avaliação do usuário">
           <header class="rating-header">
             <h2>Avaliação do Usuário</h2>
@@ -95,7 +93,6 @@
           </article>
         </section>
 
-        <!-- Termos e condições -->
         <section class="terms-section">
           <header>
             <h2>Termos e Condições</h2>
@@ -111,7 +108,6 @@
     </article>
   </main>
 
-  <!-- Botão de chat flutuante -->
   <aside class="chat-widget" aria-label="Chat de suporte">
     <button class="chat-button" aria-label="Abrir chat de suporte" onclick="openChat()">
       <i class="bx bx-message-dots"></i>
@@ -120,16 +116,13 @@
   </aside>
 
   <script>
-    // Função para abrir o chat (placeholder)
     function openChat() {
       alert('Chat será implementado aqui!');
     }
 
-    // Animação da notificação do chat
     document.addEventListener('DOMContentLoaded', function() {
       const notification = document.querySelector('.chat-notification');
       
-      // Simula uma nova mensagem após 3 segundos
       setTimeout(() => {
         notification.classList.add('active');
       }, 3000);
