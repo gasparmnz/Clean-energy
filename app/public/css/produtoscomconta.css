@@ -47,7 +47,7 @@ form {
 }
 
 .form-filtro-completo button {
-  background: #ff4d6d;
+  background: #ffffff;
   border: none;
   color: white;
   font-size: 1.2rem;
@@ -63,7 +63,7 @@ form {
 }
 
 .form-filtro-completo button:hover {
-  background: #e63950;
+  background: #ffffff;
 }
 
 
@@ -224,3 +224,16 @@ figcaption a:hover {
   text-decoration: none; 
 }
 
+
+.lupa{
+  height: 30px;
+  width: 30px;
+}
+
+.carinho{
+  color: #555;
+  }
+  
+  .carinho2{
+    color: #555;
+    }
