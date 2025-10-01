@@ -558,18 +558,3 @@ body {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
-    --text-light: #888888;
-    --background: #1a1a1a;
-    --background-light: #2a2a2a;
-    --border-color: #333333;
-  }
-  
-  .product-image-wrapper {
-    background: var(--background-light);
-  }
-}
