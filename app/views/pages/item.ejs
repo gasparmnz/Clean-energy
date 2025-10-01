@@ -1,60 +1,139 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= produto.nome %> - Clean Energy</title>
   <link rel="stylesheet" href="/css/item.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<%- include('../partial/header1.ejs') %>
-  <main>
-     <section class="back-button-container">
-  <button class="btn-voltar-plain" onclick="history.back()">
-    <i class='bx bx-left-arrow-alt'></i> Voltar
-  </button>
-</section>
-    <section class="item">
-      <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+  <%- include('../partial/header1.ejs') %>
+  
+  <!-- Botão de voltar fixo no canto superior esquerdo -->
+  <nav class="back-navigation" aria-label="Navegação de retorno">
+    <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+      <i class='bx bx-arrow-back'></i>
+      <span>Voltar</span>
+    </button>
+  </nav>
 
-      <article class="item-details">
-        <h2><%= produto.nome %></h2>
+  <main class="product-main">
+    <!-- Seção principal do produto -->
+    <article class="product-container">
+      <!-- Galeria de imagens -->
+      <section class="product-gallery" aria-label="Galeria do produto">
+        <figure class="product-image-wrapper">
+          <img src="/imagem/<%= produto.imagem %>" 
+               alt="<%= produto.nome %>" 
+               class="product-image"
+               loading="lazy">
+        </figure>
+      </section>
 
-        <section class="info-produto">
-          <span><i class="bx bx-map"></i> <%= produto.local %></span>
+      <!-- Detalhes do produto -->
+      <section class="product-info" aria-label="Informações do produto">
+        <header class="product-header">
+          <h1 class="product-title"><%= produto.nome %></h1>
+          
+          <address class="product-location">
+            <i class="bx bx-map"></i>
+            <span><%= produto.local %></span>
+          </address>
+        </header>
+
+        <section class="product-description">
+          <p><%= produto.descricao %></p>
         </section>
 
-        <p><%= produto.descricao %></p>
-
-        <p class="price">R$ <%= produto.preco %>,00</p>  
-
-        <p>Frete: FOB</p>
-
-        <a href="/carrinho">
-          <button>Comprar</button>
-        </a>
-
-        <section class="avaliacao">
-          <h3>Avaliação do Usuário</h3>
-          <img src="/imagem/avatar.png" class="avatar" alt="Avatar do Usuário">
-          <span class="aval">Usuário_1</span> <span>4,86</span>
-          <span class="stars">
-            <i class="bx bxs-star"></i>
-            <i class="bx bxs-star"></i>
-            <i class="bx bxs-star"></i>
-            <i class="bx bxs-star"></i>
-            <i class="bx bxs-star-half"></i>
-          </span>
+        <section class="product-pricing">
+          <p class="product-price" aria-label="Preço do produto">
+            <span class="currency">R$</span>
+            <span class="amount"><%= produto.preco %></span>
+            <span class="cents">,00</span>
+          </p>
+          <p class="shipping-info">
+            <i class="bx bx-truck"></i>
+            <span>Frete: FOB</span>
+          </p>
         </section>
 
-        <h2 class="details-user">Termos e condições</h2>
-        <p>
-          - Todos os produtos anunciados neste site seguem o regime FOB (Free On Board), sendo de responsabilidade do comprador o custo e o risco do frete a partir do ponto de embarque.<br><br>
-          - O site cobra uma taxa de 5% sobre o valor de cada compra ou venda realizada na plataforma, destinada exclusivamente à manutenção e operação do serviço.
-        </p>
-      </article>
-    </section>
+        <section class="product-actions">
+          <a href="/carrinho" class="buy-button">
+            <i class="bx bx-cart-add"></i>
+            <span>Comprar Agora</span>
+          </a>
+        </section>
+
+        <!-- Avaliação do usuário -->
+        <section class="user-rating" aria-label="Avaliação do usuário">
+          <header class="rating-header">
+            <h2>Avaliação do Usuário</h2>
+          </header>
+          
+          <article class="rating-content">
+            <figure class="user-avatar">
+              <img src="/imagem/avatar.png" 
+                   alt="Avatar do usuário" 
+                   class="avatar-image">
+            </figure>
+            
+            <section class="rating-details">
+              <p class="username">Usuário_1</p>
+              <p class="rating-score" aria-label="Pontuação 4,86 de 5 estrelas">
+                <span class="score-number">4,86</span>
+                <span class="stars" role="img" aria-label="4 estrelas e meia">
+                  <i class="bx bxs-star"></i>
+                  <i class="bx bxs-star"></i>
+                  <i class="bx bxs-star"></i>
+                  <i class="bx bxs-star"></i>
+                  <i class="bx bxs-star-half"></i>
+                </span>
+              </p>
+            </section>
+          </article>
+        </section>
+
+        <!-- Termos e condições -->
+        <section class="terms-section">
+          <header>
+            <h2>Termos e Condições</h2>
+          </header>
+          <article class="terms-content">
+            <ul class="terms-list">
+              <li>Todos os produtos anunciados neste site seguem o regime FOB (Free On Board), sendo de responsabilidade do comprador o custo e o risco do frete a partir do ponto de embarque.</li>
+              <li>O site cobra uma taxa de 5% sobre o valor de cada compra ou venda realizada na plataforma, destinada exclusivamente à manutenção e operação do serviço.</li>
+            </ul>
+          </article>
+        </section>
+      </section>
+    </article>
   </main>
+
+  <!-- Botão de chat flutuante -->
+  <aside class="chat-widget" aria-label="Chat de suporte">
+    <button class="chat-button" aria-label="Abrir chat de suporte" onclick="openChat()">
+      <i class="bx bx-message-dots"></i>
+      <span class="chat-notification" aria-label="Nova mensagem"></span>
+    </button>
+  </aside>
+
+  <script>
+    // Função para abrir o chat (placeholder)
+    function openChat() {
+      alert('Chat será implementado aqui!');
+    }
+
+    // Animação da notificação do chat
+    document.addEventListener('DOMContentLoaded', function() {
+      const notification = document.querySelector('.chat-notification');
+      
+      // Simula uma nova mensagem após 3 segundos
+      setTimeout(() => {
+        notification.classList.add('active');
+      }, 3000);
+    });
+  </script>
 </body>
 </html>
