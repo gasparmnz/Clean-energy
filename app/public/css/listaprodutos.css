@@ -1,4 +1,3 @@
-/* Reset e estrutura */
 :root {
   --primary-color: #488D6A;
   --text-color: #222;
@@ -16,17 +15,14 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-  
 }
 
-
-/* Main cresce e empurra o footer */
+/* Layout principal */
 main {
   display: flex;
-  flex-direction: row; /* desktop: sidebar à esquerda */
+  flex-direction: row;
   min-height: 100vh;
-  flex: 1;
-  margin-top: 87px; /* para não ficar atrás do header */
+  margin-top: 87px;
 }
 
 .content {
@@ -37,254 +33,115 @@ main {
   gap: 30px;
 }
 
-.sidebar {
-  background-color: var(--sidebar-bg);
-  padding: 20px;
-  min-width: 220px;
-  height: auto;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-}
-
-.user-info {
-  text-align: center;
-}
-
-.user-info .avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-
-.username {
-  margin-top: 10px;
-  font-weight: bold;
-}
-
-.edit-profile {
-  font-size: 0.9rem;
-  color: gray;
-  text-decoration: none;
-}
-
-.sidebar-nav ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.sidebar-nav a {
-  text-decoration: none;
-  color: var(--text-color);
-  font-weight: 500;
-}
-
-/* =========================
-   Responsividade Sidebar
-   ========================= */
-@media (max-width: 768px) {
-  main {
-    flex-direction: column; /* sidebar sobe, conteúdo desce */
-  }
-
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 10px;
-  }
-
-  .sidebar-nav ul {
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  .content {
-    padding: 15px;
-  }
-  
-}
-
-/* =========================
-   Container e tabela
-   ========================= */
-.container {
-  max-width: 1100px;
-  margin: 40px auto;
-  background: #fff;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-}
-
-/* Títulos */
-h2 {
-  font-weight: 700;
-  color: #1d3557;
-  text-align: center;
-  margin-bottom: 25px;
-  position: relative;
-}
-
-h2::after {
-  content: "";
-  display: block;
-  width: 60px;
-  height: 3px;
-  background: #457b9d;
-  margin: 8px auto 0 auto;
-  border-radius: 2px;
-}
-
-/* Tabela */
-.table {
-  background-color: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-  border-collapse: separate;
-  border-spacing: 0;
-  width: 100%;
-}
-
-.table thead {
-  background-color: #e9ecef;
-}
-
-.table th {
-  font-weight: 600;
-  color: #495057;
-  text-transform: uppercase;
-  font-size: 13px;
-  letter-spacing: 0.5px;
-}
-
-.table td {
-  vertical-align: middle;
-  font-size: 14px;
-}
-
-.table tbody tr:hover {
-  background-color: #f1f9ff;
-  transition: background-color 0.2s ease-in-out;
-}
-
-img.mini {
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  max-width: 50px;
-}
-
-/* Botões */
-.btn {
-  border-radius: 8px;
-  padding: 6px 14px;
-  font-size: 13px;
-  transition: all 0.2s ease;
-}
-
-.btn-success {
-  background-color: #2d6a4f;
-  border: none;
-}
-.btn-success:hover {
-  background-color: #1b4332;
-  transform: scale(1.05);
-}
-
-.btn-warning {
-  background-color: #fca311;
-  border: none;
-  color: #000;
-}
-.btn-warning:hover {
-  background-color: #e0910b;
-  transform: scale(1.05);
-}
-
-.btn-info {
-  background-color: #0096c7;
-  border: none;
-  color: #fff;
-}
-.btn-info:hover {
-  background-color: #0077b6;
-  transform: scale(1.05);
-}
-
-.btn-danger {
-  background-color: #e63946;
-  border: none;
-}
-.btn-danger:hover {
-  background-color: #c1121f;
-  transform: scale(1.05);
-}
+/* Botão voltar */
 .btn-voltar-plain {
-  all: unset; /* Remove todos os estilos herdados, inclusive do Bootstrap */
-  cursor: pointer; /* Mantém o cursor de botão */
+  all: unset;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 18px; /* Ajuste do texto */
-  color: #1d3557; /* Cor do texto e da seta */
+  font-size: 18px;
+  color: #1d3557;
+  margin-bottom: 10px;
 }
 .btn-voltar-plain:hover {
   color: #32598f;
 }
-
 .btn-voltar-plain i {
-  font-size: 22px; /* Ajusta tamanho da seta */
-  vertical-align: middle;
+  font-size: 22px;
+}
+
+/* =========================
+   Grid de produtos
+   ========================= */
+.produtos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 25px;
+}
+
+/* Card de produto */
+.produto-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.produto-card:hover {
+  transform: translateY(-5px);
+}
+
+.produto-card figure img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.produto-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  color: #1d3557;
+}
+
+.produto-info .endereco {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.produto-info .preco {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-bottom: 5px;
+}
+
+.produto-info .quantidade {
+  font-size: 0.9rem;
+  color: #444;
+  margin-bottom: 10px;
 }
 
 /* Ações */
 .acoes {
   display: flex;
-  gap: 8px;
   justify-content: center;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
+/* Botão Chat */
+.btn-chat {
+  background-color: #38b000;
+  border: none;
+  color: #fff;
+}
+.btn-chat:hover {
+  background-color: #2d6a4f;
+  transform: scale(1.05);
+}
+
 /* =========================
-   Responsividade Container
+   Responsividade
    ========================= */
 @media (max-width: 768px) {
-  .container {
-    padding: 15px;
-    margin: 20px auto;
-  }
-
-  h2 {
-    font-size: 20px;
-  }
-
-  .btn {
-    font-size: 12px;
-    padding: 5px 10px;
-  }
-
-  .table th, 
-  .table td {
-    font-size: 12px;
-    padding: 8px;
-  }
-
-  /* tabela vira scroll horizontal no mobile */
-  .table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 480px) {
-  .acoes {
+  main {
     flex-direction: column;
-    align-items: center;
   }
 
-  img.mini {
-    max-width: 40px;
+  .produtos-grid {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
+  }
+
+  .produto-card {
+    flex: 0 0 80%;
+    scroll-snap-align: start;
   }
 }
-

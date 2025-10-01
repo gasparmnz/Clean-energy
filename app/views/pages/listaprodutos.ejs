@@ -9,61 +9,142 @@
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
-  <%- include('../partial/header1.ejs') %>
-
+  <%- include('../partial/header.ejs') %>
   <main>
     <!-- Sidebar -->
     <%- include('../partial/sidebar.ejs') %>
 
-    <!-- Conteúdo principal -->
-
+    <!-- Conteúdo -->
     <section class="content">
+      
+      <!-- Botão voltar -->
       <section class="back-button-container">
-  <button class="btn-voltar-plain" onclick="history.back()">
-    <i class='bx bx-left-arrow-alt'></i> Voltar
-  </button>
-</section>
-      <section class="container mt-5">
+        <button class="btn-voltar-plain" onclick="history.back()">
+          <i class='bx bx-left-arrow-alt'></i> Voltar
+        </button>
+      </section>
 
-       
-        
-        <a href="/cadastrar_produto" class="btn btn-success mb-3">Novo Produto</a>
-        <nav class="table-responsive">
-          <table class="table table-bordered align-middle text-center">
-            <thead class="table-light">
-              <tr>
-                <th>ID do Produto</th>
-                <th>Nome do Produto</th>
-                <th>Endereço</th>
-                <th>Preço (R$)</th>
-                <th>Quantidade Disponível</th>
-                <th>Imagem</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>001</td>
-                <td>Bagaço de Cana</td>
-                <td>Rua das Flores, 123 - São Paulo</td>
-                <td>1500,00</td>
-                <td>20 Toneladas</td>
-                <td>
-                  <img class="mini" src="https://via.placeholder.com/50" alt="Produto" class="rounded img-fluid">
-                </td>
-                <td class="acoes">
-                  <button class="btn btn-warning btn-sm">Editar</button>
-                  <button class="btn btn-info btn-sm">Detalhes</button>
-                  <button class="btn btn-danger btn-sm">Excluir</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </nav>
+      <!-- Botão novo produto -->
+      <a href="/cadastrar_produto" class="btn btn-success mb-4">Novo Produto</a>
+
+      <!-- Lista de produtos -->
+      <section class="produtos-grid">
+
+        <!-- Produto 1 -->
+        <article class="produto-card">
+          <figure>
+            <img src="/imagem/cana.png" alt="Produto">
+          </figure>
+          <section class="produto-info">
+            <h3>Bagaço de Cana</h3>
+            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+            <p class="preco">R$ 1500,00</p>
+            <p class="quantidade">20 Toneladas</p>
+          </section>
+          <section class="acoes">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-info btn-sm">Detalhes</button>
+            <button class="btn btn-success btn-sm btn-chat">Chat</button>
+            <button class="btn btn-danger btn-sm">Excluir</button>
+          </section>
+        </article>
+
+        <!-- Exemplo de outro produto -->
+        <article class="produto-card">
+          <figure>
+            <img src="/imagem/cana.png" alt="Produto">
+          </figure>
+          <section class="produto-info">
+            <h3>Bagaço de Cana</h3>
+            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+            <p class="preco">R$ 1500,00</p>
+            <p class="quantidade">20 Toneladas</p>
+          </section>
+          <section class="acoes">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-info btn-sm">Detalhes</button>
+            <button class="btn btn-success btn-sm btn-chat">Chat</button>
+            <button class="btn btn-danger btn-sm">Excluir</button>
+          </section>
+        </article>
+
+
+        <article class="produto-card">
+          <figure>
+            <img src="/imagem/cana.png" alt="Produto">
+          </figure>
+          <section class="produto-info">
+            <h3>Bagaço de Cana</h3>
+            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+            <p class="preco">R$ 1500,00</p>
+            <p class="quantidade">20 Toneladas</p>
+          </section>
+          <section class="acoes">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-info btn-sm">Detalhes</button>
+            <button class="btn btn-success btn-sm btn-chat">Chat</button>
+            <button class="btn btn-danger btn-sm">Excluir</button>
+          </section>
+        </article>
+
+
+        <article class="produto-card">
+          <figure>
+            <img src="/imagem/cana.png" alt="Produto">
+          </figure>
+          <section class="produto-info">
+            <h3>Bagaço de Cana</h3>
+            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+            <p class="preco">R$ 1500,00</p>
+            <p class="quantidade">20 Toneladas</p>
+          </section>
+          <section class="acoes">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-info btn-sm">Detalhes</button>
+            <button class="btn btn-success btn-sm btn-chat">Chat</button>
+            <button class="btn btn-danger btn-sm">Excluir</button>
+          </section>
+        </article>
+
+        <article class="produto-card">
+          <figure>
+            <img src="/imagem/cana.png" alt="Produto">
+          </figure>
+          <section class="produto-info">
+            <h3>Bagaço de Cana</h3>
+            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+            <p class="preco">R$ 1500,00</p>
+            <p class="quantidade">20 Toneladas</p>
+          </section>
+          <section class="acoes">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-info btn-sm">Detalhes</button>
+            <button class="btn btn-success btn-sm btn-chat">Chat</button>
+            <button class="btn btn-danger btn-sm">Excluir</button>
+          </section>
+        </article>
+
+        <article class="produto-card">
+          <figure>
+            <img src="/imagem/cana.png" alt="Produto">
+          </figure>
+          <section class="produto-info">
+            <h3>Bagaço de Cana</h3>
+            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+            <p class="preco">R$ 1500,00</p>
+            <p class="quantidade">20 Toneladas</p>
+          </section>
+          <section class="acoes">
+            <button class="btn btn-warning btn-sm">Editar</button>
+            <button class="btn btn-info btn-sm">Detalhes</button>
+            <button class="btn btn-success btn-sm btn-chat">Chat</button>
+            <button class="btn btn-danger btn-sm">Excluir</button>
+          </section>
+        </article>
+
       </section>
     </section>
   </main>
 
-  <%- include('../partial/footer.ejs') %>
 </body>
 </html>
