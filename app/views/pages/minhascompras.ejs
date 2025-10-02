@@ -11,75 +11,135 @@
 <body>
   <%- include('../partial/header1.ejs') %>
  
-
- 
- 
-
-
  <main class="page-layout">
-
   <%- include('../partial/sidebar.ejs') %>
-<section class="content">
-      
-      <!-- Botão voltar -->
-      <section class="back-button-container">
-        <button class="btn-voltar-plain" onclick="history.back()">
-          <i class='bx bx-left-arrow-alt'></i> Voltar
-        </button>
-      </section>
 
-     
-
-      <!-- Lista de produtos -->
-      <section class="produtos-grid">
-
-        <!-- Produto 1 -->
-        <article class="produto-card">
-          <figure>
-            <img src="/imagem/cana.png" alt="Produto">
-          </figure>
-          <section class="produto-info">
-            <h3>Bagaço de Cana</h3>
-            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
-            <p class="preco">R$ 1500,00</p>
-            <p class="quantidade">1 Tonelada</p>
-          </section>
-          <section class="acoes">
-            <button class="btn btn-warning btn-sm">Rastrear</button>
-            <button class="btn btn-info btn-sm">Detalhes</button>
-          
-            <button class="btn btn-danger btn-sm">Cancelar</button>
-          </section>
-          <p class="situacao">Em andamento...</p>
-        </article>
-
-        <!-- Exemplo de outro produto -->
-        <article class="produto-card">
-          <figure>
-            <img src="/imagem/lenha.png" alt="Produto">
-          </figure>
-          <section class="produto-info">
-            <h3>Lenha Tratada</h3>
-            <p class="endereco">Rua Antônio Raposo Tavares, 312 - São Paulo</p>
-            <p class="preco">R$ 250,00</p>
-            <p class="quantidade">1 Tonelada</p>
-          </section>
-          <section class="acoes">
-            <button class="btn btn-warning btn-sm">Rastrear</button>
-            <button class="btn btn-info btn-sm">Detalhes</button>
-           
-            <button class="btn btn-danger btn-sm">Cancelar</button>
-          </section>
-          <p class="situacao">Em andamento...</p>
-        </article>
-
-        
-
-      </section>
+  <section class="content">
+    <!-- Botão voltar -->
+    <section class="back-button-container">
+      <button class="btn-voltar-plain" onclick="history.back()">
+        <i class='bx bx-left-arrow-alt'></i> Voltar
+      </button>
     </section>
+
+    <!-- Lista de produtos -->
+    <section class="produtos-grid">
+
+      <!-- Produto 1 -->
+      <article class="produto-card">
+        <figure>
+          <img src="/imagem/cana.png" alt="Produto">
+        </figure>
+        <section class="produto-info">
+          <h3>Bagaço de Cana</h3>
+          <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+          <p class="preco">R$ 1500,00</p>
+          <p class="quantidade">1 Tonelada</p>
+        </section>
+        <section class="acoes">
+          <button class="btn btn-warning btn-sm">Rastrear</button>
+          <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
+          <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
+        </section>
+        <p class="situacao">Em andamento...</p>
+      </article>
+
+      <!-- Produto 2 -->
+      <article class="produto-card">
+        <figure>
+          <img src="/imagem/lenha.png" alt="Produto">
+        </figure>
+        <section class="produto-info">
+          <h3>Lenha Tratada</h3>
+          <p class="endereco">Rua Antônio Raposo Tavares, 312 - São Paulo</p>
+          <p class="preco">R$ 250,00</p>
+          <p class="quantidade">1 Tonelada</p>
+        </section>
+        <section class="acoes">
+          <button class="btn btn-warning btn-sm">Rastrear</button>
+          <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
+          <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
+        </section>
+        <p class="situacao">Em andamento...</p>
+      </article>
+
+    </section>
+  </section>
 </main>
 
+<!-- Modal de Detalhes -->
+<section class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
+  <section class="modal-dialog modal-dialog-centered">
+    <section class="modal-content">
+      <section class="modal-header">
+        <h5 class="modal-title" id="detalhesModalLabel">Detalhes do Produto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </section>
+      <section class="modal-body">
+        <p><strong>Produto:</strong> <span id="modal-produto"></span></p>
+        <p><strong>Endereço:</strong> <span id="modal-endereco"></span></p>
+        <p><strong>Preço:</strong> <span id="modal-preco"></span></p>
+        <p><strong>Quantidade:</strong> <span id="modal-quantidade"></span></p>
+      </section>
+      <section class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </section>
+    </section>
+  </section>
+</section>
 
-  <%- include('../partial/footer.ejs') %>
+<div class="modal fade" id="cancelarModal" tabindex="-1" aria-labelledby="cancelarModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cancelarModalLabel">Confirmar Cancelamento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        Tem certeza que deseja cancelar esta compra?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirmarCancelarBtn">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  let cardParaCancelar = null;
+const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
+  // Botão Cancelar
+  document.querySelectorAll('.btn-cancelar').forEach(btn => {
+    btn.addEventListener('click', function() {
+      cardParaCancelar = this.closest('.produto-card'); // CORRIGIDO: salva o card
+      cancelarModal.show();
+    });
+  });
+
+  document.getElementById('confirmarCancelarBtn').addEventListener('click', function() {
+  if (cardParaCancelar) {
+    cardParaCancelar.remove();
+    cancelarModal.hide();
+    cardParaCancelar = null;
+  }
+});
+
+
+  // Botão Detalhes
+  const modal = new bootstrap.Modal(document.getElementById('detalhesModal'));
+  document.querySelectorAll('.btn-detalhes').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const card = this.closest('.produto-card');
+      document.getElementById('modal-produto').innerText = card.querySelector('h3').innerText;
+      document.getElementById('modal-endereco').innerText = card.querySelector('.endereco').innerText;
+      document.getElementById('modal-preco').innerText = card.querySelector('.preco').innerText;
+      document.getElementById('modal-quantidade').innerText = card.querySelector('.quantidade').innerText;
+      modal.show();
+    });
+  });
+</script>
+<%- include('../partial/footer.ejs') %>
 </body>
 </html>
