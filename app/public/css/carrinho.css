@@ -16,6 +16,7 @@ main {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  margin-top: 87px;
 }
 
 h2, h3 {
@@ -178,6 +179,27 @@ main > h2 {
 }
 .btn-comprar:hover {
   background: #3a6f55;
+}
+.back-button-container {
+  margin-top: 1.5rem;
+}
+
+.btn-voltar-plain {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 18px;
+  color: #1d3557;
+}
+.btn-voltar-plain:hover {
+    color: #32598f;
+}
+
+.btn-voltar-plain i {
+  font-size: 22px;
+  vertical-align: middle;
 }
 
 /* RESPONSIVIDADE */

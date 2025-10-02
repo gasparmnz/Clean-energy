@@ -72,6 +72,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-height: 300px;
 }
 
 .container {
@@ -213,14 +214,24 @@ h2::after {
 }
 
 @media (max-width: 480px) {
+  .table,
+  .table thead,
+  .table tr,
+  .table th,
+  .table td {
+    display: none !important;
+  }
+  .table td img.mini {
+    display: block !important;
+    margin: 0 auto;
+    max-width: 80px;
+  }
   .acoes {
     flex-direction: column;
     align-items: center;
   }
 
-  img.mini {
-    max-width: 40px;
-  }
+ 
 
   .back-button-container {
     margin-top: 1rem;
