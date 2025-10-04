@@ -140,6 +140,9 @@ main {
   color: #fff;
   margin-top: 15px;
 }
+.d-none {
+  display: none !important;
+}
 /* =========================
    Responsividade
    ========================= */
