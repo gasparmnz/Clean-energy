@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transportadoras Recomendadas - Biomassa Hub</title>
+  <link rel="stylesheet" href="/css/transporte.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partial/header1.ejs') %>
+  <main class="transport-main">
+    <header class="transport-hero">
+      <section class="hero-content">
+        <h1 class="hero-title">Transportadoras Recomendadas</h1>
+        <p class="hero-subtitle">Empresas especializadas no transporte de biomassa e resíduos</p>
+        <p class="hero-description">
+          Conectamos você com transportadoras confiáveis e experientes no manuseio de materiais para produção de biomassa, 
+          garantindo segurança e eficiência na logística dos seus produtos.
+        </p>
+      </section>
+    </header>
+
+    
+      </header>
+
+      <!-- Lista de Transportadoras -->
+      <section class="transporters-grid" id="transportersGrid">
+        
+        <!-- Transportadora 1 -->
+        <article class="transporter-card" data-region="sudeste" data-specialty="biomassa" data-rating="4.8">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="/imagem/cana.png" 
+                   alt="Logo Logística Verde" 
+                   class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">Logística Verde Ltda</h3>
+              <address class="company-location">
+                <i class='bx bx-map-pin'></i>
+                <span class="location-text">São Paulo, SP - Sudeste</span>
+              </address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.8</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+              </section>
+            </section>
+          </header>
+
+          <section class="card-content">
+            <p class="company-description">
+              Especializada no transporte de biomassa e resíduos orgânicos há mais de 15 anos. 
+              Frota moderna com equipamentos específicos para cargas ambientalmente sensíveis.
+            </p>
+
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Biomassa</li>
+                <li class="specialty-tag">Resíduos Orgânicos</li>
+                <li class="specialty-tag">Granéis Sólidos</li>
+              </ul>
+            </section>
+
+            <section class="company-details">
+              <section class="detail-item">
+                <i class='bx bx-truck'></i>
+                <span>Frota: 45 veículos</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-shield-check'></i>
+                <span>Certificada ISO 14001</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-time'></i>
+                <span>Disponível 24/7</span>
+              </section>
+            </section>
+          </section>
+
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('Logística Verde Ltda')">
+              <i class='bx bx-phone'></i>
+              Entrar em Contato
+            </button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos">
+              <i class='bx bx-heart'></i>
+            </button>
+          </footer>
+        </article>
+
+        <!-- Transportadora 2 -->
+        <article class="transporter-card" data-region="sul" data-specialty="residuos" data-rating="4.6">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="https://via.placeholder.com/80x80/1d3557/ffffff?text=TB" 
+                   alt="Logo TransBio" 
+                   class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">TransBio Soluções</h3>
+              <address class="company-location">
+                <i class='bx bx-map-pin'></i>
+                Curitiba, PR - Sul
+              </address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.6</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bx-star'></i>
+              </section>
+            </section>
+          </header>
+
+          <section class="card-content">
+            <p class="company-description">
+              Pioneira no transporte sustentável de resíduos para biomassa. 
+              Tecnologia avançada de rastreamento e compromisso com a sustentabilidade.
+            </p>
+
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Resíduos Orgânicos</li>
+                <li class="specialty-tag">Biomassa</li>
+                <li class="specialty-tag">Líquidos</li>
+              </ul>
+            </section>
+
+            <section class="company-details">
+              <section class="detail-item">
+                <i class='bx bx-truck'></i>
+                <span>Frota: 32 veículos</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-leaf'></i>
+                <span>100% Sustentável</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-map'></i>
+                <span>Rastreamento GPS</span>
+              </section>
+            </section>
+          </section>
+
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('TransBio Soluções')">
+              <i class='bx bx-phone'></i>
+              Entrar em Contato
+            </button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos">
+              <i class='bx bx-heart'></i>
+            </button>
+          </footer>
+        </article>
+
+        <!-- Transportadora 3 -->
+        <article class="transporter-card" data-region="nacional" data-specialty="graneis" data-rating="4.9">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="https://via.placeholder.com/80x80/f4c430/000000?text=EC" 
+                   alt="Logo EcoCargas" 
+                   class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">EcoCargas Nacional</h3>
+              <address class="company-location">
+                <i class='bx bx-map-pin'></i>
+                Brasília, DF - Nacional
+              </address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.9</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+              </section>
+            </section>
+          </header>
+
+          <section class="card-content">
+            <p class="company-description">
+              Líder nacional no transporte de granéis sólidos para biomassa. 
+              Cobertura em todo território brasileiro com excelência operacional.
+            </p>
+
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Granéis Sólidos</li>
+                <li class="specialty-tag">Biomassa</li>
+                <li class="specialty-tag">Cargas Perigosas</li>
+              </ul>
+            </section>
+
+            <section class="company-details">
+              <section class="detail-item">
+                <i class='bx bx-truck'></i>
+                <span>Frota: 120 veículos</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-award'></i>
+                <span>Prêmio Excelência 2023</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-world'></i>
+                <span>Cobertura Nacional</span>
+              </section>
+            </section>
+          </section>
+
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('EcoCargas Nacional')">
+              <i class='bx bx-phone'></i>
+              Entrar em Contato
+            </button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos">
+              <i class='bx bx-heart'></i>
+            </button>
+          </footer>
+        </article>
+
+        <!-- Transportadora 4 -->
+        <article class="transporter-card" data-region="nordeste" data-specialty="liquidos" data-rating="4.4">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="https://via.placeholder.com/80x80/ff4757/ffffff?text=NL" 
+                   alt="Logo NordLog" 
+                   class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">NordLog Transportes</h3>
+              <address class="company-location">
+                <i class='bx bx-map-pin'></i>
+                Recife, PE - Nordeste
+              </address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.4</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bx-star'></i>
+              </section>
+            </section>
+          </header>
+
+          <section class="card-content">
+            <p class="company-description">
+              Especializada no transporte de líquidos e resíduos líquidos para produção de biomassa. 
+              Forte atuação na região Nordeste com equipamentos especializados.
+            </p>
+
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Líquidos</li>
+                <li class="specialty-tag">Resíduos Líquidos</li>
+                <li class="specialty-tag">Biomassa Líquida</li>
+              </ul>
+            </section>
+
+            <section class="company-details">
+              <section class="detail-item">
+                <i class='bx bx-truck'></i>
+                <span>Frota: 28 veículos</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-droplet'></i>
+                <span>Tanques Especializados</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-phone'></i>
+                <span>Suporte 24h</span>
+              </section>
+            </section>
+          </section>
+
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('NordLog Transportes')">
+              <i class='bx bx-phone'></i>
+              Entrar em Contato
+            </button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos">
+              <i class='bx bx-heart'></i>
+            </button>
+          </footer>
+        </article>
+
+         <!-- Transportadora 5 -->
+         <article class="transporter-card" data-region="nordeste" data-specialty="liquidos" data-rating="4.4">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="https://via.placeholder.com/80x80/ff4757/ffffff?text=NL" 
+                   alt="Logo NordLog" 
+                   class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">NordLog Transportes</h3>
+              <address class="company-location">
+                <i class='bx bx-map-pin'></i>
+                Recife, PE - Nordeste
+              </address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.4</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bx-star'></i>
+              </section>
+            </section>
+          </header>
+
+          <section class="card-content">
+            <p class="company-description">
+              Especializada no transporte de líquidos e resíduos líquidos para produção de biomassa. 
+              Forte atuação na região Nordeste com equipamentos especializados.
+            </p>
+
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Líquidos</li>
+                <li class="specialty-tag">Resíduos Líquidos</li>
+                <li class="specialty-tag">Biomassa Líquida</li>
+              </ul>
+            </section>
+
+            <section class="company-details">
+              <section class="detail-item">
+                <i class='bx bx-truck'></i>
+                <span>Frota: 28 veículos</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-droplet'></i>
+                <span>Tanques Especializados</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-phone'></i>
+                <span>Suporte 24h</span>
+              </section>
+            </section>
+          </section>
+
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('NordLog Transportes')">
+              <i class='bx bx-phone'></i>
+              Entrar em Contato
+            </button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos">
+              <i class='bx bx-heart'></i>
+            </button>
+          </footer>
+        </article>
+
+         <!-- Transportadora 4 -->
+         <article class="transporter-card" data-region="nordeste" data-specialty="liquidos" data-rating="4.4">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="https://via.placeholder.com/80x80/ff4757/ffffff?text=NL" 
+                   alt="Logo NordLog" 
+                   class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">NordLog Transportes</h3>
+              <address class="company-location">
+                <i class='bx bx-map-pin'></i>
+                Recife, PE - Nordeste
+              </address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.4</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bx-star'></i>
+              </section>
+            </section>
+          </header>
+
+          <section class="card-content">
+            <p class="company-description">
+              Especializada no transporte de líquidos e resíduos líquidos para produção de biomassa. 
+              Forte atuação na região Nordeste com equipamentos especializados.
+            </p>
+
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Líquidos</li>
+                <li class="specialty-tag">Resíduos Líquidos</li>
+                <li class="specialty-tag">Biomassa Líquida</li>
+              </ul>
+            </section>
+
+            <section class="company-details">
+              <section class="detail-item">
+                <i class='bx bx-truck'></i>
+                <span>Frota: 28 veículos</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-droplet'></i>
+                <span>Tanques Especializados</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-phone'></i>
+                <span>Suporte 24h</span>
+              </section>
+            </section>
+          </section>
+
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('NordLog Transportes')">
+              <i class='bx bx-phone'></i>
+              Entrar em Contato
+            </button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos">
+              <i class='bx bx-heart'></i>
+            </button>
+          </footer>
+        </article>
+
+         <!-- Transportadora 4 -->
+         <article class="transporter-card" data-region="nordeste" data-specialty="liquidos" data-rating="4.4">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="https://via.placeholder.com/80x80/ff4757/ffffff?text=NL" 
+                   alt="Logo NordLog" 
+                   class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">NordLog Transportes</h3>
+              <address class="company-location">
+                <i class='bx bx-map-pin'></i>
+                Recife, PE - Nordeste
+              </address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.4</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bx-star'></i>
+              </section>
+            </section>
+          </header>
+
+          <section class="card-content">
+            <p class="company-description">
+              Especializada no transporte de líquidos e resíduos líquidos para produção de biomassa. 
+              Forte atuação na região Nordeste com equipamentos especializados.
+            </p>
+
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Líquidos</li>
+                <li class="specialty-tag">Resíduos Líquidos</li>
+                <li class="specialty-tag">Biomassa Líquida</li>
+              </ul>
+            </section>
+
+            <section class="company-details">
+              <section class="detail-item">
+                <i class='bx bx-truck'></i>
+                <span>Frota: 28 veículos</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-droplet'></i>
+                <span>Tanques Especializados</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-phone'></i>
+                <span>Suporte 24h</span>
+              </section>
+            </section>
+          </section>
+
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('NordLog Transportes')">
+              <i class='bx bx-phone'></i>
+              Entrar em Contato
+            </button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos">
+              <i class='bx bx-heart'></i>
+            </button>
+          </footer>
+        </article>
+
+         <!-- Transportadora 4 -->
+         <article class="transporter-card" data-region="nordeste" data-specialty="liquidos" data-rating="4.4">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="https://via.placeholder.com/80x80/ff4757/ffffff?text=NL" 
+                   alt="Logo NordLog" 
+                   class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">NordLog Transportes</h3>
+              <address class="company-location">
+                <i class='bx bx-map-pin'></i>
+                Recife, PE - Nordeste
+              </address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.4</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bx-star'></i>
+              </section>
+            </section>
+          </header>
+
+          <section class="card-content">
+            <p class="company-description">
+              Especializada no transporte de líquidos e resíduos líquidos para produção de biomassa. 
+              Forte atuação na região Nordeste com equipamentos especializados.
+            </p>
+
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Líquidos</li>
+                <li class="specialty-tag">Resíduos Líquidos</li>
+                <li class="specialty-tag">Biomassa Líquida</li>
+              </ul>
+            </section>
+
+            <section class="company-details">
+              <section class="detail-item">
+                <i class='bx bx-truck'></i>
+                <span>Frota: 28 veículos</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-droplet'></i>
+                <span>Tanques Especializados</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-phone'></i>
+                <span>Suporte 24h</span>
+              </section>
+            </section>
+          </section>
+
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('NordLog Transportes')">
+              <i class='bx bx-phone'></i>
+              Entrar em Contato
+            </button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos">
+              <i class='bx bx-heart'></i>
+            </button>
+          </footer>
+        </article>
+
+         <!-- Transportadora 4 -->
+         <article class="transporter-card" data-region="nordeste" data-specialty="liquidos" data-rating="4.4">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="https://via.placeholder.com/80x80/ff4757/ffffff?text=NL" 
+                   alt="Logo NordLog" 
+                   class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">NordLog Transportes</h3>
+              <address class="company-location">
+                <i class='bx bx-map-pin'></i>
+                Recife, PE - Nordeste
+              </address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.4</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bx-star'></i>
+              </section>
+            </section>
+          </header>
+
+          <section class="card-content">
+            <p class="company-description">
+              Especializada no transporte de líquidos e resíduos líquidos para produção de biomassa. 
+              Forte atuação na região Nordeste com equipamentos especializados.
+            </p>
+
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Líquidos</li>
+                <li class="specialty-tag">Resíduos Líquidos</li>
+                <li class="specialty-tag">Biomassa Líquida</li>
+              </ul>
+            </section>
+
+            <section class="company-details">
+              <section class="detail-item">
+                <i class='bx bx-truck'></i>
+                <span>Frota: 28 veículos</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-droplet'></i>
+                <span>Tanques Especializados</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-phone'></i>
+                <span>Suporte 24h</span>
+              </section>
+            </section>
+          </section>
+
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('NordLog Transportes')">
+              <i class='bx bx-phone'></i>
+              Entrar em Contato
+            </button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos">
+              <i class='bx bx-heart'></i>
+            </button>
+          </footer>
+        </article>
+
+         <!-- Transportadora 4 -->
+         <article class="transporter-card" data-region="nordeste" data-specialty="liquidos" data-rating="4.4">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="https://via.placeholder.com/80x80/ff4757/ffffff?text=NL" 
+                   alt="Logo NordLog" 
+                   class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">NordLog Transportes</h3>
+              <address class="company-location">
+                <i class='bx bx-map-pin'></i>
+                Recife, PE - Nordeste
+              </address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.4</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bxs-star'></i>
+                <i class='bx bx-star'></i>
+              </section>
+            </section>
+          </header>
+
+          <section class="card-content">
+            <p class="company-description">
+              Especializada no transporte de líquidos e resíduos líquidos para produção de biomassa. 
+              Forte atuação na região Nordeste com equipamentos especializados.
+            </p>
+
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Líquidos</li>
+                <li class="specialty-tag">Resíduos Líquidos</li>
+                <li class="specialty-tag">Biomassa Líquida</li>
+              </ul>
+            </section>
+
+            <section class="company-details">
+              <section class="detail-item">
+                <i class='bx bx-truck'></i>
+                <span>Frota: 28 veículos</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-droplet'></i>
+                <span>Tanques Especializados</span>
+              </section>
+              <section class="detail-item">
+                <i class='bx bx-phone'></i>
+                <span>Suporte 24h</span>
+              </section>
+            </section>
+          </section>
+
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('NordLog Transportes')">
+              <i class='bx bx-phone'></i>
+              Entrar em Contato
+            </button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos">
+              <i class='bx bx-heart'></i>
+            </button>
+          </footer>
+        </article><br><br>
+
+      </section>
+    </section>
+
+
+  </main>
+  <%- include('../partial/footer.ejs') %>
+  <script src="transportadoras.js"></script>
+</body>
+</html>

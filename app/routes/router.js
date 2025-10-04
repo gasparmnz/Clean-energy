@@ -377,8 +377,8 @@ router.get("/carrinho", (req, res) => {
   res.render("pages/carrinho");
 });
 
-router.get("/como_funciona", (req, res) =>{
-  res.render("pages/como_funciona");
+router.get("/transporte", (req, res) =>{
+  res.render("pages/transporte");
 });
 router.get("/sobre_nos", (req, res) => {
   res.render("pages/sobre_nos");
