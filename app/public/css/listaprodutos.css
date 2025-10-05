@@ -75,7 +75,10 @@ main {
 }
 
 .produto-card figure img {
-  max-width: 100%;
+    width: 100%;
+  max-width: 275px;
+  height: 155px;
+  object-fit: cover;
   border-radius: 10px;
   margin-bottom: 10px;
 }
@@ -141,7 +144,21 @@ main {
   }
 
   .produto-card {
-    flex: 0 0 80%;
+    flex: 0 0 80vw;
+     max-width: 80vw;
+    min-width: 80vw;
+    box-sizing: border-box;
     scroll-snap-align: start;
+  }
+  .acoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    justify-items: center;
+    width: 100%;
+  }
+  .acoes .btn {
+    width: 100%;
+    min-width: 0;
   }
 }
