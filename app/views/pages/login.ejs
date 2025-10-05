@@ -1,57 +1,145 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login</title>
-    <link rel="stylesheet" href="/css/login.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-  </head>
-  <body>
-    <main>
-      <section>
-        <form action="/login" method="POST">
-          <h2>Dados de acesso</h2>
-
-          <article class="input-icon">
-            <i class="bi bi-envelope icones-gerais"></i>
-            <input
-              type="text"
-              id="usuarioDigitado"
-              name="usuarioDigitado"
-              placeholder="Digite seu email"
-              value="<%= valores?.usuarioDigitado || '' %>"
-              class="<%= erro ? 'erro' : '' %>"
-            />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Biomassa Hub</title>
+  <link rel="stylesheet" href="/css/login.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="login-main">
+    <!-- Hero Section -->
+    <aside class="hero-section">
+      <header class="hero-content">
+        <h1 class="hero-title">Bem-vindo de Volta!</h1>
+        <p class="hero-subtitle">
+          Acesse sua conta e continue transformando resíduos em energia sustentável.
+        </p>
+        <section class="hero-features">
+          <article class="feature-item">
+            <i class='bx bx-shield-check'></i>
+            <span>Login Seguro</span>
           </article>
-
-          <article class="input-icon">
-            <i class="bi bi-lock icones-gerais"></i>
-            <input
-              type="password"
-              id="senhaDigitada"
-              name="senhaDigitada"
-              placeholder="Digite sua senha"
-              value="<%= valores?.senhaDigitada || '' %>"
-              class="<%= erro ? 'erro' : '' %>"
-            />
+          <article class="feature-item">
+            <i class='bx bx-time'></i>
+            <span>Acesso Rápido</span>
           </article>
+          <article class="feature-item">
+            <i class='bx bx-world'></i>
+            <span>Plataforma Nacional</span>
+          </article>
+        </section>
+      </header>
+    </aside>
 
+    <!-- Formulário de Login -->
+    <section class="form-section">
+      <header class="form-header">
+        <h2 class="form-title">Dados de Acesso</h2>
+        <p class="form-subtitle">Entre com suas credenciais para acessar sua conta</p>
+      </header>
+
+      <form 
+        action="/login" 
+        method="POST" 
+        class="login-form"
+        novalidate
+        aria-label="Formulário de login"
+      >
+        <fieldset class="form-fieldset">
+          <legend class="sr-only">Credenciais de acesso</legend>
+
+          <!-- Campo E-mail -->
+          <section class="input-group">
+            <label for="usuarioDigitado" class="input-label">
+              <i class='bx bx-envelope'></i>
+              E-mail
+            </label>
+            <section class="input-wrapper">
+              <input
+                type="email"
+                id="usuarioDigitado"
+                name="usuarioDigitado"
+                class="form-input <%= erro ? 'erro' : '' %>"
+                placeholder="Digite seu e-mail"
+                value="<%= valores?.usuarioDigitado || '' %>"
+                aria-describedby="email-error email-help"
+                autocomplete="email"
+                required
+              />
+              <i class='bx bx-envelope input-icon'></i>
+            </section>
+            <small id="email-help" class="input-help">Seu e-mail de cadastro</small>
+            <span id="email-error" class="error-message" role="alert"></span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              E-mail válido
+            </span>
+          </section>
+
+          <!-- Campo Senha -->
+          <section class="input-group">
+            <label for="senhaDigitada" class="input-label">
+              <i class='bx bx-lock-alt'></i>
+              Senha
+            </label>
+            <section class="input-wrapper password-wrapper">
+              <input
+                type="password"
+                id="senhaDigitada"
+                name="senhaDigitada"
+                class="form-input <%= erro ? 'erro' : '' %>"
+                placeholder="Digite sua senha"
+                value="<%= valores?.senhaDigitada || '' %>"
+                aria-describedby="password-error password-help"
+                autocomplete="current-password"
+                required
+              />
+              <i class='bx bx-lock-alt input-icon'></i>
+              <button type="button" class="password-toggle" aria-label="Mostrar/ocultar senha">
+                <i class='bx bx-hide'></i>
+              </button>
+            </section>
+            <small id="password-help" class="input-help">Sua senha de acesso</small>
+            <span id="password-error" class="error-message" role="alert"></span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Senha válida
+            </span>
+          </section>
+
+          <!-- Mensagem de erro do backend -->
           <% if (erro) { %>
-          <span class="msgErro"><%= erro %></span>
+          <section class="backend-error" role="alert">
+            <i class='bx bx-error-circle'></i>
+            <span><%= erro %></span>
+          </section>
           <% } %>
-          
-          <button type="submit" id="btnClique" class="btn-login">
-            Acessar
-          </button>
+        </fieldset>
 
-          <p class="login">
-            Ainda não possui uma conta?
+        <!-- Botão de Login -->
+        <button type="submit" id="btnClique" class="submit-btn">
+          <i class='bx bx-log-in'></i>
+          <span>Acessar</span>
+          <i class='bx bx-loader-alt bx-spin loading-icon'></i>
+        </button>
+
+        <!-- Links adicionais -->
+        <footer class="form-footer">
+          <p class="register-link">
+            Ainda não possui uma conta? 
             <a href="/cadastro">Cadastre-se</a> já!
           </p>
-        </form>
-      </section>
-    </main>
-    <script src="/js/script.js"></script>
-  </body>
+          <p class="forgot-password">
+            <a href="/recuperar-senha">Esqueceu sua senha?</a>
+          </p>
+        </footer>
+      </form>
+    </section>
+  </main>
+
+  <script src="/js/login-validation.js"></script>
+</body>
 </html>

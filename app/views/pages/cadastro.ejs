@@ -1,212 +1,438 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cadastro</title>
-    <link rel="stylesheet" href="/css/cadastro.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-  </head>
-  <body>
-    <main>
-      <section>
-        <nav class="toggle-buttons" aria-label="Escolher tipo de cadastro">
-          <button
-            type="button"
-            id="btnFarmacia"
-            class="ativo"
-            onclick="mostrarFormulario('farmacia')"
-          >
-            Pessoa Física
-          </button>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - Biomassa Hub</title>
+  <link rel="stylesheet" href="/css/cadastro.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="cadastro-main">
+    <!-- Hero Section -->
+    <aside class="hero-section">
+      <header class="hero-content">
+        <h1 class="hero-title">Junte-se à Revolução da Biomassa</h1>
+        <p class="hero-subtitle">
+          Conecte-se com fornecedores e compradores de resíduos para produção de biomassa. 
+          Transforme resíduos em energia sustentável.
+        </p>
+        <section class="hero-features">
+          <article class="feature-item">
+            <i class='bx bx-leaf'></i>
+            <span>100% Sustentável</span>
+          </article>
+          <article class="feature-item">
+            <i class='bx bx-shield-check'></i>
+            <span>Transações Seguras</span>
+          </article>
+          <article class="feature-item">
+            <i class='bx bx-world'></i>
+            <span>Rede Nacional</span>
+          </article>
+        </section>
+      </header>
+    </aside>
 
-          <button
-            type="button"
-            id="btnProfissional"
-            onclick="mostrarFormulario('empresa')"
-          >
-            Empresa
-          </button>
-        </nav>
+    <!-- Formulário de Cadastro -->
+    <section class="form-section">
+      <header class="form-header">
+        <h2 class="form-title">Criar Conta</h2>
+        <p class="form-subtitle">Escolha o tipo de cadastro que melhor se adequa ao seu perfil</p>
+      </header>
 
-        <!-- Form Usuário Comum -->
-        <form
-          id="formFarmacia"
-          method="POST"
-          action="/cadastroUsuario"
+      <!-- Navegação entre tipos de cadastro -->
+      <nav class="form-toggle" role="tablist" aria-label="Escolher tipo de cadastro">
+        <button
+          type="button"
+          id="btnPessoaFisica"
+          class="toggle-btn active"
+          role="tab"
+          aria-selected="true"
+          aria-controls="formPessoaFisica"
+          onclick="mostrarFormulario('pessoaFisica')"
         >
-          <h3>Cadastro como Pessoa Física</h3>
+          <i class='bx bx-user'></i>
+          <span>Pessoa Física</span>
+        </button>
+        <button
+          type="button"
+          id="btnEmpresa"
+          class="toggle-btn"
+          role="tab"
+          aria-selected="false"
+          aria-controls="formEmpresa"
+          onclick="mostrarFormulario('empresa')"
+        >
+          <i class='bx bx-buildings'></i>
+          <span>Empresa</span>
+        </button>
+      </nav>
 
-          <article class="input-icon">
+      <!-- Formulário Pessoa Física -->
+      <form
+        id="formPessoaFisica"
+        class="cadastro-form"
+        method="POST"
+        action="/cadastroUsuario"
+        role="tabpanel"
+        aria-labelledby="btnPessoaFisica"
+        novalidate
+      >
+        <fieldset class="form-fieldset">
+          <legend class="sr-only">Dados para cadastro como Pessoa Física</legend>
+
+          <!-- Campo Nome -->
+          <section class="input-group">
+            <label for="nome-pf" class="input-label">
+              <i class='bx bx-user'></i>
+              Nome Completo
+            </label>
             <input
               type="text"
+              id="nome-pf"
               name="nome"
+              class="form-input"
               placeholder="Digite seu nome completo"
-              value="<%= valoresPessoaFisica.nome %>"
-              class="<%= erroValidacaoPessoaFisica.nome %>"
+              value="<%= typeof valoresPessoaFisica !== 'undefined' ? valoresPessoaFisica.nome : '' %>"
+              aria-describedby="nome-pf-error nome-pf-help"
+              autocomplete="name"
+              required
             />
-            <span class="msgErro"><%= msgErroPessoaFisica.nome %></span>
-          </article>
+            <small id="nome-pf-help" class="input-help">Mínimo 2 caracteres</small>
+            <span id="nome-pf-error" class="error-message" role="alert">
+              <%= typeof msgErroPessoaFisica !== 'undefined' ? msgErroPessoaFisica.nome : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Nome válido
+            </span>
+          </section>
 
-          <article class="input-icon">
+          <!-- Campo CPF -->
+          <section class="input-group">
+            <label for="cpf-pf" class="input-label">
+              <i class='bx bx-id-card'></i>
+              CPF
+            </label>
             <input
               type="text"
+              id="cpf-pf"
               name="cpf"
-              placeholder="Digite seu CPF"
-              value="<%= valoresPessoaFisica.cpf %>"
-              class="<%= erroValidacaoPessoaFisica.cpf %>"
+              class="form-input"
+              placeholder="000.000.000-00"
+              value="<%= typeof valoresPessoaFisica !== 'undefined' ? valoresPessoaFisica.cpf : '' %>"
+              aria-describedby="cpf-pf-error cpf-pf-help"
+              autocomplete="off"
+              maxlength="14"
+              required
             />
-            <span class="msgErro"><%= msgErroPessoaFisica.cpf %></span>
-          </article>
+            <small id="cpf-pf-help" class="input-help">Formato: 000.000.000-00</small>
+            <span id="cpf-pf-error" class="error-message" role="alert">
+              <%= typeof msgErroPessoaFisica !== 'undefined' ? msgErroPessoaFisica.cpf : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              CPF válido
+            </span>
+          </section>
 
-          <article class="input-icon">
+          <!-- Campo Email -->
+          <section class="input-group">
+            <label for="email-pf" class="input-label">
+              <i class='bx bx-envelope'></i>
+              E-mail
+            </label>
             <input
               type="email"
+              id="email-pf"
               name="email"
-              placeholder="E-mail"
-              value="<%= valoresPessoaFisica.email %>"
-              class="<%= erroValidacaoPessoaFisica.email %>"
+              class="form-input"
+              placeholder="seu@email.com"
+              value="<%= typeof valoresPessoaFisica !== 'undefined' ? valoresPessoaFisica.email : '' %>"
+              aria-describedby="email-pf-error email-pf-help"
+              autocomplete="email"
+              required
             />
-            <span class="msgErro"><%= msgErroPessoaFisica.email %></span>
-          </article>
+            <small id="email-pf-help" class="input-help">Será usado para login</small>
+            <span id="email-pf-error" class="error-message" role="alert">
+              <%= typeof msgErroPessoaFisica !== 'undefined' ? msgErroPessoaFisica.email : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              E-mail válido
+            </span>
+          </section>
 
-          <article class="input-icon">
-            <input
-              type="password"
-              id="senha2"
-              name="senha"
-              placeholder="Senha"
-              value="<%= valoresPessoaFisica.senha %>"
-              class="<%= erroValidacaoPessoaFisica.senha %>"
-            />
-            <span class="msgErro"><%= msgErroPessoaFisica.senha %></span>
-          </article>
+          <!-- Campo Senha -->
+          <section class="input-group">
+            <label for="senha-pf" class="input-label">
+              <i class='bx bx-lock-alt'></i>
+              Senha
+            </label>
+            <section class="password-input">
+              <input
+                type="password"
+                id="senha-pf"
+                name="senha"
+                class="form-input"
+                placeholder="Crie uma senha segura"
+                value="<%= typeof valoresPessoaFisica !== 'undefined' ? valoresPessoaFisica.senha : '' %>"
+                aria-describedby="senha-pf-error senha-pf-help"
+                autocomplete="new-password"
+                required
+              />
+              <button type="button" class="password-toggle" aria-label="Mostrar/ocultar senha">
+                <i class='bx bx-hide'></i>
+              </button>
+            </section>
+            <small id="senha-pf-help" class="input-help">Mínimo 8 caracteres, com letras e números</small>
+            <span id="senha-pf-error" class="error-message" role="alert">
+              <%= typeof msgErroPessoaFisica !== 'undefined' ? msgErroPessoaFisica.senha : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Senha segura
+            </span>
+            <!-- Indicador de força da senha -->
+            <section class="password-strength">
+              <section class="strength-bar">
+                <span class="strength-fill"></span>
+              </section>
+              <span class="strength-text">Força da senha</span>
+            </section>
+          </section>
 
-          <article class="input-icon">
-            <input
-              type="password"
-              id="confirmarSenha2"
-              name="confirmarSenha"
-              placeholder="Confirmar Senha"
-              value="<%= valoresPessoaFisica.confirmarSenha %>"
-              class="<%= erroValidacaoPessoaFisica.confirmarSenha %>"
-            />
-           
-            <span class="msgErro"><%= msgErroPessoaFisica.confirmarSenha %></span>
-          </article>
+          <!-- Campo Confirmar Senha -->
+          <section class="input-group">
+            <label for="confirmar-senha-pf" class="input-label">
+              <i class='bx bx-lock-alt'></i>
+              Confirmar Senha
+            </label>
+            <section class="password-input">
+              <input
+                type="password"
+                id="confirmar-senha-pf"
+                name="confirmarSenha"
+                class="form-input"
+                placeholder="Digite a senha novamente"
+                value="<%= typeof valoresPessoaFisica !== 'undefined' ? valoresPessoaFisica.confirmarSenha : '' %>"
+                aria-describedby="confirmar-senha-pf-error confirmar-senha-pf-help"
+                autocomplete="new-password"
+                required
+              />
+              <button type="button" class="password-toggle" aria-label="Mostrar/ocultar senha">
+                <i class='bx bx-hide'></i>
+              </button>
+            </section>
+            <small id="confirmar-senha-pf-help" class="input-help">Deve ser igual à senha anterior</small>
+            <span id="confirmar-senha-pf-error" class="error-message" role="alert">
+              <%= typeof msgErroPessoaFisica !== 'undefined' ? msgErroPessoaFisica.confirmarSenha : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Senhas coincidem
+            </span>
+          </section>
+        </fieldset>
 
-          <button type="submit" class="btn-cadastrar">
-            Cadastrar Pessoa Física
-          </button>
+        <button type="submit" class="submit-btn">
+          <i class='bx bx-user-plus'></i>
+          <span>Cadastrar Pessoa Física</span>
+          <i class='bx bx-loader-alt bx-spin loading-icon'></i>
+        </button>
 
-          <p class="login">
-            Já possui uma conta? Faça seu <a href="/login">login</a>
+        <footer class="form-footer">
+          <p class="login-link">
+            Já possui uma conta? 
+            <a href="/login">Faça seu login</a>
           </p>
-        </form>
+        </footer>
+      </form>
 
-        <!-- Form Empresa -->
-        <form
-          id="formProfissional"
-          class="hidden"
-          method="POST"
-          action="/cadastroEmpresa"
-        >
-          <h3>Cadastro como Empresa</h3>
+      <!-- Formulário Empresa -->
+      <form
+        id="formEmpresa"
+        class="cadastro-form hidden"
+        method="POST"
+        action="/cadastroEmpresa"
+        role="tabpanel"
+        aria-labelledby="btnEmpresa"
+        novalidate
+      >
+        <fieldset class="form-fieldset">
+          <legend class="sr-only">Dados para cadastro como Empresa</legend>
 
-          <article class="input-icon">
+          <!-- Campo Nome da Empresa -->
+          <section class="input-group">
+            <label for="nome-empresa" class="input-label">
+              <i class='bx bx-buildings'></i>
+              Nome da Empresa
+            </label>
             <input
               type="text"
+              id="nome-empresa"
               name="nome"
-              placeholder="Nome da empresa"
-              value="<%= valoresEmpresa.nome %>"
-              class="<%= erroValidacaoEmpresa.nome %>"
+              class="form-input"
+              placeholder="Digite o nome da empresa"
+              value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.nome : '' %>"
+              aria-describedby="nome-empresa-error nome-empresa-help"
+              autocomplete="organization"
+              required
             />
-            <span class="msgErro"><%= msgErroEmpresa.nome %></span>
-          </article>
+            <small id="nome-empresa-help" class="input-help">Razão social ou nome fantasia</small>
+            <span id="nome-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.nome : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Nome válido
+            </span>
+          </section>
 
-          <article class="input-icon">
+          <!-- Campo CNPJ -->
+          <section class="input-group">
+            <label for="cnpj-empresa" class="input-label">
+              <i class='bx bx-id-card'></i>
+              CNPJ
+            </label>
             <input
               type="text"
+              id="cnpj-empresa"
               name="cnpj"
-              placeholder="CNPJ"
-              value="<%= valoresEmpresa.cnpj %>"
-              class="<%= erroValidacaoEmpresa.cnpj %>"
+              class="form-input"
+              placeholder="00.000.000/0000-00"
+              value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.cnpj : '' %>"
+              aria-describedby="cnpj-empresa-error cnpj-empresa-help"
+              autocomplete="off"
+              maxlength="18"
+              required
             />
-            <span class="msgErro"><%= msgErroEmpresa.cnpj %></span>
-          </article>
+            <small id="cnpj-empresa-help" class="input-help">Formato: 00.000.000/0000-00</small>
+            <span id="cnpj-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.cnpj : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              CNPJ válido
+            </span>
+          </section>
 
-          <article class="input-icon">
+          <!-- Campo Email -->
+          <section class="input-group">
+            <label for="email-empresa" class="input-label">
+              <i class='bx bx-envelope'></i>
+              E-mail Corporativo
+            </label>
             <input
               type="email"
+              id="email-empresa"
               name="email"
-              placeholder="E-mail"
-              value="<%= valoresEmpresa.email %>"
-              class="<%= erroValidacaoEmpresa.email %>"
+              class="form-input"
+              placeholder="contato@empresa.com"
+              value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.email : '' %>"
+              aria-describedby="email-empresa-error email-empresa-help"
+              autocomplete="email"
+              required
             />
-            <span class="msgErro"><%= msgErroEmpresa.email %></span>
-          </article>
+            <small id="email-empresa-help" class="input-help">E-mail principal da empresa</small>
+            <span id="email-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.email : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              E-mail válido
+            </span>
+          </section>
 
-          <article class="input-icon">
-            <input
-              type="password"
-              id="senha"
-              name="senha"
-              placeholder="Senha"
-              value="<%= valoresEmpresa.senha %>"
-              class="<%= erroValidacaoEmpresa.senha %>"
-            />
-  
-            <span class="msgErro"><%= msgErroEmpresa.senha %></span>
-          </article>
+          <!-- Campo Senha -->
+          <section class="input-group">
+            <label for="senha-empresa" class="input-label">
+              <i class='bx bx-lock-alt'></i>
+              Senha
+            </label>
+            <section class="password-input">
+              <input
+                type="password"
+                id="senha-empresa"
+                name="senha"
+                class="form-input"
+                placeholder="Crie uma senha segura"
+                value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.senha : '' %>"
+                aria-describedby="senha-empresa-error senha-empresa-help"
+                autocomplete="new-password"
+                required
+              />
+              <button type="button" class="password-toggle" aria-label="Mostrar/ocultar senha">
+                <i class='bx bx-hide'></i>
+              </button>
+            </section>
+            <small id="senha-empresa-help" class="input-help">Mínimo 8 caracteres, com letras e números</small>
+            <span id="senha-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.senha : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Senha segura
+            </span>
+            <!-- Indicador de força da senha -->
+            <section class="password-strength">
+              <section class="strength-bar">
+                <span class="strength-fill"></span>
+              </section>
+              <span class="strength-text">Força da senha</span>
+            </section>
+          </section>
 
-          <article class="input-icon">
-            <input
-              type="password"
-              id="confirmarSenha"
-              name="confirmarSenha"
-              placeholder="Confirmar Senha"
-              value="<%= valoresEmpresa.confirmarSenha %>"
-              class="<%= erroValidacaoEmpresa.confirmarSenha %>"
-            />
-            <span class="msgErro"><%= msgErroEmpresa.confirmarSenha %></span>
-          </article>
+          <!-- Campo Confirmar Senha -->
+          <section class="input-group">
+            <label for="confirmar-senha-empresa" class="input-label">
+              <i class='bx bx-lock-alt'></i>
+              Confirmar Senha
+            </label>
+            <section class="password-input">
+              <input
+                type="password"
+                id="confirmar-senha-empresa"
+                name="confirmarSenha"
+                class="form-input"
+                placeholder="Digite a senha novamente"
+                value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.confirmarSenha : '' %>"
+                aria-describedby="confirmar-senha-empresa-error confirmar-senha-empresa-help"
+                autocomplete="new-password"
+                required
+              />
+              <button type="button" class="password-toggle" aria-label="Mostrar/ocultar senha">
+                <i class='bx bx-hide'></i>
+              </button>
+            </section>
+            <small id="confirmar-senha-empresa-help" class="input-help">Deve ser igual à senha anterior</small>
+            <span id="confirmar-senha-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.confirmarSenha : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Senhas coincidem
+            </span>
+          </section>
+        </fieldset>
 
-          <button type="submit" class="btn-cadastrar">
-            Cadastrar Empresa
-          </button>
+        <button type="submit" class="submit-btn">
+          <i class='bx bx-buildings'></i>
+          <span>Cadastrar Empresa</span>
+          <i class='bx bx-loader-alt bx-spin loading-icon'></i>
+        </button>
 
-          <p class="login">
-            Já possui uma conta? Faça seu <a href="/login">login</a>
+        <footer class="form-footer">
+          <p class="login-link">
+            Já possui uma conta? 
+            <a href="/login">Faça seu login</a>
           </p>
-        </form>
-      </section>
-    </main>
-
-    <script src="/js/script.js"></script>
-    <script>
-      const formularioAtivo =
-        "<%= typeof formularioAtivo !== 'undefined' ? formularioAtivo : 'farmacia' %>";
-
-      function mostrarFormulario(tipo) {
-        const formFarmacia = document.getElementById("formFarmacia");
-        const formProfissional = document.getElementById("formProfissional");
-
-        const btnFarmacia = document.getElementById("btnFarmacia");
-        const btnProfissional = document.getElementById("btnProfissional");
-
-        if (tipo === "farmacia") {
-          formFarmacia.classList.remove("hidden");
-          formProfissional.classList.add("hidden");
-          btnFarmacia.classList.add("ativo");
-          btnProfissional.classList.remove("ativo");
-        } else {
-          formProfissional.classList.remove("hidden");
-          formFarmacia.classList.add("hidden");
-          btnProfissional.classList.add("ativo");
-          btnFarmacia.classList.remove("ativo");
-        }
-      }
-      mostrarFormulario(formularioAtivo);
-    </script>
-  </body>
+        </footer>
+      </form>
+    </section>
+    <script src="/js/cadastro-validation.js"></script>
+  </main>
+</body>
 </html>
