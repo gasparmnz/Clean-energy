@@ -136,24 +136,42 @@ main {
   width: 80px;
   height: 80px;
 }
-.btn-voltar-plain {
-  all: unset; /* Remove todos os estilos herdados, inclusive do Bootstrap */
-  cursor: pointer; /* Mantém o cursor de botão */
+.back-navigation {
+  position: fixed;
+  top: calc(100px + var(--spacing-lg));
+  left: var(--spacing-lg);
+  z-index: 1000;
+}
+
+.back-button {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 18px; /* Ajuste do texto */
-  color: #1d3557; /* Cor do texto e da seta */
-}
-.btn-voltar-plain:hover {
-  color: #32598f;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--background);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-full);
+  color: var(--secondary-color);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-light);
+  backdrop-filter: blur(10px);
 }
 
-
-.btn-voltar-plain i {
-  font-size: 22px; /* Ajusta tamanho da seta */
-  vertical-align: middle;
+.back-button:hover {
+  background: var(--secondary-color);
+  color: var(--background);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
 }
+
+.back-button i {
+  font-size: var(--font-size-lg);
+}
+
 
 /* Responsividade */
 @media (max-width: 768px) {
