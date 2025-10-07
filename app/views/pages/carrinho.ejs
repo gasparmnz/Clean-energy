@@ -12,64 +12,92 @@
   <%- include('../partial/header1.ejs') %>
   <main>
     <section class="back-button-container">
-  <button class="btn-voltar-plain" onclick="history.back()">
-    <i class='bx bx-left-arrow-alt'></i> Voltar
-  </button>
-</section>
-
-    <br><br><section class="produtos">
-      <!-- Produto 1 -->
-      <article class="produto-card" data-nome="Resíduos de café" data-preco="700" data-max="5">
-        <div class="produto-top">
-          <img src="/imagem/residuosdecafe.png" alt="Resíduos de café">
-          <div class="produto-info">
-            <h3>Resíduos de cafée</h3>
-            <p class="localizacao"><i class="fas fa-map-marker-alt"></i> Rio de Janeiro - RJ</p>
-            <p>Resíduos de café reciclados, ideais para produção de energia limpa e fertilização do solo.</p>
-            <p class="disponivel"><strong>Disponível:</strong> 5 toneladas</p>
-            <span class="preco">R$ 700,00</span>
-            <nav class="quantidade-controls">
-              <button class="quantidade-btn btn-menos">−</button>
-              <span class="quantidade-num">1</span>
-              <button class="quantidade-btn btn-mais">+</button>
-            </nav>
-          </div>
-        </div>
-        <button class="btn-remover">Remover</button>
-      </article>
-
-      <!-- Produto 2 -->
-      <article class="produto-card" data-nome="Resíduos de Biomassa" data-preco="1200" data-max="8">
-        <div class="produto-top">
-          <img src="/imagem/cana.png" alt="Resíduos de Biomassa">
-          <div class="produto-info">
-            <h3>Resíduos de Biomassa</h3>
-            <p class="localizacao"><i class="fas fa-map-marker-alt"></i> São Paulo - SP</p>
-            <p>Resíduos provenientes da geração de biomassa, ideais para combustíveis renováveis e geração de energia sustentável.</p>
-            <p class="disponivel"><strong>Disponível:</strong> 8 toneladas</p>
-            <span class="preco">R$ 1.200,00</span>
-            <nav class="quantidade-controls">
-              <button class="quantidade-btn btn-menos">−</button>
-              <span class="quantidade-num">1</span>
-              <button class="quantidade-btn btn-mais">+</button>
-            </nav>
-          </div>
-        </div>
-        <button class="btn-remover">Remover</button>
-      </article>
+      <button class="btn-voltar-plain" onclick="history.back()">
+        <i class='bx bx-left-arrow-alt'></i> Voltar
+      </button>
     </section>
 
-    <!-- Resumo abaixo dos produtos -->
-    <aside class="resumo">
-      <header>
-        <h2>Resumo do Pedido</h2>
-      </header>
-      <ul class="resumo-lista"></ul>
-      <p class="total"></p>
-      <a href="/minhascompras">
-      <button class="btn-comprar">Finalizar Compra</button>
-    </a>
-    </aside>
+    <br><br>
+    
+    <!-- Container com duas colunas -->
+    <div class="carrinho-container">
+      
+      <!-- Coluna esquerda: Produtos -->
+      <div class="coluna-produtos">
+        <section class="produtos">
+          <!-- Produto 1 -->
+          <article class="produto-card" data-nome="Resíduos de café" data-preco="700" data-max="5">
+            <div class="produto-top">
+              <img src="/imagem/residuosdecafe.png" alt="Resíduos de café">
+              <div class="produto-info">
+                <h3>Resíduos de café</h3>
+                <p class="localizacao"><i class="fas fa-map-marker-alt"></i> Rio de Janeiro - RJ</p>
+                <p>Resíduos de café reciclados, ideais para produção de energia limpa e fertilização do solo.</p>
+                <p class="disponivel"><strong>Disponível:</strong> 5 toneladas</p>
+                <span class="preco">R$ 700,00</span>
+                <nav class="quantidade-controls">
+                  <button class="quantidade-btn btn-menos">−</button>
+                  <span class="quantidade-num">1</span>
+                  <button class="quantidade-btn btn-mais">+</button>
+                </nav>
+              </div>
+            </div>
+            <button class="btn-remover"><i class="fas fa-times"></i></button>
+          </article>
+
+          <!-- Produto 2 -->
+          <article class="produto-card" data-nome="Resíduos de Biomassa" data-preco="1200" data-max="8">
+            <div class="produto-top">
+              <img src="/imagem/cana.png" alt="Resíduos de Biomassa">
+              <div class="produto-info">
+                <h3>Resíduos de Biomassa</h3>
+                <p class="localizacao"><i class="fas fa-map-marker-alt"></i> São Paulo - SP</p>
+                <p>Resíduos provenientes da geração de biomassa, ideais para combustíveis renováveis e geração de energia sustentável.</p>
+                <p class="disponivel"><strong>Disponível:</strong> 8 toneladas</p>
+                <span class="preco">R$ 1.200,00</span>
+                <nav class="quantidade-controls">
+                  <button class="quantidade-btn btn-menos">−</button>
+                  <span class="quantidade-num">1</span>
+                  <button class="quantidade-btn btn-mais">+</button>
+                </nav>
+              </div>
+            </div>
+            <button class="btn-remover"><i class="fas fa-times"></i></button>
+          </article>
+        </section>
+      </div>
+
+      <!-- Coluna direita: Resumo e Anúncio -->
+      <div class="coluna-lateral">
+        
+        <!-- Resumo do Pedido -->
+        <aside class="resumo">
+          <header>
+            <h2>Resumo do Pedido</h2>
+          </header>
+          <ul class="resumo-lista"></ul>
+          <p class="total"></p>
+          <a href="/minhascompras">
+            <button class="btn-comprar">Finalizar Compra</button>
+          </a>
+        </aside>
+
+        <!-- Anúncio de Transportadoras -->
+        <br><aside class="anuncio-transportadoras">
+          <div class="anuncio-icon">
+            <i class="fas fa-truck"></i>
+          </div>
+          <div class="anuncio-content">
+            <h3>Precisa de transporte?</h3>
+            <p>Conheça nossas transportadoras parceiras e escolha a melhor opção para sua entrega.</p>
+            <a href="/transporte" class="btn-anuncio">
+              Ver Transportadoras <i class="fas fa-arrow-right"></i>
+            </a>
+          </div>
+        </aside>
+
+      </div>
+    </div>
   </main>
 
   <script>

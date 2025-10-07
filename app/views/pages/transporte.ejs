@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transportadoras Recomendadas - Biomassa Hub</title>
+  <link rel="stylesheet" href="/css/transporte.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partial/header1.ejs' ) %>
+  <main class="transport-main">
+    <header class="transport-hero">
+      <section class="hero-content">
+        <h1 class="hero-title">Transportadoras Recomendadas</h1>
+        <p class="hero-subtitle">Empresas especializadas no transporte de biomassa e resíduos</p>
+        <p class="hero-description">
+          Conectamos você com transportadoras confiáveis e experientes no manuseio de materiais para produção de biomassa, 
+          garantindo segurança e eficiência na logística dos seus produtos.
+        </p>
+      </section>
+    </header>
+
+      <!-- Lista de Transportadoras -->
+      <section class="transporters-grid" id="transportersGrid">
+        
+        <!-- Transportadora 1 - Paulista Express -->
+        <article class="transporter-card" data-region="sudeste" data-specialty="fracionada" data-rating="4.7">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="/imagem/pe.png" alt="Logo Paulista Express" class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">Paulista Express</h3>
+              <address class="company-location">
+                <i class='bx bx-map-pin'></i>
+                <span class="location-text">São Bernardo do Campo, SP - Sudeste</span>
+              </address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.7</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star-half'></i>
+              </section>
+            </section>
+          </header>
+          <section class="card-content">
+            <p class="company-description">
+              Com mais de 20 anos de experiência, é referência no transporte de cargas fracionadas e dedicadas, atendendo com agilidade o eixo industrial do Sudeste.
+            </p>
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Carga Fracionada</li>
+                <li class="specialty-tag">Carga Dedicada</li>
+                <li class="specialty-tag">Logística Reversa</li>
+              </ul>
+            </section>
+            <section class="company-details">
+              <section class="detail-item"><i class='bx bx-truck'></i><span>Frota: +50 veículos</span></section>
+              <section class="detail-item"><i class='bx bx-buildings'></i><span>Armazenagem e Distribuição</span></section>
+              <section class="detail-item"><i class='bx bx-timer'></i><span>Entregas Expressas</span></section>
+            </section>
+          </section>
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('Paulista Express')"><i class='bx bx-phone'></i>Entrar em Contato</button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos"><i class='bx bx-heart'></i></button>
+          </footer>
+        </article>
+
+        <!-- Transportadora 2 - TransBio -->
+        <article class="transporter-card" data-region="sudeste" data-specialty="residuos" data-rating="4.6">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="/imagem/logotransbio.png" alt="Logo TransBio" class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">TransBio Soluções</h3>
+              <address class="company-location"><i class='bx bx-map-pin'></i>Lagoa Santa, MG - Sudeste</address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.6</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star-half'></i>
+              </section>
+            </section>
+          </header>
+          <section class="card-content">
+            <p class="company-description">
+              Focada em soluções ambientais, é especializada no transporte de resíduos industriais e orgânicos, garantindo a destinação correta e segura para usinas de biomassa.
+            </p>
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Resíduos Orgânicos</li>
+                <li class="specialty-tag">Biomassa</li>
+                <li class="specialty-tag">Coleta Seletiva</li>
+              </ul>
+            </section>
+            <section class="company-details">
+              <section class="detail-item"><i class='bx bx-truck'></i><span>Frota: 35 veículos</span></section>
+              <section class="detail-item"><i class='bx bx-leaf'></i><span>Licenciamento Ambiental</span></section>
+              <section class="detail-item"><i class='bx bx-map'></i><span>Rastreamento de Carga</span></section>
+            </section>
+          </section>
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('TransBio Soluções')"><i class='bx bx-phone'></i>Entrar em Contato</button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos"><i class='bx bx-heart'></i></button>
+          </footer>
+        </article>
+
+        <!-- Transportadora 3 - Flyville -->
+        <article class="transporter-card" data-region="sul" data-specialty="graneis" data-rating="4.8">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="/imagem/fly.png" alt="Logo Flyville" class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">Flyville Transportes</h3>
+              <address class="company-location"><i class='bx bx-map-pin'></i>Guaramirim, SC - Sul</address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.8</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+              </section>
+            </section>
+          </header>
+          <section class="card-content">
+            <p class="company-description">
+              Especialista no transporte de cargas a granel e paletizadas na região Sul. Oferece soluções logísticas eficientes para o agronegócio e a indústria de biomassa.
+            </p>
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Granéis Sólidos</li>
+                <li class="specialty-tag">Carga Paletizada</li>
+                <li class="specialty-tag">Insumos Agrícolas</li>
+              </ul>
+            </section>
+            <section class="company-details">
+              <section class="detail-item"><i class='bx bx-truck'></i><span>Frota: +130 veículos</span></section>
+              <section class="detail-item"><i class='bx bx-award'></i><span>Certificação de Qualidade</span></section>
+              <section class="detail-item"><i class='bx bx-world'></i><span>Atuação no Mercosul</span></section>
+            </section>
+          </section>
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('Flyville Transportes')"><i class='bx bx-phone'></i>Entrar em Contato</button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos"><i class='bx bx-heart'></i></button>
+          </footer>
+        </article>
+
+        <!-- Transportadora 4 - NordLog -->
+        <article class="transporter-card" data-region="nordeste" data-specialty="liquidos" data-rating="4.5">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="/imagem/nord.png" alt="Logo NordLog" class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">NordLog Transportes</h3>
+              <address class="company-location"><i class='bx bx-map-pin'></i>Recife, PE - Nordeste</address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.5</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star-half'></i>
+              </section>
+            </section>
+          </header>
+          <section class="card-content">
+            <p class="company-description">
+              Solução logística focada na região Nordeste, especializada no transporte de cargas líquidas e produtos químicos, incluindo insumos e efluentes para biomassa.
+            </p>
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Líquidos a Granel</li>
+                <li class="specialty-tag">Resíduos Químicos</li>
+                <li class="specialty-tag">Biocombustíveis</li>
+              </ul>
+            </section>
+            <section class="company-details">
+              <section class="detail-item"><i class='bx bx-truck'></i><span>Frota: 40 veículos</span></section>
+              <section class="detail-item"><i class='bx bx-droplet'></i><span>Tanques Inox e Carbono</span></section>
+              <section class="detail-item"><i class='bx bx-shield-quarter'></i><span>Transporte SASSMAQ</span></section>
+            </section>
+          </section>
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('NordLog Transportes')"><i class='bx bx-phone'></i>Entrar em Contato</button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos"><i class='bx bx-heart'></i></button>
+          </footer>
+        </article>
+
+         <!-- Transportadora 5 - Pacifico Log -->
+         <article class="transporter-card" data-region="sudeste" data-specialty="diversos" data-rating="4.6">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="/imagem/pac.png" alt="Logo Pacifico Log" class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">Pacifico Log</h3>
+              <address class="company-location"><i class='bx bx-map-pin'></i>Guarulhos, SP - Sudeste</address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.6</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star-half'></i>
+              </section>
+            </section>
+          </header>
+          <section class="card-content">
+            <p class="company-description">
+              Oferece soluções logísticas flexíveis, com forte atuação no transporte rodoviário de carga geral e lotação, conectando os principais centros de distribuição do país.
+            </p>
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Carga Lotação</li>
+                <li class="specialty-tag">Distribuição Urbana</li>
+                <li class="specialty-tag">Armazenagem</li>
+              </ul>
+            </section>
+            <section class="company-details">
+              <section class="detail-item"><i class='bx bx-truck'></i><span>Frota: +100 veículos</span></section>
+              <section class="detail-item"><i class='bx bx-sync'></i><span>Frota Rastreada</span></section>
+              <section class="detail-item"><i class='bx bx-headphone'></i><span>Atendimento 24h</span></section>
+            </section>
+          </section>
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('Pacifico Log')"><i class='bx bx-phone'></i>Entrar em Contato</button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos"><i class='bx bx-heart'></i></button>
+          </footer>
+        </article>
+
+        <!-- Transportadora 6 - JSL -->
+        <article class="transporter-card" data-region="nacional" data-specialty="diversos" data-rating="4.9">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="/imagem/jsl.png" alt="Logo JSL" class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">JSL</h3>
+              <address class="company-location"><i class='bx bx-map-pin'></i>Mogi das Cruzes, SP - Nacional</address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.9</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+              </section>
+            </section>
+          </header>
+          <section class="card-content">
+            <p class="company-description">
+              Líder em logística na América Latina, oferece um portfólio completo de serviços, incluindo o transporte de commodities agrícolas e resíduos para o setor de energia.
+            </p>
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Carga Dedicada</li><li class="specialty-tag">Gestão de Frotas</li><li class="specialty-tag">Logística Integrada</li>
+              </ul>
+            </section>
+            <section class="company-details">
+              <section class="detail-item"><i class='bx bx-truck'></i><span>Frota: +20.000 ativos</span></section>
+              <section class="detail-item"><i class='bx bx-globe'></i><span>Presença na América Latina</span></section>
+              <section class="detail-item"><i class='bx bx-line-chart'></i><span>Soluções customizadas</span></section>
+            </section>
+          </section>
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('JSL')"><i class='bx bx-phone'></i>Entrar em Contato</button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos"><i class='bx bx-heart'></i></button>
+          </footer>
+        </article>
+
+        <!-- Transportadora 7 - Braspress -->
+        <article class="transporter-card" data-region="nacional" data-specialty="fracionada" data-rating="4.7">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="/imagem/bra.png" alt="Logo Braspress" class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">Braspress</h3>
+              <address class="company-location"><i class='bx bx-map-pin'></i>Guarulhos, SP - Nacional</address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.7</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star-half' ></i>
+              </section>
+            </section>
+          </header>
+          <section class="card-content">
+            <p class="company-description">
+              Especialista nacional em transporte de encomendas, com uma capilaridade que atende todo o Brasil. Ideal para transporte de insumos e peças de menor volume.
+            </p>
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Carga Fracionada</li><li class="specialty-tag">Logística Aérea</li><li class="specialty-tag">Encomendas</li>
+              </ul>
+            </section>
+            <section class="company-details">
+              <section class="detail-item"><i class='bx bx-truck'></i><span>Frota: +3.000 veículos</span></section>
+              <section class="detail-item"><i class='bx bx-buildings'></i><span>+100 filiais no país</span></section>
+              <section class="detail-item"><i class='bx bx-package'></i><span>Rastreamento em tempo real</span></section>
+            </section>
+          </section>
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('Braspress')"><i class='bx bx-phone'></i>Entrar em Contato</button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos"><i class='bx bx-heart'></i></button>
+          </footer>
+        </article>
+
+        <!-- Transportadora 8 - Bertolini (Norte) -->
+        <article class="transporter-card" data-region="norte" data-specialty="fluvial" data-rating="4.8">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="/imagem/ber.png" alt="Logo Bertolini" class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">Grupo Bertolini</h3>
+              <address class="company-location"><i class='bx bx-map-pin'></i>Manaus, AM - Norte</address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.8</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+              </section>
+            </section>
+          </header>
+          <section class="card-content">
+            <p class="company-description">
+              Líder em logística na Amazônia, integra transporte fluvial e rodoviário. Essencial para o escoamento de biomassa, como cavaco de madeira e caroço de açaí, na região Norte.
+            </p>
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Navegação Fluvial</li><li class="specialty-tag">Granéis Sólidos</li><li class="specialty-tag">Logística Multimodal</li>
+              </ul>
+            </section>
+            <section class="company-details">
+              <section class="detail-item"><i class='bx bxs-ship'></i><span>Frota: +300 embarcações</span></section>
+              <section class="detail-item"><i class='bx bx-water'></i><span>Terminais Portuários</span></section>
+              <section class="detail-item"><i class='bx bx-recycle'></i><span>Soluções Sustentáveis</span></section>
+            </section>
+          </section>
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('Grupo Bertolini')"><i class='bx bx-phone'></i>Entrar em Contato</button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos"><i class='bx bx-heart'></i></button>
+          </footer>
+        </article>
+
+        <!-- Transportadora 9 - Carvalima (Centro-Oeste) -->
+        <article class="transporter-card" data-region="centro-oeste" data-specialty="agronegocio" data-rating="4.6">
+          <header class="card-header">
+            <figure class="company-logo">
+              <img src="/imagem/car.png" alt="Logo Carvalima" class="logo-img">
+            </figure>
+            <section class="company-info">
+              <h3 class="company-name">Carvalima Transportes</h3>
+              <address class="company-location"><i class='bx bx-map-pin'></i>Cuiabá, MT - Centro-Oeste</address>
+            </section>
+            <section class="company-rating">
+              <span class="rating-score">4.6</span>
+              <section class="rating-stars">
+                <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star-half' ></i>
+              </section>
+            </section>
+          </header>
+          <section class="card-content">
+            <p class="company-description">
+              Com forte presença no Centro-Oeste, é vital para o agronegócio, transportando desde insumos até a produção final, como bagaço de cana e resíduos de milho.
+            </p>
+            <section class="company-specialties">
+              <h4 class="specialties-title">Especialidades:</h4>
+              <ul class="specialties-list">
+                <li class="specialty-tag">Agronegócio</li><li class="specialty-tag">Carga Lotação</li><li class="specialty-tag">Encomendas Expressas</li>
+              </ul>
+            </section>
+            <section class="company-details">
+              <section class="detail-item"><i class='bx bx-truck'></i><span>Frota: +1.800 veículos</span></section>
+              <section class="detail-item"><i class='bx bxs-map-alt'></i><span>+150 unidades de atendimento</span></section>
+              <section class="detail-item"><i class='bx bx-package'></i><span>Ampla cobertura regional</span></section>
+            </section>
+          </section>
+          <footer class="card-actions">
+            <button class="btn-contact" onclick="contactTransporter('Carvalima Transportes')"><i class='bx bx-phone'></i>Entrar em Contato</button>
+            <button class="btn-favorite" aria-label="Adicionar aos favoritos"><i class='bx bx-heart'></i></button>
+          </footer>
+        </article>
+
+      </section>
+  </main>
+  <%- include('../partial/footer.ejs') %>
+  <script src="transportadoras.js"></script>
+</body>
+</html>
+

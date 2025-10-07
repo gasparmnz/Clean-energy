@@ -3,72 +3,398 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro de Produto</title>
+  <title>Cadastrar Produto - Biomassa Hub</title>
   <link rel="stylesheet" href="/css/cadastrar_produto.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <main>
-    <h1>Cadastrar Produto</h1>
+  <main class="product-main">
+    <!-- Cabeçalho da página -->
+    <header class="page-header">
+      <h1 class="page-title">
+        <i class='bx bx-package'></i>
+        Cadastrar Produto
+      </h1>
+      <p class="page-subtitle">
+        Adicione um novo produto de biomassa à plataforma
+      </p>
+    </header>
 
-    <form>
-      <fieldset>
-        <legend>Informações do Produto</legend>
+    <!-- Formulário de cadastro -->
+    <form 
+        class="product-form" 
+        method="GET" 
+        action="/listaprodutos" 
+        enctype="multipart/form-data"
+        novalidate
+        aria-label="Formulário de cadastro de produto"
+      >
+      <!-- Seção: Informações do Produto -->
+      <section class="form-section">
+        <header class="section-header">
+          <h2 class="section-title">
+            <i class='bx bx-info-circle'></i>
+            Informações do Produto
+          </h2>
+          <p class="section-subtitle">Dados básicos sobre o produto</p>
+        </header>
 
-        <label for="nome">Nome do Produto</label>
-        <input type="text" id="nome" name="nome" placeholder="Ex: Lixo orgânico" required>
+        <fieldset class="form-fieldset">
+          <legend class="sr-only">Informações básicas do produto</legend>
 
-        <label for="descricao">Descrição do Produto</label>
-        <textarea id="descricao" name="descricao" rows="3" placeholder="Digite uma breve descrição" required></textarea>
+          <!-- Nome do Produto -->
+          <article class="input-group">
+            <label for="nome" class="input-label">
+              <i class='bx bx-tag'></i>
+              Nome do Produto
+              <span class="required-indicator" aria-label="Campo obrigatório">*</span>
+            </label>
+            <section class="input-wrapper">
+              <input
+                type="text"
+                id="nome"
+                name="nome"
+                class="form-input"
+                placeholder="Ex: Lixo orgânico"
+                aria-describedby="nome-error nome-help"
+                autocomplete="off"
+                required
+              />
+              <i class='bx bx-tag input-icon'></i>
+            </section>
+            <small id="nome-help" class="input-help">Mínimo 3 caracteres, máximo 100</small>
+            <span id="nome-error" class="error-message" role="alert"></span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Nome válido
+            </span>
+          </article>
 
-        <label for="preco">Preço (R$)</label>
-        <input type="number" id="preco" name="preco" step="0.01" placeholder="Ex: 899.00" required>
+          <!-- Descrição -->
+          <article class="input-group">
+            <label for="descricao" class="input-label">
+              <i class='bx bx-text'></i>
+              Descrição do Produto
+              <span class="required-indicator" aria-label="Campo obrigatório">*</span>
+            </label>
+            <section class="input-wrapper">
+              <textarea
+                id="descricao"
+                name="descricao"
+                class="form-textarea"
+                rows="4"
+                placeholder="Digite uma descrição detalhada do produto..."
+                aria-describedby="descricao-error descricao-help"
+                required
+              ></textarea>
+              <span class="char-counter" id="descricao-counter">0/500</span>
+            </section>
+            <small id="descricao-help" class="input-help">Mínimo 10 caracteres, máximo 500</small>
+            <span id="descricao-error" class="error-message" role="alert"></span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Descrição válida
+            </span>
+          </article>
 
-        <label for="quantidade">Quantidade (Toneladas)</label>
-        <input type="number" id="quantidade" name="quantidade" step="0.01" placeholder="Ex: 10" required>
+          <!-- Grid para Preço e Quantidade -->
+          <section class="input-grid">
+            <!-- Preço -->
+            <article class="input-group">
+              <label for="preco" class="input-label">
+                <i class='bx bx-dollar-circle'></i>
+                Preço (R$)
+                <span class="required-indicator" aria-label="Campo obrigatório">*</span>
+              </label>
+              <section class="input-wrapper">
+                <input
+                  type="text"
+                  id="preco"
+                  name="preco"
+                  class="form-input money-input"
+                  placeholder="R$ 0,00"
+                  aria-describedby="preco-error preco-help"
+                  autocomplete="off"
+                  required
+                />
+                <i class='bx bx-dollar-circle input-icon'></i>
+              </section>
+              <small id="preco-help" class="input-help">Valor por tonelada</small>
+              <span id="preco-error" class="error-message" role="alert"></span>
+              <span class="success-message" role="status">
+                <i class='bx bx-check-circle'></i>
+                Preço válido
+              </span>
+            </article>
 
-        <label for="categoria">Categoria</label>
-        <select id="categoria" name="categoria" required>
-          <option value="">Selecione...</option>
-          <option value="materias-primas">Matérias-primas</option>
-        </select>
+            <!-- Quantidade -->
+            <article class="input-group">
+              <label for="quantidade" class="input-label">
+                <i class='bx bx-package'></i>
+                Quantidade (Toneladas)
+                <span class="required-indicator" aria-label="Campo obrigatório">*</span>
+              </label>
+              <section class="input-wrapper">
+                <input
+                  type="text"
+                  id="quantidade"
+                  name="quantidade"
+                  class="form-input number-input"
+                  placeholder="0,00 t"
+                  aria-describedby="quantidade-error quantidade-help"
+                  autocomplete="off"
+                  required
+                />
+                <i class='bx bx-package input-icon'></i>
+              </section>
+              <small id="quantidade-help" class="input-help">Quantidade disponível</small>
+              <span id="quantidade-error" class="error-message" role="alert"></span>
+              <span class="success-message" role="status">
+                <i class='bx bx-check-circle'></i>
+                Quantidade válida
+              </span>
+            </article>
+          </section>
 
-        <label for="imagem">Imagem</label>
-        <input type="file" id="imagem" name="imagem" accept="image/*" required>
-      </fieldset>
+          <!-- Categoria -->
+          <article class="input-group">
+            <label for="categoria" class="input-label">
+              <i class='bx bx-category'></i>
+              Categoria
+              <span class="required-indicator" aria-label="Campo obrigatório">*</span>
+            </label>
+            <section class="input-wrapper">
+              <select
+                id="categoria"
+                name="categoria"
+                class="form-select"
+                aria-describedby="categoria-error categoria-help"
+                required
+              >
+                <option value="">Selecione uma categoria...</option>
+                <option value="materias-primas">Matérias-primas</option>
+                <option value="residuos-organicos">Resíduos Orgânicos</option>
+                <option value="biomassa-florestal">Biomassa Florestal</option>
+                <option value="residuos-agricolas">Resíduos Agrícolas</option>
+              </select>
+              <i class='bx bx-chevron-down select-icon'></i>
+            </section>
+            <small id="categoria-help" class="input-help">Escolha a categoria mais adequada</small>
+            <span id="categoria-error" class="error-message" role="alert"></span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Categoria selecionada
+            </span>
+          </article>
 
-      <fieldset>
-        <legend>Endereço de Retirada</legend>
-        <div class="endereco-grid">
-          <div>
-            <label for="cidade">Cidade</label>
-            <input type="text" id="cidade" name="cidade" placeholder="Ex: São Paulo" required>
-          </div>
-          <div>
-            <label for="bairro">Bairro</label>
-            <input type="text" id="bairro" name="bairro" placeholder="Ex: Centro" required>
-          </div>
-          <div>
-            <label for="rua">Rua</label>
-            <input type="text" id="rua" name="rua" placeholder="Ex: Rua das Flores" required>
-          </div>
-          <div>
-            <label for="numero">Número</label>
-            <input type="text" id="numero" name="numero" placeholder="Ex: 123" required>
-          </div>
-          <div>
-            <label for="complemento">Complemento</label>
-            <input type="text" id="complemento" name="complemento" placeholder="Ex: Bloco A, Ap. 10">
-          </div>
-        </div>
-      </fieldset>
-
-      <section class="acoes">
-        <button type="button" class="salvar" onclick="window.location.href='/listaprodutos'">
-          Avançar
-      </button>
-        <button type="button" class="cancelar" onclick="window.location.href='/listaprodutos'">Cancelar</button>
+          <!-- Upload de Imagem -->
+          <article class="input-group">
+            <label for="imagem" class="input-label">
+              <i class='bx bx-image'></i>
+              Imagem do Produto
+              <span class="required-indicator" aria-label="Campo obrigatório">*</span>
+            </label>
+            <section class="file-upload-wrapper">
+              <input
+                type="file"
+                id="imagem"
+                name="imagem"
+                class="file-input"
+                accept="image/jpeg,image/jpg,image/png,image/webp"
+                aria-describedby="imagem-error imagem-help"
+                required
+              />
+              <label for="imagem" class="file-upload-label">
+                <i class='bx bx-cloud-upload'></i>
+                <span class="upload-text">Clique para selecionar ou arraste a imagem</span>
+                <span class="upload-subtext">JPG, PNG ou WEBP até 5MB</span>
+              </label>
+              <section class="file-preview" id="file-preview" style="display: none;">
+                <img class="preview-image" alt="Preview da imagem" />
+                <button type="button" class="remove-file" aria-label="Remover imagem">
+                  <i class='bx bx-x'></i>
+                </button>
+              </section>
+            </section>
+            <small id="imagem-help" class="input-help">Formatos aceitos: JPG, PNG, WEBP (máx. 5MB)</small>
+            <span id="imagem-error" class="error-message" role="alert"></span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Imagem válida
+            </span>
+          </article>
+        </fieldset>
       </section>
+
+      <!-- Seção: Endereço de Retirada -->
+      <section class="form-section">
+        <header class="section-header">
+          <h2 class="section-title">
+            <i class='bx bx-map'></i>
+            Endereço de Retirada
+          </h2>
+          <p class="section-subtitle">Local onde o produto está disponível</p>
+        </header>
+
+        <fieldset class="form-fieldset">
+          <legend class="sr-only">Endereço para retirada do produto</legend>
+
+          <!-- Grid de Endereço -->
+          <section class="address-grid">
+            <!-- Cidade -->
+            <article class="input-group">
+              <label for="cidade" class="input-label">
+                <i class='bx bx-buildings'></i>
+                Cidade
+                <span class="required-indicator" aria-label="Campo obrigatório">*</span>
+              </label>
+              <section class="input-wrapper">
+                <input
+                  type="text"
+                  id="cidade"
+                  name="cidade"
+                  class="form-input"
+                  placeholder="Ex: São Paulo"
+                  aria-describedby="cidade-error cidade-help"
+                  autocomplete="address-level2"
+                  required
+                />
+                <i class='bx bx-buildings input-icon'></i>
+              </section>
+              <small id="cidade-help" class="input-help">Nome da cidade</small>
+              <span id="cidade-error" class="error-message" role="alert"></span>
+              <span class="success-message" role="status">
+                <i class='bx bx-check-circle'></i>
+                Cidade válida
+              </span>
+            </article>
+
+            <!-- Bairro -->
+            <article class="input-group">
+              <label for="bairro" class="input-label">
+                <i class='bx bx-home'></i>
+                Bairro
+                <span class="required-indicator" aria-label="Campo obrigatório">*</span>
+              </label>
+              <section class="input-wrapper">
+                <input
+                  type="text"
+                  id="bairro"
+                  name="bairro"
+                  class="form-input"
+                  placeholder="Ex: Centro"
+                  aria-describedby="bairro-error bairro-help"
+                  autocomplete="address-level3"
+                  required
+                />
+                <i class='bx bx-home input-icon'></i>
+              </section>
+              <small id="bairro-help" class="input-help">Nome do bairro</small>
+              <span id="bairro-error" class="error-message" role="alert"></span>
+              <span class="success-message" role="status">
+                <i class='bx bx-check-circle'></i>
+                Bairro válido
+              </span>
+            </article>
+
+            <!-- Rua -->
+            <article class="input-group">
+              <label for="rua" class="input-label">
+                <i class='bx bx-street-view'></i>
+                Rua
+                <span class="required-indicator" aria-label="Campo obrigatório">*</span>
+              </label>
+              <section class="input-wrapper">
+                <input
+                  type="text"
+                  id="rua"
+                  name="rua"
+                  class="form-input"
+                  placeholder="Ex: Rua das Flores"
+                  aria-describedby="rua-error rua-help"
+                  autocomplete="street-address"
+                  required
+                />
+                <i class='bx bx-street-view input-icon'></i>
+              </section>
+              <small id="rua-help" class="input-help">Nome da rua</small>
+              <span id="rua-error" class="error-message" role="alert"></span>
+              <span class="success-message" role="status">
+                <i class='bx bx-check-circle'></i>
+                Rua válida
+              </span>
+            </article>
+
+            <!-- Número -->
+            <article class="input-group">
+              <label for="numero" class="input-label">
+                <i class='bx bx-hash'></i>
+                Número
+                <span class="required-indicator" aria-label="Campo obrigatório">*</span>
+              </label>
+              <section class="input-wrapper">
+                <input
+                  type="text"
+                  id="numero"
+                  name="numero"
+                  class="form-input"
+                  placeholder="Ex: 123"
+                  aria-describedby="numero-error numero-help"
+                  autocomplete="off"
+                  required
+                />
+                <i class='bx bx-hash input-icon'></i>
+              </section>
+              <small id="numero-help" class="input-help">Número do endereço</small>
+              <span id="numero-error" class="error-message" role="alert"></span>
+              <span class="success-message" role="status">
+                <i class='bx bx-check-circle'></i>
+                Número válido
+              </span>
+            </article>
+
+            <!-- Complemento -->
+            <article class="input-group complemento-full">
+              <label for="complemento" class="input-label">
+                <i class='bx bx-detail'></i>
+                Complemento
+                <span class="optional-indicator">(opcional)</span>
+              </label>
+              <section class="input-wrapper">
+                <input
+                  type="text"
+                  id="complemento"
+                  name="complemento"
+                  class="form-input"
+                  placeholder="Ex: Bloco A, Ap. 10, Galpão 2"
+                  aria-describedby="complemento-help"
+                  autocomplete="off"
+                />
+                <i class='bx bx-detail input-icon'></i>
+              </section>
+              <small id="complemento-help" class="input-help">Informações adicionais do endereço</small>
+            </article>
+          </section>
+        </fieldset>
+      </section>
+
+      <!-- Ações do Formulário -->
+      <footer class="form-actions">
+        <button type="submit" class="submit-btn">
+          <i class='bx bx-check'></i>
+          <span>Cadastrar Produto</span>
+          <i class='bx bx-loader-alt bx-spin loading-icon'></i>
+        </button>
+        
+        <button type="button" class="cancel-btn" onclick="window.location.href='/listaprodutos'">
+          <i class='bx bx-x'></i>
+          <span>Cancelar</span>
+        </button>
+      </footer>
     </form>
   </main>
+
+  <script src="/js/produto-validation.js"></script>
 </body>
 </html>
