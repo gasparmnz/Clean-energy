@@ -1,75 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre Nós</title>
     <link rel="stylesheet" type="text/css" href="/css/sobre_nos.css">
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
     <%- include('../partial/header1.ejs') %>
     <main>    
-        <nav class="heading">
-            
+        <section class="hero">
+            <h1>Sobre Nós</h1>
             <p>Somos uma plataforma criada para transformar o mercado de energia por meio da biomassa.
-                 Nosso objetivo é simplificar a conexão entre vendedores e empresas, oferecendo negociações seguras, rápidas e transparentes.
-                        Acreditamos que inovação e responsabilidade ambiental caminham lado a lado. Por isso, 
-                        todos os parceiros passam por um processo de verificação criterioso, garantindo qualidade e confiança em cada transação.
-                        Mais do que uma solução de intermediação, queremos ser aliados na construção 
-                        de um futuro energético mais sustentável, onde cada negócio representa um
-                        avanço para reduzir resíduos e valorizar a energia limpa.</p>
-        </nav>
+                Nosso objetivo é simplificar a conexão entre vendedores e empresas, oferecendo negociações seguras, rápidas e transparentes.
+                Acreditamos que inovação e responsabilidade ambiental caminham lado a lado. Por isso, 
+                todos os parceiros passam por um processo de verificação criterioso, garantindo qualidade e confiança em cada transação.
+                Mais do que uma solução de intermediação, queremos ser aliados na construção 
+                de um futuro energético mais sustentável, onde cada negócio representa um
+                avanço para reduzir resíduos e valorizar a energia limpa.</p>
+        </section>
 
-        <nav class="container">
-            <section class="about">
-                <nav class="about-image">
-                    <img class="ca" src="/imagem/download.png">
-                </nav>
-                <nav class="about-content">
-                    <h2>Quem Somos</h2>
-                    <p>Somos uma plataforma que conecta vendedores e empresas no mercado de energia a partir da biomassa. Nosso propósito
-                         é simplificar e tornar mais seguro o processo de negociação, sempre com 
-                         transparência, inovação e responsabilidade ambiental. Mais do que intermediar, queremos impulsionar 
-                        um futuro energético mais sustentável, unindo eficiência, ética e compromisso com o planeta.</p>
-                </nav>
+        <article class="content-section">
+            <figure class="content-image">
+                <img src="/imagem/download.png" alt="Ilustração representando quem somos">
+            </figure>
+            <section class="content-text">
+                <h2>Quem Somos</h2>
+                <p>Somos uma plataforma que conecta vendedores e empresas no mercado de energia a partir da biomassa. Nosso propósito
+                    é simplificar e tornar mais seguro o processo de negociação, sempre com 
+                    transparência, inovação e responsabilidade ambiental. Mais do que intermediar, queremos impulsionar 
+                    um futuro energético mais sustentável, unindo eficiência, ética e compromisso com o planeta.</p>
             </section>
-        </nav>
+        </article>
 
-        <nav class="container">
-            <section class="about">
-                <nav class="about-image">
-                    <img class="ca" src="/imagem/Caminhãoentrega.png">
-                </nav>
-                <nav class="about-content">
-                    <h2>Nossas Soluções</h2>
-                    <p> 1.Facilitação da compra e venda de resíduos destinados à
-                         produção de biomassa, garantindo agilidade e segurança nas negociações.</p>
-                    <p>2.Redução e melhor aproveitamento dos resíduos, 
-                        transformando desafios ambientais em oportunidades de energia limpa.</p> 
-                    <p>3.Integração tecnológica, com uma plataforma intuitiva que
-                         oferece dados confiáveis e suporte para decisões mais estratégicas.</p>  
-                    <p>4.Sustentabilidade e parceria, fortalecendo cadeias
-                         produtivas e incentivando práticas responsáveis em todo o processo.</p>             
-                </nav>
+        <article class="content-section reverse">
+            <figure class="content-image">
+                <img src="/imagem/Caminhãoentrega.png" alt="Caminhão de entrega representando nossas soluções">
+            </figure>
+            <section class="content-text">
+                <h2>Nossas Soluções</h2>
+                <ul>
+                    <li>Facilitação da compra e venda de resíduos destinados à
+                        produção de biomassa, garantindo agilidade e segurança nas negociações.</li>
+                    <li>Redução e melhor aproveitamento dos resíduos, 
+                        transformando desafios ambientais em oportunidades de energia limpa.</li>
+                    <li>Integração tecnológica, com uma plataforma intuitiva que
+                        oferece dados confiáveis e suporte para decisões mais estratégicas.</li>
+                    <li>Sustentabilidade e parceria, fortalecendo cadeias
+                        produtivas e incentivando práticas responsáveis em todo o processo.</li>
+                </ul>
             </section>
-        </nav>
+        </article>
 
-        <nav class="container">
-            <section class="about">
-                <nav class="about-image">
-                    <img class="ca" src="/imagem/bio.png">
-                </nav>
-                <nav class="about-content">
-                    <h2>Como o setor funciona?</h2>
-                    <p>Trabalhamos em um setor que cresce junto com a economia sustentável, 
-                        isso envolve a o aumento de vida util dos produtos, e a reciclagem das materias primas, promovendo a circularidade e reduzindo impactos ambientais. Dessa forma, 
-                        contribuímos para a geração de negócios responsáveis, fortalecendo a transição para uma matriz mais limpa e inovadora.</p>
-                </nav>
+        <article class="content-section">
+            <figure class="content-image">
+                <img src="/imagem/bio.png" alt="Biomassa representando como o setor funciona">
+            </figure>
+            <section class="content-text">
+                <h2>Como o setor funciona?</h2>
+                <p>Trabalhamos em um setor que cresce junto com a economia sustentável, 
+                    isso envolve a o aumento de vida util dos produtos, e a reciclagem das materias primas, promovendo a circularidade e reduzindo impactos ambientais. Dessa forma, 
+                    contribuímos para a geração de negócios responsáveis, fortalecendo a transição para uma matriz mais limpa e inovadora.</p>
             </section>
-        </nav>
+        </article>
     </main>
     <%- include('../partial/footer.ejs') %>
 </body>
 </html>
-
