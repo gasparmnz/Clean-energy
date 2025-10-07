@@ -159,21 +159,24 @@ main section h2 {
   .produtos-scroll {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    align-items: stretch; /* <-- faz os cards terem mesma altura */
     overflow: visible;
     padding: 0;
   }
 
   .produtos-scroll li {
     width: 100%;
+    height: 100%;
   }
 
- 
-  .form-filtro-completo {
-    display: block;
+  article {
+    display: flex;                  /* distribui o conteúdo */
+    flex-direction: column;
+    justify-content: space-between; /* mantém proporção */
+    height: 100%;                   /* garante que ocupe toda a célula */
   }
-  .form-pesquisa-simples {
-    display: none;
-  }
+
 }
 
 @media (max-width: 767px) {
