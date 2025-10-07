@@ -136,22 +136,31 @@ main {
   width: 80px;
   height: 80px;
 }
+.back-button-container {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
 .btn-voltar-plain {
-  all: unset; /* Remove todos os estilos herdados, inclusive do Bootstrap */
-  cursor: pointer; /* Mantém o cursor de botão */
+  all: unset;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 18px; /* Ajuste do texto */
-  color: #1d3557; /* Cor do texto e da seta */
-}
-.btn-voltar-plain:hover {
-  color: #32598f;
+  gap: 8px;
+  font-size: 1.1rem;
+  color: #555;
+  transition: color 0.2s ease;
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
+.btn-voltar-plain:hover {
+  color: #28a745;
+  background-color: #e0f0e0;
+}
 
 .btn-voltar-plain i {
-  font-size: 22px; /* Ajusta tamanho da seta */
+  font-size: 24px;
   vertical-align: middle;
 }
 
