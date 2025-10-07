@@ -58,9 +58,9 @@ main {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 25px;
+  align-items: stretch;
 }
 
-/* Card de produto */
 .produto-card {
   background: #fff;
   border-radius: 12px;
@@ -68,8 +68,11 @@ main {
   padding: 15px;
   text-align: center;
   transition: transform 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px; /* opcional */
 }
-
 .produto-card:hover {
   transform: translateY(-5px);
 }
