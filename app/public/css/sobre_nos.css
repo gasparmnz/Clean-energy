@@ -26,6 +26,7 @@ body{
     color: #000;
     margin-bottom: 15px;
     position: relative;
+    
 }
 .heading h1::after{
     content:"✦";
