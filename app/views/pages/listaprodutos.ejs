@@ -9,7 +9,7 @@
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
-  <%- include('../partial/header.ejs') %>
+  <%- include('../partial/header1.ejs') %>
   <main>
     <!-- Sidebar -->
     <%- include('../partial/sidebar.ejs') %>
@@ -18,11 +18,12 @@
     <section class="content">
       
       <!-- Botão voltar -->
-      <section class="back-button-container">
-        <button class="btn-voltar-plain" onclick="history.back()">
-          <i class='bx bx-left-arrow-alt'></i> Voltar
-        </button>
-      </section>
+      <nav class="back-navigation" aria-label="Navegação de retorno">
+    <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+      <i class='bx bx-arrow-back'></i>
+      <span>Voltar</span>
+    </button>
+  </nav>
 
       <!-- Botão novo produto -->
       <a href="/cadastrar_produto" class="btn btn-success mb-4">Novo Produto</a>
@@ -39,11 +40,11 @@
             <h3>Bagaço de Cana</h3>
             <p class="endereco">Rua das Flores, 123 - São Paulo</p>
             <p class="preco">R$ 1500,00</p>
-            <p class="quantidade">20 Toneladas</p>
+            <p class="quantidade">20 Tonelada(s)</p>
           </section>
           <section class="acoes">
             <button class="btn btn-warning btn-sm">Editar</button>
-            <button class="btn btn-info btn-sm">Detalhes</button>
+            
            
            <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
           </section>
@@ -56,13 +57,13 @@
           </figure>
           <section class="produto-info">
             <h3>Serragem</h3>
-            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+            <p class="endereco">Rua Joaquim dos Santos Andrade, 49 - São Paulo</p>
             <p class="preco">R$ 250,00</p>
-            <p class="quantidade">1 Tonelada</p>
+            <p class="quantidade">1 Tonelada(s)</p>
           </section>
           <section class="acoes">
             <button class="btn btn-warning btn-sm">Editar</button>
-            <button class="btn btn-info btn-sm">Detalhes</button>
+            
             
             <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
           </section>
@@ -75,13 +76,13 @@
           </figure>
           <section class="produto-info">
             <h3>Palha de Milho</h3>
-            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+            <p class="endereco">Rua Alcides Bezerra, 48 - São Paulo</p>
             <p class="preco">R$ 440,00</p>
-            <p class="quantidade">2 Toneladas</p>
+            <p class="quantidade">2 Tonelada(s)</p>
           </section>
           <section class="acoes">
             <button class="btn btn-warning btn-sm">Editar</button>
-            <button class="btn btn-info btn-sm">Detalhes</button>
+            
 
             <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
           </section>
@@ -94,13 +95,13 @@
           </figure>
           <section class="produto-info">
             <h3>Casca de Arroz</h3>
-            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+            <p class="endereco">Rua do Carmo, 81 - São Paulo</p>
             <p class="preco">R$ 1275,00</p>
-            <p class="quantidade">1 Tonelada</p>
+            <p class="quantidade">1 Tonelada(s)</p>
           </section>
           <section class="acoes">
             <button class="btn btn-warning btn-sm">Editar</button>
-            <button class="btn btn-info btn-sm">Detalhes</button>
+            
           
             <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
           </section>
@@ -112,13 +113,13 @@
           </figure>
           <section class="produto-info">
             <h3>Lixo Orgânico</h3>
-            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+            <p class="endereco">Rua Silveira Martins, 53 - São Paulo</p>
             <p class="preco">R$ 900,00</p>
-            <p class="quantidade">2 Toneladas</p>
+            <p class="quantidade">2 Tonelada(s)</p>
           </section>
           <section class="acoes">
             <button class="btn btn-warning btn-sm">Editar</button>
-            <button class="btn btn-info btn-sm">Detalhes</button>
+            
            
            <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
           </section>
@@ -130,13 +131,13 @@
           </figure>
           <section class="produto-info">
             <h3>Pallets</h3>
-            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
+            <p class="endereco">Rua Vinícius de Morais - São Paulo</p>
             <p class="preco">R$ 2000,00</p>
-            <p class="quantidade">2 Toneladas</p>
+            <p class="quantidade">2 Tonelada(s)</p>
           </section>
           <section class="acoes">
             <button class="btn btn-warning btn-sm">Editar</button>
-            <button class="btn btn-info btn-sm">Detalhes</button>
+            
             
            <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
           </section>
@@ -146,6 +147,43 @@
     </section>
 
   </main>
+  
+  <!-- Modal de Edição -->
+  <section class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+    <section class="modal-dialog modal-dialog-centered">
+      <section class="modal-content">
+        <section class="modal-header">
+          <h5 class="modal-title" id="editarModalLabel">Editar Produto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </section>
+        <section class="modal-body">
+          <form id="formEditarProduto">
+            <nav class="mb-3">
+              <label for="editarNome" class="form-label">Nome</label>
+              <input type="text" class="form-control" id="editarNome" required>
+            </nav>
+            <nav class="mb-3">
+              <label for="editarEndereco" class="form-label">Endereço</label>
+              <input type="text" class="form-control" id="editarEndereco" required>
+            </nav>
+            <nav class="mb-3">
+              <label for="editarPreco" class="form-label">Preço</label>
+              <input type="text" class="form-control" id="editarPreco" required>
+            </nav>
+            <nav class="mb-3">
+              <label for="editarQuantidade" class="form-label">Quantidade</label>
+              <input type="text" class="form-control" id="editarQuantidade" required>
+            </nav>
+          </form>
+        </section>
+        <section class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="salvarEdicaoBtn">Salvar Alterações</button>
+        </section>
+      </section>
+    </section>
+  </section>
+
 
 <section class="modal fade" id="excluirModal" tabindex="-1" aria-labelledby="excluirModalLabel" aria-hidden="true">
   <section class="modal-dialog modal-dialog-centered">
@@ -171,6 +209,8 @@
 <script>
 let cardParaExcluir = null;
 const excluirModal = new bootstrap.Modal(document.getElementById('excluirModal'));
+const editarModal = new bootstrap.Modal(document.getElementById('editarModal'));
+
 
 document.querySelectorAll('.btn-excluir').forEach(btn => {
   btn.addEventListener('click', function() {
@@ -186,7 +226,48 @@ document.getElementById('confirmarExcluirBtn').addEventListener('click', functio
     cardParaExcluir = null;
   }
 });
+
+// Editar
+document.querySelectorAll('.btn-warning').forEach(btn => {
+  btn.addEventListener('click', function() {
+    cardParaEditar = this.closest('.produto-card');
+    
+    const nome = cardParaEditar.querySelector('h3').textContent;
+    const endereco = cardParaEditar.querySelector('.endereco').textContent;
+    const preco = cardParaEditar.querySelector('.preco').textContent;
+    const quantidade = cardParaEditar.querySelector('.quantidade').textContent;
+
+    // Preenche os campos do modal
+    document.getElementById('editarNome').value = nome;
+    document.getElementById('editarEndereco').value = endereco;
+    document.getElementById('editarPreco').value = preco;
+    document.getElementById('editarQuantidade').value = quantidade;
+
+    editarModal.show();
+  });
+});
+
+// Salvar alterações
+document.getElementById('salvarEdicaoBtn').addEventListener('click', function() {
+  if (cardParaEditar) {
+    const nome = document.getElementById('editarNome').value;
+    const endereco = document.getElementById('editarEndereco').value;
+    const preco = document.getElementById('editarPreco').value;
+    const quantidade = document.getElementById('editarQuantidade').value;
+
+    // Atualiza o card com os novos valores
+    cardParaEditar.querySelector('h3').textContent = nome;
+    cardParaEditar.querySelector('.endereco').textContent = endereco;
+    cardParaEditar.querySelector('.preco').textContent = preco;
+    cardParaEditar.querySelector('.quantidade').textContent = quantidade;
+
+    editarModal.hide();
+  }
+});
 </script>
+
+
+
 <%- include('../partial/footer.ejs') %>
 </body>
 </html>
