@@ -121,6 +121,7 @@ form {
   padding-left: 1rem;
   padding-right: 1rem;
   text-decoration: none;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .produtos-scroll li {
@@ -246,4 +247,8 @@ figcaption a:hover {
   
   .carinho2{
     color: #555;
+    }
+
+    h2{
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
