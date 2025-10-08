@@ -31,6 +31,7 @@
                loading="lazy">
         </figure>
       </section>
+      
 
       <section class="product-info" aria-label="Informações do produto">
         <header class="product-header">
@@ -108,25 +109,6 @@
     </article>
   </main>
 
-  <aside class="chat-widget" aria-label="Chat de suporte">
-    <button class="chat-button" aria-label="Abrir chat de suporte" onclick="openChat()">
-      <i class="bx bx-message-dots"></i>
-      <span class="chat-notification" aria-label="Nova mensagem"></span>
-    </button>
-  </aside>
-
-  <script>
-    function openChat() {
-      alert('Chat será implementado aqui!');
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const notification = document.querySelector('.chat-notification');
-      
-      setTimeout(() => {
-        notification.classList.add('active');
-      }, 3000);
-    });
-  </script>
+  <%- include('../partial/footer.ejs') %>
 </body>
 </html>

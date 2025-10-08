@@ -62,6 +62,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+main{
+  margin-top: 87px;
+}
 
 .sr-only {
   position: absolute;

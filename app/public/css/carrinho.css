@@ -279,6 +279,11 @@ main > h2 {
   transform: translateY(0);
 }
 
+.btn-comprar a {
+  color: #fff;
+  text-decoration: none;
+}
+
 /* ANÚNCIO DE TRANSPORTADORAS */
 .anuncio-transportadoras {
   border: 1px solid #e0e0e0;

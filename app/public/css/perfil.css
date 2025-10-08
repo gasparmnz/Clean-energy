@@ -136,33 +136,42 @@ main {
   width: 80px;
   height: 80px;
 }
-.back-button-container {
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
+.back-navigation {
+  position: fixed;
+  top: calc(100px + var(--spacing-lg));
+  left: var(--spacing-lg);
+  z-index: 1000;
 }
 
-.btn-voltar-plain {
-  all: unset;
-  cursor: pointer;
+.back-button {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 1.1rem;
-  color: #555;
-  transition: color 0.2s ease;
-  padding: 5px 10px;
-  border-radius: 5px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--background);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-full);
+  color: var(--secondary-color);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-light);
+  backdrop-filter: blur(10px);
 }
 
-.btn-voltar-plain:hover {
-  color: #28a745;
-  background-color: #e0f0e0;
+.back-button:hover {
+  background: var(--secondary-color);
+  color: var(--background);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
 }
 
-.btn-voltar-plain i {
-  font-size: 24px;
-  vertical-align: middle;
+.back-button i {
+  font-size: var(--font-size-lg);
 }
+
 
 /* Responsividade */
 @media (max-width: 768px) {
