@@ -80,8 +80,8 @@
           <ul class="resumo-lista"></ul>
           <p class="total"></p>
           
-            <button class="btn-comprar"><a href="/minhascompras">Finalizar Compra
-          </a></button>
+            <a href="/minhascompras" class="btn-comprar">Finalizar Compra
+            </a>
         </aside>
 
         <!-- Anúncio de Transportadoras -->
@@ -153,7 +153,41 @@
       });
     });
 
-    atualizarResumo();
+    document.querySelectorAll('.btn-remover').forEach(btn => {
+  btn.addEventListener('click', function() {
+    const produtoCard = this.closest('.produto-card'); // Seleciona o card do produto
+
+    // Esconde o produto temporariamente
+    produtoCard.style.display = 'none';
+
+    // Cria a opção de "Desfazer" que aparece na tela
+    const confirmacao = document.createElement('div');
+    confirmacao.classList.add('confirmacao');
+    confirmacao.innerHTML = `
+      <p>Item removido. <a href="#" class="reverter">Desfazer</a></p>
+    `;
+    document.body.appendChild(confirmacao);
+
+    // Ao clicar em "Desfazer", restaurar o produto
+    confirmacao.querySelector('.reverter').addEventListener('click', function(e) {
+      e.preventDefault();
+      produtoCard.style.display = 'block'; // Restaura o produto
+      confirmacao.remove(); // Remove a mensagem de "Desfazer"
+      atualizarResumo(); // Atualiza o resumo do carrinho
+    });
+
+    // Remover a confirmação depois de 5 segundos se o usuário não reverter
+    setTimeout(() => {
+      if (confirmacao) {
+        confirmacao.remove(); // Remove a confirmação se o tempo expirar
+      }
+    }, 5000);
+
+    atualizarResumo(); // Atualiza o resumo após a remoção
+  });
+});
+
+    
   </script>
   <%- include('../partial/footer.ejs') %>
 </body>
