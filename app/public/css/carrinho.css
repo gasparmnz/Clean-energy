@@ -363,6 +363,30 @@ main > h2 {
   margin-bottom: 1rem;
 }
 
+.back-button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  color: #555;
+  transition: color 0.2s ease;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.back-button:hover {
+  color: #28a745;
+  background-color: #e0f0e0;
+}
+
+.back-button i {
+  font-size: 24px;
+  vertical-align: middle;
+}
+
+/* BOTÃO VOLTAR */
 .btn-voltar-plain {
   all: unset;
   cursor: pointer;
