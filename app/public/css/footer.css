@@ -153,7 +153,10 @@ footer {
         flex-direction: column;
         gap: 12px;
         list-style: none;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     }
+    
+    
     
   }
 
