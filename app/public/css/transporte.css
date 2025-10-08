@@ -87,6 +87,7 @@ body {
   padding: var(--spacing-3xl) var(--spacing-xl);
   text-align: center;
   margin-bottom: var(--spacing-2xl); /* Espaço entre o hero e a grid */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .hero-content {
@@ -99,6 +100,7 @@ body {
   font-weight: 700;
   margin-bottom: var(--spacing-md);
   line-height: 1.2;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .hero-subtitle {
@@ -198,6 +200,7 @@ body {
   color: var(--text-primary);
   margin-bottom: var(--spacing-xs);
   line-height: 1.3;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .company-location {
@@ -207,6 +210,7 @@ body {
   font-style: normal;
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .company-location i {
@@ -247,6 +251,7 @@ body {
   color: var(--text-secondary);
   line-height: 1.6;
   font-size: var(--font-size-sm);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .company-specialties {
@@ -290,6 +295,7 @@ body {
   gap: var(--spacing-sm);
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .detail-item i {
@@ -323,6 +329,7 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-normal);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .btn-contact:hover {
