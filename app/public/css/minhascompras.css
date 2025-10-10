@@ -9,7 +9,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {
@@ -23,7 +23,6 @@ main {
   flex-direction: row;
   min-height: 100vh;
   margin-top: 87px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .content {
@@ -46,7 +45,6 @@ main {
   transition: color 0.2s ease;
   padding: 5px 10px;
   border-radius: 5px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .back-button:hover {
@@ -95,7 +93,6 @@ main {
   font-size: 1.1rem;
   margin-bottom: 5px;
   color: #1d3557;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .produto-info .endereco {
@@ -108,7 +105,6 @@ main {
   font-size: 0.85rem;
   color: #666;
   margin-bottom: 5px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .produto-info .preco {
