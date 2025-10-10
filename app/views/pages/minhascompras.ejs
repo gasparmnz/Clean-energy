@@ -10,163 +10,168 @@
 </head>
 <body>
   <%- include('../partial/header1.ejs') %>
- 
- <main class="page-layout">
-  <%- include('../partial/sidebar.ejs') %>
 
-  <section class="content">
-    <!-- Botão voltar -->
-    <nav class="back-navigation" aria-label="Navegação de retorno">
-    <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
-      <i class='bx bx-arrow-back'></i>
-      <span>Voltar</span>
-    </button>
-  </nav>
+  <main class="page-layout">
+    <%- include('../partial/sidebar.ejs') %>
 
-    <!-- Lista de produtos -->
-    <section class="produtos-grid">
+    <section class="content">
+      <!-- Botão voltar -->
+      <nav class="back-navigation" aria-label="Navegação de retorno">
+        <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+          <i class='bx bx-arrow-back'></i>
+          <span>Voltar</span>
+        </button>
+      </nav>
 
-      <!-- Produto 1 -->
-      <article class="produto-card">
-        <figure>
-          <img src="/imagem/cana.png" alt="Produto">
-        </figure>
-        <section class="produto-info">
-          <h3>Bagaço de Cana</h3>
-          <p class="endereco d-none">Rua das Flores, 123 - São Paulo</p>
-          <p class="preco">R$ 1500,00</p>
-          <p class="quantidade d-none">1 Tonelada(s)</p>
-        </section>
-        <section class="acoes">
-          <button class="btn btn-warning btn-sm">Rastrear</button>
-          <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
-          <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
-        </section>
-        <p class="situacao">Em andamento...</p>
-      </article>
+      <!-- Abas -->
+      <ul class="nav nav-tabs" id="productTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <a class="nav-link active" id="emAndamentoTab" data-bs-toggle="tab" href="#emAndamento" role="tab" aria-controls="emAndamento" aria-selected="true">Em andamento</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="pendentesTab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-controls="pendentes" aria-selected="false">À pagar</a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link" id="concluidosTab" data-bs-toggle="tab" href="#concluidos" role="tab" aria-controls="concluidos" aria-selected="false">Concluídos</a>
+        </li>
+      </ul>
 
-      <!-- Produto 2 -->
-      <article class="produto-card">
-        <figure>
-          <img src="/imagem/lenha.png" alt="Produto">
-        </figure>
-        <section class="produto-info">
-          <h3>Lenha Tratada</h3>
-          <p class="endereco d-none">Rua Antônio Raposo Tavares, 312 - São Paulo</p>
-          <p class="preco">R$ 500,00</p>
-          <p class="quantidade d-none">2 Tonelada(s)</p>
-        </section>
-        <section class="acoes">
-          <button class="btn btn-warning btn-sm">Rastrear</button>
-          <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
-          <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
-        </section>
-        <p class="situacao">Em andamento...</p>
-      </article>
+      <!-- Conteúdo das abas -->
+      <div class="tab-content" id="productTabsContent">
+        <!-- Aba Em andamento -->
+        <div class="tab-pane fade show active" id="emAndamento" role="tabpanel" aria-labelledby="emAndamentoTab">
+          <section class="produtos-grid">
+            <!-- Produto Em andamento 1 -->
+            <article class="produto-card">
+              <figure>
+                <img src="/imagem/cana.png" alt="Produto">
+              </figure>
+              <section class="produto-info">
+                <h3>Bagaço de Cana</h3>
+                <p class="endereco d-none">Rua das Flores, 123 - São Paulo</p>
+                <p class="preco">R$ 1500,00</p>
+                <p class="quantidade d-none">1 Tonelada(s)</p>
+              </section>
+              <section class="acoes">
+                <button class="btn btn-warning btn-sm">Rastrear</button>
+                <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
+                <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
+              </section>
+              <p class="andamento">Em andamento</p>
+            </article>
+            <!-- Produto Em andamento 2 -->
+            <article class="produto-card">
+              <figure>
+                <img src="/imagem/lenha.png" alt="Produto">
+              </figure>
+              <section class="produto-info">
+                <h3>Lenha Tratada</h3>
+                <p class="endereco d-none">Rua Antônio Raposo Tavares, 312 - São Paulo</p>
+                <p class="preco">R$ 500,00</p>
+                <p class="quantidade d-none">2 Tonelada(s)</p>
+              </section>
+              <section class="acoes">
+                <button class="btn btn-warning btn-sm">Rastrear</button>
+                <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
+                <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
+              </section>
+              <p class="andamento">Em andamento</p>
+            </article>
+          </section>
+        </div>
 
-      <article class="produto-card">
-        <figure>
-          <img src="/imagem/restodecolheita.png" alt="Produto">
-        </figure>
-        <section class="produto-info">
-          <h3>Resto de Colheita</h3>
-          <p class="endereco d-none">Rua Joaquim dos Santos Andrade, 49 - São Paulo</p>
-          <p class="preco">R$ 380,00</p>
-          <p class="quantidade d-none">1 Tonelada(s)</p>
-        </section>
-        <section class="acoes">
-          <button class="btn btn-warning btn-sm">Rastrear</button>
-          <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
-          <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
-        </section>
-        <p class="situacao">Em andamento...</p>
-      </article>
+        <!-- Aba Pendentes (À Pagar) -->
+        <div class="tab-pane fade" id="pendentes" role="tabpanel" aria-labelledby="pendentesTab">
+          <section class="produtos-grid">
+            <!-- Produto pendente 1 -->
+            <article class="produto-card">
+              <figure>
+                <img src="/imagem/restodecolheita.png" alt="Produto">
+              </figure>
+              <section class="produto-info">
+                <h3>Resto de Colheita</h3>
+                <p class="endereco d-none">Rua Joaquim dos Santos Andrade, 49 - São Paulo</p>
+                <p class="preco">R$ 380,00</p>
+                <p class="quantidade d-none">1 Tonelada(s)</p>
+              </section>
+              <section class="acoes">
+                <button class="btn btn-success btn-sm">Efetuar Pagamento</button> <!-- Mudei para antes -->
+                <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
+              </section>
+              <p class="pendente">À pagar</p>
+            </article>
+          </section>
+        </div>
 
-
-      <article class="produto-card">
-        <figure>
-          <img src="/imagem/folhassecas.png" alt="Produto">
-        </figure>
-        <section class="produto-info">
-          <h3>Folhas Secas</h3>
-          <p class="endereco d-none">Rua do Carmo, 81 - São Paulo</p>
-          <p class="preco">R$ 180,00</p>
-          <p class="quantidade d-none">1 Tonelada(s)</p>
-        </section>
-        <section class="acoes">
-          <button class="btn btn-warning btn-sm">Rastrear</button>
-          <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
-          <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
-        </section>
-        <p class="situacao">Em andamento...</p>
-      </article>
-
-
-      <article class="produto-card">
-        <figure>
-          <img src="/imagem/lixo organico.png" alt="Produto">
-        </figure>
-        <section class="produto-info">
-          <h3>Lixo Orgânico</h3>
-          <p class="endereco d-none">Rua Silveira Martins, 53 - São Paulo</p>
-          <p class="preco">R$ 450,00</p>
-          <p class="quantidade d-none">1 Tonelada(s)</p>
-        </section>
-        <section class="acoes">
-          <button class="btn btn-warning btn-sm">Rastrear</button>
-          <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
-          <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
-        </section>
-        <p class="situacao">Em andamento...</p>
-      </article>
-
+        <!-- Aba Concluídos -->
+        <div class="tab-pane fade" id="concluidos" role="tabpanel" aria-labelledby="concluidosTab">
+          <section class="produtos-grid">
+            <!-- Produto concluído 1 -->
+            <article class="produto-card">
+              <figure>
+                <img src="/imagem/folhassecas.png" alt="Produto">
+              </figure>
+              <section class="produto-info">
+                <h3>Folhas Secas</h3>
+                <p class="endereco d-none">Rua do Carmo, 81 - São Paulo</p>
+                <p class="preco">R$ 180,00</p>
+                <p class="quantidade d-none">1 Tonelada(s)</p>
+              </section>
+              <section class="acoes">
+                <button class="btn btn-success btn-sm">Avaliar</button> <!-- Mudei para antes -->
+                <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
+              </section>
+              <p class="concluido">Concluído</p>
+            </article>
+            <!-- Produto concluído 2 -->
+            <article class="produto-card">
+              <figure>
+                <img src="/imagem/lixo organico.png" alt="Produto">
+              </figure>
+              <section class="produto-info">
+                <h3>Lixo Orgânico</h3>
+                <p class="endereco d-none">Rua Silveira Martins, 53 - São Paulo</p>
+                <p class="preco">R$ 450,00</p>
+                <p class="quantidade d-none">1 Tonelada(s)</p>
+              </section>
+              <section class="acoes">
+                <button class="btn btn-success btn-sm">Avaliar</button> <!-- Mudei para antes -->
+                <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
+              </section>
+              <p class="concluido">Concluído</p>
+            </article>
+          </section>
+        </div>
+      </div>
     </section>
-  </section>
-</main>
+  </main>
 
-<!-- Modal de Detalhes -->
-<section class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
-  <section class="modal-dialog modal-dialog-centered">
-    <section class="modal-content">
-      <section class="modal-header">
-        <h5 class="modal-title" id="detalhesModalLabel">Detalhes do Produto</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </section>
-      <section class="modal-body">
-        <p><strong>Produto:</strong> <span id="modal-produto"></span></p>
-        <p><strong>Endereço:</strong> <span id="modal-endereco"></span></p>
-        <p><strong>Preço:</strong> <span id="modal-preco"></span></p>
-        <p><strong>Quantidade:</strong> <span id="modal-quantidade"></span></p>
-      </section>
-      <section class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+  <!-- Modal de Detalhes -->
+  <section class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
+    <section class="modal-dialog modal-dialog-centered">
+      <section class="modal-content">
+        <section class="modal-header">
+          <h5 class="modal-title" id="detalhesModalLabel">Detalhes do Produto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </section>
+        <section class="modal-body">
+          <p><strong>Produto:</strong> <span id="modal-produto"></span></p>
+          <p><strong>Endereço:</strong> <span id="modal-endereco"></span></p>
+          <p><strong>Preço:</strong> <span id="modal-preco"></span></p>
+          <p><strong>Quantidade:</strong> <span id="modal-quantidade"></span></p>
+        </section>
+        <section class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+        </section>
       </section>
     </section>
-  </section>
-</section>
-
-<section class="modal fade" id="cancelarModal" tabindex="-1" aria-labelledby="cancelarModalLabel" aria-hidden="true">
-  <section class="modal-dialog modal-dialog-centered">
-    <section class="modal-content">
-      <section class="modal-header">
-        <h5 class="modal-title" id="cancelarModalLabel">Confirmar Cancelamento</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </section>
-      <section class="modal-body">
-        Tem certeza que deseja cancelar esta compra?
-      </section>
-      <section class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-danger" id="confirmarCancelarBtn">Confirmar</button>
-      </section>
-    </section>
-  </section>
-</section>
+  </section
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   let cardParaCancelar = null;
-const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
+  const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
+  
   // Botão Cancelar
   document.querySelectorAll('.btn-cancelar').forEach(btn => {
     btn.addEventListener('click', function() {
@@ -176,13 +181,12 @@ const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal
   });
 
   document.getElementById('confirmarCancelarBtn').addEventListener('click', function() {
-  if (cardParaCancelar) {
-    cardParaCancelar.remove();
-    cancelarModal.hide();
-    cardParaCancelar = null;
-  }
-});
-
+    if (cardParaCancelar) {
+      cardParaCancelar.remove();
+      cancelarModal.hide();
+      cardParaCancelar = null;
+    }
+  });
 
   // Botão Detalhes
   const modal = new bootstrap.Modal(document.getElementById('detalhesModal'));
@@ -196,7 +200,67 @@ const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal
       modal.show();
     });
   });
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+  // Função que oculta ou exibe os botões conforme a aba ativa
+  function updateButtonsForActiveTab() {
+    const activeTabId = document.querySelector('.nav-link.active').id; // Obtém a aba ativa
+
+    // Aba "Em andamento"
+    if (activeTabId === 'emAndamentoTab') {
+      document.querySelectorAll('.btn-cancelar').forEach(button => {
+        button.style.display = ''; // Exibe o botão de cancelar
+      });
+      document.querySelectorAll('.btn-detalhes').forEach(button => {
+        button.style.display = ''; // Exibe o botão de detalhes
+      });
+      document.querySelectorAll('.btn-success').forEach(button => {
+        button.style.display = 'none'; // Esconde o botão de pagamento ou avaliação
+      });
+    }
+
+    // Aba "À Pagar"
+    else if (activeTabId === 'pendentesTab') {
+      document.querySelectorAll('.btn-cancelar').forEach(button => {
+        button.style.display = ''; // Exibe o botão de cancelar
+      });
+      document.querySelectorAll('.btn-detalhes').forEach(button => {
+        button.style.display = 'none'; // Esconde o botão de detalhes
+      });
+      document.querySelectorAll('.btn-success').forEach(button => {
+        button.style.display = ''; // Exibe o botão de pagamento
+      });
+    }
+
+    // Aba "Concluídos"
+    else if (activeTabId === 'concluidosTab') {
+      document.querySelectorAll('.btn-cancelar').forEach(button => {
+        button.style.display = 'none'; // Esconde o botão de cancelar
+      });
+      document.querySelectorAll('.btn-detalhes').forEach(button => {
+        button.style.display = ''; // Exibe o botão de detalhes
+      });
+      document.querySelectorAll('.btn-success').forEach(button => {
+        button.style.display = ''; // Exibe o botão de avaliar
+      });
+    }
+  }
+
+  // Atualiza os botões ao carregar a página
+  updateButtonsForActiveTab();
+
+  // Adiciona evento para atualizar os botões quando a aba mudar
+  document.querySelectorAll('.nav-link').forEach(tab => {
+    tab.addEventListener('click', () => {
+      setTimeout(() => {
+        updateButtonsForActiveTab(); // Atualiza os botões após a troca de aba
+      }, 200); // Delay para garantir que a aba foi trocada
+    });
+  });
+});
 </script>
+
 <%- include('../partial/footer.ejs') %>
 </body>
 </html>

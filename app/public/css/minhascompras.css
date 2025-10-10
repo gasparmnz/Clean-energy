@@ -56,6 +56,7 @@ main {
   font-size: 24px;
   vertical-align: middle;
 }
+
 /* =========================
    Grid de produtos
    ========================= */
@@ -139,8 +140,20 @@ main {
   transform: scale(1.05);
 }
 
-.situacao {
+.concluido {
   background-color: #66CC99;
+  border: none;
+  color: #fff;
+  margin-top: 15px;
+}
+.andamento{
+  background-color: #310dff;
+  border: none;
+  color: #fff;
+  margin-top: 15px;
+}
+.pendente{
+  background-color: #ff9900;
   border: none;
   color: #fff;
   margin-top: 15px;
