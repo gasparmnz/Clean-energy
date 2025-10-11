@@ -45,6 +45,7 @@ footer {
     color: var(--color-neutral-40);
     border-radius: 50%;
     transition: all 0.4s;
+    text-decoration: none;
 }
 
 #footer_social_media .footer-link i {
