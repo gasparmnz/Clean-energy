@@ -127,9 +127,10 @@ footer {
     display: flex;
     justify-content: center;
     background-color: var(--color-neutral-0);
-    font-size: 14.4px;
+    font-size: 15.4px;
     padding: 24px;
     font-weight: 100;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 @media screen and (max-width: 768px) {
