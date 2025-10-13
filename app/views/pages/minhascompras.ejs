@@ -7,6 +7,51 @@
   <link rel="stylesheet" href="/css/minhascompras.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    /* Estilo do modal de avaliação */
+     .avaliacao-estrelas {
+    display: flex;
+    justify-content: center;
+    flex-direction: row-reverse; /* ordem visual corrigida */
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .avaliacao-estrelas input {
+    display: none;
+  }
+
+  .avaliacao-estrelas label {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  /* Quando uma estrela for selecionada ou anterior a ela */
+  .avaliacao-estrelas input:checked ~ label,
+  .avaliacao-estrelas label:hover,
+  .avaliacao-estrelas label:hover ~ label {
+    color: #FFD700;
+  }
+
+  .avaliacao-legendas {
+    display: flex;
+    justify-content: space-between;
+    max-width: 260px;
+    margin: 0 auto 10px;
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  .avaliacao-comentario {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 8px;
+    resize: none;
+  }
+  </style>
 </head>
 <body>
   <%- include('../partial/header1.ejs') %>
@@ -15,7 +60,6 @@
     <%- include('../partial/sidebar.ejs') %>
 
     <section class="content">
-      <!-- Botão voltar -->
       <nav class="back-navigation" aria-label="Navegação de retorno">
         <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
           <i class='bx bx-arrow-back'></i>
@@ -23,7 +67,6 @@
         </button>
       </nav>
 
-      <!-- Abas -->
       <ul class="nav nav-tabs" id="productTabs" role="tablist">
         <li class="nav-item" role="presentation">
           <a class="nav-link active" id="emAndamentoTab" data-bs-toggle="tab" href="#emAndamento" role="tab" aria-controls="emAndamento" aria-selected="true">Em andamento</a>
@@ -36,16 +79,12 @@
         </li>
       </ul>
 
-      <!-- Conteúdo das abas -->
-      <div class="tab-content" id="productTabsContent">
-        <!-- Aba Em andamento -->
-        <div class="tab-pane fade show active" id="emAndamento" role="tabpanel" aria-labelledby="emAndamentoTab">
+      <section class="tab-content" id="productTabsContent">
+        <!-- EM ANDAMENTO -->
+        <section class="tab-pane fade show active" id="emAndamento" role="tabpanel" aria-labelledby="emAndamentoTab">
           <section class="produtos-grid">
-            <!-- Produto Em andamento 1 -->
             <article class="produto-card">
-              <figure>
-                <img src="/imagem/cana.png" alt="Produto">
-              </figure>
+              <figure><img src="/imagem/cana.png" alt="Produto"></figure>
               <section class="produto-info">
                 <h3>Bagaço de Cana</h3>
                 <p class="endereco d-none">Rua das Flores, 123 - São Paulo</p>
@@ -59,11 +98,9 @@
               </section>
               <p class="andamento">Em andamento</p>
             </article>
-            <!-- Produto Em andamento 2 -->
+
             <article class="produto-card">
-              <figure>
-                <img src="/imagem/lenha.png" alt="Produto">
-              </figure>
+              <figure><img src="/imagem/lenha.png" alt="Produto"></figure>
               <section class="produto-info">
                 <h3>Lenha Tratada</h3>
                 <p class="endereco d-none">Rua Antônio Raposo Tavares, 312 - São Paulo</p>
@@ -78,16 +115,13 @@
               <p class="andamento">Em andamento</p>
             </article>
           </section>
-        </div>
+        </section>
 
-        <!-- Aba Pendentes (À Pagar) -->
-        <div class="tab-pane fade" id="pendentes" role="tabpanel" aria-labelledby="pendentesTab">
+        <!-- PENDENTES -->
+        <section class="tab-pane fade" id="pendentes" role="tabpanel" aria-labelledby="pendentesTab">
           <section class="produtos-grid">
-            <!-- Produto pendente 1 -->
             <article class="produto-card">
-              <figure>
-                <img src="/imagem/restodecolheita.png" alt="Produto">
-              </figure>
+              <figure><img src="/imagem/restodecolheita.png" alt="Produto"></figure>
               <section class="produto-info">
                 <h3>Resto de Colheita</h3>
                 <p class="endereco d-none">Rua Joaquim dos Santos Andrade, 49 - São Paulo</p>
@@ -101,16 +135,13 @@
               <p class="pendente">À pagar</p>
             </article>
           </section>
-        </div>
+        </section>
 
-        <!-- Aba Concluídos -->
-        <div class="tab-pane fade" id="concluidos" role="tabpanel" aria-labelledby="concluidosTab">
+        <!-- CONCLUÍDOS -->
+        <section class="tab-pane fade" id="concluidos" role="tabpanel" aria-labelledby="concluidosTab">
           <section class="produtos-grid">
-            <!-- Produto concluído 1 -->
             <article class="produto-card">
-              <figure>
-                <img src="/imagem/folhassecas.png" alt="Produto">
-              </figure>
+              <figure><img src="/imagem/folhassecas.png" alt="Produto"></figure>
               <section class="produto-info">
                 <h3>Folhas Secas</h3>
                 <p class="endereco d-none">Rua do Carmo, 81 - São Paulo</p>
@@ -118,16 +149,14 @@
                 <p class="quantidade d-none">1 Tonelada(s)</p>
               </section>
               <section class="acoes">
-                <button class="btn btn-success btn-sm">Avaliar</button>
+                <button class="btn btn-success btn-sm btn-avaliar">Avaliar</button>
                 <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
               </section>
               <p class="concluido">Concluído</p>
             </article>
-            <!-- Produto concluído 2 -->
+
             <article class="produto-card">
-              <figure>
-                <img src="/imagem/lixo organico.png" alt="Produto">
-              </figure>
+              <figure><img src="/imagem/lixo organico.png" alt="Produto"></figure>
               <section class="produto-info">
                 <h3>Lixo Orgânico</h3>
                 <p class="endereco d-none">Rua Silveira Martins, 53 - São Paulo</p>
@@ -135,25 +164,25 @@
                 <p class="quantidade d-none">1 Tonelada(s)</p>
               </section>
               <section class="acoes">
-                <button class="btn btn-success btn-sm">Avaliar</button>
+                <button class="btn btn-success btn-sm btn-avaliar">Avaliar</button>
                 <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
               </section>
               <p class="concluido">Concluído</p>
             </article>
           </section>
-        </div>
-      </div>
+        </section>
+      </section>
     </section>
   </main>
 
-  <!-- Modal de Detalhes -->
+  <!-- MODAL DETALHES -->
   <section class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
     <section class="modal-dialog modal-dialog-centered">
       <section class="modal-content">
-        <section class="modal-header">
+        <header class="modal-header">
           <h5 class="modal-title" id="detalhesModalLabel">Detalhes do Produto</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </section>
+        </header>
         <section class="modal-body">
           <p><strong>Produto:</strong> <span id="modal-produto"></span></p>
           <p><strong>Endereço:</strong> <span id="modal-endereco"></span></p>
@@ -166,55 +195,107 @@
       </section>
     </section>
   </section>
-  <!-- Modal de Confirmação de Cancelamento -->
-<section class="modal fade" id="cancelarModal" tabindex="-1" aria-labelledby="cancelarModalLabel" aria-hidden="true">
+
+  <!-- MODAL CANCELAR -->
+  <section class="modal fade" id="cancelarModal" tabindex="-1" aria-labelledby="cancelarModalLabel" aria-hidden="true">
+    <section class="modal-dialog modal-dialog-centered">
+      <section class="modal-content">
+        <header class="modal-header">
+          <h5 class="modal-title" id="cancelarModalLabel">Confirmar Cancelamento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </header>
+        <section class="modal-body">
+          <p>Tem certeza que deseja cancelar este pedido?</p>
+        </section>
+        <section class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+          <button type="button" class="btn btn-danger" id="confirmarCancelamento">Sim, cancelar</button>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <!-- MODAL AVALIAÇÃO -->
+<section class="modal fade" id="avaliarModal" tabindex="-1" aria-labelledby="avaliarModalLabel" aria-hidden="true">
   <section class="modal-dialog modal-dialog-centered">
     <section class="modal-content">
-      <section class="modal-header">
-        <h5 class="modal-title" id="cancelarModalLabel">Confirmar Cancelamento</h5>
+      <header class="modal-header">
+        <h5 class="modal-title" id="avaliarModalLabel">Avaliar Produto</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </section>
-      <section class="modal-body">
-        <p>Tem certeza que deseja cancelar este pedido?</p>
+      </header>
+      <section class="modal-body text-center">
+        <form id="formAvaliacao">
+          <fieldset class="avaliacao-estrelas">
+            <input type="radio" id="estrela5" name="estrela" value="5"><label for="estrela5">&#9733;</label>
+            <input type="radio" id="estrela4" name="estrela" value="4"><label for="estrela4">&#9733;</label>
+            <input type="radio" id="estrela3" name="estrela" value="3"><label for="estrela3">&#9733;</label>
+            <input type="radio" id="estrela2" name="estrela" value="2"><label for="estrela2">&#9733;</label>
+            <input type="radio" id="estrela1" name="estrela" value="1"><label for="estrela1">&#9733;</label>
+          </fieldset>
+
+          <section class="avaliacao-legendas">
+            <span>Péssimo</span>
+            <span>Ruim</span>
+            <span>Regular</span>
+            <span>Bom</span>
+            <span>Excelente</span>
+          </section>
+
+          <textarea class="avaliacao-comentario" rows="3" placeholder="Escreva seu comentário..."></textarea>
+        </form>
       </section>
       <section class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-        <button type="button" class="btn btn-danger" id="confirmarCancelamento">Sim, cancelar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" id="enviarAvaliacao">Enviar Avaliação</button>
       </section>
     </section>
   </section>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  let cardParaCancelar = null;
-  const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
-  
-  // Botão Cancelar
-  document.querySelectorAll('.btn-cancelar').forEach(btn => {
-    btn.addEventListener('click', function() {
-      cardParaCancelar = this.closest('.produto-card'); // CORRIGIDO: salva o card
-      cancelarModal.show();
-    });
-  });
 
-  document.getElementById('confirmarCancelamento').addEventListener('click', function() {
-    cardParaCancelar.remove(); // Remove o card
-    cancelarModal.hide();
-  });
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let cardParaCancelar = null;
+    const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
+    const avaliarModal = new bootstrap.Modal(document.getElementById('avaliarModal'));
 
-  // Detalhes do produto
-  document.querySelectorAll('.btn-detalhes').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const card = this.closest('.produto-card');
-      document.getElementById('modal-produto').textContent = card.querySelector('h3').textContent;
-      document.getElementById('modal-endereco').textContent = card.querySelector('.endereco').textContent;
-      document.getElementById('modal-preco').textContent = card.querySelector('.preco').textContent;
-      document.getElementById('modal-quantidade').textContent = card.querySelector('.quantidade').textContent;
-      
-      new bootstrap.Modal(document.getElementById('detalhesModal')).show();
+    // Cancelar
+    document.querySelectorAll('.btn-cancelar').forEach(btn => {
+      btn.addEventListener('click', function() {
+        cardParaCancelar = this.closest('.produto-card');
+        cancelarModal.show();
+      });
     });
-  });
-</script>
+
+    document.getElementById('confirmarCancelamento').addEventListener('click', function() {
+      if (cardParaCancelar) cardParaCancelar.remove();
+      cancelarModal.hide();
+    });
+
+    // Detalhes
+    document.querySelectorAll('.btn-detalhes').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const card = this.closest('.produto-card');
+        document.getElementById('modal-produto').textContent = card.querySelector('h3').textContent;
+        document.getElementById('modal-endereco').textContent = card.querySelector('.endereco').textContent;
+        document.getElementById('modal-preco').textContent = card.querySelector('.preco').textContent;
+        document.getElementById('modal-quantidade').textContent = card.querySelector('.quantidade').textContent;
+        new bootstrap.Modal(document.getElementById('detalhesModal')).show();
+      });
+    });
+
+    // Avaliar
+    document.querySelectorAll('.btn-avaliar').forEach(btn => {
+      btn.addEventListener('click', function() {
+        avaliarModal.show();
+      });
+    });
+
+    document.getElementById('enviarAvaliacao').addEventListener('click', function() {
+      avaliarModal.hide();
+      alert('✅ Obrigado por sua avaliação!');
+      document.getElementById('formAvaliacao').reset();
+    });
+  </script>
 </body>
 </html>
