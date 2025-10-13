@@ -175,6 +175,46 @@
     </section>
   </main>
 
+  <!-- MODAL PAGAMENTO -->
+<section class="modal fade" id="pagamentoModal" tabindex="-1" aria-labelledby="pagamentoModalLabel" aria-hidden="true">
+  <section class="modal-dialog modal-dialog-centered">
+    <section class="modal-content">
+      <header class="modal-header">
+        <h5 class="modal-title" id="pagamentoModalLabel">Efetuar Pagamento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </header>
+      <section class="modal-body">
+        <p><strong>Produto:</strong> <span id="pagamento-produto"></span></p>
+        <p><strong>Quantidade:</strong> <span id="pagamento-quantidade"></span></p>
+        <p><strong>Valor:</strong> <span id="pagamento-valor"></span></p>
+
+        <hr>
+
+        <p><strong>Forma de pagamento:</strong></p>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="formaPagamento" id="pix" value="Pix" checked>
+          <label class="form-check-label" for="pix">Pix</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="formaPagamento" id="cartao" value="Cartão de Crédito">
+          <label class="form-check-label" for="cartao">Cartão de Crédito</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="formaPagamento" id="boleto" value="Boleto Bancário">
+          <label class="form-check-label" for="boleto">Boleto Bancário</label>
+        </div>
+
+        <div id="mensagemPagamentoErro" class="text-danger mt-2" style="display: none;"></div>
+      </section>
+      <section class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-success" id="confirmarPagamento">Confirmar Pagamento</button>
+      </section>
+    </section>
+  </section>
+</section>
+
+
   <!-- MODAL DETALHES -->
   <section class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
     <section class="modal-dialog modal-dialog-centered">
@@ -242,6 +282,8 @@
           </section>
 
           <textarea class="avaliacao-comentario" rows="3" placeholder="Escreva seu comentário..."></textarea>
+          <div id="mensagemErroAvaliacao" class="text-danger mt-2" style="display: none;"></div>
+
         </form>
       </section>
       <section class="modal-footer">
@@ -251,6 +293,18 @@
     </section>
   </section>
 </section>
+<!-- TOAST DE CONFIRMAÇÃO -->
+<section class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+  <div id="toastAvaliacao" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body">
+        ✅ Obrigado por sua avaliação!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
+    </div>
+  </div>
+</section>
+
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -284,6 +338,25 @@
       });
     });
 
+    const pagamentoModal = new bootstrap.Modal(document.getElementById('pagamentoModal'));
+let produtoSelecionadoParaPagamento = null;
+
+document.querySelectorAll('.btn-success').forEach(btn => {
+  if (btn.textContent.includes('Efetuar Pagamento')) {
+    btn.addEventListener('click', function () {
+      const card = this.closest('.produto-card');
+      produtoSelecionadoParaPagamento = card;
+
+      document.getElementById('pagamento-produto').textContent = card.querySelector('h3').textContent;
+      document.getElementById('pagamento-quantidade').textContent = card.querySelector('.quantidade').textContent;
+      document.getElementById('pagamento-valor').textContent = card.querySelector('.preco').textContent;
+
+      pagamentoModal.show();
+    });
+  }
+});
+
+
     // Avaliar
     document.querySelectorAll('.btn-avaliar').forEach(btn => {
       btn.addEventListener('click', function() {
@@ -291,11 +364,46 @@
       });
     });
 
-    document.getElementById('enviarAvaliacao').addEventListener('click', function() {
-      avaliarModal.hide();
-      alert('✅ Obrigado por sua avaliação!');
-      document.getElementById('formAvaliacao').reset();
-    });
+    document.getElementById('enviarAvaliacao').addEventListener('click', function () {
+  const estrelaSelecionada = document.querySelector('input[name="estrela"]:checked');
+  const comentario = document.querySelector('.avaliacao-comentario').value.trim();
+  const mensagemErro = document.getElementById('mensagemErroAvaliacao');
+
+  // Reset mensagem de erro
+  mensagemErro.style.display = 'none';
+  mensagemErro.textContent = '';
+
+  // Verificações
+  if (!estrelaSelecionada && comentario === '') {
+    mensagemErro.textContent = '⚠️ Por favor, selecione uma nota e escreva um comentário.';
+    mensagemErro.style.display = 'block';
+    return;
+  }
+
+  if (!estrelaSelecionada) {
+    mensagemErro.textContent = '⚠️ Por favor, selecione uma nota.';
+    mensagemErro.style.display = 'block';
+    return;
+  }
+
+  if (comentario === '') {
+    mensagemErro.textContent = '⚠️ Por favor, escreva um comentário.';
+    mensagemErro.style.display = 'block';
+    return;
+  }
+
+  // Tudo ok: enviar avaliação
+  avaliarModal.hide();
+  document.getElementById('formAvaliacao').reset();
+  mensagemErro.style.display = 'none';
+
+  // Mostra o toast de confirmação
+  const toast = new bootstrap.Toast(document.getElementById('toastAvaliacao'));
+  toast.show();
+});
+
+
+
   </script>
 </body>
 </html>
