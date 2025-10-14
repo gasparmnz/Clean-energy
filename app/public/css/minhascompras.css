@@ -161,6 +161,118 @@ main {
 .d-none {
   display: none !important;
 }
+
+.avaliacao-estrelas {
+    display: flex;
+    justify-content: center;
+    flex-direction: row-reverse; 
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .avaliacao-estrelas input {
+    display: none;
+  }
+
+  .avaliacao-estrelas label {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  /* Quando uma estrela for selecionada ou anterior a ela */
+  .avaliacao-estrelas input:checked ~ label,
+  .avaliacao-estrelas label:hover,
+  .avaliacao-estrelas label:hover ~ label {
+    color: #FFD700;
+  }
+
+  .avaliacao-legendas {
+    display: flex;
+    justify-content: space-between;
+    max-width: 260px;
+    margin: 0 auto 10px;
+    font-size: 0.9rem;
+    color: #555;
+  }
+
+  .avaliacao-comentario {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 8px;
+    resize: none;
+  }
+  #pagamentoModal .form-check-input {
+  position: absolute; /* tira do fluxo */
+  opacity: 0; /* esconde o círculo padrão */
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+#pagamentoModal .form-check-label {
+  display: block;
+  padding: 12px 20px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  position: relative;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  user-select: none;
+  margin-bottom: 10px;
+}
+
+/* círculo personalizado */
+#pagamentoModal .form-check-label::before {
+  content: "";
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  margin-right: 10px;
+  vertical-align: middle;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* círculo preenchido quando selecionado */
+#pagamentoModal .form-check-input:checked + .form-check-label::before {
+  border-color: #198754;
+  background-color: #198754;
+}
+
+
+
+/* destaca o label selecionado com borda e fundo */
+#pagamentoModal .form-check-input:checked + .form-check-label {
+  border-color: #198754;
+  background-color: #d4edda;
+  color: #198754;
+}
+
+
+#pix + label::before {
+  content: "💸";
+}
+
+#cartao + label::before {
+  content: "💳";
+}
+
+#boleto + label::before {
+  content: "🧾";
+}
+
+#pagamentoModal .modal-footer {
+  padding: 15px 20px;
+}
+
+
 /* =========================
    Responsividade
    ========================= */
