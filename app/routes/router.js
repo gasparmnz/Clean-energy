@@ -1,8 +1,8 @@
 var express = require("express");
 var router = express.Router();
 const { body, validationResult } = require("express-validator");
-const usuarios = []; /* ARRAY QUE ARMAZENA OS E-MAILS E SENHAS DO USUARIO */
-/* O Correto seria um banco de dados, isso aqui é apenas uma simulação*/
+const usuarios = []; 
+
 
 var {validarCPF} = require("../helpers/validacao");
 
