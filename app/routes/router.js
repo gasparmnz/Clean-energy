@@ -380,6 +380,9 @@ router.get("/carrinho", (req, res) => {
 router.get("/transporte", (req, res) =>{
   res.render("pages/transporte");
 });
+router.get("/duvidas", (req, res) =>{
+  res.render("pages/duvidas");
+});
 router.get("/sobre_nos", (req, res) => {
   res.render("pages/sobre_nos");
 });

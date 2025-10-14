@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dúvidas Frequentes - Clean Energy</title>
+  <link rel="stylesheet" href="/css/duvidas.css" />
+  <script src="/js/duvidas.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="main-header">
+      <h1>Olá, como podemos ajudar?</h1>
+      
+      <form class="search-form" role="search">
+        <input 
+          type="search" 
+          placeholder="Buscar instruções e muito mais..." 
+          aria-label="Buscar dúvidas"
+        />
+        <button type="submit" aria-label="Buscar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </button>
+      </form>
+    </header>
+
+    <section class="content-wrapper">
+      <aside class="sidebar">
+        <nav aria-label="Categorias de ajuda">
+          <ul role="tablist">
+            <li role="presentation">
+              <button 
+                role="tab" 
+                aria-selected="true" 
+                aria-controls="panel-venda"
+                id="tab-venda"
+                data-category="venda"
+              >
+                Venda
+              </button>
+            </li>
+            <li role="presentation">
+              <button 
+                role="tab" 
+                aria-selected="false" 
+                aria-controls="panel-compra"
+                id="tab-compra"
+                data-category="compra"
+              >
+                Compra
+              </button>
+            </li>
+            <li role="presentation">
+              <button 
+                role="tab" 
+                aria-selected="false" 
+                aria-controls="panel-entrega"
+                id="tab-entrega"
+                data-category="entrega"
+              >
+                Entrega
+              </button>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <article class="content-area">
+        <!-- Conteúdo de Venda -->
+        <section id="panel-venda" role="tabpanel" aria-labelledby="tab-venda" class="content-panel active">
+          <h2>Instruções para Vendedores</h2>
+          <p>Aqui você encontra todas as informações necessárias para vender seus produtos na plataforma Clean Energy.</p>
+          
+          <section class="help-cards">
+            <article class="help-card">
+              <figure class="card-image" style="background-image: url('imagem1.jpg');">
+                <figcaption class="visually-hidden">Como adicionar produto</figcaption>
+              </figure>
+              <section class="card-content">
+                <h3>Como adicionar produto</h3>
+                <p>Aprenda o passo a passo para cadastrar seus produtos de energia limpa na plataforma.</p>
+                <a href="como_adicionar_produto.html" class="card-link">Saiba mais</a>
+              </section>
+            </article>
+
+            <article class="help-card">
+              <figure class="card-image" style="background-image: url('imagem-venda-2.jpg');">
+                <figcaption class="visually-hidden">Gerenciar vendas</figcaption>
+              </figure>
+              <section class="card-content">
+                <h3>Gerenciar vendas</h3>
+                <p>Acompanhe seus pedidos, estoque e relatórios de vendas em tempo real.</p>
+                <a href="gerenciar_vendas.html" class="card-link">Saiba mais</a>
+              </section>
+            </article>
+
+            <article class="help-card">
+              <figure class="card-image" style="background-image: url('imagem-venda-3.jpg');">
+                <figcaption class="visually-hidden">Políticas de venda</figcaption>
+              </figure>
+              <section class="card-content">
+                <h3>Políticas de venda</h3>
+                <p>Conheça as regras e diretrizes para vender na Clean Energy.</p>
+                <a href="politicas_venda.html" class="card-link">Saiba mais</a>
+              </section>
+            </article>
+          </section>
+        </section>
+
+        <!-- Conteúdo de Compra -->
+        <section id="panel-compra" role="tabpanel" aria-labelledby="tab-compra" class="content-panel">
+          <h2>Guia para Compradores</h2>
+          <p>Tudo o que você precisa saber para comprar produtos de energia limpa com segurança e praticidade.</p>
+          
+          <section class="help-cards">
+            <article class="help-card">
+              <figure class="card-image" style="background-image: url('imagem2.jpg');">
+                <figcaption class="visually-hidden">Como comprar produto</figcaption>
+              </figure>
+              <section class="card-content">
+                <h3>Como comprar produto</h3>
+                <p>Veja o passo a passo completo para realizar sua compra de forma segura.</p>
+                <a href="como_rastrear_pedido.html" class="card-link">Saiba mais</a>
+              </section>
+            </article>
+
+            <article class="help-card">
+              <figure class="card-image" style="background-image: url('imagem-compra-2.jpg');">
+                <figcaption class="visually-hidden">Formas de pagamento</figcaption>
+              </figure>
+              <section class="card-content">
+                <h3>Formas de pagamento</h3>
+                <p>Conheça todas as opções de pagamento disponíveis na plataforma.</p>
+                <a href="formas_pagamento.html" class="card-link">Saiba mais</a>
+              </section>
+            </article>
+
+            <article class="help-card">
+              <figure class="card-image" style="background-image: url('imagem-compra-3.jpg');">
+                <figcaption class="visually-hidden">Trocas e devoluções</figcaption>
+              </figure>
+              <section class="card-content">
+                <h3>Trocas e devoluções</h3>
+                <p>Entenda nossa política de trocas e devoluções de produtos.</p>
+                <a href="trocas_devolucoes.html" class="card-link">Saiba mais</a>
+              </section>
+            </article>
+          </section>
+        </section>
+
+        <!-- Conteúdo de Entrega -->
+        <section id="panel-entrega" role="tabpanel" aria-labelledby="tab-entrega" class="content-panel">
+          <h2>Informações sobre Entrega</h2>
+          <p>Saiba tudo sobre prazos, rastreamento e políticas de entrega dos seus produtos.</p>
+          
+          <section class="help-cards">
+            <article class="help-card">
+              <figure class="card-image" style="background-image: url('imagem-entrega-1.jpg');">
+                <figcaption class="visually-hidden">Rastrear pedido</figcaption>
+              </figure>
+              <section class="card-content">
+                <h3>Rastrear pedido</h3>
+                <p>Acompanhe seu pedido em tempo real desde a compra até a entrega.</p>
+                <a href="rastrear_pedido.html" class="card-link">Saiba mais</a>
+              </section>
+            </article>
+
+            <article class="help-card">
+              <figure class="card-image" style="background-image: url('imagem-entrega-2.jpg');">
+                <figcaption class="visually-hidden">Prazos de entrega</figcaption>
+              </figure>
+              <section class="card-content">
+                <h3>Prazos de entrega</h3>
+                <p>Consulte os prazos de entrega para sua região e tipo de produto.</p>
+                <a href="prazos_entrega.html" class="card-link">Saiba mais</a>
+              </section>
+            </article>
+
+            <article class="help-card">
+              <figure class="card-image" style="background-image: url('imagem-entrega-3.jpg');">
+                <figcaption class="visually-hidden">Problemas com entrega</figcaption>
+              </figure>
+              <section class="card-content">
+                <h3>Problemas com entrega</h3>
+                <p>Saiba como resolver problemas relacionados à entrega do seu pedido.</p>
+                <a href="problemas_entrega.html" class="card-link">Saiba mais</a>
+              </section>
+            </article>
+          </section>
+        </section>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
+
