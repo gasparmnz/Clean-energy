@@ -170,7 +170,7 @@ body {
   color: var(--accent-color);
 }
 
-/* Seção do Formulário */
+/*Formulário */
 .form-section {
   background: var(--background);
   padding: var(--spacing-3xl);
