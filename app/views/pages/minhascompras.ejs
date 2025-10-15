@@ -28,7 +28,7 @@
           <a class="nav-link active" id="emAndamentoTab" data-bs-toggle="tab" href="#emAndamento" role="tab" aria-controls="emAndamento" aria-selected="true">Em andamento</a>
         </li>
         <li class="nav-item" role="presentation">
-          <a class="nav-link" id="pendentesTab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-controls="pendentes" aria-selected="false">À pagar</a>
+          <a class="nav-link" id="pendentesTab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-controls="pendentes" aria-selected="false">Pendente</a>
         </li>
         <li class="nav-item" role="presentation">
           <a class="nav-link" id="concluidosTab" data-bs-toggle="tab" href="#concluidos" role="tab" aria-controls="concluidos" aria-selected="false">Concluídos</a>
@@ -147,24 +147,24 @@
         <hr>
 
         <p><strong>Forma de pagamento:</strong></p>
-        <div class="form-check">
+        <section class="form-check">
           <input class="form-check-input" type="radio" name="formaPagamento" id="pix" value="Pix" checked>
           <label class="form-check-label" for="pix">Pix</label>
-        </div>
-        <div class="form-check">
+        </section>
+        <section class="form-check">
           <input class="form-check-input" type="radio" name="formaPagamento" id="cartao" value="Cartão de Crédito">
           <label class="form-check-label" for="cartao">Cartão de Crédito</label>
-        </div>
-        <div class="form-check">
+        </section>
+        <section class="form-check">
           <input class="form-check-input" type="radio" name="formaPagamento" id="boleto" value="Boleto Bancário">
           <label class="form-check-label" for="boleto">Boleto Bancário</label>
-        </div>
+        </section>
 
-        <div id="mensagemPagamentoErro" class="text-danger mt-2" style="display: none;"></div>
+        <section id="mensagemPagamentoErro" class="text-danger mt-2" style="display: none;"></section>
       </section>
       <section class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-success" id="confirmarPagamento">Confirmar Pagamento</button>
+        <button type="button" class="btn btn-success" id="confirmarPagamento">Ir para Pagamento</button>
       </section>
     </section>
   </section>
@@ -238,7 +238,7 @@
           </section>
 
           <textarea class="avaliacao-comentario" rows="3" placeholder="Escreva seu comentário..."></textarea>
-          <div id="mensagemErroAvaliacao" class="text-danger mt-2" style="display: none;"></div>
+          <section id="mensagemErroAvaliacao" class="text-danger mt-2" style="display: none;"></section>
 
         </form>
       </section>
@@ -251,112 +251,143 @@
 </section>
 <!-- TOAST DE CONFIRMAÇÃO -->
 <section class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-  <div id="toastAvaliacao" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-    <div class="d-flex">
-      <div class="toast-body">
-        ✅ Obrigado por sua avaliação!
-      </div>
+  <section id="toastAvaliacao" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <section class="d-flex">
+      <section class="toast-body">
+         Obrigado por sua avaliação!
+      </section>
       <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
-    </div>
-  </div>
+    </section>
+  </section>
 </section>
 
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    let cardParaCancelar = null;
-    const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
-    const avaliarModal = new bootstrap.Modal(document.getElementById('avaliarModal'));
+      let cardParaCancelar = null;
+  const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
+  const avaliarModal = new bootstrap.Modal(document.getElementById('avaliarModal'));
+  const pagamentoModal = new bootstrap.Modal(document.getElementById('pagamentoModal'));
 
-    // Cancelar
-    document.querySelectorAll('.btn-cancelar').forEach(btn => {
-      btn.addEventListener('click', function() {
-        cardParaCancelar = this.closest('.produto-card');
-        cancelarModal.show();
-      });
+  let produtoSelecionadoParaPagamento = null;
+  let cardSelecionadoParaAvaliacao = null;
+
+  // Cancelar pedido
+  document.querySelectorAll('.btn-cancelar').forEach(btn => {
+    btn.addEventListener('click', function() {
+      cardParaCancelar = this.closest('.produto-card');
+      cancelarModal.show();
     });
+  });
 
-    document.getElementById('confirmarCancelamento').addEventListener('click', function() {
-      if (cardParaCancelar) cardParaCancelar.remove();
-      cancelarModal.hide();
-    });
+  document.getElementById('confirmarCancelamento').addEventListener('click', function() {
+    if (cardParaCancelar) cardParaCancelar.remove();
+    cancelarModal.hide();
+  });
 
-    // Detalhes
-    document.querySelectorAll('.btn-detalhes').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const card = this.closest('.produto-card');
-        document.getElementById('modal-produto').textContent = card.querySelector('h3').textContent;
-        document.getElementById('modal-endereco').textContent = card.querySelector('.endereco').textContent;
-        document.getElementById('modal-preco').textContent = card.querySelector('.preco').textContent;
-        document.getElementById('modal-quantidade').textContent = card.querySelector('.quantidade').textContent;
-        new bootstrap.Modal(document.getElementById('detalhesModal')).show();
-      });
-    });
-
-    const pagamentoModal = new bootstrap.Modal(document.getElementById('pagamentoModal'));
-let produtoSelecionadoParaPagamento = null;
-
-document.querySelectorAll('.btn-success').forEach(btn => {
-  if (btn.textContent.includes('Efetuar Pagamento')) {
-    btn.addEventListener('click', function () {
+  // Detalhes
+  document.querySelectorAll('.btn-detalhes').forEach(btn => {
+    btn.addEventListener('click', function() {
       const card = this.closest('.produto-card');
-      produtoSelecionadoParaPagamento = card;
-
-      document.getElementById('pagamento-produto').textContent = card.querySelector('h3').textContent;
-      document.getElementById('pagamento-quantidade').textContent = card.querySelector('.quantidade').textContent;
-      document.getElementById('pagamento-valor').textContent = card.querySelector('.preco').textContent;
-
-      pagamentoModal.show();
+      document.getElementById('modal-produto').textContent = card.querySelector('h3').textContent;
+      document.getElementById('modal-endereco').textContent = card.querySelector('.endereco').textContent;
+      document.getElementById('modal-preco').textContent = card.querySelector('.preco').textContent;
+      document.getElementById('modal-quantidade').textContent = card.querySelector('.quantidade').textContent;
+      new bootstrap.Modal(document.getElementById('detalhesModal')).show();
     });
-  }
-});
+  });
 
+  // Pagamento
+  document.querySelectorAll('.btn-success').forEach(btn => {
+    if (btn.textContent.includes('Efetuar Pagamento')) {
+      btn.addEventListener('click', function () {
+        const card = this.closest('.produto-card');
+        produtoSelecionadoParaPagamento = card;
 
-    // Avaliar
-    document.querySelectorAll('.btn-avaliar').forEach(btn => {
-      btn.addEventListener('click', function() {
-        avaliarModal.show();
+        document.getElementById('pagamento-produto').textContent = card.querySelector('h3').textContent;
+        document.getElementById('pagamento-quantidade').textContent = card.querySelector('.quantidade').textContent;
+        document.getElementById('pagamento-valor').textContent = card.querySelector('.preco').textContent;
+
+        pagamentoModal.show();
       });
+    }
+  });
+
+  // Avaliar
+  document.querySelectorAll('.btn-avaliar').forEach(btn => {
+    btn.addEventListener('click', function () {
+      cardSelecionadoParaAvaliacao = this.closest('.produto-card');
+      avaliarModal.show();
     });
+  });
 
-    document.getElementById('enviarAvaliacao').addEventListener('click', function () {
-  const estrelaSelecionada = document.querySelector('input[name="estrela"]:checked');
-  const comentario = document.querySelector('.avaliacao-comentario').value.trim();
+  const formAvaliacao = document.getElementById('formAvaliacao');
   const mensagemErro = document.getElementById('mensagemErroAvaliacao');
-
-  // Reset mensagem de erro
-  mensagemErro.style.display = 'none';
-  mensagemErro.textContent = '';
-
-  // Verificações
-  if (!estrelaSelecionada && comentario === '') {
-    mensagemErro.textContent = '⚠️ Por favor, selecione uma nota e escreva um comentário.';
-    mensagemErro.style.display = 'block';
-    return;
-  }
-
-  if (!estrelaSelecionada) {
-    mensagemErro.textContent = '⚠️ Por favor, selecione uma nota.';
-    mensagemErro.style.display = 'block';
-    return;
-  }
-
-  if (comentario === '') {
-    mensagemErro.textContent = '⚠️ Por favor, escreva um comentário.';
-    mensagemErro.style.display = 'block';
-    return;
-  }
-
-  // Tudo ok: enviar avaliação
-  avaliarModal.hide();
-  document.getElementById('formAvaliacao').reset();
-  mensagemErro.style.display = 'none';
-
-  // Mostra o toast de confirmação
   const toast = new bootstrap.Toast(document.getElementById('toastAvaliacao'));
-  toast.show();
-});
+
+  // Função para resetar avaliação
+  function resetarAvaliacao() {
+    formAvaliacao.reset();
+    mensagemErro.style.display = 'none';
+    mensagemErro.textContent = '';
+  }
+
+  // Ao fechar o modal (X ou Cancelar), limpar avaliação
+  document.querySelectorAll('#avaliarModal .btn-close, #avaliarModal .btn-secondary').forEach(btn => {
+    btn.addEventListener('click', resetarAvaliacao);
+  });
+
+  // Enviar avaliação
+  document.getElementById('enviarAvaliacao').addEventListener('click', function () {
+    const estrelaSelecionada = document.querySelector('input[name="estrela"]:checked');
+    const comentario = document.querySelector('.avaliacao-comentario').value.trim();
+
+    mensagemErro.style.display = 'none';
+    mensagemErro.textContent = '';
+
+    if (!estrelaSelecionada && comentario === '') {
+      mensagemErro.textContent = '⚠️ Por favor, selecione uma nota e escreva um comentário.';
+      mensagemErro.style.display = 'block';
+      return;
+    }
+
+    if (!estrelaSelecionada) {
+      mensagemErro.textContent = '⚠️ Por favor, selecione uma nota.';
+      mensagemErro.style.display = 'block';
+      return;
+    }
+
+    if (comentario === '') {
+      mensagemErro.textContent = '⚠️ Por favor, escreva um comentário.';
+      mensagemErro.style.display = 'block';
+      return;
+    }
+
+    const nota = parseInt(estrelaSelecionada.value);
+
+    // Exibir as estrelas no card
+    if (cardSelecionadoParaAvaliacao) {
+      // Remover avaliação anterior, se existir
+      const avaliacaoAntiga = cardSelecionadoParaAvaliacao.querySelector('.avaliacao-resultado');
+      if (avaliacaoAntiga) avaliacaoAntiga.remove();
+
+      const secaoInfo = cardSelecionadoParaAvaliacao.querySelector('.produto-info');
+      const estrelas = '&#9733;'.repeat(nota); // Estilo do modal
+  const pEstrelas = document.createElement('p');
+  pEstrelas.classList.add('avaliacao-resultado');
+  pEstrelas.innerHTML = estrelas; // ← aqui muda para innerHTML
+  secaoInfo.appendChild(pEstrelas);
+
+      // Mudar o botão "Avaliar" para "Editar Avaliação"
+      const botao = cardSelecionadoParaAvaliacao.querySelector('.btn-avaliar');
+      botao.textContent = 'Editar Avaliação';
+    }
+
+    avaliarModal.hide();
+    resetarAvaliacao();
+    toast.show();
+  });
 
 
 

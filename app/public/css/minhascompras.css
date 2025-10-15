@@ -75,6 +75,10 @@ main {
   padding: 15px;
   text-align: center;
   transition: transform 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 380px; /* ajuste se precisar, mas todos terão o mesmo tamanho */
 }
 
 .produto-card:hover {
@@ -90,6 +94,14 @@ main {
   margin-bottom: 10px;
 }
 
+.produto-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 50px;
+  margin-bottom: 8px; /* adiciona um pequeno espaço entre info e estrelas */
+}
 .produto-info h3 {
   font-size: 1.1rem;
   margin-bottom: 5px;
@@ -163,13 +175,12 @@ main {
 }
 
 .avaliacao-estrelas {
-    display: flex;
-    justify-content: center;
-    flex-direction: row-reverse; 
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-
+  display: flex;
+  justify-content: center;
+  flex-direction: row-reverse; 
+  gap: 8px;
+  margin-bottom: 18px; /* antes era 10px */
+}
   .avaliacao-estrelas input {
     display: none;
   }
@@ -187,6 +198,7 @@ main {
   .avaliacao-estrelas label:hover ~ label {
     color: #FFD700;
   }
+  
 
   .avaliacao-legendas {
     display: flex;
@@ -272,6 +284,17 @@ main {
   padding: 15px 20px;
 }
 
+.avaliacao-resultado {
+ 
+  color: #FFD700;
+  font-size: 1.6em;
+  height: 1.5em;
+  line-height: 1.5em;
+  text-align: center;
+  margin-top: -10px;
+}
+
+/* Aumenta o espaço das estrelas em relação aos botões */
 
 /* =========================
    Responsividade
