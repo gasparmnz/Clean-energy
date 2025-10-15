@@ -157,28 +157,32 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
         </section>
         <section class="modal-body">
-          <form id="formEditarProduto">
-            <nav class="mb-3">
-              <label for="editarNome" class="form-label">Nome</label>
+          <form id="formEditarProduto" novalidate>
+            <nav class="mb-3 form-group-validation">
+              <label for="editarNome" class="form-label">Nome do Produto</label>
               <input type="text" class="form-control" id="editarNome" required>
+              <span class="error-message" id="errorNome"></span>
             </nav>
-            <nav class="mb-3">
+            <nav class="mb-3 form-group-validation">
               <label for="editarEndereco" class="form-label">Endereço</label>
               <input type="text" class="form-control" id="editarEndereco" required>
+              <span class="error-message" id="errorEndereco"></span>
             </nav>
-            <nav class="mb-3">
-              <label for="editarPreco" class="form-label">Preço</label>
-              <input type="text" class="form-control" id="editarPreco" required>
+            <nav class="mb-3 form-group-validation">
+              <label for="editarPreco" class="form-label">Preço (R$)</label>
+              <input type="text" class="form-control" id="editarPreco" required placeholder="Ex: 1500,00">
+              <span class="error-message" id="errorPreco"></span>
             </nav>
-            <nav class="mb-3">
+            <nav class="mb-3 form-group-validation">
               <label for="editarQuantidade" class="form-label">Quantidade</label>
-              <input type="text" class="form-control" id="editarQuantidade" required>
+              <input type="text" class="form-control" id="editarQuantidade" required placeholder="Ex: 20 Tonelada(s)">
+              <span class="error-message" id="errorQuantidade"></span>
             </nav>
           </form>
         </section>
         <section class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" id="salvarEdicaoBtn">Salvar Alterações</button>
+          <button type="button" class="btn btn-primary" id="salvarEdicaoBtn" disabled>Salvar Alterações</button>
         </section>
       </section>
     </section>
@@ -206,68 +210,10 @@
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-let cardParaExcluir = null;
-const excluirModal = new bootstrap.Modal(document.getElementById('excluirModal'));
-const editarModal = new bootstrap.Modal(document.getElementById('editarModal'));
-
-
-document.querySelectorAll('.btn-excluir').forEach(btn => {
-  btn.addEventListener('click', function() {
-    cardParaExcluir = this.closest('.produto-card');
-    excluirModal.show();
-  });
-});
-
-document.getElementById('confirmarExcluirBtn').addEventListener('click', function() {
-  if (cardParaExcluir) {
-    cardParaExcluir.remove();
-    excluirModal.hide();
-    cardParaExcluir = null;
-  }
-});
-
-// Editar
-document.querySelectorAll('.btn-warning').forEach(btn => {
-  btn.addEventListener('click', function() {
-    cardParaEditar = this.closest('.produto-card');
-    
-    const nome = cardParaEditar.querySelector('h3').textContent;
-    const endereco = cardParaEditar.querySelector('.endereco').textContent;
-    const preco = cardParaEditar.querySelector('.preco').textContent;
-    const quantidade = cardParaEditar.querySelector('.quantidade').textContent;
-
-    // Preenche os campos do modal
-    document.getElementById('editarNome').value = nome;
-    document.getElementById('editarEndereco').value = endereco;
-    document.getElementById('editarPreco').value = preco;
-    document.getElementById('editarQuantidade').value = quantidade;
-
-    editarModal.show();
-  });
-});
-
-// Salvar alterações
-document.getElementById('salvarEdicaoBtn').addEventListener('click', function() {
-  if (cardParaEditar) {
-    const nome = document.getElementById('editarNome').value;
-    const endereco = document.getElementById('editarEndereco').value;
-    const preco = document.getElementById('editarPreco').value;
-    const quantidade = document.getElementById('editarQuantidade').value;
-
-    // Atualiza o card com os novos valores
-    cardParaEditar.querySelector('h3').textContent = nome;
-    cardParaEditar.querySelector('.endereco').textContent = endereco;
-    cardParaEditar.querySelector('.preco').textContent = preco;
-    cardParaEditar.querySelector('.quantidade').textContent = quantidade;
-
-    editarModal.hide();
-  }
-});
-</script>
-
-
+<!-- Script de validação e funcionalidades -->
+<script src="/js/listaprodutos.js"></script>
 
 <%- include('../partial/footer.ejs') %>
 </body>
 </html>
+

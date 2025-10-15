@@ -1,8 +1,3 @@
-/**
- * Sistema de Validação em Tempo Real para Formulários de Cadastro
- * Versão final - Botão de submit sempre habilitado
- * Suporta validação para Pessoa Física e Empresa
- */
 
 class FormValidator {
   constructor() {
@@ -34,7 +29,7 @@ class FormValidator {
   }
 
   init() {
-    // Aguardar o DOM estar completamente carregado
+
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
         this.setupEventListeners();
@@ -51,7 +46,7 @@ class FormValidator {
   }
 
   clearBackendErrors() {
-    // Limpar mensagens de erro do backend ao iniciar validação frontend
+    
     const errorElements = document.querySelectorAll('.error-message');
     errorElements.forEach(element => {
       if (element.textContent.trim()) {
@@ -67,17 +62,17 @@ class FormValidator {
 
       const inputs = form.querySelectorAll('.form-input');
       inputs.forEach(input => {
-        // Validação em tempo real (ao sair do campo)
+        // Validação em tempo real
         input.addEventListener('blur', (e) => {
           this.validateField(formType, e.target);
         });
 
-        // Validação durante a digitação (com debounce)
+        // Validação durante a digitação
         input.addEventListener('input', this.debounce((e) => {
           this.validateField(formType, e.target);
         }, 300));
 
-        // Mostrar indicador de força da senha
+         // indicador de força da senha
         if (input.type === 'password' && input.name === 'senha') {
           input.addEventListener('focus', (e) => {
             this.showPasswordStrength(e.target);
@@ -88,7 +83,7 @@ class FormValidator {
           });
         }
 
-        // Formatação automática para CPF e CNPJ
+        // Formatação para CPF e CNPJ
         if (input.name === 'cpf') {
           input.addEventListener('input', (e) => {
             this.formatCPF(e.target);
@@ -120,11 +115,8 @@ class FormValidator {
       if (!form) return;
 
       form.addEventListener('submit', (e) => {
-        // Validar todos os campos antes do envio
         this.validateAllFields(formType);
         
-        // Sempre permitir o envio - a validação backend irá bloquear se necessário
-        // Apenas mostrar estado de loading
         this.showLoadingState(form);
       });
     });
@@ -162,7 +154,6 @@ class FormValidator {
     const errorElement = inputGroup.querySelector('.error-message');
     const successElement = inputGroup.querySelector('.success-message');
 
-    // Remove classes anteriores
     inputGroup.classList.remove('valid', 'invalid');
 
     if (result.isValid) {
@@ -190,11 +181,10 @@ class FormValidator {
     const submitButton = form.querySelector('.submit-btn');
     if (submitButton) {
       submitButton.classList.add('loading');
-      // NÃO desabilitar o botão - apenas mostrar estado visual de loading
+
     }
   }
-
-  // Validadores específicos
+  // Validações específicas
   validateName(value) {
     if (!value || value.trim().length < 2) {
       return {
