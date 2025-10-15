@@ -283,7 +283,11 @@ main {
 #pagamentoModal .modal-footer {
   padding: 15px 20px;
 }
-
+#pagamento-valor {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #198754;
+}
 .avaliacao-resultado {
  
   color: #FFD700;
@@ -294,6 +298,27 @@ main {
   margin-top: -10px;
 }
 
+ .payment-button i {
+   vertical-align: middle;
+    margin-right: .5rem; 
+  }
+    .selected-payment {
+       box-shadow: 0 0 0 0.15rem rgba(13,110,253,.15);
+       }
+    .sim-boleto 
+    { font-family: monospace;
+       letter-spacing: 1px; 
+      }
+    /* garantir ícones posicionados nos inputs */
+    .position-relative .bx {
+       color: #6c757d;
+       }
+ /* Pequenos ajustes para simulação (opcional) */
+    
+    #pagamento-simulado img {
+       max-width: 150px;
+       }
+   
 /* Aumenta o espaço das estrelas em relação aos botões */
 
 /* =========================

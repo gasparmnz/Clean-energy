@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="/css/minhascompras.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-  
 </head>
 <body>
   <%- include('../partial/header1.ejs') %>
@@ -28,7 +27,7 @@
           <a class="nav-link active" id="emAndamentoTab" data-bs-toggle="tab" href="#emAndamento" role="tab" aria-controls="emAndamento" aria-selected="true">Em andamento</a>
         </li>
         <li class="nav-item" role="presentation">
-          <a class="nav-link" id="pendentesTab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-controls="pendentes" aria-selected="false">Pendente</a>
+          <a class="nav-link" id="pendentesTab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-controls="pendentes" aria-selected="false">Pendentes</a>
         </li>
         <li class="nav-item" role="presentation">
           <a class="nav-link" id="concluidosTab" data-bs-toggle="tab" href="#concluidos" role="tab" aria-controls="concluidos" aria-selected="false">Concluídos</a>
@@ -131,45 +130,104 @@
     </section>
   </main>
 
-  <!-- MODAL PAGAMENTO -->
-<section class="modal fade" id="pagamentoModal" tabindex="-1" aria-labelledby="pagamentoModalLabel" aria-hidden="true">
-  <section class="modal-dialog modal-dialog-centered">
-    <section class="modal-content">
-      <header class="modal-header">
-        <h5 class="modal-title" id="pagamentoModalLabel">Efetuar Pagamento</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </header>
-      <section class="modal-body">
-        <p><strong>Produto:</strong> <span id="pagamento-produto"></span></p>
-        <p><strong>Quantidade:</strong> <span id="pagamento-quantidade"></span></p>
-        <p><strong>Valor:</strong> <span id="pagamento-valor"></span></p>
+  <!-- MODAL PAGAMENTO (desktop-friendly, integrado) -->
+  <section class="modal fade" id="pagamentoModal" tabindex="-1" aria-labelledby="pagamentoModalLabel" aria-hidden="true">
+    <section class="modal-dialog modal-dialog-centered modal-xl">
+      <section class="modal-content">
+        <header class="modal-header">
+          <h5 class="modal-title" id="pagamentoModalLabel">Efetuar Pagamento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </header>
+        <section class="modal-body">
+          <section class="container-fluid">
+            <section class="row">
+              <!-- COLUNA ESQUERDA: INFO DO PRODUTO -->
+              <section class="col-12 col-lg-5 border-end pe-lg-4 mb-3 mb-lg-0">
+                <h6>Produto</h6>
+                <p><strong>Nome:</strong> <span id="pagamento-produto"></span></p>
+                <p><strong>Quantidade:</strong> <span id="pagamento-quantidade"></span></p>
+                <p><strong>Valor:</strong> <span id="pagamento-valor"></span></p>
+              </section>
 
-        <hr>
+              <!-- COLUNA DIREITA: FORMAS DE PAGAMENTO -->
+              <section class="col-12 col-lg-7 ps-lg-4">
+                <h6>Escolha a forma de pagamento</h6>
+                <section class="d-flex flex-column flex-md-row gap-3 mb-3">
+                  <button class="btn btn-outline-primary flex-fill payment-button" id="cardPix"><i class='bx bx-wallet'></i> Pix</button>
+                  <button class="btn btn-outline-primary flex-fill payment-button" id="cardCredito"><i class='bx bx-credit-card'></i> Cartão</button>
+                  <button class="btn btn-outline-primary flex-fill payment-button" id="cardBoleto"><i class='bx bx-file'></i> Boleto</button>
+                </section>
 
-        <p><strong>Forma de pagamento:</strong></p>
-        <section class="form-check">
-          <input class="form-check-input" type="radio" name="formaPagamento" id="pix" value="Pix" checked>
-          <label class="form-check-label" for="pix">Pix</label>
-        </section>
-        <section class="form-check">
-          <input class="form-check-input" type="radio" name="formaPagamento" id="cartao" value="Cartão de Crédito">
-          <label class="form-check-label" for="cartao">Cartão de Crédito</label>
-        </section>
-        <section class="form-check">
-          <input class="form-check-input" type="radio" name="formaPagamento" id="boleto" value="Boleto Bancário">
-          <label class="form-check-label" for="boleto">Boleto Bancário</label>
-        </section>
+                <!-- CONTEÚDO PIX -->
+                <section id="pixArea" class="p-3 border rounded mb-3" style="display:none;">
+                  <section class="row align-items-center">
+                    <section class="col-12 col-md-6 text-center">
+                      <img id="pixQrcode" src="" alt="QR Code Pix (simulado)" style="max-width:220px;">
+                    </section>
+                    <section class="col-12 col-md-6">
+                      <p><i class='bx bx-qrcode fs-3'></i> Escaneie o QR Code no seu app bancário.</p>
+                      <p>Chave Pix: <strong id="pixKey">meuemail@dominio.com</strong></p>
+                      <p><small class="text-muted">QR Code gerado apenas para simulação visual.</small></p>
+                    </section>
+                  </section>
+                </section>
 
-        <section id="mensagemPagamentoErro" class="text-danger mt-2" style="display: none;"></section>
-      </section>
-      <section class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-success" id="confirmarPagamento">Ir para Pagamento</button>
+                <!-- CONTEÚDO CARTÃO -->
+                <section id="creditoArea" class="p-3 border rounded mb-3" style="display:none;">
+                  <section class="row g-3">
+                    <section class="col-12 position-relative">
+                      <label for="numeroCartao" class="form-label">Número do Cartão</label>
+                      <i class='bx bx-credit-card position-absolute' style="top:38px; left:10px;"></i>
+                      <input type="text" class="form-control ps-5" id="numeroCartao" placeholder="0000 0000 0000 0000">
+                    </section>
+                    <section class="col-6 position-relative">
+                      <label for="validadeCartao" class="form-label">Validade</label>
+                      <i class='bx bx-calendar position-absolute' style="top:38px; left:10px;"></i>
+                      <input type="text" class="form-control ps-5" id="validadeCartao" placeholder="MM/AA">
+                    </section>
+                    <section class="col-6 position-relative">
+                      <label for="cvvCartao" class="form-label">CVV</label>
+                      <i class='bx bx-lock-alt position-absolute' style="top:38px; left:10px;"></i>
+                      <input type="text" class="form-control ps-5" id="cvvCartao" placeholder="123">
+                    </section>
+                    <section class="col-12 position-relative">
+                      <label for="nomeTitular" class="form-label">Nome do Titular</label>
+                      <i class='bx bx-user position-absolute' style="top:38px; left:10px;"></i>
+                      <input type="text" class="form-control ps-5" id="nomeTitular" placeholder="Nome impresso no cartão">
+                    </section>
+                  </section>
+                  <p class="mt-2">Bandeiras aceitas: <i class='bx bxl-visa'></i> <i class='bx bxl-mastercard'></i> <i class='bx bxl-amex'></i></p>
+                </section>
+
+                <!-- CONTEÚDO BOLETO -->
+                <section id="boletoArea" class="p-3 border rounded mb-3" style="display:none;">
+                  <section class="row g-2 align-items-center">
+                    <section class="col-12 col-md-8">
+                      <p><i class='bx bx-barcode fs-3'></i> Gere o boleto e pague em qualquer banco ou app.</p>
+                      <p><small class="text-muted">Boleto simulado — válido por 3 dias.</small></p>
+                    </section>
+                    <section class="col-12 col-md-4 text-md-end">
+                      <button class="btn btn-primary" id="gerarBoletoBtn">Gerar Boleto</button>
+                    </section>
+                    <section class="col-12 mt-2" id="boletoContainer" style="display:none;">
+                      <input type="text" class="form-control sim-boleto text-center" id="boletoCodigo" readonly>
+                      <p class="mt-2"><small class="text-muted">Copie o código do boleto para pagar.</small></p>
+                    </section>
+                  </section>
+                </section>
+
+                <section id="mensagemPagamentoErro" class="text-danger mt-2" style="display: none;"></section>
+              </section>
+            </section>
+          </section>
+        </section>
+        <section class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success" id="confirmarPagamento">Confirmar Pagamento</button>
+        </section>
       </section>
     </section>
   </section>
-</section>
-
 
   <!-- MODAL DETALHES -->
   <section class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
@@ -212,60 +270,59 @@
   </section>
 
   <!-- MODAL AVALIAÇÃO -->
-<section class="modal fade" id="avaliarModal" tabindex="-1" aria-labelledby="avaliarModalLabel" aria-hidden="true">
-  <section class="modal-dialog modal-dialog-centered">
-    <section class="modal-content">
-      <header class="modal-header">
-        <h5 class="modal-title" id="avaliarModalLabel">Avaliar Produto</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </header>
-      <section class="modal-body text-center">
-        <form id="formAvaliacao">
-          <fieldset class="avaliacao-estrelas">
-            <input type="radio" id="estrela5" name="estrela" value="5"><label for="estrela5">&#9733;</label>
-            <input type="radio" id="estrela4" name="estrela" value="4"><label for="estrela4">&#9733;</label>
-            <input type="radio" id="estrela3" name="estrela" value="3"><label for="estrela3">&#9733;</label>
-            <input type="radio" id="estrela2" name="estrela" value="2"><label for="estrela2">&#9733;</label>
-            <input type="radio" id="estrela1" name="estrela" value="1"><label for="estrela1">&#9733;</label>
-          </fieldset>
+  <section class="modal fade" id="avaliarModal" tabindex="-1" aria-labelledby="avaliarModalLabel" aria-hidden="true">
+    <section class="modal-dialog modal-dialog-centered">
+      <section class="modal-content">
+        <header class="modal-header">
+          <h5 class="modal-title" id="avaliarModalLabel">Avaliar Produto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </header>
+        <section class="modal-body text-center">
+          <form id="formAvaliacao">
+            <fieldset class="avaliacao-estrelas">
+              <input type="radio" id="estrela5" name="estrela" value="5"><label for="estrela5">&#9733;</label>
+              <input type="radio" id="estrela4" name="estrela" value="4"><label for="estrela4">&#9733;</label>
+              <input type="radio" id="estrela3" name="estrela" value="3"><label for="estrela3">&#9733;</label>
+              <input type="radio" id="estrela2" name="estrela" value="2"><label for="estrela2">&#9733;</label>
+              <input type="radio" id="estrela1" name="estrela" value="1"><label for="estrela1">&#9733;</label>
+            </fieldset>
 
-          <section class="avaliacao-legendas">
-            <span>Péssimo</span>
-            <span>Ruim</span>
-            <span>Regular</span>
-            <span>Bom</span>
-            <span>Excelente</span>
-          </section>
+            <section class="avaliacao-legendas">
+              <span>Péssimo</span>
+              <span>Ruim</span>
+              <span>Regular</span>
+              <span>Bom</span>
+              <span>Excelente</span>
+            </section>
 
-          <textarea class="avaliacao-comentario" rows="3" placeholder="Escreva seu comentário..."></textarea>
-          <section id="mensagemErroAvaliacao" class="text-danger mt-2" style="display: none;"></section>
+            <textarea class="avaliacao-comentario" rows="3" placeholder="Escreva seu comentário..."></textarea>
+            <section id="mensagemErroAvaliacao" class="text-danger mt-2" style="display: none;"></section>
 
-        </form>
-      </section>
-      <section class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-success" id="enviarAvaliacao">Enviar Avaliação</button>
+          </form>
+        </section>
+        <section class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success" id="enviarAvaliacao">Enviar Avaliação</button>
+        </section>
       </section>
     </section>
   </section>
-</section>
-<!-- TOAST DE CONFIRMAÇÃO -->
-<section class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-  <section id="toastAvaliacao" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-    <section class="d-flex">
-      <section class="toast-body">
-         Obrigado por sua avaliação!
+
+  <!-- TOAST DE CONFIRMAÇÃO -->
+  <section class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+    <section id="toastAvaliacao" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <section class="d-flex">
+        <section class="toast-body">
+           Obrigado por sua avaliação!
+        </section>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
       </section>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
     </section>
   </section>
-</section>
-
-
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-      let cardParaCancelar = null;
+  let cardParaCancelar = null;
   const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
   const avaliarModal = new bootstrap.Modal(document.getElementById('avaliarModal'));
   const pagamentoModal = new bootstrap.Modal(document.getElementById('pagamentoModal'));
@@ -273,72 +330,210 @@
   let produtoSelecionadoParaPagamento = null;
   let cardSelecionadoParaAvaliacao = null;
 
-  // Cancelar pedido
-  document.querySelectorAll('.btn-cancelar').forEach(btn => {
-    btn.addEventListener('click', function() {
-      cardParaCancelar = this.closest('.produto-card');
-      cancelarModal.show();
-    });
-  });
+  const toast = new bootstrap.Toast(document.getElementById('toastAvaliacao'));
+
+  // ---------- Attach handlers básicos (cancelar, detalhes, avaliar) ----------
+  function cancelarHandler() {
+    cardParaCancelar = this.closest('.produto-card');
+    cancelarModal.show();
+  }
+
+  function detalhesHandler() {
+    const card = this.closest('.produto-card');
+    document.getElementById('modal-produto').textContent = card.querySelector('h3').textContent;
+    document.getElementById('modal-endereco').textContent = card.querySelector('.endereco').textContent;
+    document.getElementById('modal-preco').textContent = card.querySelector('.preco').textContent;
+    document.getElementById('modal-quantidade').textContent = card.querySelector('.quantidade').textContent;
+    new bootstrap.Modal(document.getElementById('detalhesModal')).show();
+  }
+
+  function avaliarHandler() {
+    cardSelecionadoParaAvaliacao = this.closest('.produto-card');
+    avaliarModal.show();
+  }
+
+  document.querySelectorAll('.btn-cancelar').forEach(btn => btn.addEventListener('click', cancelarHandler));
+  document.querySelectorAll('.btn-detalhes').forEach(btn => btn.addEventListener('click', detalhesHandler));
+  document.querySelectorAll('.btn-avaliar').forEach(btn => btn.addEventListener('click', avaliarHandler));
 
   document.getElementById('confirmarCancelamento').addEventListener('click', function() {
     if (cardParaCancelar) cardParaCancelar.remove();
     cancelarModal.hide();
   });
 
-  // Detalhes
-  document.querySelectorAll('.btn-detalhes').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const card = this.closest('.produto-card');
-      document.getElementById('modal-produto').textContent = card.querySelector('h3').textContent;
-      document.getElementById('modal-endereco').textContent = card.querySelector('.endereco').textContent;
-      document.getElementById('modal-preco').textContent = card.querySelector('.preco').textContent;
-      document.getElementById('modal-quantidade').textContent = card.querySelector('.quantidade').textContent;
-      new bootstrap.Modal(document.getElementById('detalhesModal')).show();
+  // ---------- Pagamento ----------
+  const cardPixBtn = document.getElementById('cardPix');
+  const cardCreditoBtn = document.getElementById('cardCredito');
+  const cardBoletoBtn = document.getElementById('cardBoleto');
+
+  const pixArea = document.getElementById('pixArea');
+  const creditoArea = document.getElementById('creditoArea');
+  const boletoArea = document.getElementById('boletoArea');
+
+  const pixQrcodeImg = document.getElementById('pixQrcode');
+  const pixKeyElem = document.getElementById('pixKey');
+
+  const gerarBoletoBtn = document.getElementById('gerarBoletoBtn');
+  const boletoContainer = document.getElementById('boletoContainer');
+  const boletoCodigoInput = document.getElementById('boletoCodigo');
+
+  const confirmarPagamentoBtn = document.getElementById('confirmarPagamento');
+
+  let selectedPaymentMethod = 'pix'; // padrão
+
+  function resetPaymentAreas() {
+    pixArea.style.display = 'none';
+    creditoArea.style.display = 'none';
+    boletoArea.style.display = 'none';
+    [cardPixBtn, cardCreditoBtn, cardBoletoBtn].forEach(btn => {
+      btn.classList.remove('btn-primary', 'selected-payment');
+      btn.classList.add('btn-outline-primary');
     });
+    boletoContainer.style.display = 'none';
+  }
+
+  function selectPayment(method) {
+    resetPaymentAreas();
+    selectedPaymentMethod = method;
+    if (method === 'pix') {
+      pixArea.style.display = 'block';
+      cardPixBtn.classList.remove('btn-outline-primary');
+      cardPixBtn.classList.add('btn-primary', 'selected-payment');
+      const fakePixData = '000201010212...SIMULADOPIX...' + Date.now();
+      pixQrcodeImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(fakePixData);
+      pixKeyElem.textContent = 'meuemail@dominio.com';
+      confirmarPagamentoBtn.textContent = 'Verificar Pagamento';
+    } else if (method === 'cartao') {
+      creditoArea.style.display = 'block';
+      cardCreditoBtn.classList.remove('btn-outline-primary');
+      cardCreditoBtn.classList.add('btn-primary', 'selected-payment');
+      confirmarPagamentoBtn.textContent = 'Confirmar Pagamento';
+    } else if (method === 'boleto') {
+      boletoArea.style.display = 'block';
+      cardBoletoBtn.classList.remove('btn-outline-primary');
+      cardBoletoBtn.classList.add('btn-primary', 'selected-payment');
+      confirmarPagamentoBtn.textContent = 'Verificar Pagamento';
+    }
+  }
+
+  cardPixBtn.addEventListener('click', () => selectPayment('pix'));
+  cardCreditoBtn.addEventListener('click', () => selectPayment('cartao'));
+  cardBoletoBtn.addEventListener('click', () => selectPayment('boleto'));
+
+  function abrirPagamentoHandler() {
+    const card = this.closest('.produto-card');
+    produtoSelecionadoParaPagamento = card;
+
+    document.getElementById('pagamento-produto').textContent = card.querySelector('h3').textContent;
+    document.getElementById('pagamento-quantidade').textContent = card.querySelector('.quantidade').textContent;
+    document.getElementById('pagamento-valor').textContent = card.querySelector('.preco').textContent;
+
+    document.getElementById('numeroCartao').value = '';
+    document.getElementById('validadeCartao').value = '';
+    document.getElementById('cvvCartao').value = '';
+    document.getElementById('nomeTitular').value = '';
+    boletoCodigoInput.value = '';
+    boletoContainer.style.display = 'none';
+    selectPayment('pix');
+
+    pagamentoModal.show();
+  }
+
+  function attachPaymentButtons() {
+    document.querySelectorAll('.btn-success').forEach(btn => {
+      if (btn.textContent.includes('Efetuar Pagamento')) {
+        btn.removeEventListener('click', abrirPagamentoHandler);
+        btn.addEventListener('click', abrirPagamentoHandler);
+      }
+    });
+  }
+  attachPaymentButtons();
+
+  gerarBoletoBtn.addEventListener('click', () => {
+    const fakeBoleto = '2379' + Math.floor(Math.random() * 1e11).toString().padStart(11,'0') + '0000000000000000';
+    boletoCodigoInput.value = fakeBoleto;
+    boletoContainer.style.display = 'block';
   });
 
-  // Pagamento
-  document.querySelectorAll('.btn-success').forEach(btn => {
-    if (btn.textContent.includes('Efetuar Pagamento')) {
-      btn.addEventListener('click', function () {
-        const card = this.closest('.produto-card');
-        produtoSelecionadoParaPagamento = card;
+  confirmarPagamentoBtn.addEventListener('click', function() {
+    if (!produtoSelecionadoParaPagamento) {
+      document.getElementById('mensagemPagamentoErro').style.display = 'block';
+      document.getElementById('mensagemPagamentoErro').textContent = 'Nenhum produto selecionado.';
+      return;
+    }
 
-        document.getElementById('pagamento-produto').textContent = card.querySelector('h3').textContent;
-        document.getElementById('pagamento-quantidade').textContent = card.querySelector('.quantidade').textContent;
-        document.getElementById('pagamento-valor').textContent = card.querySelector('.preco').textContent;
+    if (selectedPaymentMethod === 'cartao') {
+      const num = document.getElementById('numeroCartao').value.trim();
+      const val = document.getElementById('validadeCartao').value.trim();
+      const cvv = document.getElementById('cvvCartao').value.trim();
+      const nome = document.getElementById('nomeTitular').value.trim();
+      if (!num || !val || !cvv || !nome) {
+        document.getElementById('mensagemPagamentoErro').style.display = 'block';
+        document.getElementById('mensagemPagamentoErro').textContent = 'Preencha os dados do cartão (simulado).';
+        return;
+      }
 
-        pagamentoModal.show();
-      });
+      // limpar mensagem de erro
+      document.getElementById('mensagemPagamentoErro').style.display = 'none';
+      document.getElementById('mensagemPagamentoErro').textContent = '';
+
+      // Mover card para "Em andamento"
+      const card = produtoSelecionadoParaPagamento;
+      const emAndamentoGrid = document.querySelector('#emAndamento .produtos-grid');
+
+      const statusP = card.querySelector('.pendente');
+      if (statusP) {
+        statusP.classList.remove('pendente');
+        statusP.classList.add('andamento');
+        statusP.textContent = 'Em andamento';
+      } else {
+        const p = document.createElement('p');
+        p.classList.add('andamento');
+        p.textContent = 'Em andamento';
+        card.appendChild(p);
+      }
+
+      const acoes = card.querySelector('.acoes');
+      acoes.innerHTML = `
+        <button class="btn btn-warning btn-sm">Rastrear</button>
+        <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
+        <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
+      `;
+
+      emAndamentoGrid.appendChild(card);
+
+      card.querySelectorAll('.btn-cancelar').forEach(b => b.addEventListener('click', cancelarHandler));
+      card.querySelectorAll('.btn-detalhes').forEach(b => b.addEventListener('click', detalhesHandler));
+      card.querySelectorAll('.btn-avaliar').forEach(b => b.addEventListener('click', avaliarHandler));
+      attachPaymentButtons();
+
+      pagamentoModal.hide();
+      produtoSelecionadoParaPagamento = null;
+
+      alert('Pagamento simulado criado com sucesso! O pedido agora está "Em andamento".');
+
+    } else {
+      // Pix ou Boleto não concluem
+      document.getElementById('mensagemPagamentoErro').style.display = 'block';
+      document.getElementById('mensagemPagamentoErro').textContent = 'Pagamento ainda não confirmado.';
+      return;
     }
   });
 
-  // Avaliar
-  document.querySelectorAll('.btn-avaliar').forEach(btn => {
-    btn.addEventListener('click', function () {
-      cardSelecionadoParaAvaliacao = this.closest('.produto-card');
-      avaliarModal.show();
-    });
-  });
-
+  // ---------- Avaliação ----------
   const formAvaliacao = document.getElementById('formAvaliacao');
   const mensagemErro = document.getElementById('mensagemErroAvaliacao');
-  const toast = new bootstrap.Toast(document.getElementById('toastAvaliacao'));
 
-  // Função para resetar avaliação
   function resetarAvaliacao() {
     formAvaliacao.reset();
     mensagemErro.style.display = 'none';
     mensagemErro.textContent = '';
   }
 
-  // Ao fechar o modal (X ou Cancelar), limpar avaliação
   document.querySelectorAll('#avaliarModal .btn-close, #avaliarModal .btn-secondary').forEach(btn => {
     btn.addEventListener('click', resetarAvaliacao);
   });
 
-  // Enviar avaliação
   document.getElementById('enviarAvaliacao').addEventListener('click', function () {
     const estrelaSelecionada = document.querySelector('input[name="estrela"]:checked');
     const comentario = document.querySelector('.avaliacao-comentario').value.trim();
@@ -366,22 +561,19 @@
 
     const nota = parseInt(estrelaSelecionada.value);
 
-    // Exibir as estrelas no card
     if (cardSelecionadoParaAvaliacao) {
-      // Remover avaliação anterior, se existir
       const avaliacaoAntiga = cardSelecionadoParaAvaliacao.querySelector('.avaliacao-resultado');
       if (avaliacaoAntiga) avaliacaoAntiga.remove();
 
       const secaoInfo = cardSelecionadoParaAvaliacao.querySelector('.produto-info');
-      const estrelas = '&#9733;'.repeat(nota); // Estilo do modal
-  const pEstrelas = document.createElement('p');
-  pEstrelas.classList.add('avaliacao-resultado');
-  pEstrelas.innerHTML = estrelas; // ← aqui muda para innerHTML
-  secaoInfo.appendChild(pEstrelas);
+      const estrelas = '&#9733;'.repeat(nota);
+      const pEstrelas = document.createElement('p');
+      pEstrelas.classList.add('avaliacao-resultado');
+      pEstrelas.innerHTML = estrelas;
+      secaoInfo.appendChild(pEstrelas);
 
-      // Mudar o botão "Avaliar" para "Editar Avaliação"
       const botao = cardSelecionadoParaAvaliacao.querySelector('.btn-avaliar');
-      botao.textContent = 'Editar Avaliação';
+      if (botao) botao.textContent = 'Editar Avaliação';
     }
 
     avaliarModal.hide();
@@ -389,8 +581,23 @@
     toast.show();
   });
 
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(m => {
+      m.addedNodes.forEach(node => {
+        if (node.nodeType === 1 && node.classList.contains('produto-card')) {
+          node.querySelectorAll('.btn-cancelar').forEach(b => b.addEventListener('click', cancelarHandler));
+          node.querySelectorAll('.btn-detalhes').forEach(b => b.addEventListener('click', detalhesHandler));
+          node.querySelectorAll('.btn-avaliar').forEach(b => b.addEventListener('click', avaliarHandler));
+          node.querySelectorAll('.btn-success').forEach(btn => {
+            if (btn.textContent.includes('Efetuar Pagamento')) btn.addEventListener('click', abrirPagamentoHandler);
+          });
+        }
+      });
+    });
+  });
 
+  document.querySelectorAll('.produtos-grid').forEach(grid => observer.observe(grid, { childList: true }));
+</script>
 
-  </script>
 </body>
 </html>
