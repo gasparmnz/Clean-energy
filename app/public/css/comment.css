@@ -1,0 +1,83 @@
+/* ============================================= */
+/*          CSS PARA SEÇÃO DE COMENTÁRIOS        */
+/* ============================================= */
+
+/* Container principal da seção de comentários */
+.product-community {
+  width: 100%;
+  margin-top: var(--spacing-2xl); /* Espaçamento abaixo da imagem do produto */
+  padding: var(--spacing-lg);
+  background-color: var(--background-light);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl); /* Espaço entre o título e os comentários */
+}
+
+.community-main-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Estilo para cada item de comentário individual */
+.comment-item {
+  display: flex;
+  gap: var(--spacing-md); /* Espaço entre o avatar e o corpo do comentário */
+  align-items: flex-start;
+}
+
+.comment-author-avatar img {
+  width: 45px;
+  height: 45px;
+  border-radius: var(--border-radius-full);
+  object-fit: cover;
+  border: 2px solid var(--primary-light);
+}
+
+.comment-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs); /* Espaço pequeno entre o nome e o texto */
+}
+
+.comment-header {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap; /* Permite quebra de linha em telas pequenas */
+}
+
+.comment-author-name {
+  font-weight: 600;
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  font-style: normal;
+}
+
+.comment-author-handle {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+.comment-body p {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Classe auxiliar para esconder texto visualmente, mas mantê-lo para leitores de tela */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
