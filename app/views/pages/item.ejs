@@ -14,7 +14,7 @@
   <%- include('../partial/header1.ejs'    ) %>
 
   <main class="product-main">
-    <!-- BOTÃO VOLTAR MOVIDO PARA CÁ E CORRIGIDO -->
+ 
     <nav class="back-navigation" aria-label="Navegação de retorno">
       <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
         <i class='bx bx-arrow-back'></i>
@@ -22,9 +22,9 @@
       </button>
     </nav>
 
-    <!-- Container principal do produto -->
+    
     <nav class="product-container">
-      <!-- Coluna da Esquerda: Imagem e Comentários -->
+      
       <nav class="product-left-column">
         <section class="product-gallery" aria-labelledby="gallery-title">
           <h2 id="gallery-title" class="visually-hidden">Galeria do Produto</h2>
@@ -33,11 +33,11 @@
           </figure>
         </section>
 
-        <!-- Seção de Comentários (agora única) -->
+       
         <section class="product-community" aria-labelledby="community-title">
           <h2 id="community-title" class="community-main-title">Comentários da Comunidade</h2>
           
-          <!-- Comentário 1 (visível em todas as telas) -->
+         
           <article class="comment-item">
             <figure class="comment-author-avatar">
               <img src="/imagem/perfil_com.png" alt="Avatar de Samara Kilsman">
@@ -54,7 +54,7 @@
             </nav>
           </article>
 
-          <!-- Comentário 2 (visível em todas as telas) -->
+          
           <article class="comment-item">
             <figure class="comment-author-avatar">
               <img src="/imagem/perfil_com.png" alt="Avatar de Cleiton Amanco">
@@ -71,7 +71,7 @@
             </nav>
           </article>
 
-          <!-- Comentário 3 (visível apenas em desktop) -->
+          
           <article class="comment-item comment-desktop">
             <figure class="comment-author-avatar">
               <img src="/imagem/perfil_com.png" alt="Avatar de Otávio Luccas">
@@ -88,7 +88,7 @@
             </nav>
           </article>
 
-          <!-- Comentário 4 (visível apenas em desktop) -->
+         
           <article class="comment-item comment-desktop">
             <figure class="comment-author-avatar">
               <img src="/imagem/perfil_com.png" alt="Avatar de Kaique Klein Costa">
@@ -107,7 +107,7 @@
         </section>
       </nav>
 
-      <!-- Coluna da Direita: Informações de Compra -->
+    
       <nav class="product-right-column">
         <section class="product-info" aria-label="Informações do produto">
           <header class="product-header">
@@ -170,7 +170,7 @@
           </section>
         </section>
       </nav>
-    </nav> <!-- Fim do .product-container -->
+    </nav> 
   </main>
 
   <%- include('../partial/footer.ejs') %>

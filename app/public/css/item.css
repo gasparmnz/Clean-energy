@@ -1,6 +1,4 @@
-/* ============================================= */
-/*          VARIÁVEIS E ESTILOS GLOBAIS          */
-/* ============================================= */
+
 :root {
   --primary-color: #37b65d;
   --primary-hover: #2fa553;
@@ -57,9 +55,7 @@ body {
   border: 0;
 }
 
-/* ============================================= */
-/*                 LAYOUT PRINCIPAL              */
-/* ============================================= */
+
 .product-main {
   padding: var(--spacing-xl);
   margin-top: 100px;
@@ -81,9 +77,7 @@ body {
   gap: var(--spacing-xl);
 }
 
-/* ============================================= */
-/*             COMPONENTES DO PRODUTO            */
-/* ============================================= */
+
 .product-image-wrapper {
   border-radius: var(--border-radius-xl);
   overflow: hidden;
@@ -152,9 +146,7 @@ body {
   background: var(--primary-hover);
 }
 
-/* ============================================= */
-/*         AVALIAÇÃO DO VENDEDOR                 */
-/* ============================================= */
+
 .user-rating {
   padding: var(--spacing-xl);
   background: var(--background);
@@ -181,7 +173,6 @@ body {
   height: 64px;
   border-radius: 50%;
   padding: 3px;
-  background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
   transition: transform var(--transition-normal);
 }
 
@@ -226,25 +217,23 @@ body {
   color: var(--accent-color);
 }
 
-/* ============================================= */
-/*        TERMOS E CONDIÇÕES (NOVO ESTILO)       */
-/* ============================================= */
+
 .terms-section {
   padding: var(--spacing-xl);
-  background: var(--background); /* Fundo branco */
-  border: 1px solid var(--border-color); /* Borda sutil */
-  border-radius: var(--border-radius-lg); /* Bordas arredondadas */
+  background: w; 
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-lg); 
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md); /* Espaçamento interno */
+  gap: var(--spacing-md); 
 }
 
 #terms-title {
-  font-size: var(--font-size-xl); /* Mesmo tamanho do título da avaliação */
+  font-size: var(--font-size-xl); 
   font-weight: 600;
   color: var(--text-primary);
-  margin: 0; /* Remove margem extra */
-  position: static; /* Reseta o estilo de .visually-hidden */
+  margin: 0; 
+  position: static; 
   width: auto;
   height: auto;
   clip: auto;
@@ -275,12 +264,10 @@ body {
   top: 2px;
 }
 
-/* ============================================= */
-/*           SEÇÃO DE COMENTÁRIOS                */
-/* ============================================= */
+
 .product-community {
-  background-color: var(--background-light);
-  border: 1px solid var(--border-color);
+  background-color: white;
+  border: 2px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   padding: var(--spacing-lg);
   display: flex;
@@ -292,7 +279,7 @@ body {
   font-size: var(--font-size-xl);
   font-weight: 600;
   padding-bottom: var(--spacing-md);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 2px solid var(--border-color);
 }
 
 .comment-item {
