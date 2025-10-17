@@ -1,178 +1,339 @@
+/* Variáveis CSS */
 :root {
-  --primary-color: #488D6A;
-  --text-color: #222;
-  --bg-color: #f9f9f9;
-  --sidebar-bg: #fff;
+    --primary-color: #488D6A;
+    --secondary-color: #28a745;
+    --text-color: #333;
+    --bg-color: #f4f7f6;
+    --card-bg: #ffffff;
+    --border-color: #e0e0e0;
+    --shadow-light: rgba(0, 0, 0, 0.05);
+    --shadow-medium: rgba(0, 0, 0, 0.1);
 }
 
+/* Reset e Tipografia */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);  
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
 }
 
-main {
-  display: flex;
-  flex-direction: row;  /* importante! */
-  min-height: 100vh;
-  margin-top: 87px;
-  flex: 1;
-}
-.sidebar {
-  background-color: var(--sidebar-bg); /* #fff */
-  padding: 20px;
-  min-width: 220px;
-  height: auto;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-}
-
-.user-info {
-  text-align: center;
-}
-
-.user-info .avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-
-.username {
-  margin-top: 10px;
-  font-weight: bold;
-}
-
-.edit-profile {
-  font-size: 0.9rem;
-  color: gray;
-  text-decoration: none;
-}
-
-.sidebar-nav ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.sidebar-nav a {
-  text-decoration: none;
-  color: var(--text-color);
-  font-weight: 500;
-}
-
-/* =========================
-   Responsividade Sidebar
-   ========================= */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 10px;
-  }
-  .sidebar-nav ul {
-    flex-direction: row;
-    gap: 10px;
-  }
-  .content {
-    padding: 10px;
-  }
-  .top-nav ul {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-}
-
-
-
-/* Conteúdo principal */
-.content {
-  flex: 1;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.top-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-  border-bottom: 1px solid #ccc;
-}
-
-.top-nav a {
-  text-decoration: none;
-  color: var(--text-color);
-  padding-bottom: 10px;
-  display: inline-block;
-}
-
-.top-nav a.active {
-  color: var(--primary-color);
-  border-bottom: 2px solid var(--primary-color);
-}
-
-/* Área de pedidos */
-.orders {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: gray;
-  font-size: 1.1rem;
-  text-align: center;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-.orders-img {
-  margin-bottom: 20px;
-  width: 80px;
-  height: 80px;
-}
-.back-button {
-  all: unset;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 1.1rem;
-  color: #555;
-  transition: color 0.2s ease;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-.back-button:hover {
-  color: #28a745;
-  background-color: #e0f0e0;
-}
-
-.back-button i {
-  font-size: 24px;
-  vertical-align: middle;
-}
-/* =========================
-   Responsividade
-   ========================= */
-@media (max-width: 768px) {
-  .perfil-form {
-    padding: 20px;
-  }
-  .perfil-form form {
-    grid-template-columns: 1fr; /* no mobile fica 1 coluna */
-  }
-  .perfil-form fieldset {
+/* Layout Principal */
+.admin-main {
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-  }
+    gap: 30px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
+.page-title {
+    font-size: 2.2rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+/* Seções */
+section {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    padding: 25px;
+}
+
+section h2 {
+    font-size: 1.8rem;
+    color: var(--text-color);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 10px;
+}
+
+/* Cards de Resumo */
+.dashboard-summary .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.summary-card {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 10px var(--shadow-medium);
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-5px);
+    background-color: var(--secondary-color);
+}
+
+.summary-card i {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.summary-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.summary-card p {
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+/* Tabelas de Transações */
+.table-responsive {
+    overflow-x: auto;
+    margin-bottom: 15px;
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px; /* Garante que a tabela não fique muito estreita em telas pequenas */
+}
+
+.transactions-table th,
+.transactions-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.transactions-table th {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.transactions-table tbody tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* Badges de Status */
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+}
+
+.status-concluido {
+    background-color: #28a745; /* Verde */
+}
+
+.status-pendente {
+    background-color: #ffc107; /* Amarelo */
+    color: #333;
+}
+
+.status-andamento {
+    background-color: #17a2b8; /* Azul */
+}
+
+/* Botões de Ação */
+.action-button {
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: color 0.2s ease;
+}
+
+.action-button:hover {
+    color: var(--secondary-color);
+}
+
+.view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: color 0.2s ease;
+}
+
+.view-all-link:hover {
+    color: var(--secondary-color);
+}
+
+/* Responsividade */
+
+/* Mobile (max-width: 767px) */
+@media (max-width: 767px) {
+    .admin-main {
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .page-title {
+        font-size: 1.8rem;
+    }
+
+    section {
+        padding: 20px;
+    }
+
+    section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+
+    .dashboard-summary .summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-card i {
+        font-size: 2.5rem;
+    }
+
+    .summary-card h3 {
+        font-size: 1rem;
+    }
+
+    .summary-card p {
+        font-size: 1.5rem;
+    }
+
+    .transactions-table {
+        min-width: unset; /* Remove o min-width para mobile */
+    }
+
+    .transactions-table thead {
+        display: none; /* Esconde o cabeçalho da tabela em mobile */
+    }
+
+    .transactions-table,
+    .transactions-table tbody,
+    .transactions-table tr,
+    .transactions-table td {
+        display: block; /* Transforma elementos da tabela em blocos */
+        width: 100%;
+    }
+
+    .transactions-table tr {
+        margin-bottom: 15px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        box-shadow: 0 2px 8px var(--shadow-light);
+    }
+
+    .transactions-table td {
+        text-align: right; /* Alinha o conteúdo à direita */
+        padding-left: 50%; /* Espaço para o label */
+        position: relative;
+    }
+
+    .transactions-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    .action-button {
+        font-size: 1rem;
+    }
+}
+
+/* Tablet (min-width: 768px and max-width: 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .admin-main {
+        padding: 25px;
+        gap: 25px;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    section {
+        padding: 20px;
+    }
+
+    section h2 {
+        font-size: 1.6rem;
+    }
+
+    .dashboard-summary .summary-cards {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 15px;
+    }
+
+    .summary-card i {
+        font-size: 2.8rem;
+    }
+
+    .summary-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .summary-card p {
+        font-size: 1.6rem;
+    }
+
+    .transactions-table {
+        min-width: 600px; /* Ajusta o min-width para tablet */
+    }
+
+    .transactions-table th,
+    .transactions-table td {
+        padding: 10px 12px;
+    }
+
+    .status-badge {
+        font-size: 0.75rem;
+    }
+
+    .action-button {
+        font-size: 1.1rem;
+    }
+}
+
+/* Desktop (min-width: 1024px) */
+@media (min-width: 1024px) {
+    .admin-main {
+        padding: 30px;
+        gap: 40px;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+    }
+
+    section h2 {
+        font-size: 2rem;
+    }
+
+    .dashboard-summary .summary-cards {
+        grid-template-columns: repeat(4, 1fr); /* 4 colunas para desktop */
+    }
+}
