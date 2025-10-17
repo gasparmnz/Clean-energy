@@ -1,0 +1,178 @@
+:root {
+  --primary-color: #488D6A;
+  --text-color: #222;
+  --bg-color: #f9f9f9;
+  --sidebar-bg: #fff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);  
+}
+
+main {
+  display: flex;
+  flex-direction: row;  /* importante! */
+  min-height: 100vh;
+  margin-top: 87px;
+  flex: 1;
+}
+.sidebar {
+  background-color: var(--sidebar-bg); /* #fff */
+  padding: 20px;
+  min-width: 220px;
+  height: auto;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.user-info {
+  text-align: center;
+}
+
+.user-info .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.username {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.edit-profile {
+  font-size: 0.9rem;
+  color: gray;
+  text-decoration: none;
+}
+
+.sidebar-nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sidebar-nav a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+/* =========================
+   Responsividade Sidebar
+   ========================= */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px;
+  }
+  .sidebar-nav ul {
+    flex-direction: row;
+    gap: 10px;
+  }
+  .content {
+    padding: 10px;
+  }
+  .top-nav ul {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+
+
+/* Conteúdo principal */
+.content {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.top-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+.top-nav a {
+  text-decoration: none;
+  color: var(--text-color);
+  padding-bottom: 10px;
+  display: inline-block;
+}
+
+.top-nav a.active {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+}
+
+/* Área de pedidos */
+.orders {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: gray;
+  font-size: 1.1rem;
+  text-align: center;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.orders-img {
+  margin-bottom: 20px;
+  width: 80px;
+  height: 80px;
+}
+.back-button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  color: #555;
+  transition: color 0.2s ease;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.back-button:hover {
+  color: #28a745;
+  background-color: #e0f0e0;
+}
+
+.back-button i {
+  font-size: 24px;
+  vertical-align: middle;
+}
+/* =========================
+   Responsividade
+   ========================= */
+@media (max-width: 768px) {
+  .perfil-form {
+    padding: 20px;
+  }
+  .perfil-form form {
+    grid-template-columns: 1fr; /* no mobile fica 1 coluna */
+  }
+  .perfil-form fieldset {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
