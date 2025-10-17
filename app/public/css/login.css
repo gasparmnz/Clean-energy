@@ -599,19 +599,6 @@ body {
   animation: spin 1s linear infinite;
 }
 
-/* Melhorias para modo escuro */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
-    --text-light: #888888;
-    --background: #1a1a1a;
-    --background-light: #2a2a2a;
-    --background-dark: #333333;
-    --border-color: #404040;
-  }
-}
-
 /* Animações de entrada para elementos */
 .input-group {
   animation: fadeInUp 0.6s ease-out;

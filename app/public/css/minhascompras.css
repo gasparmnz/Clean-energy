@@ -101,11 +101,12 @@ main {
   justify-content: flex-start;
   min-height: 50px;
   margin-bottom: 8px; /* adiciona um pequeno espaço entre info e estrelas */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 .produto-info h3 {
   font-size: 1.1rem;
   margin-bottom: 5px;
-  color: #1d3557;
+  color: #085847;
 }
 
 .produto-info .endereco {
@@ -159,13 +160,13 @@ main {
   margin-top: 15px;
 }
 .andamento{
-  background-color: #0018a0;
+  background-color: #146363;
   border: none;
   color: #fff;
   margin-top: 15px;
 }
 .pendente{
-  background-color: #ff9900;
+  background-color: #ff7b00;
   border: none;
   color: #fff;
   margin-top: 15px;
@@ -309,17 +310,16 @@ main {
     { font-family: monospace;
        letter-spacing: 1px; 
       }
-    /* garantir ícones posicionados nos inputs */
+    
     .position-relative .bx {
        color: #6c757d;
        }
- /* Pequenos ajustes para simulação (opcional) */
+
     
     #pagamento-simulado img {
        max-width: 150px;
        }
    
-/* Aumenta o espaço das estrelas em relação aos botões */
 
 /* =========================
    Responsividade
@@ -352,7 +352,7 @@ main {
     width: 100%;
   }
   .acoes .btn {
-    width: 100%; /* faz cada botão ocupar toda a coluna */
+    width: 100%;
     min-width: 0;
   }
 }

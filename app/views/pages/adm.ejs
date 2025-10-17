@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página de Perfil</title>
+  <link rel="stylesheet" href="/css/adm.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partial/header1.ejs') %>
+
+  <main>
+    <!-- Sidebar -->
+    <%- include('../partial/sidebar.ejs') %>
+
+
+    <section class="content">
+      <nav class="back-navigation" aria-label="Navegação de retorno">
+    <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+      <i class='bx bx-arrow-back'></i>
+      <span>Voltar</span>
+    </button>
+  </nav>
+             
+  </main>
+
+  <script src="/js/script.js"></script>
+  <%- include('../partial/footer.ejs') %>
+</body>
+</html>
