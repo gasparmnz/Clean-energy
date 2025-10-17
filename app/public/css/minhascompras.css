@@ -310,17 +310,16 @@ main {
     { font-family: monospace;
        letter-spacing: 1px; 
       }
-    /* garantir ícones posicionados nos inputs */
+    
     .position-relative .bx {
        color: #6c757d;
        }
- /* Pequenos ajustes para simulação (opcional) */
+
     
     #pagamento-simulado img {
        max-width: 150px;
        }
    
-/* Aumenta o espaço das estrelas em relação aos botões */
 
 /* =========================
    Responsividade
@@ -353,7 +352,7 @@ main {
     width: 100%;
   }
   .acoes .btn {
-    width: 100%; /* faz cada botão ocupar toda a coluna */
+    width: 100%;
     min-width: 0;
   }
 }
