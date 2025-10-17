@@ -4,109 +4,173 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= produto.nome %> - Clean Energy</title>
+  
   <link rel="stylesheet" href="/css/item.css">
+  
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <%- include('../partial/header1.ejs') %>
-  
-  
-  <nav class="back-navigation" aria-label="Navegação de retorno">
-    <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
-      <i class='bx bx-arrow-back'></i>
-      <span>Voltar</span>
-    </button>
-  </nav>
+  <%- include('../partial/header1.ejs'    ) %>
 
   <main class="product-main">
-  
-    <article class="product-container">
+ 
+    <nav class="back-navigation" aria-label="Navegação de retorno">
+      <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+        <i class='bx bx-arrow-back'></i>
+        <span>Voltar</span>
+      </button>
+    </nav>
 
-      <section class="product-gallery" aria-label="Galeria do produto">
-        <figure class="product-image-wrapper">
-          <img src="/imagem/<%= produto.imagem %>" 
-               alt="<%= produto.nome %>" 
-               class="product-image"
-               loading="lazy">
-        </figure>
-      </section>
+    
+    <nav class="product-container">
       
+      <nav class="product-left-column">
+        <section class="product-gallery" aria-labelledby="gallery-title">
+          <h2 id="gallery-title" class="visually-hidden">Galeria do Produto</h2>
+          <figure class="product-image-wrapper">
+            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>" class="product-image" loading="lazy">
+          </figure>
+        </section>
 
-      <section class="product-info" aria-label="Informações do produto">
-        <header class="product-header">
-          <h1 class="product-title"><%= produto.nome %></h1>
+       
+        <section class="product-community" aria-labelledby="community-title">
+          <h2 id="community-title" class="community-main-title">Comentários da Comunidade</h2>
           
-          <address class="product-location">
-            <i class="bx bx-map"></i>
-            <span><%= produto.local %></span>
-          </address>
-        </header>
-
-        <section class="product-description">
-          <p><%= produto.descricao %></p>
-        </section>
-
-        <section class="product-pricing">
-          <p class="product-price" aria-label="Preço do produto">
-            <span class="currency">R$</span>
-            <span class="amount"><%= produto.preco %></span>
-            <span class="cents">,00</span>
-          </p>
-          <p class="shipping-info">
-            <i class="bx bx-truck"></i>
-            <span>Frete: FOB</span>
-          </p>
-        </section>
-
-        <section class="product-actions">
-          <a href="/carrinho" class="buy-button">
-            <i class="bx bx-cart-add"></i>
-            <span>Comprar Agora</span>
-          </a>
-        </section>
-
-        <section class="user-rating" aria-label="Avaliação do usuário">
-          <header class="rating-header">
-            <h2>Avaliação do Usuário</h2>
-          </header>
-          
-          <article class="rating-content">
-            <figure class="user-avatar">
-              <img src="/imagem/avatar.png" 
-                   alt="Avatar do usuário" 
-                   class="avatar-image">
+         
+          <article class="comment-item">
+            <figure class="comment-author-avatar">
+              <img src="/imagem/perfil_com.png" alt="Avatar de Samara Kilsman">
             </figure>
-            
-            <section class="rating-details">
-              <p class="username">Usuário_1</p>
-              <p class="rating-score" aria-label="Pontuação 4,86 de 5 estrelas">
-                <span class="score-number">4,86</span>
-                <span class="stars" role="img" aria-label="4 estrelas e meia">
-                  <i class="bx bxs-star"></i>
-                  <i class="bx bxs-star"></i>
-                  <i class="bx bxs-star"></i>
-                  <i class="bx bxs-star"></i>
-                  <i class="bx bxs-star-half"></i>
-                </span>
-              </p>
-            </section>
+            <nav class="comment-body">
+              <header class="comment-header">
+                <nav class="comment-rating">
+                  <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+                </nav>
+                <cite class="comment-author-name">Samara Kilsman</cite>
+                <span class="comment-author-handle">@samarakilsman</span>
+              </header>
+              <p>Ótimo produto! A instalação foi mais simples do que eu esperava e a eficiência energética é notável.</p>
+            </nav>
           </article>
-        </section>
 
-        <section class="terms-section">
-          <header>
-            <h2>Termos e Condições</h2>
-          </header>
-          <article class="terms-content">
-            <ul class="terms-list">
-              <li>Todos os produtos anunciados neste site seguem o regime FOB (Free On Board), sendo de responsabilidade do comprador o custo e o risco do frete a partir do ponto de embarque.</li>
-              <li>O site cobra uma taxa de 5% sobre o valor de cada compra ou venda realizada na plataforma, destinada exclusivamente à manutenção e operação do serviço.</li>
-            </ul>
+          
+          <article class="comment-item">
+            <figure class="comment-author-avatar">
+              <img src="/imagem/perfil_com.png" alt="Avatar de Cleiton Amanco">
+            </figure>
+            <nav class="comment-body">
+              <header class="comment-header">
+                <nav class="comment-rating">
+                  <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+                </nav>
+                <cite class="comment-author-name">Cleiton Amanco</cite>
+                <span class="comment-author-handle">@Cleitonprof</span>
+              </header>
+              <p>Vendedor Confiavel e comprometido</p>
+            </nav>
+          </article>
+
+          
+          <article class="comment-item comment-desktop">
+            <figure class="comment-author-avatar">
+              <img src="/imagem/perfil_com.png" alt="Avatar de Otávio Luccas">
+            </figure>
+            <nav class="comment-body">
+              <header class="comment-header">
+                <nav class="comment-rating">
+                  <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+                </nav>
+                <cite class="comment-author-name">Otávio Luccas</cite>
+                <span class="comment-author-handle">@LuccasOt</span>
+              </header>
+              <p>Minha experiencia foi satisfatória</p>
+            </nav>
+          </article>
+
+         
+          <article class="comment-item comment-desktop">
+            <figure class="comment-author-avatar">
+              <img src="/imagem/perfil_com.png" alt="Avatar de Kaique Klein Costa">
+            </figure>
+            <nav class="comment-body">
+              <header class="comment-header">
+                <nav class="comment-rating">
+                  <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+                </nav>
+                <cite class="comment-author-name">Kaique Klein Costa</cite>
+                <span class="comment-author-handle">@KaiqueKc</span>
+              </header>
+              <p>Vou comprar novamente</p>
+            </nav>
           </article>
         </section>
-      </section>
-    </article>
+      </nav>
+
+    
+      <nav class="product-right-column">
+        <section class="product-info" aria-label="Informações do produto">
+          <header class="product-header">
+            <h1 class="product-title"><%= produto.nome %></h1>
+            <p class="product-location">
+              <i class="bx bx-map"></i>
+              <span><%= produto.local %></span>
+            </p>
+          </header>
+
+          <section class="product-description" aria-labelledby="description-title">
+            <h2 id="description-title" class="visually-hidden">Descrição do Produto</h2>
+            <p><%= produto.descricao %></p>
+          </section>
+
+          <section class="product-pricing" aria-labelledby="pricing-title">
+            <h2 id="pricing-title" class="visually-hidden">Preço</h2>
+            <p class="product-price">
+              <span class="currency">R$</span>
+              <span class="amount"><%= produto.preco %></span>
+              <span class="cents">,00</span>
+            </p>
+            <p class="shipping-info">
+              <i class="bx bx-truck"></i>
+              <span>Frete: FOB</span>
+            </p>
+          </section>
+
+          <section class="product-actions" aria-label="Ações de compra">
+            <a href="/carrinho" class="buy-button">
+              <i class="bx bx-cart-add"></i>
+              <span>Comprar Agora</span>
+            </a>
+          </section>
+
+          <section class="user-rating" aria-labelledby="rating-title">
+            <h2 id="rating-title" class="rating-main-title">Avaliação do Vendedor</h2>
+            <nav class="rating-content">
+              <figure class="user-avatar">
+                <img src="/imagem/avatar.png" alt="Avatar do vendedor" class="avatar-image">
+              </figure>
+              <nav class="rating-details">
+                <cite class="username">Vendedor_Exemplo</cite>
+                <p class="rating-score" aria-label="Pontuação 4,5 de 5 estrelas">
+                  <span class="score-number">4,5</span>
+                  <span class="stars" role="img">
+                    <i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star-half"></i>
+                  </span>
+                </p>
+              </nav>
+            </nav>
+          </section>
+
+          <section class="terms-section" aria-labelledby="terms-title">
+            <h2 id="terms-title">Termos e Condições</h2>
+            <ul class="terms-list">
+              <li>O regime de frete é FOB (Free On Board). O comprador assume os custos e riscos do transporte a partir do embarque.</li>
+              <li>Uma taxa de 5% é aplicada sobre o valor da transação para a manutenção da plataforma.</li>
+            </ul>
+          </section>
+        </section>
+      </nav>
+    </nav> 
   </main>
 
   <%- include('../partial/footer.ejs') %>
