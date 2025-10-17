@@ -101,11 +101,12 @@ main {
   justify-content: flex-start;
   min-height: 50px;
   margin-bottom: 8px; /* adiciona um pequeno espaço entre info e estrelas */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 .produto-info h3 {
   font-size: 1.1rem;
   margin-bottom: 5px;
-  color: #1d3557;
+  color: #085847;
 }
 
 .produto-info .endereco {
@@ -159,13 +160,13 @@ main {
   margin-top: 15px;
 }
 .andamento{
-  background-color: #0018a0;
+  background-color: #146363;
   border: none;
   color: #fff;
   margin-top: 15px;
 }
 .pendente{
-  background-color: #ff9900;
+  background-color: #ff7b00;
   border: none;
   color: #fff;
   margin-top: 15px;
