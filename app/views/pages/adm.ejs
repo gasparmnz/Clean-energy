@@ -11,6 +11,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+
+<section class="admin-container">
+ <%- include('../partial/sidebar_adm.ejs') %>
+
+
     <main class="admin-main">
         <h1 class="page-title">Painel Administrativo - Compras e Vendas</h1>
 
@@ -36,6 +41,16 @@
                     <i class="bx bx-check-circle"></i>
                     <h3>Transações Concluídas</h3>
                     <p>1.195</p>
+                </article>
+                <article class="summary-card">
+                    <i class="bx bx-money"></i>
+                    <h3>Total Transacionado</h3>
+                    <p>R$ 6.750,00</p>
+                </article>
+                <article class="summary-card">
+                    <i class="bx bx-wallet"></i>
+                    <h3>Comissão (5%)</h3>
+                    <p>R$ 337,50</p>
                 </article>
             </div>
         </section>
@@ -157,5 +172,7 @@
         </section>
 
     </main>
+</section>
 </body>
 </html>
+
