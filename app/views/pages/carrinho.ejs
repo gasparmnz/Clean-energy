@@ -9,12 +9,13 @@
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
-  <%- include('../partial/header1.ejs') %>
+  <%- include("../partial/header1.ejs") %>
   
   <main>
     <nav class="back-navigation" aria-label="Navegação de retorno">
     <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
-      <i class='bx bx-arrow-back'></i>
+      <i class=\'bx bx-arrow-back\
+'></i>
       <span>Voltar</span>
     </button>
   </nav>
@@ -104,91 +105,67 @@
 
   <script>
     function atualizarResumo() {
-      const produtos = document.querySelectorAll('.produto-card');
-      const resumoLista = document.querySelector('.resumo-lista');
-      const totalElement = document.querySelector('.total');
+      const produtos = document.querySelectorAll(".produto-card");
+      const resumoLista = document.querySelector(".resumo-lista");
+      const totalElement = document.querySelector(".total");
       let total = 0;
-      resumoLista.innerHTML = '';
+      resumoLista.innerHTML = "";
+
       produtos.forEach(card => {
         const nome = card.dataset.nome;
         const preco = Number(card.dataset.preco);
-        const quantidade = Number(card.querySelector('.quantidade-num').textContent);
+        const quantidade = Number(card.querySelector(".quantidade-num").textContent);
+
         if (quantidade > 0) {
-          resumoLista.innerHTML += `<li>${nome} - R$ ${preco.toFixed(2)} x${quantidade}</li>`;
-          total += preco * quantidade;
+          const subtotal = preco * quantidade;
+          resumoLista.innerHTML += `<li><span>${nome} (x${quantidade})</span> <span>R$ ${subtotal.toFixed(2)}</span></li>`;
+          total += subtotal;
         }
       });
-      totalElement.textContent = `Total: R$ ${total.toFixed(2)}`;
+
+      totalElement.innerHTML = `<span>Total:</span> <span>R$ ${total.toFixed(2)}</span>`;
     }
 
-    document.querySelectorAll('.btn-mais').forEach(btn => {
-      btn.addEventListener('click', function () {
-        const card = this.closest('.produto-card');
-        const max = Number(card.dataset.max);
-        const num = this.parentElement.querySelector('.quantidade-num');
-        const atual = Number(num.textContent);
-        if (atual < max) {
-          num.textContent = atual + 1;
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".btn-mais").forEach(btn => {
+        btn.addEventListener("click", function () {
+          const card = this.closest(".produto-card");
+          const max = Number(card.dataset.max);
+          const num = this.parentElement.querySelector(".quantidade-num");
+          const atual = Number(num.textContent);
+
+          if (atual < max) {
+            num.textContent = atual + 1;
+            atualizarResumo();
+          } else {
+            alert(`Limite máximo atingido: ${max} unidades.`);
+          }
+        });
+      });
+
+      document.querySelectorAll(".btn-menos").forEach(btn => {
+        btn.addEventListener("click", function() {
+          const num = this.parentElement.querySelector(".quantidade-num");
+          if (Number(num.textContent) > 1) {
+            num.textContent = Number(num.textContent) - 1;
+            atualizarResumo();
+          }
+        });
+      });
+
+      document.querySelectorAll(".btn-remover").forEach(btn => {
+        btn.addEventListener("click", function() {
+          const produtoCard = this.closest(".produto-card");
+          produtoCard.remove(); // Remove o card do DOM
           atualizarResumo();
-        } else {
-          alert(`Limite máximo atingido: ${max} unidades.`);
-        }
+        });
       });
+
+      // Chame a função para inicializar o resumo
+      atualizarResumo();
     });
-
-    document.querySelectorAll('.btn-menos').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const num = this.parentElement.querySelector('.quantidade-num');
-        if (Number(num.textContent) > 1) {
-          num.textContent = Number(num.textContent) - 1;
-          atualizarResumo();
-        }
-      });
-    });
-
-    document.querySelectorAll('.btn-remover').forEach(btn => {
-      btn.addEventListener('click', function() {
-        this.closest('.produto-card').remove();
-        atualizarResumo();
-      });
-    });
-
-    document.querySelectorAll('.btn-remover').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const produtoCard = this.closest('.produto-card'); // Seleciona o card do produto
-
-    // Esconde o produto temporariamente
-    produtoCard.style.display = 'none';
-
-    // Cria a opção de "Desfazer" que aparece na tela
-    const confirmacao = document.createElement('div');
-    confirmacao.classList.add('confirmacao');
-    confirmacao.innerHTML = `
-      <p>Item removido. <a href="#" class="reverter">Desfazer</a></p>
-    `;
-    document.body.appendChild(confirmacao);
-
-    // Ao clicar em "Desfazer", restaurar o produto
-    confirmacao.querySelector('.reverter').addEventListener('click', function(e) {
-      e.preventDefault();
-      produtoCard.style.display = 'block'; // Restaura o produto
-      confirmacao.remove(); // Remove a mensagem de "Desfazer"
-      atualizarResumo(); // Atualiza o resumo do carrinho
-    });
-
-    // Remover a confirmação depois de 5 segundos se o usuário não reverter
-    setTimeout(() => {
-      if (confirmacao) {
-        confirmacao.remove(); // Remove a confirmação se o tempo expirar
-      }
-    }, 5000);
-
-    atualizarResumo(); // Atualiza o resumo após a remoção
-  });
-});
-
-    
   </script>
-  <%- include('../partial/footer.ejs') %>
+  <%- include("../partial/footer.ejs") %>
 </body>
 </html>
+
