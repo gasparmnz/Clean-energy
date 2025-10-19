@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
+    <%- include('../partial/header1.ejs') %>
 <section class="admin-container">
  <%- include('../partial/sidebar_adm.ejs') %>
 
@@ -21,7 +21,7 @@
 
         <section class="dashboard-summary" aria-labelledby="dashboard-heading">
             <h2 id="dashboard-heading">Visão Geral</h2>
-            <div class="summary-cards">
+            <section class="summary-cards">
                 <article class="summary-card">
                     <i class="bx bx-cart-alt"></i>
                     <h3>Total de Compras e vendas</h3>
@@ -52,12 +52,12 @@
                     <h3>Comissão (5%)</h3>
                     <p>R$ 337,50</p>
                 </article>
-            </div>
+            </section>
         </section>
 
         <section class="transactions-section" aria-labelledby="compras-heading">
             <h2 id="compras-heading">Últimas Compras</h2>
-            <div class="table-responsive">
+            <section class="table-responsive">
                 <table class="transactions-table">
                     <thead>
                         <tr>
@@ -109,13 +109,13 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </section>
             <a href="#" class="view-all-link">Ver todas as compras <i class="bx bx-right-arrow-alt"></i></a>
         </section>
 
         <section class="transactions-section" aria-labelledby="vendas-heading">
             <h2 id="vendas-heading">Últimas Vendas</h2>
-            <div class="table-responsive">
+            <section class="table-responsive">
                 <table class="transactions-table">
                     <thead>
                         <tr>
@@ -167,7 +167,7 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </section>
             <a href="#" class="view-all-link">Ver todas as vendas <i class="bx bx-right-arrow-alt"></i></a>
         </section>
 

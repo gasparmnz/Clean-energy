@@ -91,37 +91,46 @@
   @media (max-width: 768px) {
     .sidebar {
       position: fixed;
+      top: auto; 
       bottom: 0;
       left: 0;
       width: 100%;
+      height: 60px; 
       flex-direction: row;
       justify-content: center;
       align-items: center;
-      padding: 8px 0;
+      padding: 0; 
       background-color: #fff;
       border-top: 2px solid var(--accent);
       box-shadow: 0 -6px 18px rgba(0,0,0,0.06);
       z-index: 1000;
     }
   
-  
     .user-info {
       display: none;
     }
   
+    .sidebar-nav {
+      width: 100%; 
+    }
   
     .sidebar-nav ul {
       flex-direction: row;
       justify-content: space-around;
       width: 100%;
+      height: 100%; 
       margin: 0;
-      padding: 0 6px;
-      gap: 45px;
+      padding: 0;
+      gap: 0; 
     }
   
     .sidebar-nav li {
       flex: 1;
       text-align: center;
+      height: 100%; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   
     
@@ -130,27 +139,31 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
-      padding: 8px 0;
-      font-size: 0.88rem;
+      gap: 1px; /* Diminuído o gap para aproximar os elementos */
+      padding: 6px 0; /* Ajustado o padding para otimizar o espaço */
+      font-size: 0.8rem; /* Aumentado o tamanho da fonte */
       font-weight: 700;
       color: var(--accent);
       background: transparent;
       white-space: normal; 
+      height: 100%;
+      width: 100%;
+    }
+
+    .sidebar-nav a i {
+        font-size: 1.3rem; /* Tamanho do ícone ajustado */
     }
   
    
     .two-line {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px; /* Diminuído o gap para aproximar as linhas */
     }
   
-    .two-line .l1 {
-      font-size: 0.88rem;
-    }
+    .two-line .l1,
     .two-line .l2 {
-      font-size: 0.82rem;
+      font-size: 0.75rem; /* Aumentado o tamanho da fonte */
     }
   
     .sidebar-nav a:hover,

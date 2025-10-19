@@ -319,79 +319,325 @@
   .delete-icon:hover {
     background-color: #fee2e2;
   }
+
+  /* Modal Base */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+.modal.show { display: flex; }
+
+.modal-content-horizontal {
+  background: #fff;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 1100px;
+  max-height: 85%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideIn 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  color: #fff;
+  padding: 15px 20px;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Corpo do modal dividido horizontalmente */
+.modal-body-horizontal {
+  display: flex;
+  flex: 1;
+  overflow-y: auto;
+  background: #fafafa;
+}
+
+.ratings-column {
+  flex: 1;
+  padding: 20px;
+}
+
+.divider {
+  width: 2px;
+  background: #ddd;
+}
+
+.summary-box {
+  background: #fff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.rating-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0c6b46;
+}
+
+.stars-display i {
+  color: #f5c518;
+  font-size: 18px;
+}
+
+.empty-star { color: #ccc; }
+
+.ratings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rating-card {
+  background: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.rating-card-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  color: #333;
+}
+
+.rating-card-stars {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #f5c518;
+}
+
+.rating-card-product {
+  font-size: 14px;
+  color: #0c6b46;
+  font-weight: 600;
+}
+
+.rating-card-comment {
+  font-size: 14px;
+  color: #555;
+}
+
+.empty-text {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .modal-body-horizontal {
+    flex-direction: column;
+  }
+  .divider {
+    display: none;
+  }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
   
   /* Responsive Design */
-  @media (max-width: 768px) {
+ /* Usuários Cadastrados - Estilos Específicos para Responsividade */
+
+/* IMPORTANTE: Este arquivo deve ser carregado DEPOIS de adm.css e do CSS original de usuarios_cadastrados.css */
+
+@media (max-width: 768px) {
+    /* Ajustes para o cabeçalho da página */
     .page-title-green {
-      font-size: 1.5rem;
+        font-size: 1.8rem; /* Aumenta um pouco o título para melhor leitura */
     }
-  
+
     .page-subtitle {
-      font-size: 0.9rem;
+        font-size: 0.95rem;
     }
-  
+
+    /* Cards de Resumo de Usuários */
     .summary-cards-users {
-      grid-template-columns: 1fr;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Permite 2 cards por linha em telas menores, se houver espaço */
+        gap: 15px; /* Reduz o espaçamento entre os cards */
     }
-  
+
+    .summary-card-user {
+        padding: 18px; /* Ajusta o padding do card */
+    }
+
+    .summary-card-user p {
+        font-size: 2rem; /* Mantém um bom tamanho para o número */
+    }
+
+    .summary-card-user i {
+        font-size: 2.8rem; /* Ajusta o tamanho do ícone */
+    }
+
+    /* Controles da Tabela (Pesquisa e Filtros) */
     .table-controls {
-      flex-direction: column;
-      align-items: stretch;
+        flex-direction: column; /* Empilha a pesquisa e os filtros */
+        align-items: stretch;
+        gap: 10px;
     }
-  
+
     .search-box {
-      min-width: 100%;
-      max-width: 100%;
+        min-width: unset; /* Remove o min-width para se ajustar melhor */
+        width: 100%; /* Ocupa a largura total */
+        max-width: 100%;
     }
-  
+
     .filters {
-      flex-direction: column;
-      width: 100%;
+        flex-direction: column; /* Empilha os filtros */
+        width: 100%;
+        gap: 10px;
     }
-  
+
     .filter-select {
-      width: 100%;
+        width: 100%; /* Ocupa a largura total */
     }
-  
+
+    /* Tabela de Usuários (transformada em cards) */
     .users-table-section {
-      padding: 16px;
+        padding: 15px; /* Ajusta o padding da seção da tabela */
     }
-  
+
     .users-table thead {
-      display: none;
+        display: none; /* Esconde o cabeçalho da tabela */
     }
-  
+
     .users-table tbody tr {
-      display: block;
-      margin-bottom: 20px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      padding: 16px;
-      background: #ffffff;
+        display: flex; /* Cada linha se torna um card */
+        flex-direction: column;
+        margin-bottom: 15px; /* Espaçamento entre os cards de usuário */
+        padding: 15px;
     }
-  
+
     .users-table td {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #f3f4f6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center; /* Alinha verticalmente label e valor */
+        padding: 8px 0; /* Padding vertical para as células */
+        border-bottom: 1px solid #f3f4f6; /* Adiciona uma borda sutil */
     }
-  
+
     .users-table td:last-child {
-      border-bottom: none;
+        border-bottom: none; /* Remove a borda da última célula */
+        padding-bottom: 0;
     }
-  
+
     .users-table td::before {
-      content: attr(data-label);
-      font-weight: 600;
-      color: var(--text-color);
-      margin-right: 10px;
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-color);
+        flex-shrink: 0; /* Impede que o label encolha */
+        margin-right: 10px;
     }
-  
+
     .action-buttons {
-      justify-content: flex-end;
+        justify-content: flex-end; /* Alinha os botões de ação à direita */
+        margin-top: 10px; /* Adiciona um espaço acima dos botões */
     }
-  }
+
+    /* Modal de Detalhes do Usuário */
+    .modal-content {
+        width: 95%;
+        max-width: 95%; /* Garante que o modal ocupe quase toda a largura */
+        max-height: 90vh;
+    }
+
+    .modal-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .modal-header p {
+        font-size: 0.9rem;
+    }
+
+    .ratings-summary {
+        grid-template-columns: 1fr; /* Empilha os itens de resumo de avaliação */
+        gap: 15px;
+        padding: 15px;
+    }
+
+    .rating-number,
+    .total-number {
+        font-size: 2.2rem;
+    }
+
+    .stars-display i {
+        font-size: 1.3rem;
+    }
+
+    .rating-card {
+        padding: 15px;
+    }
+
+    .rating-card-name {
+        font-size: 1rem;
+    }
+
+    .rating-card-product {
+        font-size: 0.85rem;
+    }
+
+    .rating-card-date {
+        text-align: left;
+    }
+
+    .rating-card-stars i {
+        font-size: 1.1rem;
+    }
+
+    .rating-card-score {
+        font-size: 0.9rem;
+    }
+
+    .rating-card-comment {
+        font-size: 0.9rem;
+    }
+
+    .empty-ratings i {
+        font-size: 3rem;
+    }
+
+    .empty-ratings h3 {
+        font-size: 1.1rem;
+    }
+
+    .empty-ratings p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-cards-users {
+        grid-template-columns: 1fr; /* Um card por linha em telas muito pequenas */
+    }
+}
+
+
   
   @media (max-width: 480px) {
     .summary-card-user {

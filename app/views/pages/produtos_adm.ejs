@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produtos - Admin</title>
+  <link rel="stylesheet" href="/css/adm.css">
+  <link rel="stylesheet" href="/css/produtos_adm.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+</head>
+<body>
+  <%- include('../partial/header1.ejs') %>
+  <section class="admin-container">
+    <%- include('../partial/sidebar_adm.ejs') %>
+    <main class="admin-main">
+      <header class="page-header">
+        <h1>Produtos</h1>
+        <p class="page-subtitle">Gerencie todos os produtos cadastrados na plataforma.</p>
+      </header>
+
+      <section class="products-summary">
+        <article class="summary-card">
+          <figure class="summary-card-icon accent">
+            <i class="bx bx-package"></i>
+          </figure>
+          <article>
+            <h3>Total de Produtos</h3>
+            <p id="totalProducts">0</p>
+          </article>
+        </article>
+        <article class="summary-card">
+          <figure class="summary-card-icon success">
+            <i class="bx bx-check-circle"></i>
+          </figure>
+          <article>
+            <h3>Produtos Ativos</h3>
+            <p id="activeProducts">0</p>
+          </article>
+        </article>
+        <article class="summary-card">
+          <figure class="summary-card-icon danger">
+            <i class="bx bx-block"></i>
+          </figure>
+          <article>
+            <h3>Produtos Suspensos</h3>
+            <p id="suspendedProductsSummary">0</p>
+          </article>
+        </article>
+      </section>
+
+      <nav class="products-controls">
+        <article class="search-box">
+          <i class="bx bx-search"></i>
+          <input type="text" id="searchInput" placeholder="Buscar por nome, ID ou descrição...">
+        </article>
+        <nav class="filter-controls">
+          <button class="filter-btn active" onclick="filterProducts(event, 'all')">Todos</button>
+          <button class="filter-btn" onclick="filterProducts(event, 'active')">Disponíveis</button>
+          <button class="filter-btn" onclick="filterProducts(event, 'suspended')">Suspensos</button>
+        </nav>
+      </nav>
+
+      <section id="availableSection" class="products-section">
+        <header class="section-header">
+          <h2>Disponíveis</h2>
+          <span id="availableBadge" class="badge">0</span>
+        </header>
+        <section id="availableProducts" class="products-grid"></section>
+      </section>
+
+      <section id="suspendedSection" class="products-section">
+        <header class="section-header">
+          <h2>Suspensos</h2>
+          <span id="suspendedBadge" class="badge danger">0</span>
+        </header>
+        <section id="suspendedProducts" class="products-grid"></section>
+      </section>
+    </main>
+  </section>
+
+  <dialog id="editModal" class="modal">
+    <article class="modal-content">
+      <header class="modal-header">
+        <h2>Editar Produto</h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </header>
+      <section class="modal-body">
+        <article class="form-group">
+          <label for="editName">Nome</label>
+          <input type="text" id="editName">
+        </article>
+        <article class="form-group">
+          <label for="editDescription">Descrição</label>
+          <input type="text" id="editDescription">
+        </article>
+        <article class="form-group">
+          <label for="editPrice">Preço</label>
+          <input type="number" id="editPrice" step="0.01">
+        </article>
+        <article class="form-group">
+          <label for="editStock">Estoque</label>
+          <input type="number" id="editStock">
+        </article>
+      </section>
+      <footer class="modal-footer">
+        <button class="modal-btn btn-secondary" onclick="closeModal()">Cancelar</button>
+        <button class="modal-btn btn-primary" onclick="saveProduct()">Salvar</button>
+      </footer>
+    </article>
+  </dialog>
+
+  <script>
+    let productsData = [
+      { id: 'PROD-001', name: 'Serragem', description: 'Serragem compacta de alta densidade energética, ideal para queima em caldeiras de biomassa.', price: 150.00, stock: 200, status: 'active', image: '/imagem/serragem.png' },
+      { id: 'PROD-002', name: 'Casca de Arroz', description: 'Subproduto do arroz com alto poder calorífico, excelente para geração de energia em usinas de biomassa.', price: 80.00, stock: 500, status: 'active', image: '/imagem/cascadearroz.png' },
+      { id: 'PROD-003', name: 'Bagaço de Cana', description: 'Resíduo da cana-de-açúcar com alta eficiência energética, amplamente utilizado em termelétricas de biomassa.', price: 120.00, stock: 350, status: 'active', image: '/imagem/cana.png' },
+      { id: 'PROD-004', name: 'Resíduos de Café', description: 'Borras de café com bom poder calorífico, utilizadas como complemento em misturas para energia biomassa.', price: 200.00, stock: 150, status: 'active', image: '/imagem/residuosdecafe.png' },
+      { id: 'PROD-005', name: 'Lenha Tratada', description: 'Lenha de reflorestamento com alta eficiência energética, ideal para sistemas de cogeração de energia.', price: 50.00, stock: 1000, status: 'suspended', image: '/imagem/lenha.png' },
+      { id: 'PROD-006', name: 'Folhas Secas', description: 'Biomassa vegetal compactada, utilizada como fonte renovável em sistemas de queima controlada.', price: 90.00, stock: 400, status: 'active', image: '/imagem/folhassecas.png' },
+      { id: 'PROD-007', name: 'Lixo Orgânico', description: 'Resíduos orgânicos processados para biodigestão e geração de biogás para energia.', price: 70.00, stock: 600, status: 'suspended', image: '/imagem/lixo organico.png' },
+      { id: 'PROD-008', name: 'Palha de Milho', description: 'Palha de milho com alto teor de celulose, excelente para queima em fornalhas de biomassa.', price: 180.00, stock: 250, status: 'active', image: '/imagem/palhademilho.png' },
+      { id: 'PROD-009', name: 'Resto de Colheita', description: 'Resíduos agrícolas diversos com potencial energético para transformação em biomassa.', price: 250.00, stock: 100, status: 'active', image: '/imagem/restodecolheita.png' },
+      { id: 'PROD-010', name: 'Pallet', description: 'Pallets de madeira triturados, matéria-prima de alta qualidade para produção de pellets energéticos.', price: 60.00, stock: 800, status: 'suspended', image: '/imagem/pellets.png' }
+    ];
+
+    let currentFilter = 'all';
+    let currentEditingProduct = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      displayProducts();
+      updateSummary();
+      setupEventListeners();
+    });
+
+    function updateSummary() {
+      const total = productsData.length;
+      const active = productsData.filter(p => p.status === 'active').length;
+      const suspended = productsData.filter(p => p.status === 'suspended').length;
+      document.getElementById('totalProducts').textContent = total;
+      document.getElementById('activeProducts').textContent = active;
+      document.getElementById('suspendedProductsSummary').textContent = suspended;
+    }
+
+    function displayProducts() {
+      const searchInput = document.getElementById('searchInput').value.toLowerCase();
+      const availableContainer = document.getElementById('availableProducts');
+      const suspendedContainer = document.getElementById('suspendedProducts');
+      const availableSection = document.getElementById('availableSection');
+      const suspendedSection = document.getElementById('suspendedSection');
+
+      let filteredData = productsData;
+      if (searchInput) {
+        filteredData = productsData.filter(p => 
+          p.name.toLowerCase().includes(searchInput) ||
+          p.id.toLowerCase().includes(searchInput) ||
+          p.description.toLowerCase().includes(searchInput)
+        );
+      }
+
+      const available = filteredData.filter(p => p.status === 'active');
+      const suspended = filteredData.filter(p => p.status === 'suspended');
+
+      availableContainer.innerHTML = available.length > 0 
+        ? available.map(createProductCard).join('') 
+        : '<article class="empty-state"><i class="bx bx-inbox"></i><p>Nenhum produto disponível</p></article>';
+      document.getElementById('availableBadge').textContent = available.length;
+
+      suspendedContainer.innerHTML = suspended.length > 0 
+        ? suspended.map(createProductCard).join('') 
+        : '<article class="empty-state"><i class="bx bx-inbox"></i><p>Nenhum produto suspenso</p></article>';
+      document.getElementById('suspendedBadge').textContent = suspended.length;
+
+      availableSection.style.display = (currentFilter === 'all' || currentFilter === 'active') ? 'block' : 'none';
+      suspendedSection.style.display = (currentFilter === 'all' || currentFilter === 'suspended') ? 'block' : 'none';
+    }
+
+    function createProductCard(product) {
+      const statusText = product.status === 'active' ? 'Disponível' : 'Suspenso';
+      const statusClass = product.status === 'active' ? 'active' : 'suspended';
+      const cardClass = product.status === 'suspended' ? 'suspended' : '';
+
+      return `
+        <article class="product-card ${cardClass}">
+          <figure class="product-image">
+            ${product.image ? `<img src="${product.image}" alt="${product.name}">` : '<article style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ccc; font-size: 3rem;">Sem imagem</article>'}
+            <span class="product-status-badge ${statusClass}">${statusText}</span>
+          </figure>
+          <article class="product-info">
+            <span class="product-id">${product.id}</span>
+            <h3 class="product-name">${product.name}</h3>
+            <p class="product-description">${product.description}</p>
+            <article class="product-meta">
+              <span class="product-price">R$ ${product.price.toFixed(2)}</span>
+              <article class="product-stock"><strong>${product.stock}</strong> em estoque</article>
+            </article>
+            <nav class="product-actions">
+              <button class="action-btn btn-edit" onclick="openEditModal('${product.id}')"><i class='bx bx-edit'></i>Editar</button>
+              ${product.status === 'active' 
+                ? `<button class="action-btn btn-suspend" onclick="toggleProductStatus('${product.id}')"><i class='bx bx-block'></i>Suspender</button>`
+                : `<button class="action-btn btn-activate" onclick="toggleProductStatus('${product.id}')"><i class='bx bx-check'></i>Ativar</button>`
+              }
+            </nav>
+          </article>
+        </article>
+      `;
+    }
+
+    function toggleProductStatus(productId) {
+      const product = productsData.find(p => p.id === productId);
+      if (product) {
+        product.status = product.status === 'active' ? 'suspended' : 'active';
+        displayProducts();
+        updateSummary();
+      }
+    }
+
+    function openEditModal(productId) {
+      currentEditingProduct = productsData.find(p => p.id === productId);
+      if (currentEditingProduct) {
+        document.getElementById('editName').value = currentEditingProduct.name;
+        document.getElementById('editDescription').value = currentEditingProduct.description;
+        document.getElementById('editPrice').value = currentEditingProduct.price;
+        document.getElementById('editStock').value = currentEditingProduct.stock;
+        document.getElementById('editModal').classList.add('show');
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('editModal').classList.remove('show');
+      currentEditingProduct = null;
+    }
+
+    function saveProduct() {
+      if (currentEditingProduct) {
+        currentEditingProduct.name = document.getElementById('editName').value;
+        currentEditingProduct.description = document.getElementById('editDescription').value;
+        currentEditingProduct.price = parseFloat(document.getElementById('editPrice').value);
+        currentEditingProduct.stock = parseInt(document.getElementById('editStock').value);
+        displayProducts();
+        updateSummary();
+        closeModal();
+      }
+    }
+
+    function filterProducts(event, filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      document.getElementById('searchInput').value = '';
+      displayProducts();
+    }
+
+    function setupEventListeners() {
+      document.getElementById('searchInput').addEventListener('input', displayProducts);
+      document.getElementById('editModal').addEventListener('click', (e) => {
+        if (e.target.id === 'editModal') closeModal();
+      });
+    }
+  </script>
+</body>
+</html>
