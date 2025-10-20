@@ -20,7 +20,7 @@ body, html{
 main{
   max-width: var(--container-max);
   margin: 0 auto;
-  height: 100vh; /* ocupa toda a altura da tela */
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -47,8 +47,8 @@ ol.steps{
   margin: 0;
   display: flex;
   flex-direction: column;
-  flex: 1; /* ocupa o espaço restante */
-  justify-content: space-around; /* espaço igual entre passos */
+  flex: 1;
+  justify-content: space-around;
   width: 100%;
 }
 
@@ -59,7 +59,7 @@ ol.steps{
   justify-content: center;
   gap: 1rem;
   text-align: center;
-  flex: 1; /* cada passo ocupa 1/3 da altura */
+  flex: 1;
 }
 
 .step article{
@@ -152,3 +152,114 @@ ol.steps{
     width: 100%;
   }
 }
+
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  main {
+    padding: 1.5rem;
+    height: auto; 
+  }
+
+  h1 {
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    margin-bottom: 2.5rem;
+  }
+
+  ol.steps {
+    flex-direction: row;
+    flex-wrap: wrap; 
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .step {
+    flex: 0 1 calc(50% - 1rem);
+    max-width: 450px;
+    flex-direction: column; 
+    gap: 0.8rem;
+  }
+
+  .step article {
+    max-width: none;
+  }
+
+  .step h2 {
+    font-size: clamp(1.6rem, 2vw, 1.8rem);
+    margin-bottom: 0.5rem;
+  }
+
+  .step p {
+    font-size: 0.95rem;
+  }
+
+  .icon-figure {
+    width: 80px;
+    height: 90px;
+  }
+
+  .icon-figure .bx {
+    font-size: 60px;
+  }
+
+  .acoes {
+    margin-top: 2rem;
+    gap: 1.5rem;
+  }
+
+  .acoes a {
+    padding: 0.7rem 1.5rem;
+    min-width: 140px;
+  }
+}
+
+@media (min-width: 1025px) {
+  main {
+    height: 100vh;
+    padding: 2rem;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  ol.steps {
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 3rem;
+  }
+
+  .step {
+    flex: 1;
+    max-width: 300px; 
+  }
+
+  .step h2 {
+    font-size: 2rem;
+  }
+
+  .step p {
+    font-size: 1rem;
+  }
+
+  .icon-figure {
+    width: 90px;
+    height: 110px;
+  }
+
+  .icon-figure .bx {
+    font-size: 70px;
+  }
+
+  .acoes {
+    margin-top: 3rem;
+    gap: 2rem;
+  }
+
+  .acoes a {
+    padding: 0.8rem 1.8rem;
+    min-width: 160px;
+  }
+}
+
