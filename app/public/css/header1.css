@@ -1,197 +1,190 @@
+:root{
+    --bg-color: #fdfdfd;
+    --second-bg-color: #2d3436;
+    --text-color: #2d3436;
+    --main-color: #488D6A;
+    --other-color: #dcdcdc;
+    --big-font: 4rem;
+    --h2-font: 2.2rem;
+    --p-font: 1.1rem;
+}
+
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    text-decoration: none;
+    list-style: none;
 }
- 
+
 body {
-     font-family: Arial, sans-serif;
-     }
- 
+    min-height: 100vh;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
 .header {
-  position: fixed;
-  top: 0;
-   left: 0;
-  width: 100%;
-  padding: 1rem 5%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 100;
-  background: #488D6A;
-  gap: 15px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-color);
+    padding: 15px 9%;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 }
-.header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-   left: 0;
-  width: 100%;
-   height: 100%;
-  background: rgba(72,141,106,0.8);
-  backdrop-filter: none;
-  z-index: -1;
-}
-.header::after {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg,transparent,transparent,transparent);
-  transition: .5s;
-}
-.header:hover::after { left: 100%; }
- 
+
 .logo {
-  display: flex;
-  align-items: center;  /* centraliza a imagem verticalmente */
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
 }
 
 .logo img {
-  height: 55px;  /* aumenta a logo */
-  width: auto;
+    max-width: 120px;
+    height: auto;
 }
- 
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-right: 30px;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-.navbar a {
-  font-size: 1rem;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 550;
-  margin-left: 1.5rem;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
- 
-#check { display: none; }
- 
-.icons {
-  position: absolute;
-  right: 4%;
-  font-size: 2rem;
-  color: #fff;
-  cursor: pointer;
-  display: none;
-}
- 
-.login-container {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  margin-left: 1rem;
-  padding-left: 1rem;
-  font-weight: 500;
-  color: #fff;
-}
-.login-container a {
-  color: #fff;
-  text-decoration: none;
-}
-.login-container a:hover {
-     color: #fff;
-     }
- 
-.login  {
-     height: 38px;
-      width: 38px;
-     }
-.carrinho {
-    height: 28px;
-    width: 28px;
-    filter: invert(100%) sepia(100%) saturate(500%) hue-rotate(180deg);
-}
-#menu-icon {
-    display: block;
-}
- 
-#close-icon {
-    display: none;
-}
- 
-#check:checked ~ .icons #menu-icon {
-    display: none;
-}
- 
-#check:checked ~ .icons #close-icon {
-    display: block;
-}
- 
 
-@media (max-width: 1200px) {
+.navbar {
+    display: flex;
+}
+
+.navbar a {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 10px 20px;
+    color: var(--text-color);
+    transition: all .40s ease;
+}
+
+.navbar a:hover {
+    color: var(--main-color);
+}
+
+.login-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.login-container a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.login-container a:hover {
+    background-color: var(--other-color);
+}
+
+.login-container .carrinho,
+.login-container .login {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+#check {
+    display: none;
+}
+
+.icons {
+    font-size: 2.3rem;
+    color: var(--text-color);
+    cursor: pointer;
+    display: none;
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
     .header {
-        padding: 0.8rem 4%;
+        padding: 12px 4%;
+    }
+    .logo img {
+        max-width: 100px;
+    }
+    .navbar a {
+        padding: 8px 15px;
+        font-size: 1rem;
+    }
+    .login-container {
+        gap: 10px;
+    }
+    .login-container a {
+        width: 35px;
+        height: 35px;
+    }
+    .login-container .carrinho,
+    .login-container .login {
+        width: 25px;
+        height: 25px;
     }
 }
- 
+
 @media (max-width: 768px) {
     .icons {
-        display: inline-flex;
+        display: block;
     }
- 
+    #check:checked ~ .icons #menu-icon {
+        display: none;
+    }
+    .icons #close-icon {
+        display: none;
+    }
+    #check:checked ~ .icons #close-icon {
+        display: block;
+    }
     .navbar {
         position: absolute;
         top: 100%;
-        left: 0;
+        left: -100%;
         width: 100%;
         height: 0;
-        background: rgba(0, 0, 0, 0.1);
-        backdrop-filter: none;
-       
-        overflow: hidden;
-        display: flex;
+        background: var(--bg-color);
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        transition: .3s ease;
-        gap: 0.8rem;
-        background-color: #488D6A;
-        
-    }
- 
-    .navbar a {
-        order: 3;
-        display: block;
-        font-size: 0.9rem;
         text-align: center;
-        transform: translateY(-30px);
-        opacity: 0;
-        transition: .3s ease;
-        margin: 0;
+        transition: all .40s ease;
+        overflow: hidden;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
     }
- 
     #check:checked ~ .navbar {
-        height: 12rem;
+        left: 0;
+        height: auto;
+        padding: 20px 0;
     }
- 
-    #check:checked ~ .navbar a {
-        transform: translateY(0);
-        opacity: 1;
-        transition-delay: calc(.1s * var(--i));
+    .navbar a {
+        display: block;
+        padding: 10px 0;
+        margin: 0 0;
+        font-size: 1.2rem;
     }
- 
-    .login-links {
-        display: none;
-    }
- 
     .login-container {
-        order: 2;
-        display: flex;
-        padding: 0;
-        margin-left: auto;  
-        padding-right: 1rem;
-        transform: translate(-20px);
-    }
- 
-   
- 
-    .login-container span {
-        display: inline-block;
-        gap: 1px;
+        display: none; /* Ocultar no mobile para simplificar, pode ser movido para o menu */
     }
 }
- 
+
+@media (max-width: 480px) {
+    .header {
+        padding: 10px 3%;
+    }
+    .logo img {
+        max-width: 80px;
+    }
+    .icons {
+        font-size: 2rem;
+    }
+    .navbar a {
+        font-size: 1.1rem;
+    }
+}
+
