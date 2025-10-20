@@ -1,4 +1,4 @@
-
+/* Definições de Variáveis Globais (Root) */
 :root {
   --primary-color: #37b65d;
   --primary-hover: #2fa553;
@@ -32,6 +32,7 @@
   --transition-normal: 0.3s ease;
 }
 
+/* Reset e Estilos Base */
 * {
   margin: 0;
   padding: 0;
@@ -44,18 +45,7 @@ body {
   background-color: var(--background);
 }
 
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-
-
+/* Layout Principal do Produto */
 .product-main {
   padding: var(--spacing-xl);
   margin-top: 100px;
@@ -77,7 +67,13 @@ body {
   gap: var(--spacing-xl);
 }
 
+.product-right-column > section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
 
+/* Componentes do Produto */
 .product-image-wrapper {
   border-radius: var(--border-radius-xl);
   overflow: hidden;
@@ -120,33 +116,15 @@ body {
   color: var(--primary-color);
 }
 
-.product-right-column > section {
+.shipping-info {
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.buy-button {
-  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: var(--spacing-lg);
-  background: var(--primary-color);
-  color: var(--background);
-  text-decoration: none;
-  font-weight: 600;
-  border: none;
-  border-radius: var(--border-radius-lg);
-  transition: background-color var(--transition-normal);
-  cursor: pointer;
+  gap: var(--spacing-sm);
+  color: var(--text-secondary);
+  margin-top: var(--spacing-sm);
 }
 
-.buy-button:hover {
-  background: var(--primary-hover);
-}
-
-
+/* Seção de Avaliação do Usuário */
 .user-rating {
   padding: var(--spacing-xl);
   background: var(--background);
@@ -217,10 +195,10 @@ body {
   color: var(--accent-color);
 }
 
-
+/* Seção de Termos */
 .terms-section {
   padding: var(--spacing-xl);
-  background: w; 
+  background: white;
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius-lg); 
   display: flex;
@@ -233,10 +211,6 @@ body {
   font-weight: 600;
   color: var(--text-primary);
   margin: 0; 
-  position: static; 
-  width: auto;
-  height: auto;
-  clip: auto;
 }
 
 .terms-list {
@@ -264,33 +238,42 @@ body {
   top: 2px;
 }
 
-
+/* Seção da Comunidade (Comentários) - COM MAIS ESPAÇAMENTO */
 .product-community {
+  width: 100%;
+  padding: var(--spacing-xl); /* Aumentado de lg para xl */
   background-color: white;
   border: 2px solid var(--border-color);
   border-radius: var(--border-radius-lg);
-  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
+  gap: var(--spacing-xl); /* Já estava xl */
 }
 
 .community-main-title {
   font-size: var(--font-size-xl);
   font-weight: 600;
-  padding-bottom: var(--spacing-md);
+  color: var(--text-primary);
+  padding-bottom: var(--spacing-lg); /* Aumentado de md para lg */
   border-bottom: 2px solid var(--border-color);
+  margin-bottom: var(--spacing-sm); /* Adicionado margem inferior */
 }
 
 .comment-item {
   display: flex;
-  gap: var(--spacing-md);
+  gap: var(--spacing-lg); /* Aumentado de md para lg */
   align-items: flex-start;
+  padding: var(--spacing-lg) 0; /* Adicionado padding vertical */
+  border-bottom: 1px solid var(--border-color); /* Adicionado separador */
+}
+
+.comment-item:last-child {
+  border-bottom: none; /* Remove borda do último item */
 }
 
 .comment-author-avatar img {
-  width: 45px;
-  height: 45px;
+  width: 50px; /* Aumentado de 45px para 50px */
+  height: 50px; /* Aumentado de 45px para 50px */
   border-radius: var(--border-radius-full);
   object-fit: cover;
 }
@@ -298,27 +281,23 @@ body {
 .comment-body {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-md); /* Aumentado de sm para md */
   width: 100%;
+  flex: 1;
 }
 
 .comment-header {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-md); /* Aumentado de sm para md */
   flex-wrap: wrap;
-}
-
-.comment-rating {
-  display: flex;
-  gap: 2px;
-  color: var(--accent-color);
-  font-size: var(--font-size-base);
-  order: -1;
+  margin-bottom: var(--spacing-xs); /* Adicionado espaçamento inferior */
 }
 
 .comment-author-name {
   font-weight: 600;
+  color: var(--text-primary);
+  font-size: var(--font-size-base);
 }
 
 .comment-author-handle {
@@ -327,58 +306,41 @@ body {
 }
 
 .comment-body p {
-  line-height: 1.6;
+  line-height: 1.7; /* Aumentado de 1.6 para 1.7 */
   color: var(--text-secondary);
   margin: 0;
+  font-size: var(--font-size-base);
 }
 
-.view-comments-button {
-  display: none;
+.comment-rating {
+  display: flex;
+  gap: 3px; /* Aumentado de 2px para 3px */
+  color: var(--accent-color);
+  font-size: var(--font-size-base);
+  order: -1;
+  margin-right: var(--spacing-sm); /* Adicionado espaçamento à direita */
 }
 
-
-@media (max-width: 1024px) {
-  .product-container {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-2xl);
-  }
+/* Botões e Elementos de UI */
+.buy-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--spacing-lg);
+  background: var(--primary-color);
+  color: var(--background);
+  text-decoration: none;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--border-radius-lg);
+  transition: background-color var(--transition-normal);
+  cursor: pointer;
 }
 
-@media (max-width: 768px) {
-  .product-main {
-    padding: var(--spacing-md);
-    margin-top: 80px;
-  }
-
-  .product-title {
-    font-size: var(--font-size-2xl);
-  }
-
-  .product-community {
-    display: none;
-  }
-
-  .view-comments-button {
-    display: block;
-    width: 100%;
-    padding: var(--spacing-md);
-    margin-top: var(--spacing-xl);
-    background-color: var(--primary-color);
-    color: var(--background);
-    border: none;
-    border-radius: var(--border-radius-lg);
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color var(--transition-normal);
-  }
-
-  .view-comments-button:hover {
-    background-color: var(--primary-hover);
-  }
+.buy-button:hover {
+  background: var(--primary-hover);
 }
-
 
 .back-button {
   all: unset;
@@ -401,4 +363,230 @@ body {
 .back-button i {
   font-size: 24px;
   vertical-align: middle;
+}
+
+.view-comments-button {
+  display: none;
+}
+
+/* Utilitários */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Comentários para Desktop (coluna esquerda) */
+.desktop-comments {
+  display: block;
+}
+
+/* Comentários para Mobile/Tablet (coluna direita) */
+.mobile-comments {
+  display: none;
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 1024px) {
+  .product-container {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-2xl);
+  }
+
+  /* Ajustes para telas médias (tablets) */
+  .product-main {
+    padding: var(--spacing-lg);
+  }
+
+  .product-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .product-price .amount {
+    font-size: var(--font-size-2xl);
+  }
+
+  .rating-main-title,
+  .community-main-title,
+  #terms-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .comment-author-avatar img {
+    width: 45px; /* Ajustado para tablet */
+    height: 45px;
+  }
+
+  .comment-author-name,
+  .username {
+    font-size: var(--font-size-base);
+  }
+
+  .comment-body p {
+    font-size: var(--font-size-sm);
+  }
+
+  .comment-rating,
+  .stars {
+    font-size: var(--font-size-sm);
+  }
+
+  .score-number {
+    font-size: var(--font-size-lg);
+  }
+
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+  }
+
+  .terms-list li {
+    font-size: var(--font-size-sm);
+  }
+
+  /* Ajustes de espaçamento para tablet */
+  .comment-item {
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) 0;
+  }
+
+  .comment-body {
+    gap: var(--spacing-sm);
+  }
+
+  /* Mostrar comentários mobile e esconder desktop em tablets */
+  .desktop-comments {
+    display: none;
+  }
+
+  .mobile-comments {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-main {
+    padding: var(--spacing-md);
+    margin-top: 80px;
+  }
+
+  .product-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .product-community {
+    display: flex;
+    margin-top: var(--spacing-lg);
+    border: 1px solid var(--border-color);
+    padding: var(--spacing-lg); /* Reduzido padding em mobile */
+  }
+
+  .view-comments-button {
+    display: none;
+  }
+
+  .back-button {
+    font-size: 1rem;
+  }
+
+  .back-button i {
+    font-size: 20px;
+  }
+
+  /* Ajustes de espaçamento para mobile */
+  .comment-item {
+    gap: var(--spacing-md);
+    padding: var(--spacing-md) 0;
+  }
+
+  .comment-author-avatar img {
+    width: 40px; /* Reduzido para mobile */
+    height: 40px;
+  }
+
+  .comment-header {
+    gap: var(--spacing-sm);
+  }
+
+  /* Garantir que apenas os comentários mobile sejam mostrados */
+  .desktop-comments {
+    display: none;
+  }
+
+  .mobile-comments {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-main {
+    padding: var(--spacing-sm);
+    margin-top: 70px;
+  }
+
+  .product-container {
+    gap: var(--spacing-xl);
+  }
+
+  .product-left-column,
+  .product-right-column {
+    gap: var(--spacing-lg);
+  }
+
+  .product-title {
+    font-size: var(--font-size-xl);
+  }
+
+  .product-price .amount {
+    font-size: var(--font-size-xl);
+  }
+
+  .user-rating,
+  .product-community,
+  .terms-section {
+    padding: var(--spacing-lg);
+  }
+
+  .rating-content {
+    gap: var(--spacing-md);
+  }
+
+  .user-avatar {
+    width: 45px;
+    height: 45px;
+  }
+
+  .comment-item {
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) 0;
+  }
+
+  .comment-author-avatar img {
+    width: 35px;
+    height: 35px;
+  }
+
+  /* Ajustes finos de espaçamento para mobile pequeno */
+  .product-community {
+    padding: var(--spacing-md);
+    gap: var(--spacing-lg);
+  }
+
+  .community-main-title {
+    padding-bottom: var(--spacing-md);
+  }
+
+  /* Garantir que apenas os comentários mobile sejam mostrados */
+  .desktop-comments {
+    display: none;
+  }
+
+  .mobile-comments {
+    display: flex;
+  }
 }
