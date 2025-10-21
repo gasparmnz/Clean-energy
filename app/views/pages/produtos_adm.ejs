@@ -177,35 +177,37 @@
       suspendedSection.style.display = (currentFilter === 'all' || currentFilter === 'suspended') ? 'block' : 'none';
     }
 
-    function createProductCard(product) {
-      const statusText = product.status === 'active' ? 'Disponível' : 'Suspenso';
-      const statusClass = product.status === 'active' ? 'active' : 'suspended';
-      const cardClass = product.status === 'suspended' ? 'suspended' : '';
+   function createProductCard(product) {
+  const statusText = product.status === 'active' ? 'Disponível' : 'Suspenso';
+  const statusClass = product.status === 'active' ? 'active' : 'suspended';
+  const cardClass = product.status === 'suspended' ? 'suspended' : '';
 
-      return `
-        <article class="product-card ${cardClass}">
-          <figure class="product-image">
-            ${product.image ? `<img src="${product.image}" alt="${product.name}">` : '<article style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ccc; font-size: 3rem;">Sem imagem</article>'}
-            <span class="product-status-badge ${statusClass}">${statusText}</span>
-          </figure>
-          <article class="product-info">
-            <span class="product-id">${product.id}</span>
-            <h3 class="product-name">${product.name}</h3>
-            <p class="product-description">${product.description}</p>
-            <article class="product-meta">
-              <span class="product-price">R$ ${product.price.toFixed(2)}</span>
-              <article class="product-stock"><strong>${product.stock}</strong> em estoque</article>
-            </article>
-            <nav class="product-actions">
-              <button class="action-btn btn-edit" onclick="openEditModal('${product.id}')"><i class='bx bx-edit'></i>Editar</button>
-              ${product.status === 'active' 
-                ? `<button class="action-btn btn-suspend" onclick="toggleProductStatus('${product.id}')"><i class='bx bx-block'></i>Suspender</button>`
-                : `<button class="action-btn btn-activate" onclick="toggleProductStatus('${product.id}')"><i class='bx bx-check'></i>Ativar</button>`
-              }
-            </nav>
-          </article>
+  return `
+    <article class="product-card ${cardClass}">
+      <figure class="product-image">
+        <img src="${product.image}" alt="${product.name}" 
+             onerror="this.onerror=null; this.src='/imagem/placeholder.png'; this.alt='Imagem não disponível'; this.style.backgroundColor='#f5f5f5';">
+        <span class="product-status-badge ${statusClass}">${statusText}</span>
+      </figure>
+      <article class="product-info">
+        <span class="product-id">${product.id}</span>
+        <h3 class="product-name">${product.name}</h3>
+        <p class="product-description">${product.description}</p>
+        <article class="product-meta">
+          <span class="product-price">R$ ${product.price.toFixed(2)}</span>
+          <article class="product-stock"><strong>${product.stock}</strong> em estoque</article>
         </article>
-      `;
+        <nav class="product-actions">
+          <button class="action-btn btn-edit" onclick="openEditModal('${product.id}')"><i class='bx bx-edit'></i>Editar</button>
+          ${product.status === 'active' 
+            ? `<button class="action-btn btn-suspend" onclick="toggleProductStatus('${product.id}')"><i class='bx bx-block'></i>Suspender</button>`
+            : `<button class="action-btn btn-activate" onclick="toggleProductStatus('${product.id}')"><i class='bx bx-check'></i>Ativar</button>`
+          }
+        </nav>
+      </article>
+    </article>
+  `;
+
     }
 
     function toggleProductStatus(productId) {

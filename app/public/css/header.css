@@ -204,6 +204,36 @@ body {
         padding: 0.8rem 4%;
     }
 }
+
+/* 👇 Corrige o problema de 780px (antes do mobile) */
+@media (max-width: 932px) {
+  /* Oculta o texto LOGIN | CADASTRE-SE */
+  .login-links {
+    display: none;
+  }
+
+  /* Exibe o avatar/dropdown mais cedo */
+  .dropdown {
+    display: block;
+  }
+
+  /* Diminui o espaçamento do menu */
+  .navbar a {
+    margin-left: 1rem;
+    font-size: 0.95rem;
+  }
+
+  /* Ajusta leve recuo do carrinho */
+  .carrinho {
+    height: 26px;
+    width: 26px;
+  }
+
+  .login-container {
+    gap: 0.6rem;
+  }
+}
+
  
 @media (max-width: 768px) {
      .login-links {
