@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <%- include('../partial/header1.ejs'    ) %>
+  <%- include('../partial/header1.ejs') %>
 
   <main class="product-main">
  
@@ -33,8 +33,8 @@
           </figure>
         </section>
 
-       
-        <section class="product-community" aria-labelledby="community-title">
+        <!-- Seção de Comentários na coluna esquerda (APENAS DESKTOP) -->
+        <section class="product-community desktop-comments" aria-labelledby="community-title">
           <h2 id="community-title" class="community-main-title">Comentários da Comunidade</h2>
           
          
@@ -72,7 +72,7 @@
           </article>
 
           
-          <article class="comment-item comment-desktop">
+          <article class="comment-item">
             <figure class="comment-author-avatar">
               <img src="/imagem/perfil_com.png" alt="Avatar de Otávio Luccas">
             </figure>
@@ -89,7 +89,7 @@
           </article>
 
          
-          <article class="comment-item comment-desktop">
+          <article class="comment-item">
             <figure class="comment-author-avatar">
               <img src="/imagem/perfil_com.png" alt="Avatar de Kaique Klein Costa">
             </figure>
@@ -154,11 +154,84 @@
                 <p class="rating-score" aria-label="Pontuação 4,5 de 5 estrelas">
                   <span class="score-number">4,5</span>
                   <span class="stars" role="img">
-                    <i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star"></i><i class="bx bxs-star-half"></i>
+                    <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star-half'></i>
                   </span>
                 </p>
               </nav>
             </nav>
+          </section>
+
+          <!-- Seção de Comentários na coluna direita (APENAS MOBILE/TABLET) -->
+          <section class="product-community mobile-comments" aria-labelledby="community-title-mobile">
+            <h2 id="community-title-mobile" class="community-main-title">Comentários da Comunidade</h2>
+            
+           
+            <article class="comment-item">
+              <figure class="comment-author-avatar">
+                <img src="/imagem/perfil_com.png" alt="Avatar de Samara Kilsman">
+              </figure>
+              <nav class="comment-body">
+                <header class="comment-header">
+                  <nav class="comment-rating">
+                    <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+                  </nav>
+                  <cite class="comment-author-name">Samara Kilsman</cite>
+                  <span class="comment-author-handle">@samarakilsman</span>
+                </header>
+                <p>Ótimo produto! A eficiência energética é notável.</p>
+              </nav>
+            </article>
+
+            
+            <article class="comment-item">
+              <figure class="comment-author-avatar">
+                <img src="/imagem/perfil_com.png" alt="Avatar de Cleiton Amanco">
+              </figure>
+              <nav class="comment-body">
+                <header class="comment-header">
+                  <nav class="comment-rating">
+                    <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+                  </nav>
+                  <cite class="comment-author-name">Cleiton Amanco</cite>
+                  <span class="comment-author-handle">@Cleitonprof</span>
+                </header>
+                <p>Vendedor Confiavel e comprometido</p>
+              </nav>
+            </article>
+
+            
+            <article class="comment-item">
+              <figure class="comment-author-avatar">
+                <img src="/imagem/perfil_com.png" alt="Avatar de Otávio Luccas">
+              </figure>
+              <nav class="comment-body">
+                <header class="comment-header">
+                  <nav class="comment-rating">
+                    <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+                  </nav>
+                  <cite class="comment-author-name">Otávio Luccas</cite>
+                  <span class="comment-author-handle">@LuccasOt</span>
+                </header>
+                <p>Minha experiencia foi satisfatória</p>
+              </nav>
+            </article>
+
+           
+            <article class="comment-item">
+              <figure class="comment-author-avatar">
+                <img src="/imagem/perfil_com.png" alt="Avatar de Kaique Klein Costa">
+              </figure>
+              <nav class="comment-body">
+                <header class="comment-header">
+                  <nav class="comment-rating">
+                    <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+                  </nav>
+                  <cite class="comment-author-name">Kaique Klein Costa</cite>
+                  <span class="comment-author-handle">@KaiqueKc</span>
+                </header>
+                <p>Vou comprar novamente</p>
+              </nav>
+            </article>
           </section>
 
           <section class="terms-section" aria-labelledby="terms-title">
