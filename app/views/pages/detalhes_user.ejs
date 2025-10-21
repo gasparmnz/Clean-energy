@@ -279,9 +279,6 @@
                 <p>${user.email || 'Não informado'}</p>
                 <span class="status-badge status-${user.status}">${user.status.toUpperCase()}</span>
                 <nav class="profile-actions">
-                  <button class="action-btn-small btn-edit" onclick="editUserInfo('${userId}')">
-                    <i class='bx bx-edit'></i>Editar Informações
-                  </button>
                   <button class="action-btn-small btn-suspend" onclick="suspendAccount('${userId}')">
                     <i class='bx bx-block'></i>Suspender Conta
                   </button>
@@ -571,11 +568,6 @@
     function closeModal() {
       document.getElementById('avaliacoesModal').classList.remove('show');
       document.body.classList.remove('modal-open');
-    }
-
-    function editUserInfo(userId) {
-      alert(`Editar informações do usuário: ${usersData[userId].name}`);
-      // Aqui você pode implementar a lógica de edição
     }
 
     function suspendAccount(userId) {
