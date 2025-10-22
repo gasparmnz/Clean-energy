@@ -171,6 +171,21 @@ main {
   color: #fff;
   margin-top: 15px;
 }
+.confirmar-coleta{
+  margin-top: 15px;
+  background-color: green;
+  color: #fff;
+  border: none;
+  padding: 5px;
+ width: 75%;
+  border-radius: 5px;
+  transform: translateX(30px);
+  
+}
+
+.confirmar-coleta:hover{
+  background-color: rgb(1, 95, 1);
+}
 .d-none {
   display: none !important;
 }
@@ -356,3 +371,12 @@ main {
     min-width: 0;
   }
 }
+
+@media (max-width: 300px) {
+  .confirmar-coleta{
+    margin-bottom: 5px;
+    width: 100%;
+    transform: translateX(-5px);
+  }
+}
+

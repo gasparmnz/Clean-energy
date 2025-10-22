@@ -28,6 +28,7 @@
       flex-grow: 1;
       padding: 30px;
       overflow-y: auto;
+      
     }
 
     /* Header with Back Button */
@@ -592,6 +593,21 @@
         flex-direction: column;
       }
 
+
+        .products-container {
+          grid-template-columns: 1fr 1fr;  /* Exibe 2 itens por linha */
+          gap: 15px;  /* Adiciona mais espaçamento entre os itens */
+        }
+      
+        .product-card {
+          padding: 12px;  /* Ajusta o padding dentro dos cards */
+        }
+      
+        .product-name {
+          font-size: 0.95rem;  /* Ajusta o tamanho da fonte para ser mais legível */
+        }
+      
+      
       .admin-main {
         padding: 20px 15px;
       }
