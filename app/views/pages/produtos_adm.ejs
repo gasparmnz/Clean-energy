@@ -16,6 +16,12 @@
   <section class="admin-container">
     <%- include('../partial/sidebar_adm.ejs') %>
     <main class="admin-main">
+      <nav class="back-navigation" aria-label="Navegação de retorno">
+        <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+          <i class='bx bx-arrow-back'></i>
+          <span>Voltar</span>
+        </button>
+      </nav>
       <header class="page-header">
         <h1>Produtos</h1>
         <p class="page-subtitle">Gerenciamento de todos os produtos cadastrados na plataforma.</p>

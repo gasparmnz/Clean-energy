@@ -392,6 +392,9 @@ router.get("/sobre_nos", (req, res) => {
 router.get("/cadastrar_produto", (req, res) => {
   res.render("pages/cadastrar_produto");
 });
+router.get("/painel", (req, res) => {
+  res.render("pages/painel");
+});
 router.get("/item/:id", function (req, res) {
   const id = parseInt(req.params.id);
   const produto = [

@@ -3,14 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dúvidas Frequentes - Clean Energy</title>
   <link rel="stylesheet" href="/css/duvidas.css" />
-  <script src="/js/duvidas.js" defer></script>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <title>Dúvidas Frequentes - Clean Energy</title>
+ 
 </head>
 <body>
-    <%- include('../partial/header1.ejs') %>
+  <%- include('../partial/header1.ejs') %>
   <main>
+
+    <section class="container">
+
+    <nav class="back-navigation" aria-label="Navegação de retorno">
+        <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+          <i class='bx bx-arrow-back'></i>
+          <span>Voltar</span>
+        </button>
+      </nav>
     <header class="main-header">
+        
       <br><br><br><h1>Olá, como podemos ajudar?</h1>
       
       <form class="search-form" role="search">
@@ -77,35 +88,63 @@
           
           <section class="help-cards">
             <article class="help-card">
-              <figure class="card-image" style="background-image: url('imagem1.jpg');">
-                <figcaption class="visually-hidden">Como adicionar produto</figcaption>
-              </figure>
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
               <section class="card-content">
                 <h3>Como adicionar produto</h3>
                 <p>Aprenda o passo a passo para cadastrar seus produtos de energia limpa na plataforma.</p>
-                <a href="como_adicionar_produto.html" class="card-link">Saiba mais</a>
+                <button class="card-link toggle-more" aria-expanded="false" aria-controls="info-como-adicionar-produto">
+                  Saiba mais
+                </button>
+                <article id="info-como-adicionar-produto" class="info-extra" hidden>
+                  <p>Para adicionar um produto, acesse "Torne-se Vendedor", clique em "Começar" e depois em "Novo Produto". Preencha os campos obrigatórios e envie uma imagem. Após a aprovação, ele aparecerá em seu catálogo.</p>
+                </article>
               </section>
             </article>
 
             <article class="help-card">
-              <figure class="card-image" style="background-image: url('imagem-venda-2.jpg');">
-                <figcaption class="visually-hidden">Gerenciar vendas</figcaption>
-              </figure>
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
               <section class="card-content">
                 <h3>Gerenciar vendas</h3>
                 <p>Acompanhe seus pedidos, estoque e relatórios de vendas em tempo real.</p>
-                <a href="gerenciar_vendas.html" class="card-link">Saiba mais</a>
+                <button class="card-link toggle-more" aria-expanded="false" aria-controls="info-gerenciar-vendas">
+                  Saiba mais
+                </button>
+                <article id="info-gerenciar-vendas" class="info-extra" hidden>
+                  <p>Após fazer login, acesse seu perfil, clicando no icone do seu avatar, e clique em "Meus Produtos". Você poderá consultar seus produtos cadastrados</p>
+                </article>
               </section>
             </article>
 
             <article class="help-card">
-              <figure class="card-image" style="background-image: url('imagem-venda-3.jpg');">
-                <figcaption class="visually-hidden">Políticas de venda</figcaption>
-              </figure>
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
               <section class="card-content">
                 <h3>Políticas de venda</h3>
                 <p>Conheça as regras e diretrizes para vender na Clean Energy.</p>
-                <a href="politicas_venda.html" class="card-link">Saiba mais</a>
+                <button class="card-link toggle-more" aria-expanded="false" aria-controls="info-politicas-venda">
+                  Saiba mais
+                </button>
+                <article id="info-politicas-venda" class="info-extra" hidden>
+                  <p>O regime de frete é FOB (Free On Board). O comprador assume os custos e riscos do transporte a partir do embarque. Uma taxa de 5% é aplicada sobre o valor da transação para a manutenção da plataforma.</p>
+                </article>
               </section>
             </article>
           </section>
@@ -118,35 +157,61 @@
           
           <section class="help-cards">
             <article class="help-card">
-              <figure class="card-image" style="background-image: url('imagem2.jpg');">
-                <figcaption class="visually-hidden">Como comprar produto</figcaption>
-              </figure>
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+              </div>
               <section class="card-content">
                 <h3>Como comprar produto</h3>
                 <p>Veja o passo a passo completo para realizar sua compra de forma segura.</p>
-                <a href="como_rastrear_pedido.html" class="card-link">Saiba mais</a>
+                <button class="card-link toggle-more" aria-expanded="false" aria-controls="info-como-comprar-produto">
+                  Saiba mais
+                </button>
+                <article id="info-como-comprar-produto" class="info-extra" hidden>
+                  <p>Ao entrar no site, procure o produto que deseja e aperte em "Ver Detalhes". Depois em "Compre Agora", que direcionará você para o carrinho. Clique em "Finalizar Pedido" e depois em "Efetuar Pagamento", onde você poderá escolher sua forma de pagamento.</p>
+                </article>
               </section>
             </article>
 
             <article class="help-card">
-              <figure class="card-image" style="background-image: url('imagem-compra-2.jpg');">
-                <figcaption class="visually-hidden">Formas de pagamento</figcaption>
-              </figure>
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+              </div>
               <section class="card-content">
                 <h3>Formas de pagamento</h3>
                 <p>Conheça todas as opções de pagamento disponíveis na plataforma.</p>
-                <a href="formas_pagamento.html" class="card-link">Saiba mais</a>
+                <button class="card-link toggle-more" aria-expanded="false" aria-controls="info-formas-pagamento">
+                  Saiba mais
+                </button>
+                <article id="info-formas-pagamento" class="info-extra" hidden>
+                  <p>Ao comprar um produto, você pode optar por pagamento via pix, através do QR Code gerado. Via Cartão de Credito, preenchendo os dados do seu cartão. E via Boleto, gerando um código válido por três dias.</p>
+                </article>
               </section>
             </article>
 
             <article class="help-card">
-              <figure class="card-image" style="background-image: url('imagem-compra-3.jpg');">
-                <figcaption class="visually-hidden">Trocas e devoluções</figcaption>
-              </figure>
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                  <path d="M4 6v12c0 1.1.9 2 2 2h14v-4"></path>
+                  <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+                </svg>
+              </div>
               <section class="card-content">
                 <h3>Trocas e devoluções</h3>
                 <p>Entenda nossa política de trocas e devoluções de produtos.</p>
-                <a href="trocas_devolucoes.html" class="card-link">Saiba mais</a>
+                <button class="card-link toggle-more" aria-expanded="false" aria-controls="info-trocas-devolucoes">
+                  Saiba mais
+                </button>
+                <article id="info-trocas-devolucoes" class="info-extra" hidden>
+                  <p>Para solicitar troca ou devolução, acesse "Meus Pedidos" no seu perfil, selecione o pedido desejado e clique em "Solicitar Troca/Devolução". Você terá até 7 dias após o recebimento para fazer a solicitação.</p>
+                </article>
               </section>
             </article>
           </section>
@@ -159,43 +224,145 @@
           
           <section class="help-cards">
             <article class="help-card">
-              <figure class="card-image" style="background-image: url('imagem-entrega-1.jpg');">
-                <figcaption class="visually-hidden">Rastrear pedido</figcaption>
-              </figure>
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
               <section class="card-content">
                 <h3>Rastrear pedido</h3>
                 <p>Acompanhe seu pedido em tempo real desde a compra até a entrega.</p>
-                <a href="rastrear_pedido.html" class="card-link">Saiba mais</a>
+                <button class="card-link toggle-more" aria-expanded="false" aria-controls="info-rastrear-pedido">
+                  Saiba mais
+                </button>
+                <article id="info-rastrear-pedido" class="info-extra" hidden>
+                  <p>Para rastrear seu pedido, acesse "Meus Pedidos" no seu perfil, selecione o pedido desejado e clique em "Rastrear Entrega". Você receberá atualizações por e-mail e SMS sobre o status da entrega.</p>
+                </article>
               </section>
             </article>
 
             <article class="help-card">
-              <figure class="card-image" style="background-image: url('imagem-entrega-2.jpg');">
-                <figcaption class="visually-hidden">Prazos de entrega</figcaption>
-              </figure>
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </div>
               <section class="card-content">
                 <h3>Prazos de entrega</h3>
                 <p>Consulte os prazos de entrega para sua região e tipo de produto.</p>
-                <a href="prazos_entrega.html" class="card-link">Saiba mais</a>
+                <button class="card-link toggle-more" aria-expanded="false" aria-controls="info-prazos-entrega">
+                  Saiba mais
+                </button>
+                <article id="info-prazos-entrega" class="info-extra" hidden>
+                  <p>Os prazos de entrega variam conforme a região e o tipo de produto. Em geral, para capitais o prazo é de 3 a 7 dias úteis, e para interior de 7 a 15 dias úteis. Produtos sob encomenda podem ter prazos específicos informados no momento da compra.</p>
+                </article>
               </section>
             </article>
 
             <article class="help-card">
-              <figure class="card-image" style="background-image: url('imagem-entrega-3.jpg');">
-                <figcaption class="visually-hidden">Problemas com entrega</figcaption>
-              </figure>
+              <div class="card-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                  <line x1="12" y1="9" x2="12" y2="13"></line>
+                  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+              </div>
               <section class="card-content">
                 <h3>Problemas com entrega</h3>
                 <p>Saiba como resolver problemas relacionados à entrega do seu pedido.</p>
-                <a href="problemas_entrega.html" class="card-link">Saiba mais</a>
+                <button class="card-link toggle-more" aria-expanded="false" aria-controls="info-problemas-entrega">
+                  Saiba mais
+                </button>
+                <article id="info-problemas-entrega" class="info-extra" hidden>
+                  <p>Em caso de problemas com a entrega, como atraso significativo, produto danificado ou não recebimento, entre em contato com nosso suporte através do e-mail suporte@cleanenergy.com ou pelo telefone (11) 1234-5678. Nossa equipe resolverá o problema o mais rápido possível.</p>
+                </article>
               </section>
             </article>
           </section>
         </section>
       </article>
     </section>
+    </section>
   </main>
   <%- include('../partial/footer.ejs') %>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Seleciona todos os botões que abrem a extra info
+      const toggles = document.querySelectorAll('.toggle-more');
+
+      toggles.forEach(button => {
+        const targetId = button.getAttribute('aria-controls');
+        const panel = document.getElementById(targetId);
+
+        // Proteção caso id não exista
+        if (!panel) return;
+
+        button.addEventListener('click', (e) => {
+          const isExpanded = button.getAttribute('aria-expanded') === 'true';
+          // Alterna estado
+          if (isExpanded) {
+            collapse(panel, button);
+          } else {
+            expand(panel, button);
+          }
+        });
+      });
+
+      // Funções de acessibilidade + animação
+      function expand(panel, button) {
+        panel.hidden = false; // remove hidden para acessibilidade
+        // força reflow para garantir transição
+        panel.offsetHeight;
+        panel.classList.add('show');
+        button.setAttribute('aria-expanded', 'true');
+
+        // opcional: rolar levemente para mostrar o conteúdo recém aberto (bom em telas pequenas)
+        const rect = panel.getBoundingClientRect();
+        if (rect.bottom > (window.innerHeight || document.documentElement.clientHeight)) {
+          panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+
+      function collapse(panel, button) {
+        panel.classList.remove('show');
+        button.setAttribute('aria-expanded', 'false');
+
+        // após a transição terminar, adiciona hidden de novo
+        const onTransitionEnd = (e) => {
+          // garantir que seja a transição do max-height/opacity
+          if (e.propertyName !== 'max-height') return;
+          panel.hidden = true;
+          panel.removeEventListener('transitionend', onTransitionEnd);
+        };
+        panel.addEventListener('transitionend', onTransitionEnd);
+      }
+
+      // Adiciona funcionalidade para as abas
+      const tabs = document.querySelectorAll('[role="tab"]');
+      const panels = document.querySelectorAll('.content-panel');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          // Remove a classe active de todas as abas e painéis
+          tabs.forEach(t => {
+            t.setAttribute('aria-selected', 'false');
+          });
+          panels.forEach(p => {
+            p.classList.remove('active');
+          });
+
+          // Adiciona a classe active à aba clicada e ao painel correspondente
+          tab.setAttribute('aria-selected', 'true');
+          const panelId = tab.getAttribute('aria-controls');
+          document.getElementById(panelId).classList.add('active');
+        });
+      });
+    });
+  </script>
 </body>
 </html>
-

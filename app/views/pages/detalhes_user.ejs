@@ -20,9 +20,12 @@
     <main class="admin-main">
       <!-- Header -->
       <header class="details-header">
-        <button class="back-button" onclick="window.history.back()">
-          <i class="fas fa-arrow-left"></i>
+         <nav class="back-navigation" aria-label="Navegação de retorno">
+        <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+          <i class='bx bx-arrow-back'></i>
+          <span>Voltar</span>
         </button>
+      </nav>
         <article class="header-content">
           <h1>Detalhes do Usuário</h1>
           <p class="page-subtitle">Informações completas e histórico de transações</p>
