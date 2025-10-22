@@ -1,4 +1,4 @@
-/* Reset e configurações base */
+
 * {
   margin: 0;
   padding: 0;
@@ -6,20 +6,20 @@
 }
 
 :root {
-  /* Cores principais */
+
   --primary-color: #28530b;
   --primary-hover: #357d12;
   --primary-light: #e8f5e8;
   --secondary-color: #1d3557;
   --accent-color: #f4c430;
   
-  /* Cores de status */
+
   --success-color: #22c55e;
   --error-color: #ef4444;
   --warning-color: #f59e0b;
   --info-color: #3b82f6;
   
-  /* Cores neutras */
+
   --text-primary: #1a1a1a;
   --text-secondary: #666666;
   --text-light: #888888;
@@ -31,7 +31,7 @@
   --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
   --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.2);
   
-  /* Tipografia */
+
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
@@ -42,7 +42,7 @@
   --font-size-3xl: 1.875rem;
   --font-size-4xl: 2.25rem;
   
-  /* Espaçamentos */
+ 
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
@@ -51,14 +51,14 @@
   --spacing-2xl: 3rem;
   --spacing-3xl: 4rem;
   
-  /* Bordas */
+
   --border-radius-sm: 0.375rem;
   --border-radius-md: 0.5rem;
   --border-radius-lg: 0.75rem;
   --border-radius-xl: 1rem;
   --border-radius-full: 9999px;
   
-  /* Transições */
+
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
@@ -75,7 +75,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Utilitários */
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -88,7 +88,7 @@ body {
   border: 0;
 }
 
-/* Layout principal */
+
 .login-main {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -98,7 +98,7 @@ body {
   box-shadow: var(--shadow-heavy);
 }
 
-/* Hero Section */
+
 .hero-section {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   color: var(--background);
@@ -166,7 +166,7 @@ body {
   color: var(--accent-color);
 }
 
-/* Seção do Formulário */
+
 .form-section {
   background: var(--background);
   padding: var(--spacing-3xl);
@@ -217,7 +217,7 @@ body {
   margin-bottom: var(--spacing-xl);
 }
 
-/* Grupos de input */
+
 .input-group {
   margin-bottom: var(--spacing-xl);
   position: relative;
@@ -239,12 +239,11 @@ body {
   font-size: var(--font-size-base);
 }
 
-/* Wrapper do input */
+
 .input-wrapper {
   position: relative;
 }
 
-/* Inputs */
 .form-input {
   width: 100%;
   padding: var(--spacing-md) var(--spacing-lg) var(--spacing-md) 3rem;
@@ -270,8 +269,6 @@ body {
 .form-input::placeholder {
   color: var(--text-light);
 }
-
-/* Ícones dos inputs */
 .input-icon {
   position: absolute;
   left: var(--spacing-md);
@@ -286,8 +283,6 @@ body {
 .input-group:focus-within .input-icon {
   color: var(--primary-color);
 }
-
-/* Wrapper de senha com botão de toggle */
 .password-wrapper {
   position: relative;
 }
@@ -315,7 +310,7 @@ body {
   font-size: var(--font-size-lg);
 }
 
-/* Estados de validação */
+
 .input-group.valid .form-input {
   border-color: var(--success-color);
   background: rgba(34, 197, 94, 0.05);
@@ -327,7 +322,6 @@ body {
   background: rgba(239, 68, 68, 0.05);
 }
 
-/* Mensagens de ajuda */
 .input-help {
   display: block;
   font-size: var(--font-size-xs);
@@ -336,7 +330,7 @@ body {
   font-weight: 400;
 }
 
-/* Mensagens de erro e sucesso */
+
 .error-message,
 .success-message {
   display: none;
@@ -378,7 +372,7 @@ body {
   font-size: var(--font-size-base);
 }
 
-/* Mensagem de erro do backend */
+
 .backend-error {
   display: flex;
   align-items: center;
@@ -398,7 +392,7 @@ body {
   flex-shrink: 0;
 }
 
-/* Botão de submit */
+
 .submit-btn {
   width: 100%;
   display: flex;
@@ -441,7 +435,7 @@ body {
   opacity: 0.7;
 }
 
-/* Footer do formulário */
+
 .form-footer {
   text-align: center;
   display: flex;
@@ -470,7 +464,7 @@ body {
   text-decoration: underline;
 }
 
-/* Responsividade para tablets */
+
 @media (max-width: 1024px) {
   .login-main {
     grid-template-columns: 1fr;
@@ -496,7 +490,7 @@ body {
   }
 }
 
-/* Responsividade para mobile */
+
 @media (max-width: 768px) {
   .login-main {
     box-shadow: none;
@@ -549,7 +543,6 @@ body {
   }
 }
 
-/* Responsividade para telas muito pequenas */
 @media (max-width: 480px) {
   .hero-section {
     padding: var(--spacing-lg);
@@ -577,7 +570,7 @@ body {
   }
 }
 
-/* Estados de foco para acessibilidade */
+
 .form-input:focus,
 .password-toggle:focus,
 .submit-btn:focus {
@@ -585,7 +578,7 @@ body {
   outline-offset: 2px;
 }
 
-/* Animações de carregamento */
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -599,7 +592,7 @@ body {
   animation: spin 1s linear infinite;
 }
 
-/* Animações de entrada para elementos */
+
 .input-group {
   animation: fadeInUp 0.6s ease-out;
   animation-fill-mode: both;
@@ -620,12 +613,12 @@ body {
   }
 }
 
-/* Efeitos de hover nos inputs */
+
 .form-input:hover {
   box-shadow: 0 2px 8px rgba(40, 83, 11, 0.1);
 }
 
-/* Melhorias de performance */
+
 * {
   will-change: auto;
 }
@@ -635,7 +628,7 @@ body {
   will-change: transform, box-shadow;
 }
 
-/* Compatibilidade com navegadores antigos */
+
 .login-main {
   display: -ms-grid;
   -ms-grid-columns: 1fr 1fr;

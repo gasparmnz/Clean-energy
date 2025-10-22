@@ -11,12 +11,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <%- include('../partial/header1.ejs') %>
+<section class="admin-container">
+ <%- include('../partial/sidebar_adm.ejs') %>
+
+ 
+
+
+
+ 
     <main class="admin-main">
-        <h1 class="page-title">Painel Administrativo - Compras e Vendas</h1>
+
+        <nav class="back-navigation" aria-label="Navegação de retorno">
+        <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+          <i class='bx bx-arrow-back'></i>
+          <span>Voltar</span>
+        </button>
+    </nav>
 
         <section class="dashboard-summary" aria-labelledby="dashboard-heading">
             <h2 id="dashboard-heading">Visão Geral</h2>
-            <div class="summary-cards">
+            <section class="summary-cards">
                 <article class="summary-card">
                     <i class="bx bx-cart-alt"></i>
                     <h3>Total de Compras e vendas</h3>
@@ -28,7 +43,7 @@
                     <p>45</p>
                 </article>
                 <article class="summary-card">
-                    <i class='bxr  bx-x'  ></i> 
+                    <i class='bx bx-x-circle'></i> 
                     <h3>Transações Canceladas</h3>
                     <p>65</p>
                 </article>
@@ -37,12 +52,22 @@
                     <h3>Transações Concluídas</h3>
                     <p>1.195</p>
                 </article>
-            </div>
+                <article class="summary-card">
+                    <i class="bx bx-money"></i>
+                    <h3>Total Transacionado</h3>
+                    <p>R$ 6.750,00</p>
+                </article>
+                <article class="summary-card">
+                    <i class="bx bx-wallet"></i>
+                    <h3>Comissão (5%)</h3>
+                    <p>R$ 337,50</p>
+                </article>
+            </section>
         </section>
 
         <section class="transactions-section" aria-labelledby="compras-heading">
             <h2 id="compras-heading">Últimas Compras</h2>
-            <div class="table-responsive">
+            <section class="table-responsive">
                 <table class="transactions-table">
                     <thead>
                         <tr>
@@ -94,13 +119,13 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </section>
             <a href="#" class="view-all-link">Ver todas as compras <i class="bx bx-right-arrow-alt"></i></a>
         </section>
 
         <section class="transactions-section" aria-labelledby="vendas-heading">
             <h2 id="vendas-heading">Últimas Vendas</h2>
-            <div class="table-responsive">
+            <section class="table-responsive">
                 <table class="transactions-table">
                     <thead>
                         <tr>
@@ -152,10 +177,12 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </section>
             <a href="#" class="view-all-link">Ver todas as vendas <i class="bx bx-right-arrow-alt"></i></a>
         </section>
 
     </main>
+</section>
 </body>
 </html>
+

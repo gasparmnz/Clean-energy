@@ -24,16 +24,63 @@ body {
     line-height: 1.6;
 }
 
-/* Layout Principal */
+/* Layout geral com sidebar */
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.back-button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  color: #555;
+  transition: color 0.2s ease;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.back-button:hover {
+  color: #28a745;
+  background-color: #e0f0e0;
+}
+
+.back-button i {
+  font-size: 24px;
+  vertical-align: middle;
+}
+
+/* Sidebar fixa à esquerda */
+.sidebar {
+    width: 250px;
+    background-color: var(--primary-color);
+    color: #fff;
+    flex-shrink: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: 87px 0 0 0; /* para ficar abaixo do header */
+}
+
 .admin-main {
+    margin-left: 250px; /* espaço da sidebar */
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 30px;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 30px;
+    margin-top: 87px; /* distância do header */
+    width: calc(100% - 250px); /* ocupa o resto da tela */
+    box-sizing: border-box;
 }
-
 .page-title {
     font-size: 2.2rem;
     color: var(--primary-color);
@@ -43,14 +90,14 @@ body {
 }
 
 /* Seções */
-section {
+.admin-main section {
     background-color: var(--card-bg);
     border-radius: 12px;
     box-shadow: 0 4px 15px var(--shadow-light);
     padding: 25px;
 }
 
-section h2 {
+.admin-main section h2 {
     font-size: 1.8rem;
     color: var(--text-color);
     margin-bottom: 20px;
@@ -75,10 +122,7 @@ section h2 {
     transition: transform 0.2s ease-in-out, background-color 0.2s ease;
 }
 
-.summary-card:hover {
-    transform: translateY(-5px);
-    background-color: var(--secondary-color);
-}
+
 
 .summary-card i {
     font-size: 3rem;
@@ -183,42 +227,17 @@ section h2 {
 /* Responsividade */
 
 /* Mobile (max-width: 767px) */
+/* Estilos para exibir produtos lado a lado em telas menores */
 @media (max-width: 767px) {
-    .admin-main {
-        padding: 15px;
-        gap: 20px;
-    }
-
-    .page-title {
-        font-size: 1.8rem;
-    }
-
-    section {
-        padding: 20px;
-    }
-
-    section h2 {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-    }
-
-    .dashboard-summary .summary-cards {
-        grid-template-columns: 1fr;
-    }
-
-    .summary-card i {
-        font-size: 2.5rem;
-    }
-
-    .summary-card h3 {
-        font-size: 1rem;
-    }
-
-    .summary-card p {
-        font-size: 1.5rem;
+    /* Ajustes para as seções de transações */
+    .transactions-section .table-responsive {
+        overflow-x: hidden; /* Esconde a barra de rolagem horizontal se houver */
     }
 
     .transactions-table {
+        display: grid; /* Usa grid para organizar os itens */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Colunas flexíveis */
+        gap: 20px; /* Espaçamento entre os 'cards' de produto */
         min-width: unset; /* Remove o min-width para mobile */
     }
 
@@ -226,49 +245,72 @@ section h2 {
         display: none; /* Esconde o cabeçalho da tabela em mobile */
     }
 
-    .transactions-table,
-    .transactions-table tbody,
-    .transactions-table tr,
-    .transactions-table td {
-        display: block; /* Transforma elementos da tabela em blocos */
-        width: 100%;
+    .transactions-table tbody {
+        display: contents; /* Permite que os tr's sejam itens do grid */
     }
 
     .transactions-table tr {
-        margin-bottom: 15px;
+        display: flex; /* Cada linha se torna um flex container */
+        flex-direction: column; /* Itens da linha empilhados verticalmente */
         border: 1px solid var(--border-color);
         border-radius: 8px;
         box-shadow: 0 2px 8px var(--shadow-light);
+        padding: 15px;
+        margin-bottom: 0; /* Remove margem inferior, pois o gap do grid já cuida disso */
+        background-color: var(--card-bg);
     }
 
     .transactions-table td {
-        text-align: right; /* Alinha o conteúdo à direita */
-        padding-left: 50%; /* Espaço para o label */
-        position: relative;
+        display: flex; /* Cada célula se torna um flex container */
+        justify-content: space-between; /* Alinha label e valor */
+        padding: 5px 0; /* Padding vertical para as células */
+        text-align: left; /* Alinha o texto à esquerda */
+        border-bottom: none; /* Remove borda inferior das células */
+        position: static; /* Remove posicionamento absoluto */
+        width: 100%;
     }
 
     .transactions-table td::before {
         content: attr(data-label);
-        position: absolute;
-        left: 15px;
-        width: calc(50% - 30px);
-        padding-right: 10px;
-        white-space: nowrap;
-        text-align: left;
         font-weight: 600;
         color: var(--text-color);
+        flex-shrink: 0; /* Impede que o label encolha */
+        margin-right: 10px; /* Espaçamento entre label e valor */
+    }
+
+    .transactions-table td:last-child {
+        border-bottom: none; /* Garante que a última célula não tenha borda */
+        padding-bottom: 0;
+    }
+
+    .transactions-table td:first-child {
+        padding-top: 0;
     }
 
     .action-button {
         font-size: 1rem;
     }
+
+    /* Ajuste para os botões de ação dentro do td */
+    .transactions-table td[data-label="Ações"] {
+        justify-content: flex-start; /* Alinha os botões à esquerda */
+        gap: 10px; /* Espaçamento entre os botões */
+        padding-top: 10px;
+        border-top: 1px solid var(--border-color); /* Separador visual */
+        margin-top: 10px;
+    }
 }
+
+
 
 /* Tablet (min-width: 768px and max-width: 1023px) */
 @media (min-width: 768px) and (max-width: 1023px) {
+   
+   
     .admin-main {
         padding: 25px;
         gap: 25px;
+        
     }
 
     .page-title {

@@ -1,4 +1,3 @@
-/* RESET */
 * {
   margin: 0;
   padding: 0;
@@ -30,7 +29,6 @@ main > h2 {
   text-align: center;
 }
 
-/* CONTAINER DUAS COLUNAS */
 .carrinho-container {
   display: grid;
   grid-template-columns: 1fr;
@@ -43,13 +41,11 @@ main > h2 {
   }
 }
 
-/* COLUNA PRODUTOS */
 .coluna-produtos {
   display: flex;
   flex-direction: column;
 }
 
-/* COLUNA LATERAL */
 .coluna-lateral {
   position: relative;
 }
@@ -60,7 +56,6 @@ main > h2 {
   gap: 25px;
 }
 
-/* LISTA DE PRODUTOS */
 .produtos {
   display: flex;
   flex-direction: column;
@@ -125,7 +120,7 @@ main > h2 {
 }
 
 .localizacao i {
-  color: #28a745; /* Cor verde mais vibrante */
+  color: #28a745;
 }
 
 .preco {
@@ -136,7 +131,6 @@ main > h2 {
   color: #28a745;
 }
 
-/* CONTROLES DE QUANTIDADE */
 .quantidade-controls {
   display: flex;
   align-items: center;
@@ -152,16 +146,11 @@ main > h2 {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: background 0.2s ease;
 }
 
 .quantidade-btn:hover {
   background: #218838;
-  transform: translateY(-1px);
-}
-
-.quantidade-btn:active {
-  transform: translateY(0);
 }
 
 .quantidade-num {
@@ -172,7 +161,6 @@ main > h2 {
   color: #444;
 }
 
-/* BOTÃO REMOVER (ÍCONE 'X') */
 .btn-remover {
   position: absolute;
   top: 10px;
@@ -188,17 +176,12 @@ main > h2 {
   border-radius: 50%;
   cursor: pointer;
   font-size: 16px;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: background 0.2s ease;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .btn-remover:hover {
   background: #c82333;
-  transform: scale(1.1);
-}
-
-.btn-remover:active {
-  transform: scale(1);
 }
 
 .confirmacao {
@@ -227,7 +210,6 @@ main > h2 {
   color: #ffd700;
 }
 
-/* RESUMO DO PEDIDO */
 .resumo {
   border: 1px solid #e0e0e0;
   border-radius: 10px;
@@ -289,7 +271,7 @@ main > h2 {
   font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: background 0.2s ease;
   text-decoration: none;
   text-align: center;
   margin-top: 20px;
@@ -297,11 +279,6 @@ main > h2 {
 
 .btn-comprar:hover {
   background: #218838;
-  transform: translateY(-2px);
-}
-
-.btn-comprar:active {
-  transform: translateY(0);
 }
 
 .btn-comprar a {
@@ -309,7 +286,6 @@ main > h2 {
   text-decoration: none;
 }
 
-/* ANÚNCIO DE TRANSPORTADORAS */
 .anuncio-transportadoras {
   border: 1px solid #e0e0e0;
   border-radius: 10px;
@@ -362,7 +338,7 @@ main > h2 {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: background 0.2s ease;
   text-decoration: none;
   width: fit-content;
   margin: 0 auto;
@@ -371,18 +347,12 @@ main > h2 {
 
 .btn-anuncio:hover {
   background: #218838;
-  transform: translateY(-2px);
-}
-
-.btn-anuncio:active {
-  transform: translateY(0);
 }
 
 .btn-anuncio i {
   font-size: 16px;
 }
 
-/* BOTÃO VOLTAR */
 .back-navigation {
     margin-bottom: 1rem;
 }
@@ -410,7 +380,6 @@ main > h2 {
   vertical-align: middle;
 }
 
-/* RESPONSIVIDADE */
 @media (max-width: 991px) {
   .coluna-lateral {
     margin-top: 20px;
@@ -418,20 +387,29 @@ main > h2 {
 }
 
 @media (max-width: 767px) {
-  .produto-card {
-    flex-direction: row; /* Mantém a formatação original em linha */
-    align-items: center;
-    padding: 15px;
+  .back-navigation {
+    margin-bottom: 0.5rem;
   }
 
-  .produto-top {
-    flex-direction: row; /* Mantém a imagem e info na mesma linha */
-    align-items: center;
+  .produtos {
     gap: 15px;
   }
 
+  .produto-card {
+    flex-direction: row;
+    align-items: center;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .produto-top {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+  }
+
   .produto-card img {
-    width: 60px; /* Imagem menor para celular */
+    width: 60px;
     height: 60px;
     margin-bottom: 0; 
   }
@@ -494,5 +472,24 @@ main > h2 {
   .btn-anuncio {
     padding: 10px 16px;
     font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-navigation {
+    margin-bottom: 0.3rem;
+  }
+
+  .produtos {
+    gap: 12px;
+  }
+
+  .produto-card {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .produto-top {
+    gap: 10px;
   }
 }

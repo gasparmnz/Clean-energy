@@ -110,7 +110,7 @@ main {
     background: var(--bg-white);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
-    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+    transition: box-shadow var(--transition-normal);
     position: relative;
     overflow: hidden;
 }
@@ -128,12 +128,7 @@ main {
 }
 
 .content-section:hover {
-    transform: translateY(-10px);
     box-shadow: var(--shadow-lg);
-}
-
-.content-section:hover::before {
-    opacity: 1;
 }
 
 /* Inverte a ordem visual em telas grandes */
@@ -169,23 +164,18 @@ main {
     transition: transform var(--transition-slow);
 }
 
-.content-image:hover::before {
-    transform: scale(1.2);
-}
-
 .content-image img {
     width: 100%;
     max-width: 480px;
     height: auto;
     border-radius: var(--radius-md);
-    transition: transform var(--transition-slow), box-shadow var(--transition-normal);
+    transition: box-shadow var(--transition-normal);
     box-shadow: var(--shadow-sm);
     position: relative;
     z-index: 1;
 }
 
 .content-image:hover img {
-    transform: scale(1.05) rotate(1deg);
     box-shadow: var(--shadow-md);
 }
 
@@ -215,11 +205,6 @@ main {
     bottom: 0;
     left: 0;
     border-radius: 2px;
-    transition: width var(--transition-normal);
-}
-
-.content-section:hover .content-text h2::after {
-    width: 120px;
 }
 
 .content-text p {
@@ -231,13 +216,7 @@ main {
     border-left: 3px solid var(--primary-color);
     border-radius: var(--radius-sm);
     margin-bottom: 1rem;
-    transition: background var(--transition-fast), border-left var(--transition-fast);
     text-align: justify;
-}
-
-.content-text p:hover {
-    background: rgba(76, 175, 80, 0.05);
-    border-left: 4px solid var(--primary-dark);
 }
 
 .content-text p:last-child {
@@ -263,7 +242,6 @@ main {
     border-radius: var(--radius-sm);
     margin-bottom: 1.25rem;
     position: relative;
-    transition: all var(--transition-normal);
     counter-increment: solution-counter;
     text-align: justify;
 }
@@ -285,17 +263,6 @@ main {
     justify-content: center;
     border-radius: 50%;
     box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
-    transition: transform var(--transition-fast);
-}
-
-.content-text ul li:hover {
-    background: rgba(76, 175, 80, 0.05);
-    border-left: 4px solid var(--primary-dark);
-    transform: translateX(5px);
-}
-
-.content-text ul li:hover::before {
-    transform: translateY(-50%) scale(1.15) rotate(360deg);
 }
 
 .content-text ul li:last-child {
@@ -386,10 +353,6 @@ main {
         width: 60px;
         height: 3px;
     }
-
-    .content-section:hover .content-text h2::after {
-        width: 90px;
-    }
     
     .content-text p {
         padding: 1.25rem;
@@ -455,7 +418,6 @@ main {
 @media (prefers-reduced-motion: no-preference) {
     .content-section,
     .content-image img,
-    .content-text h2::after,
     .content-text p,
     .content-text ul li {
         transition-duration: 0.3s;
@@ -498,4 +460,3 @@ main {
         max-width: 1400px;
     }
 }
-

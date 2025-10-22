@@ -10,7 +10,7 @@
 </head>
 <body>
   <main class="login-main">
-    <!-- Hero Section -->
+   
     <aside class="hero-section">
       <header class="hero-content">
         <h1 class="hero-title">Bem-vindo de Volta!</h1>
@@ -34,7 +34,6 @@
       </header>
     </aside>
 
-    <!-- Formulário de Login -->
     <section class="form-section">
       <header class="form-header">
         <h2 class="form-title">Dados de Acesso</h2>
@@ -51,7 +50,6 @@
         <fieldset class="form-fieldset">
           <legend class="sr-only">Credenciais de acesso</legend>
 
-          <!-- Campo E-mail -->
           <section class="input-group">
             <label for="usuarioDigitado" class="input-label">
               <i class='bx bx-envelope'></i>
@@ -79,7 +77,6 @@
             </span>
           </section>
 
-          <!-- Campo Senha -->
           <section class="input-group">
             <label for="senhaDigitada" class="input-label">
               <i class='bx bx-lock-alt'></i>
@@ -110,7 +107,6 @@
             </span>
           </section>
 
-          <!-- Mensagem de erro do backend -->
           <% if (erro) { %>
           <section class="backend-error" role="alert">
             <i class='bx bx-error-circle'></i>
@@ -119,14 +115,12 @@
           <% } %>
         </fieldset>
 
-        <!-- Botão de Login -->
         <button type="submit" id="btnClique" class="submit-btn">
           <i class='bx bx-log-in'></i>
           <span>Acessar</span>
           <i class='bx bx-loader-alt bx-spin loading-icon'></i>
         </button>
 
-        <!-- Links adicionais -->
         <footer class="form-footer">
           <p class="register-link">
             Ainda não possui uma conta? 

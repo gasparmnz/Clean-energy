@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Compras e Vendas</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/painel.css">
+</head>
+<body>
+     <%- include("../partial/header1.ejs") %>
+  <main>
+    
+    <section class="content-area">
+<%- include("../partial/sidebar.ejs") %>
+      <section class="dashboard-overview">
+      <h1>Visão Geral de Compras e Vendas</h1>
+      <section class="metrics-cards">
+
+        <article class="metric-card">
+          <i class=\'bx bx-check-circle\'></i>
+          <h2>Transações Concluídas</h2>
+          <p>5</p>
+          <small>últimos 30 dias</small>
+        </article>
+
+        <article class="metric-card">
+          <i class=\'bx bx-x-circle\'></i>
+          <h2>Pedidos Cancelados</h2>
+          <p>2</p>
+          <small>últimos 30 dias</small>
+        </article>
+
+        <article class="metric-card">
+          <i class=\'bx bx-dollar-circle\'></i>
+          <h2>Lucro do Usuário</h2>
+          <p>R$ 1.250,00</p>
+          <small>últimos 30 dias</small>
+        </article>
+      </section>
+    </section>
+
+    <section class="recent-transactions">
+      <h2>Transações Recentes</h2>
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th>ID da Transação</th>
+            <th>Tipo</th>
+            <th>Produto</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#001</td>
+            <td>Compra</td>
+            <td>Cavaco de Eucalipto</td>
+            <td>R$ 500,00</td>
+            <td>Concluída</td>
+            <td>20/10/2025</td>
+          </tr>
+          <tr>
+            <td>#002</td>
+            <td>Venda</td>
+            <td>Serragem de Pinus</td>
+            <td>R$ 750,00</td>
+            <td>Pendente</td>
+            <td>19/10/2025</td>
+          </tr>
+          <tr>
+            <td>#003</td>
+            <td>Compra</td>
+            <td>Bagaço de Cana</td>
+            <td>R$ 300,00</td>
+            <td>Concluída</td>
+            <td>18/10/2025</td>
+          </tr>
+          <tr>
+            <td>#004</td>
+            <td>Venda</td>
+            <td>Palha de Arroz</td>
+            <td>R$ 200,00</td>
+            <td>Cancelada</td>
+            <td>17/10/2025</td>
+          </tr>
+          <tr>
+            <td>#005</td>
+            <td>Compra</td>
+            <td>Lenha de Reflorestamento</td>
+            <td>R$ 600,00</td>
+            <td>Concluída</td>
+            <td>16/10/2025</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </section>
+  </main>
+   <%- include("../partial/footer.ejs") %>
+</body>
+</html>
+

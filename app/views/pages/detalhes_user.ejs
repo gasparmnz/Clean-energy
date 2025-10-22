@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Usuário - Admin</title>
+  <link rel="stylesheet" href="/css/adm.css">
+  <link rel="stylesheet" href="/css/detalhes_user.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+</head>
+<body>
+  <%- include('../partial/header1.ejs') %>
+  <section class="admin-container">
+    <!-- Sidebar via EJS -->
+    <%- include('../partial/sidebar_adm.ejs') %>
+
+    <main class="admin-main">
+      <!-- Header -->
+      <header class="details-header">
+         <nav class="back-navigation" aria-label="Navegação de retorno">
+        <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+          <i class='bx bx-arrow-back'></i>
+          <span>Voltar</span>
+        </button>
+      </nav>
+        <article class="header-content">
+          <h1>Detalhes do Usuário</h1>
+          <p class="page-subtitle">Informações completas e histórico de transações</p>
+        </article>
+      </header>
+
+      <!-- User Content -->
+      <article id="userContent">
+        <!-- Conteúdo do usuário será carregado aqui pelo JavaScript -->
+      </article>
+    </main>
+  </section>
+
+  <!-- MODAL DE AVALIAÇÕES -->
+  <dialog id="avaliacoesModal" class="avaliacoes-modal">
+    <article class="avaliacoes-content">
+      <button class="close-modal" onclick="closeModal()">&times;</button>
+      <h2><i class='bx bxs-star'></i> Avaliações Detalhadas</h2>
+      <p class="subtitle">Avaliações de <span id="modalUserName">-</span></p>
+
+      <section class="avaliacoes-grid">
+        <article class="avaliacoes-col">
+          <h3>Avaliações Dadas</h3>
+          <section id="modalGivenReviews"></section>
+        </article>
+        <article class="avaliacoes-col">
+          <h3>Avaliações Recebidas</h3>
+          <section id="modalReceivedReviews"></section>
+        </article>
+      </section>
+    </article>
+  </dialog>
+
+  <script>
+    const usersData = {
+      'USR-001': {
+        name: 'João Silva',
+        email: 'joao.silva@email.com',
+        phone: '(11) 98765-4321',
+        cpf: '123.456.789-00',
+        address: 'Rua das Flores, 123 - São Paulo, SP',
+        salesCount: 15,
+        salesTotal: 'R$ 45.000,00',
+        purchasesCount: 10,
+        purchasesTotal: 'R$ 15.000,00',
+        rating: 4.8,
+        status: 'ativo',
+        given: [
+          { to: 'Maria Santos', product: 'Lenha Tratada', score: 4.5, date: '12/12/2024', comment: 'Ótima compradora, muito responsável.' }
+        ],
+        received: [
+          { from: 'Maria Santos', product: 'Lenha Tratada', score: 5.0, date: '15/12/2024', comment: 'Produto excelente!' }
+        ],
+        products: [
+          { name: 'Lenha Tratada', price: 'R$ 1.200,00', quantity: 50, date: '20/12/2024', image: '/imagem/lenha.png' },
+          { name: 'Serragem', price: 'R$ 800,00', quantity: 30, date: '18/12/2024', image: '/imagem/serragem.png' },
+          { name: 'Palha de Milho', price: 'R$ 600,00', quantity: 25, date: '15/12/2024', image: '/imagem/palhademilho.png' }
+        ],
+        purchasedProducts: [
+          { name: 'Casca de Arroz', price: 'R$ 950,00', quantity: 40, date: '18/12/2024', image: '/imagem/cascadearroz.png' },
+          { name: 'Resíduos de Café', price: 'R$ 550,00', quantity: 20, date: '14/12/2024', image: '/imagem/residuosdecafe.png' }
+        ]
+      },
+      'USR-002': {
+        name: 'Maria Santos',
+        email: 'maria.santos@email.com',
+        phone: '(11) 97654-3210',
+        cpf: '234.567.890-11',
+        address: 'Av. Paulista, 1000 - São Paulo, SP',
+        salesCount: 8,
+        salesTotal: 'R$ 25.000,00',
+        purchasesCount: 5,
+        purchasesTotal: 'R$ 8.000,00',
+        rating: 4.5,
+        status: 'ativo',
+        given: [
+          { to: 'Pedro Costa', product: 'Casca de Arroz', score: 4.0, date: '10/12/2024', comment: 'Bom vendedor.' }
+        ],
+        received: [
+          { from: 'João Silva', product: 'Lenha Tratada', score: 5.0, date: '15/12/2024', comment: 'Excelente compradora!' }
+        ],
+        products: [
+          { name: 'Casca de Arroz', price: 'R$ 900,00', quantity: 40, date: '19/12/2024', image: '/imagem/cascadearroz.png' },
+          { name: 'Pallet', price: 'R$ 750,00', quantity: 35, date: '16/12/2024', image: '/imagem/pellets.png' }
+        ],
+        purchasedProducts: [
+          { name: 'Lenha Tratada', price: 'R$ 1.100,00', quantity: 45, date: '17/12/2024', image: '/imagem/lenha.png' },
+          { name: 'Bagaco de Cana', price: 'R$ 600,00', quantity: 30, date: '12/12/2024', image: '/imagem/cana.png' },
+          { name: 'Folhas Secas', price: 'R$ 700,00', quantity: 25, date: '10/12/2024', image: '/imagem/folhassecas.png' }
+        ]
+      },
+      'USR-003': {
+        name: 'Pedro Costa',
+        email: 'pedro.costa@email.com',
+        phone: '(11) 96543-2109',
+        cpf: '345.678.901-22',
+        address: 'Rua Augusta, 500 - São Paulo, SP',
+        salesCount: 12,
+        salesTotal: 'R$ 35.000,00',
+        purchasesCount: 7,
+        purchasesTotal: 'R$ 12.000,00',
+        rating: 4.7,
+        status: 'ativo',
+        given: [],
+        received: [
+          { from: 'Maria Santos', product: 'Casca de Arroz', score: 5.0, date: '10/12/2024', comment: 'Produto excelente!' },
+          { from: 'Ana Oliveira', product: 'Casca de Arroz', score: 5.0, date: '05/12/2024', comment: 'Qualidade impecável.' }
+        ],
+        products: [
+          { name: 'Serragem', price: 'R$ 550,00', quantity: 20, date: '21/12/2024', image: '/imagem/serragem.png' },
+          { name: 'Resíduos de Colheita', price: 'R$ 700,00', quantity: 28, date: '14/12/2024', image: '/imagem/restodecolheita.png' },
+          { name: 'Lixo Orgânico', price: 'R$ 650,00', quantity: 32, date: '12/12/2024', image: '/imagem/lixo organico.png' }
+        ],
+        purchasedProducts: [
+          { name: 'Pallet ', price: 'R$ 1.300,00', quantity: 50, date: '19/12/2024', image: '/imagem/pellets.png' },
+          { name: 'Serragem ', price: 'R$ 800,00', quantity: 35, date: '15/12/2024', image: '/imagem/serragem.png' }
+        ]
+      },
+      'USR-004': {
+        name: 'Ana Oliveira',
+        email: 'ana.oliveira@email.com',
+        phone: '(11) 95432-1098',
+        cpf: '456.789.012-33',
+        address: 'Rua Consolação, 250 - São Paulo, SP',
+        salesCount: 6,
+        salesTotal: 'R$ 18.000,00',
+        purchasesCount: 9,
+        purchasesTotal: 'R$ 20.000,00',
+        rating: 4.6,
+        status: 'ativo',
+        given: [],
+        received: [
+          { from: 'Juliana Mendes', product: 'Serragem', score: 5.0, date: '20/12/2024', comment: 'Muito atenciosa!' },
+          { from: 'Roberto Alves', product: 'Pellets de Madeira', score: 4.0, date: '17/12/2024', comment: 'Bom produto.' }
+        ],
+        products: [
+          { name: 'Resíduos de Café', price: 'R$ 480,00', quantity: 15, date: '22/12/2024', image: '/imagem/residuosdecafe.png' },
+          { name: 'Lenha Tratada', price: 'R$ 1.100,00', quantity: 45, date: '19/12/2024', image: '/imagem/lenha.png' }
+        ],
+        purchasedProducts: [
+          { name: 'Palha de Milho', price: 'R$ 750,00', quantity: 30, date: '20/12/2024', image: '/imagem/palhademilho.png' },
+          { name: 'Bagaco de Cana', price: 'R$ 950,00', quantity: 40, date: '16/12/2024', image: '/imagem/cana.png' },
+          { name: 'Folhas Secas', price: 'R$ 650,00', quantity: 28, date: '13/12/2024', image: '/imagem/folhassecas.png' }
+        ]
+      },
+      'USR-005': {
+        name: 'Carlos Ferreira',
+        email: 'carlos.ferreira@email.com',
+        phone: '(11) 94321-0987',
+        cpf: '567.890.123-44',
+        address: 'Rua Oscar Freire, 800 - São Paulo, SP',
+        salesCount: 20,
+        salesTotal: 'R$ 60.000,00',
+        purchasesCount: 3,
+        purchasesTotal: 'R$ 5.000,00',
+        rating: 4.9,
+        status: 'ativo',
+        given: [
+          { to: 'Juliana Mendes', product: 'Casca de Arroz', score: 4.0, date: '15/12/2024', comment: 'Produto de boa qualidade.' }
+        ],
+        received: [
+          { from: 'Juliana Mendes', product: 'Bagaco de Cana', score: 4.0, date: '15/12/2024', comment: 'Produto de boa qualidade.' }
+        ],
+        products: [
+          { name: 'Lenha Tratada', price: 'R$ 1.500,00', quantity: 60, date: '23/12/2024', image: '/imagem/lenha.png' },
+          { name: 'Serragem', price: 'R$ 650,00', quantity: 38, date: '20/12/2024', image: '/imagem/serragem.png' },
+          { name: 'Resíduos de Colheita', price: 'R$ 700,00', quantity: 42, date: '17/12/2024', image: '/imagem/restodecolheita.png' },
+          { name: 'Bagaco de Cana', price: 'R$ 950,00', quantity: 55, date: '13/12/2024', image: '/imagem/cana.png' }
+        ],
+        purchasedProducts: [
+          { name: 'Serragem', price: 'R$ 920,00', quantity: 35, date: '21/12/2024', image: '/imagem/serragem.png' },
+          { name: 'Resto de Colheita', price: 'R$ 850,00', quantity: 38, date: '18/12/2024', image: '/imagem/restodecolheita.png' },
+          { name: 'Pallet', price: 'R$ 1.100,00', quantity: 50, date: '14/12/2024', image: '/imagem/pellets.png' }
+        ]
+      },
+      'USR-006': {
+        name: 'Juliana Mendes',
+        email: 'juliana.mendes@email.com',
+        phone: '(11) 93210-9876',
+        cpf: '678.901.234-55',
+        address: 'Av. Brigadeiro Faria Lima, 1500 - São Paulo, SP',
+        salesCount: 11,
+        salesTotal: 'R$ 33.000,00',
+        purchasesCount: 8,
+        purchasesTotal: 'R$ 14.000,00',
+        rating: 4.4,
+        status: 'ativo',
+        given: [
+          { to: 'Ana Oliveira', product: 'Serragem Compressada', score: 5.0, date: '20/12/2024', comment: 'Muito atenciosa!' },
+          { to: 'Carlos Ferreira', product: 'Casca de Arroz', score: 4.0, date: '15/12/2024', comment: 'Produto de boa qualidade.' }
+        ],
+        received: [
+          { from: 'Carlos Ferreira', product: 'Casca de Arroz', score: 4.0, date: '15/12/2024', comment: 'Produto de boa qualidade.' }
+        ],
+        products: [
+          { name: 'Resíduos de Café', price: 'R$ 920,00', quantity: 35, date: '21/12/2024', image: '/imagem/residuosdecafe.png' },
+          { name: 'Palha de Milho', price: 'R$ 780,00', quantity: 40, date: '18/12/2024', image: '/imagem/palhademilho.png' },
+          { name: 'Lenha Tratada', price: 'R$ 850,00', quantity: 38, date: '16/12/2024', image: '/imagem/lenha.png' }
+        ],
+        purchasedProducts: [
+          { name: 'Folhas Secas', price: 'R$ 1.200,00', quantity: 45, date: '19/12/2024', image: '/imagem/folhassecas.png' },
+          { name: 'Lixo Orgânico', price: 'R$ 550,00', quantity: 25, date: '15/12/2024', image: '/imagem/lixo organico.png' },
+          { name: 'Casca de Arroz', price: 'R$ 600,00', quantity: 30, date: '12/12/2024', image: '/imagem/cascadearroz.png' }
+        ]
+      }
+    };
+
+    let currentUserId = '';
+
+    function getUserIdFromUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('userId');
+    }
+
+    function renderStars(score) {
+      const fullStars = Math.floor(score);
+      const hasHalfStar = score % 1 !== 0;
+      let starsHtml = '';
+
+      for (let i = 0; i < fullStars; i++) {
+        starsHtml += '<i class="fas fa-star"></i>';
+      }
+
+      if (hasHalfStar) {
+        starsHtml += '<i class="fas fa-star-half-alt"></i>';
+      }
+
+      const emptyStars = 5 - Math.ceil(score);
+      for (let i = 0; i < emptyStars; i++) {
+        starsHtml += '<i class="far fa-star"></i>';
+      }
+
+      return starsHtml;
+    }
+
+    function displayUserContent(userId) {
+      const user = usersData[userId];
+      const contentDiv = document.getElementById('userContent');
+
+      if (!user) {
+        contentDiv.innerHTML = '<article class="empty-state"><p>Usuário não encontrado.</p></article>';
+        return;
+      }
+
+      currentUserId = userId;
+
+      let html = `
+        <section class="user-profile-card">
+          <header class="profile-header">
+            <article class="profile-info">
+              <figure class="profile-avatar"><i class='bx bx-user'></i></figure>
+              <article>
+                <h2>${user.name}</h2>
+                <p>${user.email || 'Não informado'}</p>
+                <span class="status-badge status-${user.status}">${user.status.toUpperCase()}</span>
+                <nav class="profile-actions">
+                  <button class="action-btn-small btn-suspend" onclick="suspendAccount('${userId}')">
+                    <i class='bx bx-block'></i>Suspender Conta
+                  </button>
+                </nav>
+              </article>
+            </article>
+            <article class="profile-rating">
+              <span class="rating-label">Avaliação Média</span>
+              <article class="rating-display">
+                <span class="rating-value">${user.rating ? user.rating.toFixed(1) : 'N/A'}</span>
+                <i class='bx bxs-star'></i>
+              </article>
+            </article>
+          </header>
+
+          <section class="info-section">
+            <header class="section-header">
+              <h3>Informações do Usuário</h3>
+            </header>
+            <header class="section-header" style="margin-top: 20px; margin-bottom: 15px;">
+              <h4 style="font-size: 1.1rem; color: #6b7280; font-weight: 600; margin: 0;">Informações Pessoais</h4>
+            </header>
+            <section class="info-grid">
+              <article class="info-item">
+                <i class="info-icon bx bx-envelope"></i>
+                <article>
+                  <label>Email</label>
+                  <p>${user.email || 'Não informado'}</p>
+                </article>
+              </article>
+              <article class="info-item">
+                <i class="info-icon bx bx-phone"></i>
+                <article>
+                  <label>Telefone</label>
+                  <p>${user.phone || 'Não informado'}</p>
+                </article>
+              </article>
+              <article class="info-item">
+                <i class="info-icon bx bx-id-card"></i>
+                <article>
+                  <label>CPF</label>
+                  <p>${user.cpf || 'Não informado'}</p>
+                </article>
+              </article>
+              <article class="info-item">
+                <i class="info-icon bx bx-map"></i>
+                <article>
+                  <label>Endereço</label>
+                  <p>${user.address || 'Não informado'}</p>
+                </article>
+              </article>
+            </section>
+          </section>
+
+          <section class="statistics-section">
+            <article class="stat-card">
+              <i class="stat-icon bx bx-shopping-bag"></i>
+              <article>
+                <h4>Vendas Realizadas</h4>
+                <p class="stat-value">${user.salesCount || 0}</p>
+              </article>
+            </article>
+            <article class="stat-card">
+              <i class="stat-icon bx bx-trending-up"></i>
+              <article>
+                <h4>Total em Vendas</h4>
+                <p class="stat-value">${user.salesTotal || 'R$ 0,00'}</p>
+              </article>
+            </article>
+            <article class="stat-card">
+              <i class="stat-icon bx bx-cart"></i>
+              <article>
+                <h4>Compras Realizadas</h4>
+                <p class="stat-value">${user.purchasesCount || 0}</p>
+              </article>
+            </article>
+            <article class="stat-card">
+              <i class="stat-icon bx bx-package"></i>
+              <article>
+                <h4>Total em Compras</h4>
+                <p class="stat-value">${user.purchasesTotal || 'R$ 0,00'}</p>
+              </article>
+            </article>
+          </section>
+        </section>
+      `;
+
+      // Produtos Vendidos
+      if (user.products && user.products.length > 0) {
+        html += `
+          <section class="user-profile-card">
+            <section class="products-section">
+              <header class="section-header">
+                <h3><i class='bx bx-package'></i> Produtos Vendidos</h3>
+              </header>
+              <section class="products-container">
+        `;
+        user.products.forEach(product => {
+          html += `
+            <article class="product-card">
+              <figure class="product-image">
+                <img src="${product.image}" alt="${product.name}">
+              </figure>
+              <article class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-price">${product.price}</p>
+                <p class="product-quantity">Quantidade: ${product.quantity} unidades</p>
+                <time class="product-date">Vendido em: ${product.date}</time>
+              </article>
+            </article>
+          `;
+        });
+        html += `
+              </section>
+            </section>
+          </section>
+        `;
+      }
+
+      // Produtos Comprados
+      if (user.purchasedProducts && user.purchasedProducts.length > 0) {
+        html += `
+          <section class="user-profile-card">
+            <section class="products-section">
+              <header class="section-header">
+                <h3><i class='bx bx-cart'></i> Produtos Comprados</h3>
+              </header>
+              <section class="products-container">
+        `;
+        user.purchasedProducts.forEach(product => {
+          html += `
+            <article class="product-card">
+              <figure class="product-image">
+                <img src="${product.image}" alt="${product.name}">
+              </figure>
+              <article class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-price">${product.price}</p>
+                <p class="product-quantity">Quantidade: ${product.quantity} unidades</p>
+                <time class="product-date">Comprado em: ${product.date}</time>
+              </article>
+            </article>
+          `;
+        });
+        html += `
+              </section>
+            </section>
+          </section>
+        `;
+      }
+
+      // Avações Dadas
+      if (user.given && user.given.length > 0) {
+        html += `
+          <section class="user-profile-card">
+            <section class="info-section">
+              <header class="section-header">
+                <h3><i class='bx bxs-star'></i> Avaliações Dadas</h3>
+              </header>
+              <section class="reviews-container">
+        `;
+        user.given.forEach(review => {
+          html += `
+            <article class="review-card">
+              <header class="review-header">
+                <span class="review-person">Para: ${review.to}</span>
+                <time class="review-date">${review.date}</time>
+              </header>
+              <span class="review-product">${review.product}</span>
+              <article class="review-rating">${renderStars(review.score)}</article>
+              <blockquote class="review-comment">"${review.comment}"</blockquote>
+            </article>
+          `;
+        });
+        html += `
+              </section>
+            </section>
+          </section>
+        `;
+      } else {
+        html += `
+          <section class="user-profile-card">
+            <section class="info-section">
+              <header class="section-header">
+                <h3><i class='bx bxs-star'></i> Avaliações Dadas</h3>
+              </header>
+              <article class="empty-state">
+                <p>Nenhuma avaliação dada ainda.</p>
+              </article>
+            </section>
+          </section>
+        `;
+      }
+
+      // Avaliações Recebidas
+      if (user.received && user.received.length > 0) {
+        html += `
+          <section class="user-profile-card">
+            <section class="info-section">
+              <header class="section-header">
+                <h3><i class='bx bx-inbox'></i> Avaliações Recebidas</h3>
+              </header>
+              <section class="reviews-container">
+        `;
+        user.received.forEach(review => {
+          html += `
+            <article class="review-card">
+              <header class="review-header">
+                <span class="review-person">De: ${review.from}</span>
+                <time class="review-date">${review.date}</time>
+              </header>
+              <span class="review-product">${review.product}</span>
+              <article class="review-rating">${renderStars(review.score)}</article>
+              <blockquote class="review-comment">"${review.comment}"</blockquote>
+            </article>
+          `;
+        });
+        html += `
+              </section>
+            </section>
+          </section>
+        `;
+      } else {
+        html += `
+          <section class="user-profile-card">
+            <section class="info-section">
+              <header class="section-header">
+                <h3><i class='bx bx-inbox'></i> Avaliações Recebidas</h3>
+              </header>
+              <article class="empty-state">
+                <p>Nenhuma avaliação recebida ainda.</p>
+              </article>
+            </section>
+          </section>
+        `;
+      }
+
+      contentDiv.innerHTML = html;
+    }
+
+    function openModal(userId) {
+      const user = usersData[userId];
+      if (!user) return;
+
+      document.getElementById('modalUserName').textContent = user.name;
+
+      const modalGivenReviewsDiv = document.getElementById('modalGivenReviews');
+      const modalReceivedReviewsDiv = document.getElementById('modalReceivedReviews');
+
+      modalGivenReviewsDiv.innerHTML = '';
+      modalReceivedReviewsDiv.innerHTML = '';
+
+      if (user.given && user.given.length > 0) {
+        user.given.forEach(review => {
+          modalGivenReviewsDiv.innerHTML += `
+            <article class="avaliacao-item-modal">
+              <p>Para: <em>${review.to}</em><span>${review.date}</span></p>
+              <p>Produto: ${review.product}</p>
+              <article class="review-rating">${renderStars(review.score)}</article>
+              <p>${review.comment}</p>
+            </article>
+          `;
+        });
+      } else {
+        modalGivenReviewsDiv.innerHTML = '<article class="empty-state"><p>Nenhuma avaliação dada.</p></article>';
+      }
+
+      if (user.received && user.received.length > 0) {
+        user.received.forEach(review => {
+          modalReceivedReviewsDiv.innerHTML += `
+            <article class="avaliacao-item-modal">
+              <p>De: <em>${review.from}</em><span>${review.date}</span></p>
+              <p>Produto: ${review.product}</p>
+              <article class="review-rating">${renderStars(review.score)}</article>
+              <p>${review.comment}</p>
+            </article>
+          `;
+        });
+      } else {
+        modalReceivedReviewsDiv.innerHTML = '<article class="empty-state"><p>Nenhuma avaliação recebida.</p></article>';
+      }
+
+      document.getElementById('avaliacoesModal').classList.add('show');
+      document.body.classList.add('modal-open');
+    }
+
+    function closeModal() {
+      document.getElementById('avaliacoesModal').classList.remove('show');
+      document.body.classList.remove('modal-open');
+    }
+
+    function suspendAccount(userId) {
+      const user = usersData[userId];
+      if (confirm(`Tem certeza que deseja suspender a conta de ${user.name}?`)) {
+        alert(`Conta de ${user.name} foi suspensa.`);
+        // Aqui você pode implementar a lógica de suspensão
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const userId = getUserIdFromUrl();
+      if (userId) {
+        displayUserContent(userId);
+      } else {
+        document.getElementById('userContent').innerHTML = '<article class="empty-state"><p>Nenhum ID de usuário fornecido na URL.</p><p>Por favor, use uma URL como: <code>detalhes_usuario.html?userId=USR-001</code></p></article>';
+      }
+    });
+  </script>
+</body>
+</html>
