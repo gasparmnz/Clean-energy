@@ -81,7 +81,7 @@ main{
 .transport-main {
   min-height: 100vh;
   position: relative;
-  padding-bottom: var(--spacing-3xl); /* Adiciona espaço no final */
+  padding-bottom: var(--spacing-3xl);
 }
 
 .transport-hero {
@@ -89,8 +89,7 @@ main{
   color: var(--background);
   padding: var(--spacing-3xl) var(--spacing-xl);
   text-align: center;
-  margin-bottom: var(--spacing-2xl); /* Espaço entre o hero e a grid */
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin-bottom: var(--spacing-2xl);
 }
 
 .hero-content {
@@ -103,7 +102,6 @@ main{
   font-weight: 700;
   margin-bottom: var(--spacing-md);
   line-height: 1.2;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .hero-subtitle {
@@ -121,17 +119,15 @@ main{
   margin: 0 auto;
 }
 
-/* Grid de Transportadoras */
 .transporters-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: var(--spacing-xl);
-  padding: 0 var(--spacing-xl); /* Adiciona padding lateral na grid */
-  max-width: 1400px; /* Limita a largura máxima da grid */
-  margin: 0 auto; /* Centraliza a grid */
+  padding: 0 var(--spacing-xl);
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* Cards de Transportadora */
 .transporter-card {
   background: var(--background);
   border-radius: var(--border-radius-xl);
@@ -146,13 +142,12 @@ main{
 .transporter-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-medium);
-  /* REMOVIDO: border-color: var(--primary-color); */
 }
 
 .card-header {
   padding: var(--spacing-lg);
   display: flex;
-  align-items: flex-start; /* Alinha o logo e o conteúdo principal no topo */
+  align-items: flex-start;
   gap: var(--spacing-md);
 }
 
@@ -165,18 +160,18 @@ main{
   width: 70px;
   height: 70px;
   border-radius: var(--border-radius-md);
-  object-fit: contain; /* Usa 'contain' para evitar cortes no logo */
+  object-fit: contain;
   border: 1px solid var(--border-color);
   background-color: var(--background);
 }
 
 .card-header-main {
   display: flex;
-  flex: 1; /* Ocupa o espaço restante */
-  justify-content: space-between; /* Empurra a avaliação para a direita */
-  align-items: flex-start; /* Alinha os itens no topo */
+  flex: 1;
+  justify-content: space-between;
+  align-items: flex-start;
   gap: var(--spacing-sm);
-  min-width: 0; /* Impede que o flex item cresça demais e quebre o layout */
+  min-width: 0;
 }
 
 .company-info {
@@ -187,7 +182,7 @@ main{
 .company-rating {
   text-align: right;
   flex-shrink: 0;
-  padding-left: var(--spacing-sm); /* Adiciona um pequeno espaço para evitar que o texto encoste */
+  padding-left: var(--spacing-sm);
 }
 
 .company-name {
@@ -196,7 +191,6 @@ main{
   color: var(--text-primary);
   margin-bottom: var(--spacing-xs);
   line-height: 1.3;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .company-location {
@@ -206,7 +200,6 @@ main{
   font-style: normal;
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .company-location i {
@@ -230,7 +223,7 @@ main{
 
 .rating-stars {
   display: flex;
-  gap: 2px; /* Reduz o gap entre as estrelas */
+  gap: 2px;
   color: var(--accent-color);
   font-size: var(--font-size-base);
 }
@@ -247,11 +240,10 @@ main{
   color: var(--text-secondary);
   line-height: 1.6;
   font-size: var(--font-size-sm);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .company-specialties {
-  margin-top: auto; /* Empurra os detalhes para baixo, se houver espaço */
+  margin-top: auto;
 }
 
 .specialties-title {
@@ -291,7 +283,6 @@ main{
   gap: var(--spacing-sm);
   color: var(--text-secondary);
   font-size: var(--font-size-sm);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .detail-item i {
@@ -325,12 +316,11 @@ main{
   font-weight: 500;
   cursor: pointer;
   transition: all var(--transition-normal);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  text-decoration: none;
 }
 
 .btn-contact:hover {
   background: var(--primary-hover);
-  /* REMOVIDO: transform: translateY(-2px); */
   box-shadow: var(--shadow-light);
 }
 
@@ -353,7 +343,6 @@ main{
   transform: scale(1.1);
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .hero-title {
     font-size: var(--font-size-3xl);
@@ -362,10 +351,6 @@ main{
   .transporters-grid {
     grid-template-columns: 1fr;
     padding: 0 var(--spacing-md);
-  }
-  
-  .card-header {
-    /* Mantém o layout flexível em mobile, mas ajusta o alinhamento se necessário */
   }
 }
 
@@ -401,7 +386,6 @@ main{
   }
 }
 
-/* Estados de foco para acessibilidade */
 .btn-contact:focus-visible,
 .btn-favorite:focus-visible {
   outline: 3px solid var(--primary-hover);
