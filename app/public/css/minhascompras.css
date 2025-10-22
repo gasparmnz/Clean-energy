@@ -81,9 +81,7 @@ main {
   height: 380px; /* ajuste se precisar, mas todos terão o mesmo tamanho */
 }
 
-.produto-card:hover {
-  transform: translateY(-5px);
-}
+
 
 .produto-card figure img {
    width: 100%;
