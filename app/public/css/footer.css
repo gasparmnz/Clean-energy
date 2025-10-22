@@ -133,6 +133,13 @@ footer {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+.footer-logo {
+  width: 140px;
+  height: auto;
+  margin-bottom: 12px;
+  object-fit: contain
+}
+
 @media screen and (max-width: 768px) {
     #footer_content {
       grid-template-columns: 1fr 1fr; 

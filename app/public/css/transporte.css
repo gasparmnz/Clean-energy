@@ -146,7 +146,7 @@ main{
 .transporter-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-medium);
-  border-color: var(--primary-color);
+  /* REMOVIDO: border-color: var(--primary-color); */
 }
 
 .card-header {
@@ -170,9 +170,6 @@ main{
   background-color: var(--background);
 }
 
-/* --- INÍCIO DA CORREÇÃO --- */
-
-/* 1. Novo contêiner para agrupar informações e avaliação */
 .card-header-main {
   display: flex;
   flex: 1; /* Ocupa o espaço restante */
@@ -182,20 +179,16 @@ main{
   min-width: 0; /* Impede que o flex item cresça demais e quebre o layout */
 }
 
-/* 2. Ajuste na seção de informações */
 .company-info {
   flex: 1;
   min-width: 0;
 }
 
-/* 3. Ajuste na seção de avaliação */
 .company-rating {
   text-align: right;
   flex-shrink: 0;
   padding-left: var(--spacing-sm); /* Adiciona um pequeno espaço para evitar que o texto encoste */
 }
-
-/* --- FIM DA CORREÇÃO --- */
 
 .company-name {
   font-size: var(--font-size-xl);
@@ -337,7 +330,7 @@ main{
 
 .btn-contact:hover {
   background: var(--primary-hover);
-  transform: translateY(-2px);
+  /* REMOVIDO: transform: translateY(-2px); */
   box-shadow: var(--shadow-light);
 }
 

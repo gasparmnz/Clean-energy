@@ -146,16 +146,11 @@ main > h2 {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: background 0.2s ease;
 }
 
 .quantidade-btn:hover {
   background: #218838;
-  transform: translateY(-1px);
-}
-
-.quantidade-btn:active {
-  transform: translateY(0);
 }
 
 .quantidade-num {
@@ -181,17 +176,12 @@ main > h2 {
   border-radius: 50%;
   cursor: pointer;
   font-size: 16px;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: background 0.2s ease;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .btn-remover:hover {
   background: #c82333;
-  transform: scale(1.1);
-}
-
-.btn-remover:active {
-  transform: scale(1);
 }
 
 .confirmacao {
@@ -281,7 +271,7 @@ main > h2 {
   font-size: 1.1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: background 0.2s ease;
   text-decoration: none;
   text-align: center;
   margin-top: 20px;
@@ -289,11 +279,6 @@ main > h2 {
 
 .btn-comprar:hover {
   background: #218838;
-  transform: translateY(-2px);
-}
-
-.btn-comprar:active {
-  transform: translateY(0);
 }
 
 .btn-comprar a {
@@ -353,7 +338,7 @@ main > h2 {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
+  transition: background 0.2s ease;
   text-decoration: none;
   width: fit-content;
   margin: 0 auto;
@@ -362,11 +347,6 @@ main > h2 {
 
 .btn-anuncio:hover {
   background: #218838;
-  transform: translateY(-2px);
-}
-
-.btn-anuncio:active {
-  transform: translateY(0);
 }
 
 .btn-anuncio i {
