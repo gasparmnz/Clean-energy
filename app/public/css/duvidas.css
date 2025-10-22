@@ -52,6 +52,7 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 2rem 1rem;
+    margin-top: 87px;
   }
   
   /* Header da página */
@@ -67,6 +68,29 @@
     margin-bottom: 2rem;
     letter-spacing: -0.02em;
   }
+
+   .back-button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  color: #555;
+  transition: color 0.2s ease;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.back-button:hover {
+  color: #28a745;
+  background-color: #e0f0e0;
+}
+
+.back-button i {
+  font-size: 24px;
+  vertical-align: middle;
+}
   
   /* Formulário de busca */
   .search-form {
@@ -175,7 +199,7 @@
     transform: translateY(-50%);
     width: 4px;
     height: 0;
-    background-color: var(--primary-color);
+    
     border-radius: 0 4px 4px 0;
     transition: var(--transition);
   }
@@ -186,7 +210,7 @@
   }
   
   .sidebar nav button[aria-selected="true"] {
-    background-color: var(--primary-light);
+      background-color: var(--bg-hover);
     color: var(--primary-dark);
     font-weight: 600;
   }
@@ -248,7 +272,7 @@
   
   .help-card {
     background-color: var(--bg-primary);
-    border: 1px solid var(--border-color);
+    
     border-radius: var(--radius-lg);
     overflow: hidden;
     transition: var(--transition);
@@ -257,11 +281,24 @@
     box-shadow: var(--shadow-sm);
   }
   
-  .help-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--primary-color);
-  }
+ /* Estilos para os ícones */
+    .card-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 120px;
+      background-color: #f0f9ff;
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .card-icon svg {
+      width: 64px;
+      height: 64px;
+      color: #2c5aa0;
+    }
+    
+    /* Estilos existentes mantidos */
+   
   
   .card-image {
     width: 100%;
@@ -285,7 +322,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    flex: 1;
+    
   }
   
   .card-content h3 {
@@ -299,7 +336,9 @@
     font-size: 0.95rem;
     color: var(--text-secondary);
     line-height: 1.6;
-    flex: 1;
+    flex: unset;
+    margin-bottom: 0.75rem;
+
   }
   
   .card-link {
@@ -315,9 +354,9 @@
   }
   
   .card-link::after {
-    content: '→';
+    
     font-size: 1.25rem;
-    transition: var(--transition);
+    
   }
   
   .card-link:hover {
@@ -328,6 +367,95 @@
   .card-link:hover::after {
     transform: translateX(4px);
   }
+
+  /* Caixa extra que aparece ao clicar em "Saiba mais" */
+.info-extra {
+  margin-top: 0.5rem;
+  max-height: 0;
+  overflow: hidden;
+   transition: max-height 0.32s cubic-bezier(.4,0,.2,1), opacity 0.24s ease, padding 0.24s ease;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;;
+  padding: 1rem 1.25rem;
+  background-color: #f0f0f0; /* leve tom para diferenciar, combine com suas variáveis se quiser */
+  
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-sm);
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-size: 0.95rem;
+
+  /* animação de abertura (altura) */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.32s cubic-bezier(.4,0,.2,1), opacity 0.24s ease, padding 0.24s ease;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Quando estiver visível (removendo hidden no JS) */
+.info-extra.show {
+ max-height: 500px; /* suficiente para o texto */
+  opacity: 1;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  
+  border: 2px solid var(--primary-color); /* borda mais visível */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12); /* sombra mais evidente */
+
+}
+
+
+
+/* Permite o texto fluir e quebrar linhas normalmente */
+.info-extra p {
+  margin: 0;
+  
+}
+
+/* Ajuste visual do button (mantendo seu visual de link) */
+.card-link.toggle-more {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.95rem;
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  transition: var(--transition);
+  margin-top: 0.5rem;
+  flex-shrink: 0;
+}
+
+.card-link.toggle-more:hover {
+  color: var(--primary-dark);
+  gap: 0.75rem;
+}
+
+/* Opcional: ícone de chevron girando indicando aberto/fechado */
+.card-link.toggle-more::after {
+  display: inline-block;
+  transform: rotate(0deg);
+  transition: transform 0.25s ease;
+  font-size: 0.8rem;
+  margin-left: 6px;
+}
+
+.card-link.toggle-more[aria-expanded="true"] {
+  color: var(--primary-dark);
+  font-weight: 600;
+}
+
+.card-link.toggle-more[aria-expanded="true"]::after {
+  transform: rotate(90deg);
+  color: var(--primary-dark);
+}
+
   
   /* Responsividade para tablets */
   @media (max-width: 1024px) {

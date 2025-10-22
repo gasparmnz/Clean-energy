@@ -17,6 +17,29 @@
     font-size: 2rem;
     color: var(--accent);
   }
+
+      .back-button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  color: #555;
+  transition: color 0.2s ease;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.back-button:hover {
+  color: #28a745;
+  background-color: #e0f0e0;
+}
+
+.back-button i {
+  font-size: 24px;
+  vertical-align: middle;
+}
   
   /* Active State na Sidebar */
   .sidebar-nav a.active {
@@ -68,10 +91,7 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   
-  .summary-card-user:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-  }
+  
   
   .card-content {
     display: flex;

@@ -39,28 +39,28 @@
     }
 
     .back-button {
-      background: #ffffff;
-      border: 2px solid var(--border-color);
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      flex-shrink: 0;
-    }
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  color: #555;
+  transition: color 0.2s ease;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
 
-    .back-button:hover {
-      background: #f3f4f6;
-      border-color: var(--accent);
-    }
+.back-button:hover {
+  color: #28a745;
+  background-color: #e0f0e0;
+}
 
-    .back-button i {
-      font-size: 1.5rem;
-      color: var(--text-color);
-    }
+.back-button i {
+  font-size: 24px;
+  vertical-align: middle;
+}
+
 
     .header-content h1 {
       font-size: 2rem;
@@ -73,6 +73,7 @@
       font-size: 1rem;
       color: #6b7280;
       font-weight: 400;
+      
     }
 
     /* User Profile Card */
@@ -302,9 +303,7 @@
       transition: transform 0.2s;
     }
 
-    .stat-card:hover {
-      transform: translateY(-3px);
-    }
+    
 
     .stat-icon {
       font-size: 2rem;
@@ -341,10 +340,7 @@
       transition: transform 0.2s;
     }
 
-    .review-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
+   
 
     .review-header {
       display: flex;
@@ -533,10 +529,7 @@
       transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
+    
 
     .product-image {
       width: 100%;
