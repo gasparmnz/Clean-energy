@@ -80,6 +80,7 @@ body {
     margin-top: 87px; /* distância do header */
     width: calc(100% - 250px); /* ocupa o resto da tela */
     box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 .page-title {
     font-size: 2.2rem;
@@ -87,6 +88,7 @@ body {
     text-align: center;
     margin-bottom: 20px;
     font-weight: 700;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* Seções */
@@ -120,6 +122,7 @@ body {
     text-align: center;
     box-shadow: 0 4px 10px var(--shadow-medium);
     transition: transform 0.2s ease-in-out, background-color 0.2s ease;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 
@@ -127,16 +130,19 @@ body {
 .summary-card i {
     font-size: 3rem;
     margin-bottom: 10px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .summary-card h3 {
     font-size: 1.2rem;
     margin-bottom: 5px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .summary-card p {
     font-size: 1.8rem;
     font-weight: 700;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* Tabelas de Transações */
@@ -149,6 +155,7 @@ body {
     width: 100%;
     border-collapse: collapse;
     min-width: 700px; /* Garante que a tabela não fique muito estreita em telas pequenas */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .transactions-table th,
@@ -179,19 +186,23 @@ body {
     font-weight: 600;
     color: #fff;
     text-align: center;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .status-concluido {
     background-color: #28a745; /* Verde */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .status-pendente {
     background-color: #ffc107; /* Amarelo */
     color: #333;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .status-andamento {
     background-color: #17a2b8; /* Azul */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 /* Botões de Ação */
