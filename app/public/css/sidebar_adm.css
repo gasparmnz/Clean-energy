@@ -24,7 +24,7 @@
     background-color: var(--sidebar-bg);
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
     min-width: 220px;
-    z-index: 100;
+    
     overflow-y: auto; /* Permite scroll se necessário */
 }
 
@@ -43,6 +43,7 @@
     align-items: center;
     gap: 6px;
     margin-bottom: 20px;
+    
 }
 
 .user-info .avatar {
@@ -120,7 +121,7 @@
         background-color: #fff;
         border-top: 2px solid var(--accent);
         box-shadow: 0 -6px 18px rgba(0,0,0,0.06);
-        z-index: 1000;
+        
     }
 
     .admin-main {

@@ -82,9 +82,7 @@ main {
   min-height: 400px;
 }
 
-.produto-card:hover {
-  transform: translateY(-5px);
-}
+
 
 .produto-card figure img {
   width: 100%;

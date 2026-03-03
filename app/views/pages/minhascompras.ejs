@@ -27,7 +27,7 @@
           <a class="nav-link active" id="pendentesTab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-controls="pendentes" aria-selected="true">Pendentes</a>
         </li>
         <li class="nav-item" role="presentation">
-          <a class="nav-link" id="emAndamentoTab" data-bs-toggle="tab" href="#emAndamento" role="tab" aria-controls="emAndamento" aria-selected="false">Em andamento</a>
+          <a class="nav-link" id="emAndamentoTab" data-bs-toggle="tab" href="#emAndamento" role="tab" aria-controls="emAndamento" aria-selected="false">Em trânsito</a>
         </li>   
         <li class="nav-item" role="presentation">
           <a class="nav-link" id="concluidosTab" data-bs-toggle="tab" href="#concluidos" role="tab" aria-controls="concluidos" aria-selected="false">Concluídos</a>
@@ -51,7 +51,7 @@
                 <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
                 <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
               </section>
-              <p class="andamento">Em andamento</p>
+             <button class="confirmar-coleta">Confirmar Coleta</button>
             </article>
 
             <article class="produto-card">
@@ -67,7 +67,7 @@
                 <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
                 <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
               </section>
-              <p class="andamento">Em andamento</p>
+             <button class="confirmar-coleta">Confirmar Coleta</button>
             </article>
           </section>
         </section>
@@ -320,6 +320,26 @@
     </section>
   </section>
 
+  <!-- MODAL CONFIRMAR COLETA -->
+<section class="modal fade" id="coletaModal" tabindex="-1" aria-labelledby="coletaModalLabel" aria-hidden="true">
+  <section class="modal-dialog modal-dialog-centered">
+    <section class="modal-content">
+      <header class="modal-header">
+        <h5 class="modal-title" id="coletaModalLabel">Confirmar Coleta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </header>
+      <section class="modal-body">
+        <p>Você confirma que realizou a coleta deste produto?</p>
+      </section>
+      <section class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+        <button type="button" class="btn btn-success" id="confirmarColetaBtn">Sim, confirmar</button>
+      </section>
+    </section>
+  </section>
+</section>
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
   let cardParaCancelar = null;
@@ -542,19 +562,19 @@
     mensagemErro.textContent = '';
 
     if (!estrelaSelecionada && comentario === '') {
-      mensagemErro.textContent = '⚠️ Por favor, selecione uma nota e escreva um comentário.';
+      mensagemErro.textContent = ' Por favor, selecione uma nota e escreva um comentário.';
       mensagemErro.style.display = 'block';
       return;
     }
 
     if (!estrelaSelecionada) {
-      mensagemErro.textContent = '⚠️ Por favor, selecione uma nota.';
+      mensagemErro.textContent = ' Por favor, selecione uma nota.';
       mensagemErro.style.display = 'block';
       return;
     }
 
     if (comentario === '') {
-      mensagemErro.textContent = '⚠️ Por favor, escreva um comentário.';
+      mensagemErro.textContent = ' Por favor, escreva um comentário.';
       mensagemErro.style.display = 'block';
       return;
     }
@@ -595,6 +615,71 @@
       });
     });
   });
+
+ // ---------- Confirmação de Coleta ----------
+let cardParaConfirmarColeta = null;
+const coletaModal = new bootstrap.Modal(document.getElementById('coletaModal'));
+
+function confirmarColetaHandler() {
+  cardParaConfirmarColeta = this.closest('.produto-card');
+  coletaModal.show();
+}
+
+document.querySelectorAll('.confirmar-coleta').forEach(btn => {
+  btn.addEventListener('click', confirmarColetaHandler);
+});
+
+document.getElementById('confirmarColetaBtn').addEventListener('click', function() {
+  if (cardParaConfirmarColeta) {
+    // Clona o card para manter a estrutura original
+    const cardClone = cardParaConfirmarColeta.cloneNode(true);
+    
+    // Remove o botão "Confirmar Coleta"
+    const confirmarBtn = cardClone.querySelector('.confirmar-coleta');
+    if (confirmarBtn) {
+      confirmarBtn.remove();
+    }
+    
+    // Remove o status de andamento se existir
+    const statusAndamento = cardClone.querySelector('.andamento');
+    if (statusAndamento) {
+      statusAndamento.remove();
+    }
+    
+    // Remove os botões de ação antigos
+    const acoesAntigas = cardClone.querySelector('.acoes');
+    if (acoesAntigas) {
+      acoesAntigas.innerHTML = '';
+    }
+    
+    // Adiciona os botões de "Concluídos"
+    const acoes = cardClone.querySelector('.acoes');
+    if (acoes) {
+      acoes.innerHTML = `
+        <button class="btn btn-success btn-sm btn-avaliar">Avaliar</button>
+        <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
+      `;
+    }
+    
+    // Adiciona o status "Concluído"
+    const statusConcluido = document.createElement('p');
+    statusConcluido.classList.add('concluido');
+    statusConcluido.textContent = 'Concluído';
+    cardClone.appendChild(statusConcluido);
+    
+    // Adiciona os event listeners aos novos botões
+    cardClone.querySelectorAll('.btn-detalhes').forEach(b => b.addEventListener('click', detalhesHandler));
+    cardClone.querySelectorAll('.btn-avaliar').forEach(b => b.addEventListener('click', avaliarHandler));
+    
+    // Adiciona o card à aba "Concluídos"
+    const concluidosGrid = document.querySelector('#concluidos .produtos-grid');
+    concluidosGrid.appendChild(cardClone);
+    
+    // Remove o card original da aba "Em andamento"
+    cardParaConfirmarColeta.remove();
+  }
+  coletaModal.hide();
+});
 
   document.querySelectorAll('.produtos-grid').forEach(grid => observer.observe(grid, { childList: true }));
 </script>
