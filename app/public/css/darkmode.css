@@ -1,0 +1,12 @@
+body.dark-mode{
+  background-color:#121212;
+  color:white;
+}
+
+body.dark-mode header{
+  background:#1e1e1e;
+}
+
+.darkmode.ativo{
+  filter: brightness(0) invert(1);
+}
