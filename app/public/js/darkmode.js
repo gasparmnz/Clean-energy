@@ -8,7 +8,7 @@ function ativarDarkMode(){
 
 function desativarDarkMode(){
     document.body.classList.remove("dark-mode");
-    icon.src="/imagem/lua.png";
+    icon.src="/imagem/darkmode.png";
 }
 
 if(localStorage.getItem("darkmode") === "ativo"){
