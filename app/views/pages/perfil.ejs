@@ -13,7 +13,7 @@
   <%- include('../partial/header1.ejs') %>
 
     <main>
-      <!-- Sidebar -->
+      
       <%- include('../partial/sidebar.ejs') %>
 
 
@@ -25,38 +25,38 @@
             </button>
           </nav>
 
-          <section class="perfil-form">
-            <h2>Meu Perfil</h2>
+            <section class="perfil-form">
+              <h2>Meu Perfil</h2>
 
-            <!-- 🔹 ÁREA QUE MOSTRA OS DADOS -->
-            <section id="perfilVisualizacao">
-              <p><strong>Nome/Empresa:</strong> <span id="nomeDisplay">Usuário</span></p>
-              <p><strong>Email:</strong> <span id="emailDisplay">usuario@gmail.com</span></p>
-              <p><strong>Telefone:</strong> <span id="telefoneDisplay">*********19</span></p>
-              <p><strong>CPF/CNPJ:</strong> <span id="cpfDisplay">***.***.*18-70 / **.***.***/0001-42</span></p>
+              
+              <section id="perfilVisualizacao">
+                <p><strong>Nome/Empresa:</strong> <span id="nomeDisplay">Usuário</span></p>
+                <p><strong>Email:</strong> <span id="emailDisplay">usuario@gmail.com</span></p>
+                <p><strong>Telefone:</strong> <span id="telefoneDisplay">*********19</span></p>
+                <p><strong>CPF/CNPJ:</strong> <span id="cpfDisplay">***.***.*18-70 / **.***.***/0001-42</span></p>
 
-              <button id="btnEditar">Editar perfil</button>
-            </section>
+                <button id="btnEditar">Editar perfil</button>
+              </section>
 
-            <!-- 🔹 BLOCO DE EDIÇÃO (começa escondido) -->
-            <section id="blocoEdicao" style="display:none; margin-top:10px;">
-              <form id="formEdicao">
-                <label>NOME/EMPRESA:</label>
-                <input type="text" id="nomeInput">
+              
+              <section id="blocoEdicao" style="display:none; margin-top:10px;">
+                <form id="formEdicao">
+                  <label>NOME/EMPRESA:</label>
+                  <input type="text" id="nomeInput">
 
-                <label>EMAIL:</label>
-                <input type="email" id="emailInput">
+                  <label>EMAIL:</label>
+                  <input type="email" id="emailInput">
 
-                <label>TELEFONE:</label>
-                <input type="tel" id="telefoneInput">
+                  <label>TELEFONE:</label>
+                  <input type="tel" id="telefoneInput">
 
-                <label>CPF/CNPJ:</label>
-                <input type="text" id="cpfInput">
+                  <label>CPF/CNPJ:</label>
+                  <input type="text" id="cpfInput">
 
-                <button type="submit">Salvar</button>
-                <button type="button" id="btnCancelar">Cancelar</button>
-              </form>
-            </section>
+                  <button type="submit">Salvar</button>
+                  <button type="button" id="btnCancelar">Cancelar</button>
+                </form>
+              </section>
           </section>
           <script>
             const btnEditar = document.getElementById("btnEditar");
@@ -65,18 +65,21 @@
             const btnCancelar = document.getElementById("btnCancelar");
             const formEdicao = document.getElementById("formEdicao");
 
+            
             const nomeInput = document.getElementById("nomeInput");
             const emailInput = document.getElementById("emailInput");
             const telefoneInput = document.getElementById("telefoneInput");
             const cpfInput = document.getElementById("cpfInput");
 
+        
             const nomeDisplay = document.getElementById("nomeDisplay");
             const emailDisplay = document.getElementById("emailDisplay");
             const telefoneDisplay = document.getElementById("telefoneDisplay");
             const cpfDisplay = document.getElementById("cpfDisplay");
 
-
+            
             btnEditar.addEventListener("click", () => {
+              
               nomeInput.value = nomeDisplay.textContent;
               emailInput.value = emailDisplay.textContent;
               telefoneInput.value = telefoneDisplay.textContent;
@@ -91,134 +94,8 @@
               perfilVisualizacao.style.display = "block";
             });
 
-            telefoneInput.addEventListener("input", () => {
-              let v = telefoneInput.value.replace(/\D/g, "");
-
-              if (v.length > 11) v = v.slice(0, 11);
-
-              v = v.replace(/^(\d{2})(\d)/g, "($1) $2");
-              v = v.replace(/(\d{5})(\d)/, "$1-$2");
-
-              telefoneInput.value = v;
-            });
-
-            cpfInput.addEventListener("input", () => {
-              let v = cpfInput.value.replace(/\D/g, "");
-
-              if (v.length <= 11) {
-
-                v = v.replace(/(\d{3})(\d)/, "$1.$2");
-                v = v.replace(/(\d{3})(\d)/, "$1.$2");
-                v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-              } else {
-  
-                v = v.replace(/^(\d{2})(\d)/, "$1.$2");
-                v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
-                v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
-                v = v.replace(/(\d{4})(\d)/, "$1-$2");
-              }
-
-              cpfInput.value = v;
-            });
-
-            function erro(msg) {
-              alert(msg);
-            }
-
-            function validaNome() {
-              const nome = nomeInput.value.trim();
-              const regex = /^[A-Za-zÀ-ÿ\s]{3,}$/;
-
-              if (nome === "") {
-                erro("Nome é obrigatório");
-                return false;
-              }
-
-              if (!regex.test(nome)) {
-                erro("Nome deve conter apenas letras e mínimo 3 caracteres");
-                return false;
-              }
-
-              return true;
-            }
-
-            function validaEmail() {
-              const email = emailInput.value.trim();
-              const regex = /[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-              if (email === "") {
-                erro("Email é obrigatório");
-                return false;
-              }
-
-              if (!regex.test(email)) {
-                erro("Email inválido");
-                return false;
-              }
-
-              return true;
-            }
-
-            function validaTelefone() {
-              const tel = telefoneInput.value.replace(/\D/g, "");
-
-              if (tel.length < 10) {
-                erro("Telefone inválido");
-                return false;
-              }
-
-              return true;
-            }
-
-            function isValidCPF(cpf) {
-              if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
-
-              let sum = 0;
-              for (let i = 0; i < 9; i++)
-                sum += parseInt(cpf.charAt(i)) * (10 - i);
-
-              let r = (sum * 10) % 11;
-              if (r === 10) r = 0;
-              if (r !== parseInt(cpf.charAt(9))) return false;
-
-              sum = 0;
-              for (let i = 0; i < 10; i++)
-                sum += parseInt(cpf.charAt(i)) * (11 - i);
-
-              r = (sum * 10) % 11;
-              if (r === 10) r = 0;
-              if (r !== parseInt(cpf.charAt(10))) return false;
-
-              return true;
-            }
-
-            function validaCpfCnpj() {
-              const v = cpfInput.value.replace(/\D/g, "");
-
-              if (v.length === 11) {
-                if (!isValidCPF(v)) {
-                  erro("CPF inválido");
-                  return false;
-                }
-              }
-              else if (v.length !== 14) {
-                erro("CPF/CNPJ inválido");
-                return false;
-              }
-
-              return true;
-            }
-
-
             formEdicao.addEventListener("submit", (e) => {
               e.preventDefault();
-
-              if (
-                !validaNome() ||
-                !validaEmail() ||
-                !validaTelefone() ||
-                !validaCpfCnpj()
-              ) return;
 
               nomeDisplay.textContent = nomeInput.value;
               emailDisplay.textContent = emailInput.value;
@@ -227,8 +104,6 @@
 
               blocoEdicao.style.display = "none";
               perfilVisualizacao.style.display = "block";
-
-              alert("Dados atualizados com sucesso!");
             });
           </script>
 
