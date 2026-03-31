@@ -20,9 +20,9 @@ body {
     z-index: 100;
     background-color: #488D6A;
     gap: 15px;
-     border-bottom: none;
-  outline: none;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    border-bottom: none;
+    outline: none;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
  
 .header::before {
@@ -38,37 +38,43 @@ body {
 }
  
 .header::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: #488D6A;
-  width: 100%;
-  height: 100%;
-  z-index: -2;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #488D6A;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
 }
  
- .header:hover::after {
-     left: 100%;
-     }
+.header:hover::after {
+    left: 100%;
+}
  
 .logo {
     display: flex;
-    align-items: center;  /* centraliza a imagem verticalmente */
-    }
+    align-items: center;
+    flex-shrink: 0;
+    z-index: 10;
+}
       
 .logo img {
-    height: 55px;  /* aumenta a logo */
+    height: 55px;
     width: auto;
+    max-width: 200px;
 }
  
 .navbar {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-right: 30px;
+    gap: 2rem;
     z-index: 1;
-    background-color: #488D6A;
+    background-color: transparent;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
  
@@ -76,10 +82,47 @@ body {
     font-size: 1rem;
     color: #fff;
     text-decoration: none;
-    font-weight: 500;
-    margin-left: 1.5rem;
     font-weight: 550;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+.navbar a:hover {
+    color: #f0f0f0;
+}
+ 
+/* --- ESTILO DO BOTÃO TORNE-SE VENDEDOR --- */
+.btn-vendedor {
+    background-color: #fff;
+    color: #488D6A !important;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    border: 2px solid #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    text-transform: uppercase;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.btn-vendedor:hover {
+    background-color: transparent;
+    color: #fff !important;
+    border-color: #fff;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.btn-vendedor:active {
+    transform: scale(0.98);
 }
  
 #check {
@@ -93,18 +136,19 @@ body {
     color: #fff;
     cursor: pointer;
     display: none;
+    z-index: 101;
 }
  
 .login-container {
     display: flex;
     align-items: center;
     color: white;
-    font-weight: 500;
-    gap: 0.8rem;
+    font-weight: 550;
+    gap: 1.5rem;
     margin-left: 1rem;
     padding-left: 1rem;
-    font-weight: 550;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    z-index: 10;
 }
  
 .login-container a {
@@ -115,13 +159,25 @@ body {
  
 .login-container a:hover {
     color: white;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.login-links {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
 }
  
 .carrinho {
     height: 28px;
     width: 28px;
-    filter: invert(100%) sepia(100%) saturate(500%) hue-rotate(180deg);;
+    filter: invert(100%) sepia(100%) saturate(500%) hue-rotate(180deg);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.carrinho:hover {
+    transform: scale(1.1);
 }
  
 #menu-icon {
@@ -140,64 +196,71 @@ body {
     display: block;
 }
  
-
 .dropdown {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: inline-block;
 }
+
 .dropdown input {
-  display: none;
+    display: none;
 }
 
 .dropdown label img.avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  cursor: pointer;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 .dropdown-content {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
-  border-radius: 5px;
-  z-index: 9999;
-  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    z-index: 9999;
+    min-width: 140px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
 .dropdown-content a {
-  display: block;
-  padding: 10px;
-  text-decoration: none;
-  color: black;
-  font-weight: 550;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: block;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: black;
+    font-weight: 550;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    transition: background 0.3s, color 0.3s;
 }
 
 .dropdown-content a:hover {
-  background: #206744;
-  transition: background 0.3s, transform 0.2s;
-  
+    background: #206744;
+    color: white;
 }
+
 .dropdown-content.show {
-  display: block;
+    display: block;
 }
 
 .avatar {
-  width: 38px;   
-  height: 38px;
-  border-radius: 50%; 
-  cursor: pointer;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
+.avatar:hover {
+    transform: scale(1.1);
+}
 
 .dropdown input:checked ~ .dropdown-content {
-  display: block;
+    display: block;
 }
 
+/* RESPONSIVIDADE */
 
 @media (max-width: 1200px) {
     .header {
@@ -205,58 +268,83 @@ body {
     }
 }
 
-/* 👇 Corrige o problema de 780px (antes do mobile) */
+@media (max-width: 1024px) {
+    .navbar a {
+        font-size: 0.9rem;
+    }
+    
+    .btn-vendedor {
+        padding: 8px 16px;
+        font-size: 0.75rem;
+    }
+    
+    .login-container {
+        gap: 1rem;
+    }
+}
+
+/* 👇 Corrige o problema de 932px (antes do mobile) */
 @media (max-width: 932px) {
-  /* Oculta o texto LOGIN | CADASTRE-SE */
-  .login-links {
-    display: none;
-  }
+    /* Oculta o texto LOGIN | CADASTRE-SE e o botão de vendedor */
+    .login-links {
+        display: none;
+    }
 
-  /* Exibe o avatar/dropdown mais cedo */
-  .dropdown {
-    display: block;
-  }
+    .btn-vendedor {
+        display: none;
+    }
 
-  /* Diminui o espaçamento do menu */
-  .navbar a {
-    margin-left: 1rem;
-    font-size: 0.95rem;
-  }
+    /* Exibe o avatar/dropdown mais cedo */
+    .dropdown {
+        display: block;
+    }
 
-  /* Ajusta leve recuo do carrinho */
-  .carrinho {
-    height: 26px;
-    width: 26px;
-  }
+    /* Diminui o espaçamento do menu */
+    .navbar a {
+        font-size: 0.95rem;
+    }
 
-  .login-container {
-    gap: 0.6rem;
-  }
+    /* Ajusta leve recuo do carrinho */
+    .carrinho {
+        height: 26px;
+        width: 26px;
+    }
+
+    .login-container {
+        gap: 0.8rem;
+    }
+    
+    .navbar {
+        gap: 1.5rem;
+    }
 }
 
- 
 @media (max-width: 768px) {
-     .login-links {
-    display: none; 
-  }
+    .login-links {
+        display: none;
+    }
 
-  .dropdown {
-    display: block; 
-  
-}
+    .btn-vendedor {
+        display: none;
+    }
+
+    .dropdown {
+        display: block;
+    }
+
     .icons {
         display: inline-flex;
     }
- 
+
     .navbar {
         position: absolute;
         top: 100%;
         left: 0;
+        right: 0;
         width: 100%;
         height: 0;
         background: rgba(0, 0, 0, 0.1);
         backdrop-filter: none;
-       
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -265,10 +353,10 @@ body {
         transition: .3s ease;
         gap: 0.8rem;
         background-color: #488D6A;
-        
         z-index: 1;
+        transform: none;
     }
- 
+
     .navbar a {
         order: 3;
         display: block;
@@ -279,33 +367,24 @@ body {
         transition: .3s ease;
         margin: 0;
     }
- 
+
     #check:checked ~ .navbar {
         height: 12rem;
     }
- 
+
     #check:checked ~ .navbar a {
         transform: translateY(0);
         opacity: 1;
         transition-delay: calc(.1s * var(--i));
     }
- 
-    .login-links {
-        display: none;
-    }
- 
+
     .login-container {
         font-size: 0.9rem;
         order: 2;
         display: flex;
         padding: 0;
-        margin-left: auto;  
+        margin-left: auto;
         padding-right: 1rem;
-         transform: translateX(-20px);
+        transform: translateX(-20px);
     }
- 
-    
-   
 }
-
- 
