@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,48 +8,113 @@
   <link rel="stylesheet" href="/css/perfil.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
+
 <body>
   <%- include('../partial/header1.ejs') %>
 
-  <main>
-    <!-- Sidebar -->
-    <%- include('../partial/sidebar.ejs') %>
+    <main>
+      
+      <%- include('../partial/sidebar.ejs') %>
 
 
-    <section class="content">
-      <nav class="back-navigation" aria-label="Navegação de retorno">
-    <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
-      <i class='bx bx-arrow-back'></i>
-      <span>Voltar</span>
-    </button>
-  </nav>
-             
-      <section class="perfil-form">
-        <h2>Meu Perfil</h2><br>
+        <section class="content">
+          <nav class="back-navigation" aria-label="Navegação de retorno">
+            <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+              <i class='bx bx-arrow-back'></i>
+              <span>Voltar</span>
+            </button>
+          </nav>
+
+            <section class="perfil-form">
+              <h2>Meu Perfil</h2>
+
+              
+              <section id="perfilVisualizacao">
+                <p><strong>Nome/Empresa:</strong> <span id="nomeDisplay">Usuário</span></p>
+                <p><strong>Email:</strong> <span id="emailDisplay">usuario@gmail.com</span></p>
+                <p><strong>Telefone:</strong> <span id="telefoneDisplay">*********19</span></p>
+                <p><strong>CPF/CNPJ:</strong> <span id="cpfDisplay">***.***.*18-70 / **.***.***/0001-42</span></p>
+
+                <button id="btnEditar">Editar perfil</button>
+              </section>
+
+              
+              <section id="blocoEdicao" style="display:none; margin-top:10px;">
+                <form id="formEdicao">
+                  <label>NOME/EMPRESA:</label>
+                  <input type="text" id="nomeInput">
+
+                  <label>EMAIL:</label>
+                  <input type="email" id="emailInput">
+
+                  <label>TELEFONE:</label>
+                  <input type="tel" id="telefoneInput">
+
+                  <label>CPF/CNPJ:</label>
+                  <input type="text" id="cpfInput">
+
+                  <button type="submit">Salvar</button>
+                  <button type="button" id="btnCancelar">Cancelar</button>
+                </form>
+              </section>
+          </section>
+          <script>
+            const btnEditar = document.getElementById("btnEditar");
+            const blocoEdicao = document.getElementById("blocoEdicao");
+            const perfilVisualizacao = document.getElementById("perfilVisualizacao");
+            const btnCancelar = document.getElementById("btnCancelar");
+            const formEdicao = document.getElementById("formEdicao");
+
+            
+            const nomeInput = document.getElementById("nomeInput");
+            const emailInput = document.getElementById("emailInput");
+            const telefoneInput = document.getElementById("telefoneInput");
+            const cpfInput = document.getElementById("cpfInput");
+
         
-        <form>
-        
-          <label for="nome">Nome/Empresa</label>
-          <input type="text" id="nome" name="nome" value="Usuário">
+            const nomeDisplay = document.getElementById("nomeDisplay");
+            const emailDisplay = document.getElementById("emailDisplay");
+            const telefoneDisplay = document.getElementById("telefoneDisplay");
+            const cpfDisplay = document.getElementById("cpfDisplay");
 
-          <label for="email">Email</label>
-          <input type="email" id="email" value="usu********@gmail.com">
+            
+            btnEditar.addEventListener("click", () => {
+              
+              nomeInput.value = nomeDisplay.textContent;
+              emailInput.value = emailDisplay.textContent;
+              telefoneInput.value = telefoneDisplay.textContent;
+              cpfInput.value = cpfDisplay.textContent;
 
-          <label for="telefone">Número de telefone</label>
-          <input type="tel" id="telefone" value="*********19">
+              perfilVisualizacao.style.display = "none";
+              blocoEdicao.style.display = "block";
+            });
 
-          <label for="cpf">CPF/CNPJ</label>
-          <output id="cpf">***.***.*18-70 / **.***.***/0001-42</output>
+            btnCancelar.addEventListener("click", () => {
+              blocoEdicao.style.display = "none";
+              perfilVisualizacao.style.display = "block";
+            });
 
-          <button type="submit">Salvar</button>
-        </form>
-      </section>
+            formEdicao.addEventListener("submit", (e) => {
+              e.preventDefault();
 
-    </section>
-  </main>
+              nomeDisplay.textContent = nomeInput.value;
+              emailDisplay.textContent = emailInput.value;
+              telefoneDisplay.textContent = telefoneInput.value;
+              cpfDisplay.textContent = cpfInput.value;
 
-  <script src="/js/script.js"></script>
-  <%- include('../partial/footer.ejs') %>
-  <script src="/js/darkmode.js"></script>
+              blocoEdicao.style.display = "none";
+              perfilVisualizacao.style.display = "block";
+            });
+          </script>
+
+          </form>
+        </section>
+
+        </section>
+    </main>
+
+    <script src="/js/script.js"></script>
+    <%- include('../partial/footer.ejs') %>
 </body>
+
 </html>
