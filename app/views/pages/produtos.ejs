@@ -6,6 +6,18 @@
   <title>Biomassa Hub - Produtos</title>
   <link rel="stylesheet" href="/css/produtos.css" />
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imagem/ico.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/imagem/ico.png">
+  <meta property="og:locale" contente="pt_BR">
+ 
+<meta property="og:title" content="Clean Energy" />
+<meta property="og:description" content="Bobobobobobobobobobobobobobobobobobobobbobobobobobobobobobobo" />
+<meta property="og:image" content="" />
+<meta property="og:url" content="https://clean-energy.onrender.com/"/>
+<meta property="og:type" content="website" />
+ 
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" contente="630">
 </head>
 <body>
   <%- include('../partial/header.ejs') %>
@@ -67,14 +79,14 @@
       <ul class="produtos-scroll">
   <% produtos.forEach(produto => { %>
     <li>
-      <article>
+      <article class="produto-card" data-id="<%= produto.id %>">
         <figure>
           <a href="/item/<%= produto.id %>">
             <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
           </a>
           <figcaption>
             <h3><%= produto.nome %></h3>
-            <p>R$ <%= produto.preco %>,00 / tonelada</p>
+            <p>R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %> / tonelada</p>
             <p>Disponível em <%= produto.local %></p>
             <a href="/item/<%= produto.id %>">Ver detalhes</a>
           </figcaption>
@@ -86,122 +98,9 @@
 
     </section>
 
-    <section>
-      <h2>Matéria-prima disponível no Rio de Janeiro</h2>
-      <ul class="produtos-scroll">
-        <% produtos2.forEach(produto => { %>
-    <li>
-      <article>
-        <figure>
-          <a href="/item/<%= produto.id %>">
-            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
-          </a>
-          <figcaption>
-            <h3><%= produto.nome %></h3>
-            <p>R$ <%= produto.preco %>,00 / tonelada</p>
-            <p>Disponível em <%= produto.local %></p>
-            <a href="/item/<%= produto.id %>">Ver detalhes</a>
-          </figcaption>
-        </figure>
-      </article>
-    </li>
-  <% }) %>
-      </ul>
-    </section>
 
-    <section>
-      <h2>Matéria-prima disponível em Curitiba</h2>
-      <ul class="produtos-scroll">
-        <% produtos3.forEach(produto => { %>
-    <li>
-      <article>
-        <figure>
-          <a href="/item/<%= produto.id %>">
-            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
-          </a>
-          <figcaption>
-            <h3><%= produto.nome %></h3>
-            <p>R$ <%= produto.preco %>,00 / tonelada</p>
-            <p>Disponível em <%= produto.local %></p>
-            <a href="/item/<%= produto.id %>">Ver detalhes</a>
-          </figcaption>
-        </figure>
-      </article>
-    </li>
-  <% }) %>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Matéria-prima disponível Florianópolis</h2>
-      <ul class="produtos-scroll">
-        <% produtos4.forEach(produto => { %>
-    <li>
-      <article>
-        <figure>
-          <a href="/item/<%= produto.id %>">
-            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
-          </a>
-          <figcaption>
-            <h3><%= produto.nome %></h3>
-            <p>R$ <%= produto.preco %>,00 / tonelada</p>
-            <p>Disponível em <%= produto.local %></p>
-            <a href="/item/<%= produto.id %>">Ver detalhes</a>
-          </figcaption>
-        </figure>
-      </article>
-    </li>
-  <% }) %>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Matéria-prima disponível em Salvador</h2>
-      <ul class="produtos-scroll">
-        <% produtos5.forEach(produto => { %>
-    <li>
-      <article>
-        <figure>
-          <a href="/item/<%= produto.id %>">
-            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
-          </a>
-          <figcaption>
-            <h3><%= produto.nome %></h3>
-            <p>R$ <%= produto.preco %>,00 / tonelada</p>
-            <p>Disponível em <%= produto.local %></p>
-            <a href="/item/<%= produto.id %>">Ver detalhes</a>
-          </figcaption>
-        </figure>
-      </article>
-    </li>
-  <% }) %>
-      </ul>
-    </section>
-
-    <section>
-      <h2>Matéria-prima disponível em Fortaleza</h2>
-      <ul class="produtos-scroll">
-        <% produtos6.forEach(produto => { %>
-    <li>
-      <article>
-        <figure>
-          <a href="/item/<%= produto.id %>">
-            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
-          </a>
-          <figcaption>
-            <h3><%= produto.nome %></h3>
-            <p>R$ <%= produto.preco %>,00 / tonelada</p>
-            <p>Disponível em <%= produto.local %></p>
-            <a href="/item/<%= produto.id %>">Ver detalhes</a>
-          </figcaption>
-        </figure>
-      </article>
-    </li>
-  <% }) %>
-      </ul>
-    </section>
   </main>
   <%- include('../partial/footer.ejs') %>
-  <script src="/js/darkmode.js"></script>
+  <script src="/js/produto-delete.js"></script>
 </body>
 </html>
