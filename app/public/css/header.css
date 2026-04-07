@@ -1,13 +1,14 @@
+/* --- ESTILOS GERAIS --- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
- 
+
 body {
     font-family: Arial, sans-serif;
 }
- 
+
 .header {
     position: fixed;
     top: 0;
@@ -24,7 +25,7 @@ body {
     outline: none;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
- 
+
 .header::before {
     content: '';
     position: absolute;
@@ -36,7 +37,7 @@ body {
     height: 100%;
     z-index: -1;
 }
- 
+
 .header::after {
     content: '';
     position: absolute;
@@ -47,24 +48,24 @@ body {
     height: 100%;
     z-index: -2;
 }
- 
+
 .header:hover::after {
     left: 100%;
 }
- 
+
 .logo {
     display: flex;
     align-items: center;
     flex-shrink: 0;
     z-index: 10;
 }
-      
+    
 .logo img {
     height: 55px;
     width: auto;
     max-width: 200px;
 }
- 
+
 .navbar {
     position: absolute;
     left: 50%;
@@ -77,7 +78,7 @@ body {
     background-color: transparent;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
- 
+
 .navbar a {
     font-size: 1rem;
     color: #fff;
@@ -91,7 +92,7 @@ body {
 .navbar a:hover {
     color: #f0f0f0;
 }
- 
+
 /* --- ESTILO DO BOTÃO TORNE-SE VENDEDOR --- */
 .btn-vendedor {
     background-color: #fff;
@@ -124,11 +125,11 @@ body {
 .btn-vendedor:active {
     transform: scale(0.98);
 }
- 
+
 #check {
     display: none;
 }
- 
+
 .icons {
     position: absolute;
     right: 4%;
@@ -138,7 +139,7 @@ body {
     display: none;
     z-index: 101;
 }
- 
+
 .login-container {
     display: flex;
     align-items: center;
@@ -150,13 +151,13 @@ body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     z-index: 10;
 }
- 
+
 .login-container a {
     color: white;
     text-decoration: none;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
- 
+
 .login-container a:hover {
     color: white;
 }
@@ -167,7 +168,7 @@ body {
     gap: 5px;
     white-space: nowrap;
 }
- 
+
 .carrinho {
     height: 28px;
     width: 28px;
@@ -179,23 +180,23 @@ body {
 .carrinho:hover {
     transform: scale(1.1);
 }
- 
+
 #menu-icon {
     display: block;
 }
- 
+
 #close-icon {
     display: none;
 }
- 
+
 #check:checked ~ .icons #menu-icon {
     display: none;
 }
- 
+
 #check:checked ~ .icons #close-icon {
     display: block;
 }
- 
+
 .dropdown {
     position: relative;
     display: inline-block;
@@ -260,7 +261,12 @@ body {
     display: block;
 }
 
-/* RESPONSIVIDADE */
+/* --- RESPONSIVIDADE --- */
+
+/* Esconde o botão mobile por padrão */
+.btn-vendedor-mobile {
+    display: none;
+}
 
 @media (max-width: 1200px) {
     .header {
@@ -285,12 +291,9 @@ body {
 
 /* 👇 Corrige o problema de 932px (antes do mobile) */
 @media (max-width: 932px) {
-    /* Oculta o texto LOGIN | CADASTRE-SE e o botão de vendedor */
-    .login-links {
-        display: none;
-    }
-
-    .btn-vendedor {
+    /* Oculta o texto LOGIN | CADASTRE-SE e o botão de vendedor desktop */
+    .login-links,
+    .btn-vendedor-desktop {
         display: none;
     }
 
@@ -320,11 +323,8 @@ body {
 }
 
 @media (max-width: 768px) {
-    .login-links {
-        display: none;
-    }
-
-    .btn-vendedor {
+    .login-links,
+    .btn-vendedor-desktop {
         display: none;
     }
 
@@ -369,7 +369,7 @@ body {
     }
 
     #check:checked ~ .navbar {
-        height: 12rem;
+        height: 15rem; /* Aumentado para acomodar o botão */
     }
 
     #check:checked ~ .navbar a {
@@ -386,5 +386,22 @@ body {
         margin-left: auto;
         padding-right: 1rem;
         transform: translateX(-20px);
+    }
+
+    /* Exibe o botão mobile dentro do menu hambúrguer */
+    .btn-vendedor-mobile {
+        display: block;
+        margin-top: 1rem; /* Espaçamento para o botão */
+        order: 4; /* Garante que ele apareça depois dos outros links */
+        transform: translateY(-30px);
+        opacity: 0;
+        transition: .3s ease;
+        transition-delay: calc(.1s * var(--i));
+    }
+
+    #check:checked ~ .navbar .btn-vendedor-mobile {
+        transform: translateY(0);
+        opacity: 1;
+        transition-delay: calc(.1s * var(--i) + 0.3s); /* Atraso para aparecer depois dos links */
     }
 }

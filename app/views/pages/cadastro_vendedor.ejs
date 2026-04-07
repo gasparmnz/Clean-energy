@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro Vendedor - Biomassa Hub</title>
-  <link rel="stylesheet" href="/css/cadastro_vendedor.css">
+  <title>Cadastro Empresa - Biomassa Hub</title>
+  <link rel="stylesheet" href="/css/cadastro.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -38,8 +38,8 @@
     <!-- Formulário de Cadastro -->
     <section class="form-section">
       <header class="form-header">
-        <h2 class="form-title">Cadastro Vendedor</h2>
-        <p class="form-subtitle">Preencha os dados da sua Empresa</p>
+        <h2 class="form-title">Cadastrar empresa</h2>
+        <p class="form-subtitle">Libere a função de venda em poucos minutos!</p>
       </header>
 
       <!-- Formulário Empresa -->
@@ -57,7 +57,7 @@
           <section class="input-group">
             <label for="nome-empresa" class="input-label">
               <i class='bx bx-buildings'></i>
-              Nome da Empresa / Razão Social
+              Nome da Empresa
             </label>
             <input
               type="text"
@@ -65,10 +65,19 @@
               name="nome"
               class="form-input"
               placeholder="Digite o nome da empresa"
+              value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.nome : '' %>"
+              aria-describedby="nome-empresa-error nome-empresa-help"
               autocomplete="organization"
               required
             />
-            <small id="nome-empresa-help" class="input-help">Nome completo da organização</small>
+            <small id="nome-empresa-help" class="input-help">Nome jurídico ou fantasia</small>
+            <span id="nome-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.nome : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Nome válido
+            </span>
           </section>
 
           <!-- Campo CNPJ -->
@@ -83,13 +92,23 @@
               name="cnpj"
               class="form-input"
               placeholder="00.000.000/0000-00"
+              value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.cnpj : '' %>"
+              aria-describedby="cnpj-empresa-error cnpj-empresa-help"
+              autocomplete="off"
               maxlength="18"
               required
             />
             <small id="cnpj-empresa-help" class="input-help">Formato: 00.000.000/0000-00</small>
+            <span id="cnpj-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.cnpj : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              CNPJ válido
+            </span>
           </section>
 
-          <!-- Campo Email Corporativo -->
+          <!-- Campo Email -->
           <section class="input-group">
             <label for="email-empresa" class="input-label">
               <i class='bx bx-envelope'></i>
@@ -101,10 +120,19 @@
               name="email"
               class="form-input"
               placeholder="contato@empresa.com"
+              value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.email : '' %>"
+              aria-describedby="email-empresa-error email-empresa-help"
               autocomplete="email"
               required
             />
             <small id="email-empresa-help" class="input-help">E-mail principal da empresa</small>
+            <span id="email-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.email : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              E-mail válido
+            </span>
           </section>
 
           <!-- Campo Senha -->
@@ -120,6 +148,8 @@
                 name="senha"
                 class="form-input"
                 placeholder="Crie uma senha segura"
+                value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.senha : '' %>"
+                aria-describedby="senha-empresa-error senha-empresa-help"
                 autocomplete="new-password"
                 required
               />
@@ -128,6 +158,19 @@
               </button>
             </section>
             <small id="senha-empresa-help" class="input-help">Mínimo 8 caracteres, com letras e números</small>
+            <span id="senha-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.senha : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Senha segura
+            </span>
+            <section class="password-strength">
+              <section class="strength-bar">
+                <span class="strength-fill"></span>
+              </section>
+              <span class="strength-text">Força da senha</span>
+            </section>
           </section>
 
           <!-- Campo Confirmar Senha -->
@@ -143,6 +186,8 @@
                 name="confirmarSenha"
                 class="form-input"
                 placeholder="Digite a senha novamente"
+                value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.confirmarSenha : '' %>"
+                aria-describedby="confirmar-senha-empresa-error confirmar-senha-empresa-help"
                 autocomplete="new-password"
                 required
               />
@@ -150,12 +195,20 @@
                 <i class='bx bx-hide'></i>
               </button>
             </section>
+            <small id="confirmar-senha-empresa-help" class="input-help">Deve ser igual à senha anterior</small>
+            <span id="confirmar-senha-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.confirmarSenha : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Senhas coincidem
+            </span>
           </section>
         </fieldset>
 
         <button type="submit" class="submit-btn">
           <i class='bx bx-buildings'></i>
-          <span>Cadastrar Vendedor</span>
+          <span>Cadastrar Empresa</span>
           <i class='bx bx-loader-alt bx-spin loading-icon'></i>
         </button>
 
@@ -167,7 +220,7 @@
         </footer>
       </form>
     </section>
+    <script src="/js/cadastro-validation.js"></script>
   </main>
-  <script src="/js/cadastro-validation.js"></script>
 </body>
 </html>

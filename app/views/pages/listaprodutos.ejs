@@ -30,124 +30,35 @@
 
       <!-- Lista de produtos -->
       <section class="produtos-grid">
-
-        <!-- Produto 1 -->
-        <article class="produto-card">
-          <figure>
-            <img src="/imagem/cana.png" alt="Produto">
-          </figure>
-          <section class="produto-info">
-            <h3>Bagaço de Cana</h3>
-            <p class="endereco">Rua das Flores, 123 - São Paulo</p>
-            <p class="preco">R$ 1500,00</p>
-            <p class="quantidade">20 Tonelada(s)</p>
-          </section>
-          <section class="acoes">
-            <button class="btn btn-warning btn-sm">Editar</button>
-            
-           
-           <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
-          </section>
-        </article>
-
-        <!-- Exemplo de outro produto -->
-        <article class="produto-card">
-          <figure>
-            <img src="/imagem/serragem.png" alt="Produto">
-          </figure>
-          <section class="produto-info">
-            <h3>Serragem</h3>
-            <p class="endereco">Rua Joaquim dos Santos Andrade, 49 - São Paulo</p>
-            <p class="preco">R$ 250,00</p>
-            <p class="quantidade">1 Tonelada(s)</p>
-          </section>
-          <section class="acoes">
-            <button class="btn btn-warning btn-sm">Editar</button>
-            
-            
-            <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
-          </section>
-        </article>
-
-
-        <article class="produto-card">
-          <figure>
-            <img src="/imagem/palhademilho.png" alt="Produto">
-          </figure>
-          <section class="produto-info">
-            <h3>Palha de Milho</h3>
-            <p class="endereco">Rua Alcides Bezerra, 48 - São Paulo</p>
-            <p class="preco">R$ 440,00</p>
-            <p class="quantidade">2 Tonelada(s)</p>
-          </section>
-          <section class="acoes">
-            <button class="btn btn-warning btn-sm">Editar</button>
-            
-
-            <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
-          </section>
-        </article>
-
-
-        <article class="produto-card">
-          <figure>
-            <img src="/imagem/cascadearroz.png" alt="Produto">
-          </figure>
-          <section class="produto-info">
-            <h3>Casca de Arroz</h3>
-            <p class="endereco">Rua do Carmo, 81 - São Paulo</p>
-            <p class="preco">R$ 1275,00</p>
-            <p class="quantidade">1 Tonelada(s)</p>
-          </section>
-          <section class="acoes">
-            <button class="btn btn-warning btn-sm">Editar</button>
-            
-          
-            <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
-          </section>
-        </article>
-
-        <article class="produto-card">
-          <figure>
-            <img src="/imagem/lixo organico.png" alt="Produto">
-          </figure>
-          <section class="produto-info">
-            <h3>Lixo Orgânico</h3>
-            <p class="endereco">Rua Silveira Martins, 53 - São Paulo</p>
-            <p class="preco">R$ 900,00</p>
-            <p class="quantidade">2 Tonelada(s)</p>
-          </section>
-          <section class="acoes">
-            <button class="btn btn-warning btn-sm">Editar</button>
-            
-           
-           <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
-          </section>
-        </article>
-
-        <article class="produto-card">
-          <figure>
-            <img src="/imagem/pellets.png" alt="Produto">
-          </figure>
-          <section class="produto-info">
-            <h3>Pallets</h3>
-            <p class="endereco">Rua Vinícius de Morais - São Paulo</p>
-            <p class="preco">R$ 2000,00</p>
-            <p class="quantidade">2 Tonelada(s)</p>
-          </section>
-          <section class="acoes">
-            <button class="btn btn-warning btn-sm">Editar</button>
-            
-            
-           <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
-          </section>
-        </article>
-
+        <% if (produtos && produtos.length > 0) { %>
+          <% produtos.forEach(produto => { %>
+            <article class="produto-card" data-id="<%= produto.id %>">
+              <figure>
+                <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>" onerror="this.src='/imagem/sem-foto-placeholder.txt'">
+              </figure>
+              <section class="produto-info">
+                <h3><%= produto.nome %></h3>
+                <p class="endereco"><%= produto.local %></p>
+                <p class="preco">R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></p>
+                <p class="quantidade"><%= produto.quantidade %></p>
+              </section>
+              <section class="acoes">
+                <button class="btn btn-warning btn-sm">Editar</button>
+                <button class="btn btn-danger btn-sm btn-excluir">Excluir</button>
+              </section>
+            </article>
+          <% }) %>
+        <% } else { %>
+          <p style="grid-column: 1/-1; text-align: center; padding: 2rem;">Nenhum produto cadastrado ainda.</p>
+        <% } %>
       </section>
     </section>
 
   </main>
-  
+
+  <script src="/js/listaprodutos.js"></script>
+  <script src="/js/produto-delete.js"></script>
+
   <!-- Modal de Edição -->
   <section class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
     <section class="modal-dialog modal-dialog-centered">
@@ -214,7 +125,6 @@
 <script src="/js/listaprodutos.js"></script>
 
 <%- include('../partial/footer.ejs') %>
-<script src="/js/darkmode.js"></script>
 </body>
 </html>
 

@@ -2,357 +2,63 @@ var express = require("express");
 var router = express.Router();
 const { body, validationResult } = require("express-validator");
 const usuarios = []; 
+const path = require('path');
+const multer = require('multer');
+const pool = require("../../config/pool_conexoes");
+const produtosModel = require("../models/models");
 
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, '../public/imagem'),
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage });
 
 var {validarCPF} = require("../helpers/validacao");
 
-/* produtos */
-const produtos = [
-  {
-    id: 1,
-    nome: "Lenha tratada",
-    preco: 250,
-    local: "Campinas - SP",
-    imagem: "Lenha.png",
-    descricao:
-      "Lenha tratada com baixa umidade, ideal para geração de energia.",
-  },
-  {
-    id: 2,
-    nome: "Casca de arroz",
-    preco: 1275,
-    local: "Guarulhos - SP",
-    imagem: "cascadearroz.png",
-    descricao:
-      "Casca de arroz limpa, excelente para uso em caldeiras de biomassa.",
-  },
-  {
-    id: 3,
-    nome: "Bagaço de cana",
-    preco: 150,
-    local: "Socorro - SP",
-    imagem: "cana.png",
-    descricao: "Bagaço de cana fresco, ideal para geração de energia limpa.",
-  },
-  {
-    id: 4,
-    nome: "Serragem",
-    preco: 350,
-    local: "Sorocaba - SP",
-    imagem: "serragem.png",
-    descricao:
-      "Serragem seca e uniforme, perfeita para briquetes e geração de energia biomassa.",
-  },
-  {
-    id: 5,
-    nome: "Resto de colheita",
-    preco: 380,
-    local: "Santo André - SP",
-    imagem: "restodecolheita.png",
-    descricao:
-      "Resto de colheita rico em biomassa, excelente para compostagem e produção de energia renovável.",
-  },
-  {
-    id: 6,
-    nome: "Pallets",
-    preco: 1000,
-    local: "Ribeirão Preto - SP",
-    imagem: "pellets.png",
-    descricao:
-      "Pallets de madeira reutilizáveis, ideais para soluções sustentáveis.",
-  },
-];
-const produtos2 = [
-  {
-    id: 101,
-    nome: "Resíduos de café",
-    preco: 700,
-    local: "Rio de janeiro - RJ",
-    imagem: "residuosdecafe.png",
-    descricao:
-      "Resíduos de café reciclados, ideais para produção de energia limpa e fertilização do solo.",
-  },
-  {
-    id: 102,
-    nome: "Palha de milho",
-    preco: 220,
-    local: "São Gonçalo - RJ",
-    imagem: "palhademilho.png",
-    descricao:
-      "Palha de milho seca e versátil, ideal para ração, cobertura do solo e produção de energia renovável.",
-  },
-  {
-    id: 103,
-    nome: "Lixo Orgânico",
-    preco: 450,
-    local: "Nova Iguaçu - RJ",
-    imagem: "lixo organico.png",
-    descricao:
-      "O lixo orgânico pode ser usado na produção de biomassa, um tipo de matéria orgânica de origem vegetal ou animal.",
-  },
-  {
-    id: 104,
-    nome: "Lenha tratada",
-    preco: 250,
-    local: "Niterói - RJ",
-    imagem: "Lenha.png",
-    descricao:
-      "Lenha tratada com baixa umidade, ideal para geração de energia.",
-  },
-  {
-    id: 105,
-    nome: "Serragem",
-    preco: 350,
-    local: "Bangu - RJ",
-    imagem: "serragem.png",
-    descricao:
-      "Serragem seca e uniforme, perfeita para briquetes e geração de energia biomassa.",
-  },
-  {
-    id: 106,
-    nome: "Casca de arroz",
-    preco: 1275,
-    local: "Volta Redonda - RJ",
-    imagem: "cascadearroz.png",
-    descricao:
-      "Casca de arroz limpa, excelente para uso em caldeiras de biomassa.",
-  },
-];
-const produtos3 = [
-  {
-    id: 201,
-    nome: "Lenha tratada",
-    preco: 250,
-    local: "Mandirituba - CWB",
-    imagem: "Lenha.png",
-    descricao:
-      "Lenha tratada com baixa umidade, ideal para geração de energia.",
-  },
-  {
-    id: 202,
-    nome: "Lixo orgânico",
-    preco: 450,
-    local: "Pinhais - CWB",
-    imagem: "lixo organico.png",
-    descricao:
-      "O lixo orgânico pode ser usado na produção de biomassa, um tipo de matéria orgânica de origem vegetal ou animal.",
-  },
-  {
-    id: 203,
-    nome: "Resíduos de café",
-    preco: 700,
-    local: "Curitiba - CWB",
-    imagem: "residuosdecafe.png",
-    descricao:
-      "Resíduos de café reciclados, ideais para produção de energia limpa e fertilização do solo.",
-  },
-  {
-    id: 204,
-    nome: "Palha de milho",
-    preco: 220,
-    local: "Maringá - CWB",
-    imagem: "palhademilho.png",
-    descricao:
-      "Palha de milho seca e versátil, ideal para ração, cobertura do solo e produção de energia renovável.",
-  },
-  {
-    id: 205,
-    nome: "Resto de colheita",
-    preco: 380,
-    local: "São José dos Pinhais - CWB",
-    imagem: "restodecolheita.png",
-    descricao:
-      "Resto de colheita rico em biomassa, excelente para compostagem e produção de energia renovável.",
-  },
-  {
-    id: 206,
-    nome: "Bagaço de cana",
-    preco: 150,
-    local: "Fazenda Rio Grande - CWB",
-    imagem: "cana.png",
-    descricao: "Bagaço de cana fresco, ideal para geração de energia limpa.",
-  },
-];
-const produtos4 = [
-  {
-    id: 301,
-    nome: "Folhas secas",
-    preco: 180,
-    local: "Palhoça - FLN",
-    imagem: "folhassecas.png",
-    descricao:
-      "Folhas secas urbanas, apropriadas para compostagem ou produção de biomassa vegetal leve.",
-  },
-  {
-    id: 302,
-    nome: "Lixo orgânico",
-    preco: 450,
-    local: "São José - FLN",
-    imagem: "lixo organico.png",
-    descricao:
-      "O lixo orgânico pode ser usado na produção de biomassa, um tipo de matéria orgânica de origem vegetal ou animal.",
-  },
-  {
-    id: 303,
-    nome: "Resíduos de café",
-    preco: 700,
-    local: "Biguaçu - FLN",
-    imagem: "residuosdecafe.png",
-    descricao:
-      "Resíduos de café reciclados, ideais para produção de energia limpa e fertilização do solo.",
-  },
-  {
-    id: 304,
-    nome: "Lenha tratada",
-    preco: 250,
-    local: "Santo Amaro da Imperatriz - FLN",
-    imagem: "Lenha.png",
-    descricao:
-      "Lenha tratada com baixa umidade, ideal para geração de energia.",
-  },
-  {
-    id: 305,
-    nome: "Serragem",
-    preco: 350,
-    local: "Florianópolis - FLN",
-    imagem: "serragem.png",
-    descricao:
-      "Serragem seca e uniforme, perfeita para briquetes e geração de energia biomassa.",
-  },
-  {
-    id: 306,
-    nome: "Casca de arroz",
-    preco: 1275,
-    local: "Governador Celso Ramos - FLN",
-    imagem: "cascadearroz.png",
-    descricao:
-      "Casca de arroz limpa, excelente para uso em caldeiras de biomassa.",
-  },
-];
-const produtos5 = [
-  {
-    id: 401,
-    nome: "Lenha tratada",
-    preco: 250,
-    local: "Itaparica - SSA",
-    imagem: "Lenha.png",
-    descricao:
-      "Lenha tratada com baixa umidade, ideal para geração de energia.",
-  },
-  {
-    id: 402,
-    nome: "Pallets",
-    preco: 1000,
-    local: "Salvador - SSA",
-    imagem: "pellets.png",
-    descricao:
-      "Pallets de madeira reutilizáveis, ideais para soluções sustentáveis.",
-  },
-  {
-    id: 403,
-    nome: "Palha de milho",
-    preco: 220,
-    local: "Pojuca - SSA",
-    imagem: "palhademilho.png",
-    descricao:
-      "Palha de milho seca e versátil, ideal para ração, cobertura do solo e produção de energia renovável.",
-  },
-  {
-    id: 404,
-    nome: "Serragem",
-    preco: 350,
-    local: "Camaçari - SSA",
-    imagem: "serragem.png",
-    descricao:
-      "Serragem seca e uniforme, perfeita para briquetes e geração de energia biomassa.",
-  },
-  {
-    id: 405,
-    nome: "Resto de Colheita",
-    preco: 380,
-    local: "Candeias - SSA",
-    imagem: "restodecolheita.png",
-    descricao:
-      "Resto de colheita rico em biomassa, excelente para compostagem e produção de energia renovável.",
-  },
-  {
-    id: 406,
-    nome: "Folhas secas",
-    preco: 180,
-    local: "Simões Filho - SSA",
-    imagem: "folhassecas.png",
-    descricao:
-      "Folhas secas urbanas, apropriadas para compostagem ou produção de biomassa vegetal leve.",
-  },
-];
-const produtos6 = [
-  {
-    id: 501,
-    nome: "Pallets",
-    preco: 1000,
-    local: "Cascavel - FOR",
-    imagem: "pellets.png",
-    descricao:
-      "Pallets de madeira reutilizáveis, ideais para soluções sustentáveis.",
-  },
-  {
-    id: 502,
-    nome: "Bagaço de cana",
-    preco: 150,
-    local: "Aquiraz - FOR",
-    imagem: "cana.png",
-    descricao: "Bagaço de cana fresco, ideal para geração de energia limpa.",
-  },
-  {
-    id: 503,
-    nome: "Casca de arroz",
-    preco: 1275,
-    local: "Itaitinga - FOR",
-    imagem: "cascadearroz.png",
-    descricao:
-      "Casca de arroz limpa, excelente para uso em caldeiras de biomassa.",
-  },
-  {
-    id: 504,
-    nome: "Serragem",
-    preco: 350,
-    local: "Paracuru - FOR",
-    imagem: "serragem.png",
-    descricao:
-      "Serragem seca e uniforme, perfeita para briquetes e geração de energia biomassa.",
-  },
-  {
-    id: 505,
-    nome: "Resíduos de café",
-    preco: 700,
-    local: "Fortaleza - FOR",
-    imagem: "residuosdecafe.png",
-    descricao:
-      "Resíduos de café reciclados, ideais para produção de energia limpa e fertilização do solo.",
-  },
-  {
-    id: 506,
-    nome: "Palha de milho",
-    preco: 220,
-    local: "Caucaia - FOR",
-    imagem: "palhademilho.png",
-    descricao:
-      "Palha de milho seca e versátil, ideal para ração, cobertura do solo e produção de energia renovável.",
-  },
-];
-/* --------- */
+async function getProdutos() {
+  try {
+    return await produtosModel.findAll();
+  } catch (err) {
+    console.error('Erro ao buscar produtos:', err.message);
+    return [];
+  }
+}
+
+/* produtos - removido array estático, agora busca do banco */
 
 /* ROTAS */
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
+  const produtos = await getProdutos();
   res.render("pages/produtos", {
     produtos,
-    produtos2,
-    produtos3,
-    produtos4,
-    produtos5,
-    produtos6,
   });
 });
+
+router.get("/produtos", async (req, res) => {
+  const produtos = await getProdutos();
+  res.render("pages/produtos", { produtos });
+});
+
+router.get("/produtoscomconta", async (req, res) => {
+  const produtos = await getProdutos();
+  const produtos2 = await getProdutos();
+  const produtos3 = await getProdutos();
+  const produtos4 = await getProdutos();
+  const produtos5 = await getProdutos();
+  const produtos6 = await getProdutos();
+  res.render("pages/produtoscomconta", { 
+    produtos, 
+    produtos2, 
+    produtos3, 
+    produtos4, 
+    produtos5, 
+    produtos6 
+  });
+});
+
 router.get("/home", (req, res) => {
   res.render("pages/home");
 });
@@ -372,8 +78,9 @@ router.get("/painel", (req, res) => {
 router.get("/meus_produtos", (req, res) => {
   res.render("pages/meus_produtos");
 });
-router.get("/listaprodutos", (req, res) => {
-  res.render("pages/listaprodutos");
+router.get("/listaprodutos", async (req, res) => {
+  const produtos = await getProdutos();
+  res.render("pages/listaprodutos", { produtos });
 });
 
 router.get("/carrinho", (req, res) => {
@@ -398,33 +105,62 @@ router.get("/painel", (req, res) => {
 router.get("/cadastro_vendedor", (req, res) => {
   res.render("pages/cadastro_vendedor");
 });
-router.get("/item/:id", function (req, res) {
-  const id = parseInt(req.params.id);
-  const produto = [
-    ...produtos,
-    ...produtos2,
-    ...produtos3,
-    ...produtos4,
-    ...produtos5,
-    ...produtos6,
-  ].find((p) => p.id === id);
-
-  if (!produto) {
-    return res.status(404).send("Produto não encontrado");
+router.get("/item/:id", async function (req, res) {
+  try {
+    const produto = await produtosModel.findById(req.params.id);
+    if (!produto) {
+      return res.status(404).send("Produto não encontrado");
+    }
+    res.render("pages/item", { produto });
+  } catch (err) {
+    console.error('Erro ao buscar produto:', err);
+    res.status(500).send('Erro interno do servidor');
   }
-
-  res.render("pages/item", { produto });
 });
 
-router.get("/produtoscomconta", (req, res) => {
+router.get("/produtoscomconta", async (req, res) => {
+  const produtos = await getProdutos();
+  
+  // Filtrar produtos por cidade (baseado no campo 'local')
+  const produtosSP = produtos.filter(p => p.local && p.local.includes('São Paulo'));
+  const produtosRJ = produtos.filter(p => p.local && p.local.includes('Rio de Janeiro'));
+  const produtosCuritiba = produtos.filter(p => p.local && p.local.includes('Curitiba'));
+  const produtosFlorianopolis = produtos.filter(p => p.local && p.local.includes('Florianópolis'));
+  const produtosSalvador = produtos.filter(p => p.local && p.local.includes('Salvador'));
+  const produtosFortaleza = produtos.filter(p => p.local && p.local.includes('Fortaleza'));
+  
   res.render("pages/produtoscomconta", {
-    produtos,
-    produtos2,
-    produtos3,
-    produtos4,
-    produtos5,
-    produtos6,
+    produtos: produtosSP,
+    produtos2: produtosRJ,
+    produtos3: produtosCuritiba,
+    produtos4: produtosFlorianopolis,
+    produtos5: produtosSalvador,
+    produtos6: produtosFortaleza,
   });
+});
+
+router.post("/cadastrar_produto", upload.single('imagem'), async (req, res) => {
+  const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento } = req.body;
+  const imagem = req.file ? req.file.filename : 'sem-foto.png';
+  const local = `${cidade || ''}${cidade ? ', ' : ''}${bairro || ''}${bairro ? ', ' : ''}${rua || ''}${rua ? ', ' : ''}${numero || ''}${complemento ? ', ' + complemento : ''}`;
+
+  const precoNumerico = parseFloat((preco || '0').replace(/\./g, '').replace(',', '.')) || 0;
+
+  try {
+    await produtosModel.create({
+      nome,
+      descricao,
+      preco: precoNumerico,
+      quantidade,
+      categoria,
+      local,
+      imagem
+    });
+    res.redirect('/listaprodutos');
+  } catch (err) {
+    console.error('Erro ao cadastrar produto:', err);
+    res.status(500).send('Erro ao cadastrar produto. Tente novamente.');
+  }
 });
 
 /* ROTAS com VALIDAÇÕES */
@@ -660,5 +396,17 @@ router.post("/login", (req, res) => {
   }
 });
 /* ========== FIM DAS VALIDAÇÕES ========= */
+
+// Rota para deletar produto
+router.delete('/produtos/:id', async (req, res) => {
+  try {
+    const produtoId = req.params.id;
+    await produtosModel.delete(produtoId);
+    res.json({ success: true, message: 'Produto deletado com sucesso' });
+  } catch (err) {
+    console.error('Erro ao deletar produto:', err);
+    res.status(500).json({ success: false, message: 'Erro ao deletar produto' });
+  }
+});
 
 module.exports = router;

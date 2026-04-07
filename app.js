@@ -1,20 +1,22 @@
-const express = require ('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const app = express();
+require('dotenv').config();
 
-app.use(express.static('./app/public'));
+const path = require('path');
 
-app.set('view engine' , 'ejs');
-app.set('views', './app/views');
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'app', 'views'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'app', 'public')));
 
-var rotas = require('./app/routes/router');
-var rotasAdm = require('./app/routes/router-adm');
+const rotas = require('./app/routes/router');
+const rotasAdm = require('./app/routes/router-adm');
 app.use('/', rotas);
-app.use('/adm', rotasAdm); 
+app.use('/adm', rotasAdm);
 
-app.listen(port, () => {
-    console.log(`Servidor online\nHttp://localhost:${port}`);
+const porta = process.env.PORT || process.env.APP_PORT || 3000;
+app.listen(porta, () => {
+  console.log(`Servidor ouvindo na porta ${porta} - http://localhost:${porta}/`);
 });
