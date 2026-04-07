@@ -102,6 +102,9 @@ router.get("/cadastrar_produto", (req, res) => {
 router.get("/painel", (req, res) => {
   res.render("pages/painel");
 });
+router.get("/cadastro_vendedor", (req, res) => {
+  res.render("pages/cadastro_vendedor");
+});
 router.get("/item/:id", async function (req, res) {
   try {
     const produto = await produtosModel.findById(req.params.id);
