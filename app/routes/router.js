@@ -36,29 +36,6 @@ router.get("/", async (req, res) => {
     produtos,
   });
 });
-
-router.get("/produtos", async (req, res) => {
-  const produtos = await getProdutos();
-  res.render("pages/produtos", { produtos });
-});
-
-router.get("/produtoscomconta", async (req, res) => {
-  const produtos = await getProdutos();
-  const produtos2 = await getProdutos();
-  const produtos3 = await getProdutos();
-  const produtos4 = await getProdutos();
-  const produtos5 = await getProdutos();
-  const produtos6 = await getProdutos();
-  res.render("pages/produtoscomconta", { 
-    produtos, 
-    produtos2, 
-    produtos3, 
-    produtos4, 
-    produtos5, 
-    produtos6 
-  });
-});
-
 router.get("/home", (req, res) => {
   res.render("pages/home");
 });
@@ -129,7 +106,7 @@ router.get("/produtoscomconta", async (req, res) => {
   const produtosSalvador = produtos.filter(p => p.local && p.local.includes('Salvador'));
   const produtosFortaleza = produtos.filter(p => p.local && p.local.includes('Fortaleza'));
   
-  res.render("pages/produtoscomconta", {
+  res.render("pages/produtos", {
     produtos: produtosSP,
     produtos2: produtosRJ,
     produtos3: produtosCuritiba,
