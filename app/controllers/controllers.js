@@ -55,7 +55,7 @@ router.post('/cadastrar_produto', upload.single('imagem'), async (req, res) => {
       quantidade: body.quantidade,
       categoria: body.categoria,
       local,
-      imagem: req.file ? req.file.filename : null
+      imagem: req.file ? `/imagem/${req.file.filename}` : null
     };
 
     await produtosModel.create(produto);
@@ -89,6 +89,10 @@ router.get('/item/:id', async (req, res) => {
     res.status(500).send('Erro ao obter produto');
   }
 });
+
+
+
+
 
 router.post('/cart/add', async (req, res) => {
   try {

@@ -11,6 +11,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'app', 'public')));
 
+app.use('/imagem', express.static('app/public/imagem'));
+
 const session = require('express-session');
 app.use(session({
   secret: 'clean-energy-secret-key',
