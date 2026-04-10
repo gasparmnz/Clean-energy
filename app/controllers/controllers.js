@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const multer = require('multer');
 const produtosModel = require('../models/models.js');
+const cartModel = require('../models/cartModel');
+
 
 const router = express.Router();
 
@@ -85,6 +87,47 @@ router.get('/item/:id', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao obter produto');
+  }
+});
+
+router.post('/cart/add', async (req, res) => {
+  try {
+    const userId = req.session?.userId || (req.user && req.user.id);
+    if (!userId) return res.redirect('/login');
+
+    const { productId, quantidade } = req.body;
+    const qty = parseInt(quantidade, 10) || 1;
+
+    const produto = await produtosModel.findById(productId);
+    if (!produto) return res.status(404).send('Produto não encontrado');
+
+    // guarda snapshot do produto (nome, preço atual, imagem) + quantidade
+    await cartModel.addItem(userId, {
+      productId: produto.id || produto._id || productId,
+      nome: produto.nome,
+      preco: produto.preco,
+      imagem: produto.imagem,
+      quantidade: qty
+    });
+
+      res.redirect('/carrinho');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao adicionar ao carrinho');
+  }
+});
+
+// Rota: mostra carrinho do usuário
+router.get('/carrinho', async (req, res) => {
+  try {
+    const userId = req.session?.userId || (req.user && req.user.id);
+    if (!userId) return res.redirect('/login');
+
+    const cart = await cartModel.getCartByUser(userId);
+    res.render('pages/carrinho', { cart });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao obter carrinho');
   }
 });
 
