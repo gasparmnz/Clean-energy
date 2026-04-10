@@ -10,28 +10,6 @@
 </head>
 <body>
   <%- include("../partial/header.ejs") %>
-  
-  <main>
-     <nav class="back-navigation" aria-label="Navegação de retorno">
-      <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
-        <i class='bx bx-arrow-back'></i>
-        <span>Voltar</span>
-      </button>
-  </nav>
-
-    <!DOCTYPE html>
-
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carrinho</title>
-  <link rel="stylesheet" href="/css/carrinho.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-</head>
-<body>
-  <%- include("../partial/header.ejs") %>
 
   <main>
     <nav class="back-navigation" aria-label="Navegação de retorno">
@@ -41,7 +19,6 @@
       </button>
     </nav>
 
-```
 <br><br>
 
 <div class="carrinho-container">
@@ -88,7 +65,7 @@
             </div>
 
             <!-- REMOVER -->
-            <form action="/remove-from-cart" method="POST">
+            <form action="/cart/remove" method="POST">
               <input type="hidden" name="index" value="<%= index %>">
               <button type="submit" class="btn-remover">
                 <i class="fas fa-times"></i>
@@ -136,7 +113,7 @@
 
   </div>
 </div>
-```
+
 
   </main>
 
@@ -193,10 +170,11 @@
 
       document.querySelectorAll(".btn-remover").forEach(btn => {
         btn.addEventListener("click", function(e) {
-          e.preventDefault(); // evita envio imediato do form
-          const produtoCard = this.closest(".produto-card");
-          produtoCard.remove();
-          atualizarResumo();
+          // Remover e.preventDefault() para permitir envio do formulário
+          // e.preventDefault(); // REMOVIDO
+          // const produtoCard = this.closest(".produto-card");
+          // produtoCard.remove();
+          // atualizarResumo();
         });
       });
 
@@ -211,8 +189,6 @@
 </body>
 </html>
 
-  <%- include("../partial/footer.ejs") %>
-  <script src="/js/darkmode.js"></script>
-</body>
-</html>
+ 
+
 

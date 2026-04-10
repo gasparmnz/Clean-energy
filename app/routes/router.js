@@ -6,6 +6,7 @@ const path = require('path');
 const multer = require('multer');
 const pool = require("../../config/pool_conexoes");
 const produtosModel = require("../models/models");
+const cartModel = require("../models/cartModel");
 
 const storage = multer.diskStorage({
   destination: path.join(__dirname, '../public/imagem'),
@@ -83,8 +84,54 @@ router.get("/listaprodutos", async (req, res) => {
   res.render("pages/listaprodutos", { produtos });
 });
 
-router.get("/carrinho", (req, res) => {
-  res.render("pages/carrinho");
+router.get("/carrinho", async (req, res) => {
+  try {
+    const userId = req.session?.userId || 'guest';
+    const cart = await cartModel.getCartByUser(userId);
+    res.render("pages/carrinho", { cart });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao obter carrinho');
+  }
+});
+
+router.post('/cart/add', async (req, res) => {
+  try {
+    const { productId, quantidade } = req.body;
+    const qty = parseInt(quantidade, 10) || 1;
+
+    const produto = await produtosModel.findById(productId);
+    if (!produto) return res.status(404).send('Produto não encontrado');
+
+    const item = {
+      productId,
+      nome: produto.nome,
+      preco: produto.preco,
+      imagem: produto.imagem,
+      local: produto.local,
+      quantidade: qty
+    };
+
+    const userId = req.session?.userId || 'guest';
+    await cartModel.addItem(userId, item);
+
+    res.redirect('/carrinho');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao adicionar ao carrinho: ' + err.message);
+  }
+});
+
+router.post('/cart/remove', async (req, res) => {
+  try {
+    const userId = req.session?.userId || 'guest';
+    const { index } = req.body;
+    await cartModel.removeByIndex(userId, parseInt(index));
+    res.redirect('/carrinho');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao remover do carrinho');
+  }
 });
 
 router.get("/transporte", (req, res) =>{

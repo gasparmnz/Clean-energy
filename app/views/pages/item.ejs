@@ -137,10 +137,14 @@
           </section>
 
           <section class="product-actions" aria-label="Ações de compra">
-            <a href="/carrinho" class="buy-button">
-              <i class="bx bx-cart-add"></i>
-              <span>Comprar Agora</span>
-            </a>
+            <form action="/cart/add" method="POST" class="buy-form">
+              <input type="hidden" name="productId" value="<%= produto.id %>">
+              <input type="hidden" name="quantidade" value="1">
+              <button type="submit" class="buy-button">
+                <i class="bx bx-cart-add"></i>
+                <span>Comprar Agora</span>
+              </button>
+            </form>
           </section>
 
           <section class="user-rating" aria-labelledby="rating-title">
