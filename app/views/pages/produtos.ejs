@@ -23,58 +23,40 @@
   <%- include('../partial/header.ejs') %>
   <main>
  
-    <section aria-labelledby="filtro-titulo" class="form-filtro-completo">
-      <h2 id="filtro-titulo"></h2>
-      <form>
-        <fieldset>
+    <section class="filtro-container">
+  <form class="filtro-box">
 
-          <label>
-            Estados
-            <select class="carinho">
-              <option value="">Todas</option>
-              <option>São Paulo</option>
-              <option>Rio de Janeiro</option>
-              <option>Minas Gerais</option>
-              <option>Santa Catarina</option>
-              <option>Paraná</option>
-            </select>
-          </label>
+    <!-- Barra de busca -->
+    <div class="filtro-topo">
+      <i class='bx bx-search'></i>
+      <input type="text" placeholder="Buscar produtos..." />
+    </div>
 
-          <label>
-            Tipo
-            <select class="carinho2">
-              <option value="">Todos</option>
-              <option>Lenha</option>
-              <option>Pellets</option>
-              <option>Cavaco</option>
-              <option>Bagaço</option>
-            </select>
-          </label>
+    <!-- Filtros -->
+    <div class="filtro-linha">
+      <select>
+        <option value="">Estados</option>
+        <option>São Paulo</option>
+        <option>Rio de Janeiro</option>
+        <option>Minas Gerais</option>
+        <option>Santa Catarina</option>
+        <option>Paraná</option>
+      </select>
 
-          <label>
-            Preço mín.
-            <input type="number" placeholder="R$ 0" />
-          </label>
+      <select>
+        <option value="">Tipo</option>
+        <option>Lenha</option>
+        <option>Pellets</option>
+        <option>Cavaco</option>
+        <option>Bagaço</option>
+      </select>
 
-          <label>
-            Preço máx.
-            <input type="number" placeholder="R$ 0" />
-          </label>
+      <input type="number" placeholder="Preço mín." />
+      <input type="number" placeholder="Preço máx." />
+    </div>
 
-          <button type="submit" aria-label="Pesquisar"><img class= "lupa" src="/imagem/lupa.png"></button>
-        </fieldset>
-      </form>
-    </section>
-
-  
-    <section class="form-pesquisa-simples" aria-label="Pesquisa simples">
-      <form>
-        <input type="text" placeholder="Pesquisar matérias-primas" aria-label="Pesquisar matérias-primas" />
-        <button type="submit" aria-label="Pesquisar"><img class="lupa" src="/imagem/lupa.png"></button>
-      </form>
-    </section>
-
-    <section>
+  </form>
+</section>
       
       <ul class="produtos-scroll">
   <% produtos.forEach(produto => { %>

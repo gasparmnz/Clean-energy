@@ -66,14 +66,20 @@ body {
     max-width: 200px;
 }
 
+.left,
+.right {
+    display: flex;
+    align-items: center;
+}
+
 .navbar {
-    position: absolute;
+    position: static;
     left: 50%;
-    transform: translateX(-50%);
+    transform: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 2rem;
+    gap: 1.5rem;
     z-index: 1;
     background-color: transparent;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -251,6 +257,7 @@ body {
     border-radius: 50%;
     cursor: pointer;
     transition: transform 0.3s ease;
+    visibility: hidden;
 }
 
 .avatar:hover {
@@ -290,7 +297,7 @@ body {
 }
 
 /* 👇 Corrige o problema de 932px (antes do mobile) */
-@media (max-width: 932px) {
+@media (max-width: 960px) {
     /* Oculta o texto LOGIN | CADASTRE-SE e o botão de vendedor desktop */
     .login-links,
     .btn-vendedor-desktop {
@@ -319,6 +326,9 @@ body {
     
     .navbar {
         gap: 1.5rem;
+    }
+    .avatar{
+        visibility: visible;
     }
 }
 
