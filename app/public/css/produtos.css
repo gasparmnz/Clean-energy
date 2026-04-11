@@ -175,6 +175,12 @@ figcaption a {
   padding-top: 0.8rem;    /* Espaço entre o texto e o link */
 }
 
+.produto-card figcaption p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 main section {
   margin-bottom: 2rem;
 }
