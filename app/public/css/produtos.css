@@ -72,6 +72,35 @@ main {
   background: #fff;
 }
 
+.sem-produtos {
+  width: 100%;
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #555;
+}
+
+.sem-produtos i {
+  font-size: 60px;
+  color: #cfcfcf;
+  margin-bottom: 1rem;
+}
+
+.sem-produtos h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.sem-produtos p {
+  font-size: 1rem;
+  color: #777;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.sem-produtos {
+  list-style: none;
+}
+
 .produtos-scroll {
   display: flex;
   overflow-x: auto;

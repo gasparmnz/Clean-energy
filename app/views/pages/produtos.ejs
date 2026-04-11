@@ -58,24 +58,36 @@
   </form>
 </section>
       
-      <ul class="produtos-scroll">
-  <% produtos.forEach(produto => { %>
-    <li>
-      <article class="produto-card" data-id="<%= produto.id %>">
-        <figure>
-          <a href="/item/<%= produto.id %>">
-            <img src="/imagem/<%=produto.imagem %>" alt="<%= produto.nome %>">
-          </a>
-          <figcaption>
-            <h3><%= produto.nome %></h3>
-            <p>R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %> / tonelada</p>
-            <p>Disponível em <%= produto.local %></p>
-            <a href="/item/<%= produto.id %>">Ver detalhes</a>
-          </figcaption>
-        </figure>
-      </article>
-    </li>
-  <% }) %>
+     <ul class="produtos-scroll">
+  <% if (produtos.length === 0) { %>
+
+    <div class="sem-produtos">
+      <i class='bx bx-package'></i>
+      <h2>Nenhum produto disponível</h2>
+      <p>No momento não há produtos cadastrados.</p>
+    </div>
+
+  <% } else { %>
+
+    <% produtos.forEach(produto => { %>
+      <li>
+        <article class="produto-card" data-id="<%= produto.id %>">
+          <figure>
+            <a href="/item/<%= produto.id %>">
+              <img src="/imagem/<%=produto.imagem %>" alt="<%= produto.nome %>">
+            </a>
+            <figcaption>
+              <h3><%= produto.nome %></h3>
+              <p>R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %> / tonelada</p>
+              <p>Disponível em <%= produto.local %></p>
+              <a href="/item/<%= produto.id %>">Ver detalhes</a>
+            </figcaption>
+          </figure>
+        </article>
+      </li>
+    <% }) %>
+
+  <% } %>
 </ul>
 
     </section>
