@@ -1,4 +1,4 @@
-/* --- ESTILOS GERAIS --- */
+/* --- RESET E ESTILOS GERAIS --- */
 * {
     margin: 0;
     padding: 0;
@@ -6,94 +6,70 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
+/* --- HEADER PRINCIPAL --- */
 .header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    padding: 1rem 5%;
+    height: 80px;
+    padding: 0 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 100;
+    z-index: 1000;
     background-color: #488D6A;
-    gap: 15px;
-    border-bottom: none;
-    outline: none;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-.header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(72, 141, 106, 0.8);
-    backdrop-filter: none;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-}
-
-.header::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: #488D6A;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-}
-
-.header:hover::after {
-    left: 100%;
-}
-
+/* --- LOGO --- */
 .logo {
     display: flex;
     align-items: center;
     flex-shrink: 0;
-    z-index: 10;
-}
-    
-.logo img {
-    height: 55px;
-    width: auto;
-    max-width: 200px;
 }
 
+.logo img {
+    height: 50px;
+    width: auto;
+}
+
+/* --- NAVBAR (DESKTOP) --- */
 .navbar {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 2rem;
-    z-index: 1;
-    background-color: transparent;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    flex-grow: 1;
+    justify-content: center;
 }
 
 .navbar a {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: #fff;
     text-decoration: none;
-    font-weight: 550;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    transition: color 0.3s ease;
+    font-weight: 600;
+    transition: 0.3s;
     white-space: nowrap;
+    text-transform: uppercase;
 }
 
 .navbar a:hover {
     color: #f0f0f0;
+    opacity: 0.8;
 }
 
-/* --- ESTILO DO BOTÃO TORNE-SE VENDEDOR --- */
+/* --- CONTAINER DE LOGIN E BOTÕES --- */
+.login-container {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* --- BOTÃO TORNE-SE VENDEDOR --- */
 .btn-vendedor {
     background-color: #fff;
     color: #488D6A !important;
@@ -102,147 +78,53 @@ body {
     font-weight: 700;
     text-decoration: none;
     font-size: 0.85rem;
-    transition: all 0.3s ease;
+    transition: 0.3s;
     border: 2px solid #fff;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    white-space: nowrap;
-    text-transform: uppercase;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    letter-spacing: 0.5px;
+    text-align: center;
 }
 
 .btn-vendedor:hover {
     background-color: transparent;
     color: #fff !important;
-    border-color: #fff;
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
-.btn-vendedor:active {
-    transform: scale(0.98);
-}
-
-#check {
-    display: none;
-}
-
-.icons {
-    position: absolute;
-    right: 4%;
-    font-size: 2rem;
-    color: #fff;
-    cursor: pointer;
-    display: none;
-    z-index: 101;
-}
-
-.login-container {
-    display: flex;
-    align-items: center;
-    color: white;
-    font-weight: 550;
-    gap: 1.5rem;
-    margin-left: 1rem;
-    padding-left: 1rem;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    z-index: 10;
-}
-
-.login-container a {
-    color: white;
-    text-decoration: none;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-
-.login-container a:hover {
-    color: white;
-}
-
+/* --- LINKS DE LOGIN/CADASTRE-SE (TEXTO) --- */
 .login-links {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
     white-space: nowrap;
 }
 
+.login-links a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* --- ÍCONES (CARRINHO E AVATAR) --- */
 .carrinho {
     height: 28px;
-    width: 28px;
-    filter: invert(100%) sepia(100%) saturate(500%) hue-rotate(180deg);
+    width: auto;
+    filter: invert(1);
     cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: 0.3s;
 }
 
 .carrinho:hover {
     transform: scale(1.1);
 }
 
-#menu-icon {
-    display: block;
-}
-
-#close-icon {
-    display: none;
-}
-
-#check:checked ~ .icons #menu-icon {
-    display: none;
-}
-
-#check:checked ~ .icons #close-icon {
-    display: block;
-}
-
+/* --- DROPDOWN AVATAR --- */
 .dropdown {
     position: relative;
-    display: inline-block;
-}
-
-.dropdown input {
-    display: none;
-}
-
-.dropdown label img.avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: white;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-    z-index: 9999;
-    min-width: 140px;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
-
-.dropdown-content a {
-    display: block;
-    padding: 12px 15px;
-    text-decoration: none;
-    color: black;
-    font-weight: 550;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    transition: background 0.3s, color 0.3s;
-}
-
-.dropdown-content a:hover {
-    background: #206744;
-    color: white;
-}
-
-.dropdown-content.show {
-    display: block;
+    display: flex;
+    align-items: center;
 }
 
 .avatar {
@@ -250,158 +132,182 @@ body {
     height: 38px;
     border-radius: 50%;
     cursor: pointer;
-    transition: transform 0.3s ease;
+    transition: 0.3s;
 }
 
 .avatar:hover {
     transform: scale(1.1);
 }
 
-.dropdown input:checked ~ .dropdown-content {
+.dropdown-content {
+    display: none; /* Escondido por padrão */
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    min-width: 150px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    margin-top: 10px;
+    z-index: 1005; /* Acima de tudo */
+}
+
+/* Classe 'show' adicionada via JS para abrir o dropdown */
+.dropdown-content.show {
     display: block;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #488D6A;
+    border-radius: 8px;
+}
+
+/* --- MENU HAMBÚRGUER --- */
+#check {
+    display: none;
+}
+
+.icons {
+    display: none;
+    font-size: 2.2rem;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1001;
+    margin-left: 10px;
 }
 
 /* --- RESPONSIVIDADE --- */
 
-/* Esconde o botão mobile por padrão */
-.btn-vendedor-mobile {
-    display: none;
-}
-
-@media (max-width: 1200px) {
-    .header {
-        padding: 0.8rem 4%;
-    }
-}
-
-@media (max-width: 1024px) {
-    .navbar a {
-        font-size: 0.9rem;
-    }
-    
-    .btn-vendedor {
-        padding: 8px 16px;
-        font-size: 0.75rem;
-    }
-    
-    .login-container {
-        gap: 1rem;
-    }
-}
-
-/* 👇 Corrige o problema de 932px (antes do mobile) */
-@media (max-width: 932px) {
-    /* Oculta o texto LOGIN | CADASTRE-SE e o botão de vendedor desktop */
-    .login-links,
-    .btn-vendedor-desktop {
-        display: none;
-    }
-
-    /* Exibe o avatar/dropdown mais cedo */
-    .dropdown {
-        display: block;
-    }
-
-    /* Diminui o espaçamento do menu */
-    .navbar a {
-        font-size: 0.95rem;
-    }
-
-    /* Ajusta leve recuo do carrinho */
-    .carrinho {
-        height: 26px;
-        width: 26px;
-    }
-
-    .login-container {
-        gap: 0.8rem;
-    }
-    
+/* Breakpoint 1: Tablets e Telas Médias */
+@media (max-width: 1150px) {
     .navbar {
-        gap: 1.5rem;
+        gap: 1.2rem;
+    }
+    .navbar a {
+        font-size: 0.85rem;
+    }
+    .btn-vendedor {
+        padding: 8px 18px;
+        font-size: 0.8rem;
+    }
+    .login-links {
+        display: none; /* Oculta textos de login em tablets */
     }
 }
 
-@media (max-width: 768px) {
-    .login-links,
-    .btn-vendedor-desktop {
-        display: none;
-    }
-
-    .dropdown {
-        display: block;
-    }
-
+/* Breakpoint 2: Ativação do Menu Hambúrguer (Abaixo de 950px) */
+@media (max-width: 950px) {
     .icons {
         display: inline-flex;
+        order: 3;
     }
 
+    #check:checked ~ .icons #menu-icon {
+        display: none;
+    }
+
+    #check:checked ~ .icons #close-icon {
+        display: block;
+    }
+
+    #close-icon {
+        display: none;
+    }
+
+    .logo { order: 1; }
+    .login-container { order: 2; margin-left: auto; }
+
+    /* Oculta textos de login definitivamente no mobile */
+    .login-links {
+        display: none !important;
+    }
+    
+    /* NAVBAR: Menu vertical */
     .navbar {
         position: absolute;
-        top: 100%;
+        top: 80px;
         left: 0;
-        right: 0;
         width: 100%;
         height: 0;
-        background: rgba(0, 0, 0, 0.1);
-        backdrop-filter: none;
-        overflow: hidden;
+        background-color: #488D6A;
         display: flex;
         flex-direction: column;
+        justify-content: flex-start;
         align-items: center;
-        justify-content: center;
-        transition: .3s ease;
-        gap: 0.8rem;
-        background-color: #488D6A;
-        z-index: 1;
-        transform: none;
-    }
-
-    .navbar a {
-        order: 3;
-        display: block;
-        font-size: 0.9rem;
-        text-align: center;
-        transform: translateY(-30px);
-        opacity: 0;
-        transition: .3s ease;
-        margin: 0;
+        gap: 1.2rem;
+        transition: 0.4s ease-in-out;
+        overflow: hidden;
+        z-index: 999;
+        padding: 0;
     }
 
     #check:checked ~ .navbar {
-        height: 15rem; /* Aumentado para acomodar o botão */
+        height: 320px;
+        padding: 2.5rem 0;
+        border-bottom: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .navbar a {
+        font-size: 1.1rem;
+        opacity: 0;
+        transform: translateY(-15px);
+        transition: 0.3s;
     }
 
     #check:checked ~ .navbar a {
-        transform: translateY(0);
         opacity: 1;
-        transition-delay: calc(.1s * var(--i));
+        transform: translateY(0);
+        transition-delay: 0.2s;
     }
 
-    .login-container {
-        font-size: 0.9rem;
-        order: 2;
+    /* BOTÃO VENDEDOR: Move para dentro do menu mobile */
+    .login-container .btn-vendedor {
+        display: none;
+    }
+
+    #check:checked ~ .login-container .btn-vendedor {
         display: flex;
-        padding: 0;
-        margin-left: auto;
-        padding-right: 1rem;
-        transform: translateX(-20px);
-    }
-
-    /* Exibe o botão mobile dentro do menu hambúrguer */
-    .btn-vendedor-mobile {
-        display: block;
-        margin-top: 1rem; /* Espaçamento para o botão */
-        order: 4; /* Garante que ele apareça depois dos outros links */
-        transform: translateY(-30px);
-        opacity: 0;
-        transition: .3s ease;
-        transition-delay: calc(.1s * var(--i));
-    }
-
-    #check:checked ~ .navbar .btn-vendedor-mobile {
-        transform: translateY(0);
+        position: absolute;
+        top: 240px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.95rem;
+        padding: 12px 25px;
+        z-index: 1000;
         opacity: 1;
-        transition-delay: calc(.1s * var(--i) + 0.3s); /* Atraso para aparecer depois dos links */
+        transition-delay: 0.4s;
+    }
+}
+
+/* Breakpoint 3: Celulares Pequenos */
+@media (max-width: 480px) {
+    .logo img {
+        height: 40px;
+    }
+    .header {
+        padding: 0 4%;
+    }
+    .login-container {
+        gap: 0.8rem;
+    }
+    
+    #check:checked ~ .navbar {
+        height: 350px;
+    }
+
+    #check:checked ~ .login-container .btn-vendedor {
+        top: 260px;
+        width: 85%;
     }
 }
