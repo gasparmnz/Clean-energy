@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const multer = require('multer');
 const produtosModel = require('../models/models.js');
+const cartModel = require('../models/cartModel');
+
 
 const router = express.Router();
 
@@ -53,7 +55,7 @@ router.post('/cadastrar_produto', upload.single('imagem'), async (req, res) => {
       quantidade: body.quantidade,
       categoria: body.categoria,
       local,
-      imagem: req.file ? req.file.filename : null
+      imagem: req.file ? `/imagem/${req.file.filename}` : null
     };
 
     await produtosModel.create(produto);
@@ -85,6 +87,61 @@ router.get('/item/:id', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro ao obter produto');
+  }
+});
+
+
+
+
+
+router.post('/cart/add', async (req, res) => {
+  try {
+    const { productId, quantidade } = req.body;
+    const qty = parseInt(quantidade, 10) || 1;
+
+    const produto = await produtosModel.findById(productId);
+    if (!produto) return res.status(404).send('Produto não encontrado');
+
+    const item = {
+      productId,
+      nome: produto.nome,
+      preco: produto.preco,
+      imagem: produto.imagem,
+      local: produto.local,
+      quantidade: qty
+    };
+
+    const userId = req.session?.userId || 'guest';
+    await cartModel.addItem(userId, item);
+
+    res.redirect('/carrinho');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao adicionar ao carrinho');
+  }
+});
+
+// Rota: mostra carrinho do usuário
+router.get('/carrinho', async (req, res) => {
+  try {
+    const userId = req.session?.userId || 'guest';
+    const cart = await cartModel.getCartByUser(userId);
+    res.render('pages/carrinho', { cart });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao obter carrinho');
+  }
+});
+
+router.post('/cart/remove', async (req, res) => {
+  try {
+    const userId = req.session?.userId || 'guest';
+    const { index } = req.body;
+    await cartModel.removeByIndex(userId, parseInt(index));
+    res.redirect('/carrinho');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao remover do carrinho');
   }
 });
 

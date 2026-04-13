@@ -11,6 +11,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'app', 'public')));
 
+app.use('/imagem', express.static('app/public/imagem'));
+
+const session = require('express-session');
+app.use(session({
+  secret: 'clean-energy-secret-key',
+  resave: false,
+  saveUninitialized: true
+}));
+
 const rotas = require('./app/routes/router');
 const rotasAdm = require('./app/routes/router-adm');
 app.use('/', rotas);

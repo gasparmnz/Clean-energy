@@ -10,96 +10,111 @@
 </head>
 <body>
   <%- include("../partial/header.ejs") %>
-  
+
   <main>
-     <nav class="back-navigation" aria-label="Navegação de retorno">
+    <nav class="back-navigation" aria-label="Navegação de retorno">
       <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
         <i class='bx bx-arrow-back'></i>
         <span>Voltar</span>
       </button>
-  </nav>
+    </nav>
 
-    <br><br>
+<br><br>
+
+<div class="carrinho-container">
+  
+  <!-- COLUNA ESQUERDA -->
+  <div class="coluna-produtos">
+    <section class="produtos">
+
+      <% if (!cart || cart.length === 0) { %>
+        <p>Seu carrinho está vazio.</p>
+      <% } else { %>
+
+        <% cart.forEach((produto, index) => { %>
+          <article class="produto-card"
+            data-nome="<%= produto.nome %>"
+            data-preco="<%= produto.preco %>"
+            data-max="5">
+
+            <div class="produto-top">
+              <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+
+              <div class="produto-info">
+                <h3><%= produto.nome %></h3>
+
+                <p class="localizacao">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <%= produto.local || "Local não informado" %>
+                </p>
+
+                <p><%= produto.descricao || "Sem descrição" %></p>
+
+                <p class="disponivel">
+                  <strong>Disponível:</strong> 5 toneladas
+                </p>
+
+                <span class="preco">R$ <%= produto.preco %></span>
+
+                <nav class="quantidade-controls">
+                  <button class="quantidade-btn btn-menos">−</button>
+                  <span class="quantidade-num">1</span>
+                  <button class="quantidade-btn btn-mais">+</button>
+                </nav>
+              </div>
+            </div>
+
+            <!-- REMOVER -->
+            <form action="/cart/remove" method="POST">
+              <input type="hidden" name="index" value="<%= index %>">
+              <button type="submit" class="btn-remover">
+                <i class="fas fa-times"></i>
+              </button>
+            </form>
+
+          </article>
+        <% }) %>
+
+      <% } %>
+
+    </section>
+  </div>
+
+  <!-- COLUNA DIREITA -->
+  <div class="coluna-lateral">
     
-    <!-- Container com duas colunas -->
-    <div class="carrinho-container">
+    <aside class="resumo">
+      <header>
+        <h2>Resumo do Pedido</h2>
+      </header>
+
+      <ul class="resumo-lista"></ul>
+      <p class="total"></p>
       
-      <!-- Coluna esquerda: Produtos -->
-      <div class="coluna-produtos">
-        <section class="produtos">
-          <!-- Produto 1 -->
-          <article class="produto-card" data-nome="Resíduos de café" data-preco="700" data-max="5">
-            <div class="produto-top">
-              <img src="/imagem/residuosdecafe.png" alt="Resíduos de café">
-              <div class="produto-info">
-                <h3>Resíduos de café</h3>
-                <p class="localizacao"><i class="fas fa-map-marker-alt"></i> Rio de Janeiro - RJ</p>
-                <p>Resíduos de café reciclados, ideais para produção de energia limpa e fertilização do solo.</p>
-                <p class="disponivel"><strong>Disponível:</strong> 5 toneladas</p>
-                <span class="preco">R$ 700,00</span>
-                <nav class="quantidade-controls">
-                  <button class="quantidade-btn btn-menos">−</button>
-                  <span class="quantidade-num">1</span>
-                  <button class="quantidade-btn btn-mais">+</button>
-                </nav>
-              </div>
-            </div>
-            <button class="btn-remover"><i class="fas fa-times"></i></button>
-          </article>
+      <a href="/minhascompras" class="btn-comprar">
+        Finalizar Compra
+      </a>
+    </aside>
 
-          <!-- Produto 2 -->
-          <article class="produto-card" data-nome="Resíduos de Biomassa" data-preco="1200" data-max="8">
-            <div class="produto-top">
-              <img src="/imagem/cana.png" alt="Resíduos de Biomassa">
-              <div class="produto-info">
-                <h3>Resíduos de Biomassa</h3>
-                <p class="localizacao"><i class="fas fa-map-marker-alt"></i> São Paulo - SP</p>
-                <p>Resíduos provenientes da geração de biomassa, ideais para combustíveis renováveis e geração de energia sustentável.</p>
-                <p class="disponivel"><strong>Disponível:</strong> 8 toneladas</p>
-                <span class="preco">R$ 1.200,00</span>
-                <nav class="quantidade-controls">
-                  <button class="quantidade-btn btn-menos">−</button>
-                  <span class="quantidade-num">1</span>
-                  <button class="quantidade-btn btn-mais">+</button>
-                </nav>
-              </div>
-            </div>
-            <button class="btn-remover"><i class="fas fa-times"></i></button>
-          </article>
-        </section>
+    <br>
+
+    <aside class="anuncio-transportadoras">
+      <div class="anuncio-icon">
+        <i class="fas fa-truck"></i>
       </div>
-
-      <!-- Coluna direita: Resumo e Anúncio -->
-      <div class="coluna-lateral">
-        
-        <!-- Resumo do Pedido -->
-        <aside class="resumo">
-          <header>
-            <h2>Resumo do Pedido</h2>
-          </header>
-          <ul class="resumo-lista"></ul>
-          <p class="total"></p>
-          
-            <a href="/minhascompras" class="btn-comprar">Finalizar Compra
-            </a>
-        </aside>
-
-        <!-- Anúncio de Transportadoras -->
-        <br><aside class="anuncio-transportadoras">
-          <div class="anuncio-icon">
-            <i class="fas fa-truck"></i>
-          </div>
-          <div class="anuncio-content">
-            <h3>Precisa de transporte?</h3>
-            <p>Conheça nossas transportadoras parceiras e escolha a melhor opção para sua entrega.</p>
-            <a href="/transporte" class="btn-anuncio">
-              Ver Transportadoras <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-        </aside>
-
+      <div class="anuncio-content">
+        <h3>Precisa de transporte?</h3>
+        <p>Conheça nossas transportadoras parceiras e escolha a melhor opção para sua entrega.</p>
+        <a href="/transporte" class="btn-anuncio">
+          Ver Transportadoras <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
-    </div>
+    </aside>
+
+  </div>
+</div>
+
+
   </main>
 
   <script>
@@ -126,6 +141,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", () => {
+
       document.querySelectorAll(".btn-mais").forEach(btn => {
         btn.addEventListener("click", function () {
           const card = this.closest(".produto-card");
@@ -153,19 +169,26 @@
       });
 
       document.querySelectorAll(".btn-remover").forEach(btn => {
-        btn.addEventListener("click", function() {
-          const produtoCard = this.closest(".produto-card");
-          produtoCard.remove(); // Remove o card do DOM
-          atualizarResumo();
+        btn.addEventListener("click", function(e) {
+          // Remover e.preventDefault() para permitir envio do formulário
+          // e.preventDefault(); // REMOVIDO
+          // const produtoCard = this.closest(".produto-card");
+          // produtoCard.remove();
+          // atualizarResumo();
         });
       });
 
-      // Chame a função para inicializar o resumo
       atualizarResumo();
     });
   </script>
-  <%- include("../partial/footer.ejs") %>
+
+<%- include("../partial/footer.ejs") %>
+
   <script src="/js/darkmode.js"></script>
+
 </body>
 </html>
+
+ 
+
 
