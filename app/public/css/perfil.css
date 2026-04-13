@@ -1,236 +1,144 @@
 :root {
   --primary-color: #488D6A;
-  --text-color: #222;
   --bg-color: #f9f9f9;
-  --sidebar-bg: #fff;
+  --text-color: #222;
 }
 
+/* reset básico */
 * {
   box-sizing: border-box;
   margin: 0;
-  padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);  
+  background: var(--bg-color);
+  color: var(--text-color);
 }
 
 main {
   display: flex;
-  flex-direction: row;  /* importante! */
   min-height: 100vh;
   margin-top: 87px;
-  flex: 1;
-}
-.sidebar {
-  background-color: var(--sidebar-bg); /* #fff */
-  padding: 20px;
-  min-width: 220px;
-  height: auto;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
 }
 
-.sidebar-nav ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.sidebar-nav a {
-  text-decoration: none;
-  color: var(--text-color);
-  font-weight: 500;
-}
-
-/* =========================
-   Responsividade Sidebar
-   ========================= */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 10px;
-  }
-  .sidebar-nav ul {
-    flex-direction: row;
-    gap: 10px;
-  }
-  .content {
-    padding: 10px;
-  }
-  .top-nav ul {
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-}
-
-
-
-/* Conteúdo principal */
+/* conteúdo */
 .content {
   flex: 1;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+  padding: 25px;
 }
 
-.top-nav ul {
-  list-style: none;
-  display: flex;
-  gap: 20px;
-  border-bottom: 1px solid #ccc;
-}
-
-.top-nav a {
-  text-decoration: none;
-  color: var(--text-color);
-  padding-bottom: 10px;
-  display: inline-block;
-}
-
-.top-nav a.active {
-  color: var(--primary-color);
-  border-bottom: 2px solid var(--primary-color);
-}
-
-.orders-img {
-  margin-bottom: 20px;
-  width: 80px;
-  height: 80px;
-}
+/* botão voltar */
 .back-button {
   all: unset;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
+  display: flex;
   gap: 8px;
-  font-size: 1.1rem;
-  color: #555;
-  transition: color 0.2s ease;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin-bottom: 20px;
 }
 
-.back-button:hover {
-  color: #28a745;
-  background-color: #e0f0e0;
-}
-
-.back-button i {
-  font-size: 24px;
-  vertical-align: middle;
-}
-
-
-/* Responsividade */
-@media (max-width: 768px) {
-  main {
-    flex-direction: column;
-  }
-}
-/* =========================
-   Formulário de Perfil
-   ========================= */
+/* card perfil */
 .perfil-form {
-  background: #fff;
-  padding: 30px 40px;
+  background: white;
+  padding: 35px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  max-width: 6000px;       
-  width: 100%;
-  height: 700px;           
-  margin: 20px auto;        
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  max-width: 6500px;
+  margin-bottom: 20px;
+  font-size: 19px;
+  font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .perfil-form h2 {
-  font-size: 1.8rem;
-  margin-bottom: 5px;
   color: var(--primary-color);
+  margin-bottom: 20px;
 }
 
-.perfil-form p {
-  font-size: 1rem;
-  margin-bottom: 25px;
-  color: #666;
-}
-
-/* Inputs em grid para ficar mais bonito */
-.perfil-form form {
+/* formulário */
+form {
   display: grid;
-  grid-template-columns: 1fr 1fr; 
-  gap: 22px;
+  gap: 15px;
 }
 
-.perfil-form label {
-  font-weight: 300;
-  margin-bottom: 35px;
-  display: block;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 18px;
 }
 
-.perfil-form input[type="text"],
-.perfil-form input[type="email"],
-.perfil-form input[type="tel"] {
-  width: 100%;
-  padding: 13px;
-  border: 1px solid #000000;
-  border-radius: 15px;
-  font-size: 1.09rem;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-.perfil-form input:focus {
-  border-color: var(--primary-color);
-  outline: none;
-}
-
-.perfil-form legend {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.perfil-form button {
-  grid-column: span 2;
+button {
   background: var(--primary-color);
-  color: #fff;
+  color: white;
   border: none;
-  border-radius: 8px;
-  padding: 14px;
-  font-size: 1.1rem;
+  padding: 13px;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background 0.3s;
+  font-size: 18px;
+  font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
 }
 
-.perfil-form button:hover {
-  background: #366b46;
+#btnCancelar {
+  background: #ef4444;
+  
 }
-#btnCancelar{
-  background-color: #ef4444;
-}
-#blocoEdicao{
-  color: #000000;
+
+/* utilitário */
+.hidden {
+  display: none;
 }
 
 
-/* =========================
-   Responsividade
-   ========================= */
-@media (max-width: 768px) {
-  .perfil-form {
-    padding: 20px;
-  }
-  .perfil-form form {
-    grid-template-columns: 1fr; /* no mobile fica 1 coluna */
-  }
-  .perfil-form fieldset {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+#perfilVisualizacao {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 
+/* textos das infos */
+#perfilVisualizacao p {
+  font-size: 1px;    /* AQUI você controla o tamanho */
+  line-height: 1.5;
+  font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* títulos (Nome, Email, etc) */
+#perfilVisualizacao strong {
+  font-size: 20px;
+  color: #333;
+}
+
+/* valores (Usuário, email, etc) */
+#perfilVisualizacao span {
+  font-size: 20px;
+  color: #555;
+  margin-left: 6px;
+}
+
+/* botão editar */
+#perfilVisualizacao button {
+  margin-top: 10px;
+  width: 350px;
+  font-size: 20px;   
+  padding: 14px;
+}
+
+.perfil-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+/* FOTO */
+.perfil-foto img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-color);
+}
+
+.hidden {
+  display: none !important;
+}
