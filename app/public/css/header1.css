@@ -45,11 +45,11 @@ body {
  
 .logo {
   display: flex;
-  align-items: center;  /* centraliza a imagem verticalmente */
+  align-items: center;
 }
 
 .logo img {
-  height: 55px;  /* aumenta a logo */
+  height: 55px;
   width: auto;
 }
  
