@@ -84,13 +84,44 @@ main{
   padding-bottom: var(--spacing-3xl);
 }
 
+.hero-content {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+
 .transport-hero {
+  position: relative;
+  background-image: url('/imagem/Carga.png');
+  background-size: cover;
+  background-position: center;
+  padding: 80px 20px;
+  color: white;
+}
+
+/* camada escura por cima da imagem */
+.transport-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5); /* transparência */
+}
+
+/* garante que o texto fique acima do overlay */
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+/*.transport-hero {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   color: var(--background);
   padding: var(--spacing-3xl) var(--spacing-xl);
   text-align: center;
   margin-bottom: var(--spacing-2xl);
-}
+
+  
+}*/
 
 .hero-content {
   max-width: 900px;
