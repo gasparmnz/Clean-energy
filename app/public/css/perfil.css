@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #488D6A;
+  --primary-color: #386b52;
   --bg-color: #f9f9f9;
   --text-color: #222;
 }
@@ -39,11 +39,13 @@ main {
 
 /* card perfil */
 .perfil-form {
-  background: white;
+background: url('/imagem/selva.png') no-repeat center center;
+  background-size: cover;
+
   padding: 35px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,.08);
-  max-width: 6500px;
+  max-width: 100%;
   margin-bottom: 20px;
   font-size: 19px;
   font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -69,7 +71,7 @@ input {
 
 button {
   background: var(--primary-color);
-  color: white;
+  color: rgb(255, 255, 255);
   border: none;
   padding: 13px;
   border-radius: 5px;
