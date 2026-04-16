@@ -169,7 +169,8 @@ figcaption a {
 .produto-card figcaption p {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  
+ 
 }
 
 main section {
