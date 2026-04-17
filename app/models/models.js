@@ -22,8 +22,8 @@ const produtosModel = {
   create: async (dados) => {
     try {
       const sql = `INSERT INTO produtos
-        (nome, descricao, preco, quantidade, categoria, local, imagem)
-        VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        (nome, descricao, preco, quantidade, categoria, local, imagem, estado)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
       const params = [
         dados.nome,
         dados.descricao || null,
@@ -31,7 +31,8 @@ const produtosModel = {
         dados.quantidade || null,
         dados.categoria || null,
         dados.local || null,
-        dados.imagem || null
+        dados.imagem || null,
+        dados.estado || null
       ];
       const [result] = await pool.query(sql, params);
       return result;
