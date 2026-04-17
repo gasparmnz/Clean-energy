@@ -1,73 +1,81 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Perfil</title>
-
+  <title>Meu Perfil - Biomassa Hub</title>
   <link rel="stylesheet" href="/css/perfil.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <style>
+    .perfil-badge { display:inline-block; padding:4px 14px; border-radius:20px; font-size:0.85rem; font-weight:700; margin-bottom:16px; }
+    .badge-comprador { background:#e8f5e9; color:#2e7d32; }
+    .badge-vendedor  { background:#fff3e0; color:#e65100; }
+    .perfil-info p { margin:8px 0; font-size:1rem; }
+    .btn-logout { background:#e74c3c; color:#fff; border:none; padding:10px 24px; border-radius:8px; cursor:pointer; font-size:0.95rem; margin-top:20px; text-decoration:none; display:inline-block; }
+    .btn-cadastrar-produto { background:#2e7d32; color:#fff; padding:10px 24px; border-radius:8px; text-decoration:none; font-weight:600; display:inline-block; margin-top:10px; }
+  </style>
 </head>
-
 <body>
   <%- include('../partial/header.ejs') %>
+  <main>
+    <%- include('../partial/sidebar.ejs') %>
 
-    <main>
-      <%- include('../partial/sidebar.ejs') %>
+    <section class="content">
+      <button class="back-button" onclick="history.back()">
+        <i class='bx bx-arrow-back'></i>
+        <span>Voltar</span>
+      </button>
 
-        <section class="content">
+      <section class="perfil-form">
+        <h2>Meu Perfil</h2>
 
-          <!-- botão voltar -->
-          <button class="back-button" onclick="history.back()">
-            <i class='bx bx-arrow-back'></i>
-            <span>Voltar</span>
-          </button>
-
-          <section class="perfil-form">
-            <h2>Meu Perfil</h2>
-
-            <section class="perfil-foto">
-              <img id="fotoPerfil" src="/imagem/avatar.png" alt="Foto do usuário">
-            </section>
-            <br>
-
-            <!-- VISUALIZAÇÃO -->
-            <section id="perfilVisualizacao">
-              <p><strong>Nome/Empresa:</strong> <span id="nomeDisplay">Usuário</span></p>
-              <p><strong>Email:</strong> <span id="emailDisplay">usuario@gmail.com</span></p>
-              <p><strong>Telefone:</strong> <span id="telefoneDisplay">*********19</span></p>
-              <p><strong>CPF/CNPJ:</strong> <span id="cpfDisplay">***.***.*18-70</span></p>
-
-              <button id="btnEditar" class="btn-editar" type="button">
-                Editar perfil
-              </button>
-            </section>
-
-            <!-- EDIÇÃO -->
-            <form id="formEdicao" class="hidden">
-              <label>Nome/Empresa</label>
-              <input type="text" id="nomeInput">
-
-              <label>Email</label>
-              <input type="email" id="emailInput">
-
-              <label>Telefone</label>
-              <input type="tel" id="telefoneInput">
-
-              <label>CPF/CNPJ</label>
-              <input type="text" id="cpfInput">
-
-              <button type="submit">Salvar</button>
-              <button type="button" id="btnCancelar">Cancelar</button>
-            </form>
-
-          </section>
+        <section class="perfil-foto">
+          <img id="fotoPerfil" src="/imagem/avatar.png" alt="Foto do usuário">
         </section>
-    </main>
 
-    <%- include('../partial/footer.ejs') %>
-      <script src="/js/perfil.js"></script>
+        <% if (usuario) { %>
+          <span class="perfil-badge <%= usuario.Tipo === 'PJ' ? 'badge-vendedor' : 'badge-comprador' %>">
+            <%= usuario.Tipo === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
+          </span>
+
+          <section class="perfil-info">
+            <p><strong>Nome:</strong> <%= usuario.Nome %></p>
+            <p><strong>E-mail:</strong> <%= usuario.Email %></p>
+            <p><strong>Tipo de conta:</strong> <%= usuario.Tipo === 'PJ' ? 'Pessoa Jurídica (Vendedor)' : 'Pessoa Física (Comprador)' %></p>
+            <% if (usuario.Data_Criacao) { %>
+              <p><strong>Membro desde:</strong> <%= new Date(usuario.Data_Criacao).toLocaleDateString('pt-BR') %></p>
+            <% } %>
+            <% if (usuario.Ultimo_Login) { %>
+              <p><strong>Último acesso:</strong> <%= new Date(usuario.Ultimo_Login).toLocaleString('pt-BR') %></p>
+            <% } %>
+          </section>
+
+          <% if (usuario.Tipo === 'PJ') { %>
+            <a href="/cadastrar_produto" class="btn-cadastrar-produto">
+              <i class='bx bx-plus'></i> Cadastrar Produto
+            </a>
+            <br>
+            <a href="/listaprodutos" class="btn-cadastrar-produto" style="background:#1565c0; margin-top:8px;">
+              <i class='bx bx-list-ul'></i> Meus Produtos
+            </a>
+          <% } else { %>
+            <a href="/minhascompras" class="btn-cadastrar-produto">
+              <i class='bx bx-shopping-bag'></i> Minhas Compras
+            </a>
+          <% } %>
+
+          <br>
+          <a href="/logout" class="btn-logout">
+            <i class='bx bx-log-out'></i> Sair da Conta
+          </a>
+
+        <% } else { %>
+          <p>Erro ao carregar dados do perfil.</p>
+        <% } %>
+      </section>
+    </section>
+  </main>
+
+  <%- include('../partial/footer.ejs') %>
 </body>
-
 </html>

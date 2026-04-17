@@ -61,7 +61,11 @@
  
     <nav class="acoes" role="navigation" aria-label="Ações">
       <a href="/produtoscomconta" class="voltar">Voltar</a>
-      <a href="/cadastro_vendedor" class="comecar">Começar</a>
+      <% if (typeof usuario !== 'undefined' && usuario && usuario.perfil === 'comprador') { %>
+        <a href="/upgrade_vendedor" class="comecar">Continuar como vendedor</a>
+      <% } else { %>
+        <a href="/cadastro_vendedor" class="comecar">Começar</a>
+      <% } %>
     </nav>
   </main>
   <script src="/js/darkmode.js"></script>

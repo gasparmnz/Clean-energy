@@ -38,7 +38,7 @@
             data-max="5">
 
             <div class="produto-top">
-              <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+              <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>" onerror="this.src='/imagem/sem-foto.png'">
 
               <div class="produto-info">
                 <h3><%= produto.nome %></h3>

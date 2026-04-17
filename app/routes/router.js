@@ -1,9 +1,9 @@
 var express = require("express");
 var router = express.Router();
 const { body, validationResult } = require("express-validator");
-const usuarios = []; 
 const path = require('path');
 const multer = require('multer');
+const bcrypt = require('bcryptjs');
 const pool = require("../../config/pool_conexoes");
 const produtosModel = require("../models/models");
 const cartModel = require("../models/cartModel");
@@ -16,8 +16,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
-var {validarCPF} = require("../helpers/validacao");
+var { validarCPF } = require("../helpers/validacao");
 
 async function getProdutos() {
   try {
@@ -28,35 +27,151 @@ async function getProdutos() {
   }
 }
 
-/* produtos - removido array estático, agora busca do banco */
+function requireLogin(req, res, next) {
+  if (!req.session.userId) return res.redirect('/login');
+  next();
+}
+
+function requireVendedor(req, res, next) {
+  if (!req.session.userId) return res.redirect('/login');
+  if (req.session.perfil !== 'vendedor') return res.redirect('/?erro=acesso_restrito');
+  next();
+}
 
 /* ROTAS */
 router.get("/", async (req, res) => {
-  const produtos = await getProdutos();
+  const { busca, estado, categoria, precoMin, precoMax } = req.query;
+  let produtos = await getProdutos();
+
+  if (busca && busca.trim()) {
+    const termo = busca.trim().toLowerCase();
+    produtos = produtos.filter(p => p.nome && p.nome.toLowerCase().includes(termo));
+  }
+  if (estado && estado.trim()) {
+    const t = estado.trim().toLowerCase();
+    produtos = produtos.filter(p => p.estado && p.estado.toLowerCase().includes(t));
+  }
+  if (categoria && categoria.trim()) {
+    const t = categoria.trim().toLowerCase();
+    produtos = produtos.filter(p => p.categoria && p.categoria.toLowerCase().includes(t));
+  }
+  if (precoMin && !isNaN(precoMin)) {
+    produtos = produtos.filter(p => parseFloat(p.preco) >= parseFloat(precoMin));
+  }
+  if (precoMax && !isNaN(precoMax)) {
+    produtos = produtos.filter(p => parseFloat(p.preco) <= parseFloat(precoMax));
+  }
+
   res.render("pages/produtos", {
     produtos,
+    usuario: req.session.userId ? { nome: req.session.nomeUsuario, perfil: req.session.perfil } : null,
+    filtros: { busca: busca||'', estado: estado||'', categoria: categoria||'', precoMin: precoMin||'', precoMax: precoMax||'' }
   });
 });
-router.get("/home", (req, res) => {
-  res.render("pages/home");
-});
-router.get("/adicione_produto", (req, res) => {
-  res.render("pages/adicione_produto");
+
+router.get("/home", (req, res) => res.render("pages/home"));
+// Rota para comprador se tornar vendedor
+router.get("/upgrade_vendedor", requireLogin, async (req, res) => {
+  // Só permite se for comprador
+  if (req.session.perfil !== 'comprador') {
+    return res.redirect('/?erro=acesso_restrito');
+  }
+  res.render("pages/upgrade_vendedor", { 
+    valoresEmpresa: { nome: req.session.nomeUsuario, email: req.session.emailUsuario, company_name: '', company_email: '', cnpj: '' }, 
+    erroValidacaoEmpresa: {}, 
+    msgErroEmpresa: {} 
+  });
 });
 
-router.get("/minhascompras", (req, res) => {
-  res.render("pages/minhascompras");
+// POST para upgrade de vendedor
+router.post("/upgrade_vendedor",
+  requireLogin,
+  body("company_name").trim().notEmpty().withMessage("*Campo obrigatório!").isLength({ min:3 }).withMessage("*Nome da empresa muito curto"),
+  body("company_email").trim().notEmpty().withMessage("*Campo obrigatório!").isEmail().withMessage("*E-mail inválido!"),
+  body("cnpj").notEmpty().withMessage("*Campo obrigatório!").custom((value) => { if (value.replace(/\D/g,'').length !== 14) throw new Error("*O CNPJ deve conter 14 números!"); return true; }),
+  async (req, res) => {
+    // Verifica se é comprador
+    if (req.session.perfil !== 'comprador') {
+      return res.redirect('/?erro=acesso_restrito');
+    }
+
+    const errors = validationResult(req);
+    const valoresEmpresa = {
+      nome: req.session.nomeUsuario,
+      email: req.session.emailUsuario,
+      company_name: req.body.company_name || '',
+      company_email: req.body.company_email || '',
+      cnpj: req.body.cnpj || ''
+    };
+    if (!errors.isEmpty()) {
+      const erroValidacaoEmpresa = {}, msgErroEmpresa = {};
+      errors.array().forEach(e => { erroValidacaoEmpresa[e.path]='erro'; msgErroEmpresa[e.path]=e.msg; });
+      return res.render("pages/upgrade_vendedor", { valoresEmpresa, erroValidacaoEmpresa, msgErroEmpresa });
+    }
+
+    try {
+      const companyName = req.body.company_name.trim();
+      const companyEmail = req.body.company_email.trim();
+      const cnpjNumeros = req.body.cnpj.replace(/\D/g, '');
+
+      // Verifica se email da empresa já existe em outra conta
+      const [emailExists] = await pool.query("SELECT Usuario_ID FROM Usuario WHERE Email = ? AND Usuario_ID != ?", [companyEmail, req.session.userId]);
+      if (emailExists.length > 0) {
+        return res.render("pages/upgrade_vendedor", {
+          valoresEmpresa,
+          erroValidacaoEmpresa: { company_email: 'erro' },
+          msgErroEmpresa: { company_email: '*Este e-mail já está em uso em outra conta!' }
+        });
+      }
+
+      // Verifica se CNPJ já existe
+      const [existing] = await pool.query("SELECT Usuario_ID FROM Pessoa_Juridica WHERE CNPJ = ?", [cnpjNumeros]);
+      if (existing.length > 0) {
+        return res.render("pages/upgrade_vendedor", {
+          valoresEmpresa,
+          erroValidacaoEmpresa: { cnpj: 'erro' },
+          msgErroEmpresa: { cnpj: '*Este CNPJ já está cadastrado!' }
+        });
+      }
+
+      // Converte usuário para vendedor (PJ) e atualiza dados da conta para dados da empresa
+      await pool.query("UPDATE Usuario SET Tipo = 'PJ', Nome = ?, Email = ? WHERE Usuario_ID = ?", [companyName, companyEmail, req.session.userId]);
+      
+      // Adiciona registro em Pessoa_Juridica
+      await pool.query("INSERT INTO Pessoa_Juridica (Usuario_ID, CNPJ) VALUES (?, ?)", [req.session.userId, cnpjNumeros]);
+      
+      // Atualiza sessão
+      req.session.perfil = 'vendedor';
+      req.session.tipo = 'PJ';
+      req.session.nomeUsuario = companyName;
+      req.session.emailUsuario = companyEmail;
+
+      return res.redirect('/perfil');
+    } catch (err) {
+      console.error('Erro ao fazer upgrade para vendedor:', err);
+      res.status(500).send('Erro ao fazer upgrade. Tente novamente.');
+    }
+  }
+);
+router.get("/minhascompras", requireLogin, (req, res) => res.render("pages/minhascompras"));
+
+router.get("/perfil", requireLogin, async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM Usuario WHERE Usuario_ID = ?", [req.session.userId]);
+    const usuarioDados = rows[0] || null;
+    if (usuarioDados) {
+      usuarioDados.perfil = req.session.perfil; // Adiciona o perfil da sessão para consistência
+    }
+    res.render("pages/perfil", { usuario: usuarioDados });
+  } catch (err) {
+    res.render("pages/perfil", { usuario: null });
+  }
 });
-router.get("/perfil", (req, res) => {
-  res.render("pages/perfil");
-});
-router.get("/painel", (req, res) => {
-  res.render("pages/painel");
-});
-router.get("/meus_produtos", (req, res) => {
-  res.render("pages/meus_produtos");
-});
-router.get("/listaprodutos", async (req, res) => {
+
+router.get("/painel", requireLogin, (req, res) => res.render("pages/painel"));
+router.get("/meus_produtos", requireLogin, (req, res) => res.render("pages/meus_produtos"));
+
+router.get("/listaprodutos", requireLogin, async (req, res) => {
   const produtos = await getProdutos();
   res.render("pages/listaprodutos", { produtos });
 });
@@ -67,7 +182,6 @@ router.get("/carrinho", async (req, res) => {
     const cart = await cartModel.getCartByUser(userId);
     res.render("pages/carrinho", { cart });
   } catch (err) {
-    console.error(err);
     res.status(500).send('Erro ao obter carrinho');
   }
 });
@@ -75,26 +189,12 @@ router.get("/carrinho", async (req, res) => {
 router.post('/cart/add', async (req, res) => {
   try {
     const { productId, quantidade } = req.body;
-    const qty = parseInt(quantidade, 10) || 1;
-
     const produto = await produtosModel.findById(productId);
     if (!produto) return res.status(404).send('Produto não encontrado');
-
-    const item = {
-      productId,
-      nome: produto.nome,
-      preco: produto.preco,
-      imagem: produto.imagem,
-      local: produto.local,
-      quantidade: qty
-    };
-
     const userId = req.session?.userId || 'guest';
-    await cartModel.addItem(userId, item);
-
+    await cartModel.addItem(userId, { productId, nome: produto.nome, preco: produto.preco, imagem: produto.imagem, local: produto.local, quantidade: parseInt(quantidade,10)||1 });
     res.redirect('/carrinho');
   } catch (err) {
-    console.error(err);
     res.status(500).send('Erro ao adicionar ao carrinho: ' + err.message);
   }
 });
@@ -102,84 +202,57 @@ router.post('/cart/add', async (req, res) => {
 router.post('/cart/remove', async (req, res) => {
   try {
     const userId = req.session?.userId || 'guest';
-    const { index } = req.body;
-    await cartModel.removeByIndex(userId, parseInt(index));
+    await cartModel.removeByIndex(userId, parseInt(req.body.index));
     res.redirect('/carrinho');
   } catch (err) {
-    console.error(err);
     res.status(500).send('Erro ao remover do carrinho');
   }
 });
 
-router.get("/transporte", (req, res) =>{
-  res.render("pages/transporte");
+router.get("/transporte", (req, res) => res.render("pages/transporte"));
+router.get("/duvidas", (req, res) => res.render("pages/duvidas"));
+router.get("/sobre_nos", (req, res) => res.render("pages/sobre_nos"));
+
+router.get("/adicione_produto", (req, res) => {
+  res.render("pages/adicione_produto");
 });
-router.get("/duvidas", (req, res) =>{
-  res.render("pages/duvidas");
-});
-router.get("/sobre_nos", (req, res) => {
-  res.render("pages/sobre_nos");
-});
-router.get("/cadastrar_produto", (req, res) => {
-  res.render("pages/cadastrar_produto");
-});
-router.get("/painel", (req, res) => {
-  res.render("pages/painel");
-});
-router.get("/cadastro_vendedor", (req, res) => {
-  res.render("pages/cadastro_vendedor");
-});
+
+router.get("/cadastrar_produto", requireVendedor, (req, res) => res.render("pages/cadastrar_produto"));
+router.get("/cadastro_vendedor", (req, res) => res.render("pages/cadastro_vendedor", { valoresEmpresa: { nome:'',cnpj:'',email:'',senha:'',confirmarSenha:'' }, erroValidacaoEmpresa:{}, msgErroEmpresa:{}, retorno:null }));
+
 router.get("/item/:id", async function (req, res) {
   try {
     const produto = await produtosModel.findById(req.params.id);
-    if (!produto) {
-      return res.status(404).send("Produto não encontrado");
-    }
+    if (!produto) return res.status(404).send("Produto não encontrado");
     res.render("pages/item", { produto });
   } catch (err) {
-    console.error('Erro ao buscar produto:', err);
     res.status(500).send('Erro interno do servidor');
   }
 });
 
-router.get("/produtoscomconta", async (req, res) => {
-  const produtos = await getProdutos();
-  
-  // Filtrar produtos por cidade (baseado no campo 'local')
-  const produtosSP = produtos.filter(p => p.local && p.local.includes('São Paulo'));
-  const produtosRJ = produtos.filter(p => p.local && p.local.includes('Rio de Janeiro'));
-  const produtosCuritiba = produtos.filter(p => p.local && p.local.includes('Curitiba'));
-  const produtosFlorianopolis = produtos.filter(p => p.local && p.local.includes('Florianópolis'));
-  const produtosSalvador = produtos.filter(p => p.local && p.local.includes('Salvador'));
-  const produtosFortaleza = produtos.filter(p => p.local && p.local.includes('Fortaleza'));
-  
-  res.render("pages/produtos", {
-    produtos: produtosSP,
-    produtos2: produtosRJ,
-    produtos3: produtosCuritiba,
-    produtos4: produtosFlorianopolis,
-    produtos5: produtosSalvador,
-    produtos6: produtosFortaleza,
-  });
-});
-
-router.post("/cadastrar_produto", upload.single('imagem'), async (req, res) => {
-  const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento } = req.body;
+/* FIX DO PREÇO: limpa máscara antes de parsear */
+router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), async (req, res) => {
+  const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
   const imagem = req.file ? req.file.filename : 'sem-foto.png';
-  const local = `${cidade || ''}${cidade ? ', ' : ''}${bairro || ''}${bairro ? ', ' : ''}${rua || ''}${rua ? ', ' : ''}${numero || ''}${complemento ? ', ' + complemento : ''}`;
+  const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
 
-  const precoNumerico = parseFloat((preco || '0').replace(/\./g, '').replace(',', '.')) || 0;
+  // Remove R$, espaços, pontos de milhar; troca vírgula por ponto
+  let precoLimpo = (preco || '0').toString().trim()
+    .replace(/R\$\s*/g, '')
+    .replace(/\s/g, '')
+    .replace(/\./g, '')
+    .replace(',', '.');
+  const precoNumerico = parseFloat(precoLimpo) || 0;
+
+  // Limpa quantidade: remove 't', espaços; troca vírgula por ponto
+  let quantidadeLimpa = (quantidade || '0').toString().trim()
+    .replace(/ t$/i, '')
+    .replace(/\s/g, '')
+    .replace(',', '.');
+  const quantidadeNumerica = parseFloat(quantidadeLimpa) || 0;
 
   try {
-    await produtosModel.create({
-      nome,
-      descricao,
-      preco: precoNumerico,
-      quantidade,
-      categoria,
-      local,
-      imagem
-    });
+    await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem, estado });
     res.redirect('/listaprodutos');
   } catch (err) {
     console.error('Erro ao cadastrar produto:', err);
@@ -187,248 +260,132 @@ router.post("/cadastrar_produto", upload.single('imagem'), async (req, res) => {
   }
 });
 
-/* ROTAS com VALIDAÇÕES */
-
-//cadastro//
+/* AUTENTICAÇÃO */
 router.get("/cadastro", (req, res) => {
   res.render("pages/cadastro", {
-    // Usuario normal
-    valoresPessoaFisica: {
-      // variavel sem valor quando o usuario entra
-      nome: "",
-      cpf: "",
-      email: "",
-      senha: "",
-      confirmarSenha: "",
-    },
-    erroValidacaoPessoaFisica: {}, // sem erro de validacao quando o usuario entra
-    msgErroPessoaFisica: {}, // sem mensagem de erro quando o usuario entra
-
-    // Empresa
-    valoresEmpresa: {
-      // variavel sem valor quando o usuario entra
-      nome: "",
-      cpf: "",
-      email: "",
-      senha: "",
-      confirmarSenha: "",
-    },
-    erroValidacaoEmpresa: {}, // sem erro de validacao quando o usuario entra
-    msgErroEmpresa: {}, // sem mensagem de erro quando o usuario entra
-
+    valoresPessoaFisica: { nome:'', cpf:'', email:'', senha:'', confirmarSenha:'' },
+    erroValidacaoPessoaFisica: {}, msgErroPessoaFisica: {},
+    valoresEmpresa: { nome:'', cpf:'', email:'', senha:'', confirmarSenha:'' },
+    erroValidacaoEmpresa: {}, msgErroEmpresa: {},
     retorno: null,
   });
 });
 
-//login//
 router.get("/login", (req, res) => {
-  res.render("pages/login", {
-    erro: null, // sem erro quando o usuario entra
-    valores: {
-      // variavel sem valor quando o usuario entra
-      usuarioDigitado: "",
-      senhaDigitada: "",
-    },
-    sucesso: false,
-  });
+  if (req.session.userId) return res.redirect('/perfil');
+  res.render("pages/login", { erro: null, valores: { usuarioDigitado:'', senhaDigitada:'' }, sucesso: false });
 });
 
-/* =========== VALIDAÇÕES ============ */
-//Usuario comum//
-router.post(
-  "/cadastroUsuario",
-  body("nome")
-    .trim()
-    .notEmpty()
-    .withMessage("*Campo obrigatório!")
-    .isLength({ min: 3, max: 50 })
-    .withMessage("*O Nome deve conter entre 3 e 50 caracteres!"),
+router.get("/logout", (req, res) => {
+  req.session.destroy(() => res.redirect('/login'));
+});
 
-    body("cpf")
-    .custom((value) => {
-        if (validarCPF(value)){
-            return true;
-        } else {
-            throw new Error("CPF inválido!");
-        }
-    }),
+/* CADASTRO COMPRADOR (PF) */
+router.post("/cadastroUsuario",
+  body("nome").trim().notEmpty().withMessage("*Campo obrigatório!").isLength({ min:3, max:50 }).withMessage("*O Nome deve conter entre 3 e 50 caracteres!"),
+  body("cpf").custom((value) => { if (validarCPF(value)) return true; throw new Error("CPF inválido!"); }),
+  body("email").notEmpty().withMessage("*Campo obrigatório!").isEmail().withMessage("*Endereço de email inválido!"),
+  body("senha").notEmpty().withMessage("*Campo obrigatório!").isStrongPassword({ minLowercase:1, minUppercase:1, minNumbers:1, minSymbols:1, minLength:8 }).withMessage("*Sua senha deve conter pelo menos: uma letra maiúscula, um número e um caractere especial!"),
+  body("confirmarSenha").notEmpty().withMessage("*Campo obrigatório!").custom((value, { req }) => { if (value !== req.body.senha) throw new Error("*As senhas não conferem!"); return true; }),
 
-  body("email")
-    .notEmpty()
-    .withMessage("*Campo obrigatório!")
-    .isEmail()
-    .withMessage("*Endereço de email inválido!"),
-
-  body("senha")
-    .notEmpty()
-    .withMessage("*Campo obrigatório!")
-    .isStrongPassword({
-      minLowercase: 1,
-      minUppercase: 1,
-      minNumbers: 1,
-      minSymbols: 1,
-      minLength: 8,
-    })
-    .withMessage(
-      "*Sua senha deve conter pelo menos: uma letra maiúscula, um número e um caractere especial!"
-    ),
-
-  body("confirmarSenha")
-    .notEmpty()
-    .withMessage("*Campo obrigatório!")
-    .custom((value, { req }) => {
-      if (value !== req.body.senha) throw new Error("*As senhas não conferem!");
-      return true;
-    }),
-
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const erroValidacaoPessoaFisica = {};
-      const msgErroPessoaFisica = {};
-      errors.array().forEach((erro) => {
-        erroValidacaoPessoaFisica[erro.path] = "erro";
-        msgErroPessoaFisica[erro.path] = erro.msg;
-      });
-
+      const erroValidacaoPessoaFisica = {}, msgErroPessoaFisica = {};
+      errors.array().forEach(e => { erroValidacaoPessoaFisica[e.path]='erro'; msgErroPessoaFisica[e.path]=e.msg; });
       return res.render("pages/cadastro", {
-        valoresPessoaFisica: req.body,
-        erroValidacaoPessoaFisica,
-        msgErroPessoaFisica,
-
-        valoresEmpresa: {
-          nome: "",
-          cnpj: "",
-          email: "",
-          senha: "",
-          confirmarSenha: "",
-        },
-        erroValidacaoEmpresa: {},
-        msgErroEmpresa: {},
-
-        formularioAtivo: "farmacia",
+        valoresPessoaFisica: req.body, erroValidacaoPessoaFisica, msgErroPessoaFisica,
+        valoresEmpresa: { nome:'', cnpj:'', email:'', senha:'', confirmarSenha:'' },
+        erroValidacaoEmpresa: {}, msgErroEmpresa: {}, formularioAtivo:'farmacia', retorno:null
       });
     }
-
-    usuarios.push({ email: req.body.email, senha: req.body.senha });
-    res.redirect("/login");
+    try {
+      const [existing] = await pool.query("SELECT Usuario_ID FROM Usuario WHERE Email = ?", [req.body.email]);
+      if (existing.length > 0) {
+        return res.render("pages/cadastro", {
+          valoresPessoaFisica: req.body,
+          erroValidacaoPessoaFisica: { email:'erro' }, msgErroPessoaFisica: { email:'*Este e-mail já está cadastrado!' },
+          valoresEmpresa: { nome:'', cnpj:'', email:'', senha:'', confirmarSenha:'' },
+          erroValidacaoEmpresa: {}, msgErroEmpresa: {}, retorno:null
+        });
+      }
+      const senhaHash = await bcrypt.hash(req.body.senha, 10);
+      const [result] = await pool.query("INSERT INTO Usuario (Nome, Email, Senha, Tipo) VALUES (?, ?, ?, 'PF')", [req.body.nome, req.body.email, senhaHash]);
+      const cpfNumeros = req.body.cpf.replace(/\D/g, '');
+      await pool.query("INSERT INTO Pessoa_Fisica (Usuario_ID, CPF) VALUES (?, ?)", [result.insertId, cpfNumeros]);
+      res.redirect("/login");
+    } catch (err) {
+      console.error('Erro ao cadastrar usuário:', err);
+      res.status(500).send('Erro ao cadastrar. Tente novamente.');
+    }
   }
 );
 
-//Empresas//
-router.post(
-  "/cadastroEmpresa",
-  body("nome")
-    .trim()
-    .notEmpty()
-    .withMessage("*Campo obrigatório!")
-    .isLength({ min: 3, max: 50 })
-    .withMessage("*O Nome da empresa deve conter entre 3 e 50 caracteres!"),
+/* CADASTRO VENDEDOR (PJ) */
+router.post("/cadastroEmpresa",
+  body("nome").trim().notEmpty().withMessage("*Campo obrigatório!").isLength({ min:3, max:50 }).withMessage("*O Nome da empresa deve conter entre 3 e 50 caracteres!"),
+  body("cnpj").notEmpty().withMessage("*Campo obrigatório!").custom((value) => { if (value.replace(/\D/g,'').length !== 14) throw new Error("*O CNPJ deve conter 14 números!"); return true; }),
+  body("email").notEmpty().withMessage("*Campo obrigatório!").isEmail().withMessage("*Endereço de email inválido!"),
+  body("senha").notEmpty().withMessage("*Campo obrigatório!").isStrongPassword({ minLowercase:1, minUppercase:1, minNumbers:1, minSymbols:1, minLength:8 }).withMessage("*Sua senha deve conter pelo menos: uma letra maiúscula, um número e um caractere especial!"),
+  body("confirmarSenha").notEmpty().withMessage("*Campo obrigatório!").custom((value, { req }) => { if (value !== req.body.senha) throw new Error("*As senhas não conferem!"); return true; }),
 
-  body("cnpj")
-    .notEmpty()
-    .withMessage("*Campo obrigatório!")
-    .custom((value) => {
-      const apenasNumeros = value.replace(/[^\d]+/g, "");
-      if (apenasNumeros.length !== 14)
-        throw new Error("*O CNPJ deve conter 14 números!");
-      if (!validarCNPJ(value)) throw new Error("*CNPJ inválido!");
-      return true;
-    }),
-
-  body("email")
-    .notEmpty()
-    .withMessage("*Campo obrigatório!")
-    .isEmail()
-    .withMessage("*Endereço de email inválido!"),
-
-  body("senha")
-    .notEmpty()
-    .withMessage("*Campo obrigatório!")
-    .isStrongPassword({
-      minLowercase: 1,
-      minUppercase: 1,
-      minNumbers: 1,
-      minSymbols: 1,
-      minLength: 8,
-    })
-    .withMessage(
-      "*Sua senha deve conter pelo menos: uma letra maiúscula, um número e um caractere especial!"
-    ),
-
-  body("confirmarSenha")
-    .notEmpty()
-    .withMessage("*Campo obrigatório!")
-    .custom((value, { req }) => {
-      if (value !== req.body.senha) throw new Error("*As senhas não conferem!");
-      return true;
-    }),
-
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const erroValidacaoEmpresa = {};
-      const msgErroEmpresa = {};
-      errors.array().forEach((erro) => {
-        erroValidacaoEmpresa[erro.path] = "erro";
-        msgErroEmpresa[erro.path] = erro.msg;
-      });
-
-      return res.render("pages/cadastro", {
-        valoresEmpresa: req.body,
-        erroValidacaoEmpresa,
-        msgErroEmpresa,
-
-        valoresPessoaFisica: {
-          nome: "",
-          cpf: "",
-          email: "",
-          senha: "",
-          confirmarSenha: "",
-        },
-        erroValidacaoPessoaFisica: {},
-        msgErroPessoaFisica: {},
-
-        formularioAtivo: "empresa",
-      });
+      const erroValidacaoEmpresa = {}, msgErroEmpresa = {};
+      errors.array().forEach(e => { erroValidacaoEmpresa[e.path]='erro'; msgErroEmpresa[e.path]=e.msg; });
+      return res.render("pages/cadastro_vendedor", { valoresEmpresa: req.body, erroValidacaoEmpresa, msgErroEmpresa, retorno:null });
     }
-
-    usuarios.push({ email: req.body.email, senha: req.body.senha });
-    res.redirect("/login");
+    try {
+      const [existing] = await pool.query("SELECT Usuario_ID FROM Usuario WHERE Email = ?", [req.body.email]);
+      if (existing.length > 0) {
+        return res.render("pages/cadastro_vendedor", {
+          valoresEmpresa: req.body,
+          erroValidacaoEmpresa: { email:'erro' }, msgErroEmpresa: { email:'*Este e-mail já está cadastrado!' }, retorno:null
+        });
+      }
+      const senhaHash = await bcrypt.hash(req.body.senha, 10);
+      const [result] = await pool.query("INSERT INTO Usuario (Nome, Email, Senha, Tipo) VALUES (?, ?, ?, 'PJ')", [req.body.nome, req.body.email, senhaHash]);
+      const cnpjNumeros = req.body.cnpj.replace(/\D/g, '');
+      await pool.query("INSERT INTO Pessoa_Juridica (Usuario_ID, CNPJ) VALUES (?, ?)", [result.insertId, cnpjNumeros]);
+      res.redirect("/login");
+    } catch (err) {
+      console.error('Erro ao cadastrar empresa:', err);
+      res.status(500).send('Erro ao cadastrar. Tente novamente.');
+    }
   }
 );
 
-//login//
-router.post("/login", (req, res) => {
+/* LOGIN COM BANCO */
+router.post("/login", async (req, res) => {
   const { usuarioDigitado, senhaDigitada } = req.body;
-
-  const usuarioEncontrado = usuarios.find(
-    (u) => u.email === usuarioDigitado && u.senha === senhaDigitada
-  );
-
-  if (usuarioEncontrado) {
+  try {
+    const [rows] = await pool.query("SELECT * FROM Usuario WHERE Email = ?", [usuarioDigitado]);
+    if (rows.length === 0 || !(await bcrypt.compare(senhaDigitada, rows[0].Senha))) {
+      return res.render("pages/login", {
+        erro: "*Não reconhecemos estas credenciais. Tente novamente.",
+        sucesso: false, valores: { usuarioDigitado, senhaDigitada: '' }
+      });
+    }
+    const usuario = rows[0];
+    req.session.userId = usuario.Usuario_ID;
+    req.session.nomeUsuario = usuario.Nome;
+    req.session.emailUsuario = usuario.Email;
+    req.session.perfil = usuario.Tipo === 'PJ' ? 'vendedor' : 'comprador';
+    req.session.tipo = usuario.Tipo;
+    await pool.query("UPDATE Usuario SET Ultimo_Login = NOW() WHERE Usuario_ID = ?", [usuario.Usuario_ID]);
     return res.redirect("/perfil");
-  } else {
-    return res.render("pages/login", {
-      erro: "*Não reconhecemos estas credenciais. Tente novamente.",
-      sucesso: false,
-      valores: {
-        usuarioDigitado: usuarioDigitado,
-        senhaDigitada: senhaDigitada,
-      },
-    });
+  } catch (err) {
+    console.error('Erro no login:', err);
+    res.status(500).send('Erro interno. Tente novamente.');
   }
 });
-/* ========== FIM DAS VALIDAÇÕES ========= */
 
-// Rota para deletar produto
-router.delete('/produtos/:id', async (req, res) => {
+router.delete('/produtos/:id', requireVendedor, async (req, res) => {
   try {
-    const produtoId = req.params.id;
-    await produtosModel.delete(produtoId);
+    await produtosModel.delete(req.params.id);
     res.json({ success: true, message: 'Produto deletado com sucesso' });
   } catch (err) {
-    console.error('Erro ao deletar produto:', err);
     res.status(500).json({ success: false, message: 'Erro ao deletar produto' });
   }
 });
