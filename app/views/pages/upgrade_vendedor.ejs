@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tornar-se Vendedor - Biomassa Hub</title>
+  <link rel="stylesheet" href="/css/cadastro.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="cadastro-main">
+    <!-- Hero Section -->
+    <aside class="hero-section">
+      <header class="hero-content">
+        <h1 class="hero-title">Torne-se Vendedor!</h1>
+        <p class="hero-subtitle">
+          Comece a vender seus produtos de biomassa agora mesmo. 
+          Basta informar seus dados de empresa para ativar sua conta como vendedor.
+        </p>
+        <section class="hero-features">
+          <article class="feature-item">
+            <i class='bx bx-leaf'></i>
+            <span>Expanda Seus Negócios</span>
+          </article>
+          <article class="feature-item">
+            <i class='bx bx-shield-check'></i>
+            <span>Transações Seguras</span>
+          </article>
+          <article class="feature-item">
+            <i class='bx bx-world'></i>
+            <span>Alcance Nacional</span>
+          </article>
+        </section>
+      </header>
+    </aside>
+
+    <!-- Formulário -->
+    <section class="form-section">
+      <header class="form-header">
+        <h2 class="form-title">Dados da Empresa</h2>
+        <p class="form-subtitle">Preencha os dados para ativar sua conta como vendedor</p>
+      </header>
+
+      <form
+        id="formUpgrade"
+        class="cadastro-form"
+        method="POST"
+        action="/upgrade_vendedor"
+        novalidate
+      >
+        <fieldset class="form-fieldset">
+          <legend class="sr-only">Dados da empresa para se tornar vendedor</legend>
+
+          <section class="form-section-title">
+            <h3>Dados pessoais</h3>
+            <p>Estes dados serão mantidos como informações do usuário.</p>
+          </section>
+
+          <section class="input-group">
+            <label for="nome-pessoal" class="input-label">
+              <i class='bx bx-user'></i>
+              Nome pessoal
+            </label>
+            <input
+              type="text"
+              id="nome-pessoal"
+              name="nome_pessoal"
+              class="form-input"
+              value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.nome : '' %>"
+              aria-describedby="nome-pessoal-help"
+              autocomplete="name"
+              readonly
+            />
+            <small id="nome-pessoal-help" class="input-help">Nome vinculado à sua conta</small>
+          </section>
+
+          <section class="input-group">
+            <label for="email-pessoal" class="input-label">
+              <i class='bx bx-envelope'></i>
+              E-mail pessoal
+            </label>
+            <input
+              type="email"
+              id="email-pessoal"
+              name="email_pessoal"
+              class="form-input"
+              value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.email : '' %>"
+              aria-describedby="email-pessoal-help"
+              autocomplete="email"
+              readonly
+            />
+            <small id="email-pessoal-help" class="input-help">Usado para acesso à sua conta</small>
+          </section>
+
+          <section class="form-section-title" style="margin-top:32px;">
+            <h3>Dados da empresa</h3>
+          </section>
+
+          <section class="input-group">
+            <label for="nome-empresa" class="input-label">
+              <i class='bx bx-buildings'></i>
+              Nome da empresa
+            </label>
+            <input
+              type="text"
+              id="nome-empresa"
+              name="company_name"
+              class="form-input"
+              placeholder="Digite o nome da empresa"
+              value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.company_name : '' %>"
+              aria-describedby="nome-empresa-help nome-empresa-error"
+              autocomplete="organization"
+              required
+            />
+            <small id="nome-empresa-help" class="input-help">Nome da empresa ou razão social</small>
+            <span id="nome-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.company_name : '' %>
+            </span>
+          </section>
+
+          <section class="input-group">
+            <label for="email-empresa" class="input-label">
+              <i class='bx bx-envelope'></i>
+              E-mail da empresa
+            </label>
+            <input
+              type="email"
+              id="email-empresa"
+              name="company_email"
+              class="form-input"
+              placeholder="Digite o e-mail da empresa"
+              value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.company_email : '' %>"
+              aria-describedby="email-empresa-help email-empresa-error"
+              autocomplete="email"
+              required
+            />
+            <small id="email-empresa-help" class="input-help">E-mail para contato e faturamento</small>
+            <span id="email-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.company_email : '' %>
+            </span>
+          </section>
+
+          <section class="input-group">
+            <label for="cnpj-empresa" class="input-label">
+              <i class='bx bx-id-card'></i>
+              CNPJ
+              <span class="required-indicator" aria-label="Campo obrigatório">*</span>
+            </label>
+            <input
+              type="text"
+              id="cnpj-empresa"
+              name="cnpj"
+              class="form-input"
+              placeholder="00.000.000/0000-00"
+              value="<%= typeof valoresEmpresa !== 'undefined' ? valoresEmpresa.cnpj : '' %>"
+              aria-describedby="cnpj-empresa-error cnpj-empresa-help"
+              autocomplete="off"
+              maxlength="18"
+              required
+            />
+            <small id="cnpj-empresa-help" class="input-help">Insira seu CNPJ de 14 dígitos</small>
+            <span id="cnpj-empresa-error" class="error-message" role="alert">
+              <%= typeof msgErroEmpresa !== 'undefined' ? msgErroEmpresa.cnpj : '' %>
+            </span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              CNPJ válido
+            </span>
+          </section>
+
+          <!-- Informação -->
+          <section class="info-box" style="background:#f0f7ff; border:1px solid #0066cc; border-radius:8px; padding:16px; margin-top:32px;">
+            <p style="color:#0066cc; margin:0; font-size:0.95rem;">
+              <i class='bx bx-info-circle' style="margin-right:8px;"></i>
+              <strong>Informação:</strong> Após ativar sua conta como vendedor, você poderá cadastrar e gerenciar produtos imediatamente.
+            </p>
+          </section>
+
+          <!-- Botão -->
+          <section class="form-actions" style="margin-top:24px;">
+            <button type="submit" class="submit-btn">
+              <i class='bx bx-check'></i>
+              <span>Ativar como Vendedor</span>
+            </button>
+          </section>
+        </fieldset>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    // Máscara para CNPJ
+    document.getElementById('cnpj-empresa').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 14) value = value.slice(0, 14);
+      
+      if (value.length <= 2) {
+        e.target.value = value;
+      } else if (value.length <= 5) {
+        e.target.value = value.slice(0, 2) + '.' + value.slice(2);
+      } else if (value.length <= 8) {
+        e.target.value = value.slice(0, 2) + '.' + value.slice(2, 5) + '.' + value.slice(5);
+      } else if (value.length <= 12) {
+        e.target.value = value.slice(0, 2) + '.' + value.slice(2, 5) + '.' + value.slice(5, 8) + '/' + value.slice(8);
+      } else {
+        e.target.value = value.slice(0, 2) + '.' + value.slice(2, 5) + '.' + value.slice(5, 8) + '/' + value.slice(8, 12) + '-' + value.slice(12);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -3,7 +3,12 @@
 <aside class="sidebar" role="complementary" aria-label="Barra lateral do usuário">
   <div class="user-info">
     <img src="/imagem/avatar.png" alt="Foto do usuário" class="avatar">
-    <p class="username">Usuário</p>
+    <p class="username"><%= typeof usuario !== 'undefined' && usuario ? usuario.Nome || usuario.nome || 'Usuário' : 'Usuário' %></p>
+    <% if (typeof usuario !== 'undefined' && usuario) { %>
+      <span style="font-size:0.75rem;padding:2px 10px;border-radius:20px;font-weight:600;<%= (usuario.Tipo||usuario.tipo) === 'PJ' ? 'background:#fff3e0;color:#e65100;' : 'background:#e8f5e9;color:#2e7d32;' %>">
+        <%= (usuario.Tipo||usuario.tipo) === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
+      </span>
+    <% } %>
   </div>
 
   <nav class="sidebar-nav" aria-label="Navegação do usuário">
@@ -17,6 +22,7 @@
         </a>
       </li>
 
+      <% if (typeof usuario !== 'undefined' && usuario && (usuario.Tipo === 'PJ' || usuario.tipo === 'PJ')) { %>
       <li>
         <a href="/listaprodutos">
           <span class="two-line">
@@ -25,6 +31,7 @@
           </span>
         </a>
       </li>
+      <% } %>
 
       <li>
         <a href="/minhascompras">
