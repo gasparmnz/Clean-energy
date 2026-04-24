@@ -33,72 +33,11 @@
                 </article>
             </header>
 
-            <!-- Summary Cards -->
-            <section class="users-summary">
-                <section class="summary-cards-users">
-                    <article class="summary-card-user">
-                        <article class="card-content">
-                            <article>
-                                <h3>Total de Usuários</h3>
-                                <p class="number-teal">7</p>
-                            </article>
-                            <i class='bx bx-user icon-teal'></i>
-                        </article>
-                    </article>
-                    <article class="summary-card-user">
-                        <article class="card-content">
-                            <article>
-                                <h3>Usuários Ativos</h3>
-                                <p class="number-green">5</p>
-                            </article>
-                            <i class='bx bx-check-circle icon-green'></i>
-                        </article>
-                    </article>
-                    <article class="summary-card-user">
-                        <article class="card-content">
-                            <article>
-                                <h3>Usuários Inativos</h3>
-                                <p class="number-orange">2</p>
-                            </article>
-                            <i class='bx bx-user-x icon-orange'></i>
-                        </article>
-                    </article>
-                    <article class="summary-card-user">
-                        <article class="card-content">
-                            <article>
-                                <h3>Novos Este Mês</h3>
-                                <p class="number-blue">3</p>
-                            </article>
-                            <i class='bx bx-user-plus icon-blue'></i>
-                        </article>
-                    </article>
-                </section>
-            </section>
-
-            <!-- Users Table Section -->
-            <section class="users-table-section">
-                <nav class="table-controls">
-                    <article class="search-box">
-                        <i class='bx bx-search'></i>
-                        <input type="text" placeholder="Buscar por nome, email ou ID...">
-                    </article>
-                    <nav class="filters">
-                        <select class="filter-select">
-                            <option>Todos os status</option>
-                            <option>Ativo</option>
-                            <option>Inativo</option>
-                        </select>
-                    </nav>
-                </nav>
-
-                <article class="table-responsive">
-                    <table class="users-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
                                 <th>Nome</th>
                                 <th>Email</th>
-                                <th>Telefone</th>
                                 <th>Produto Principal</th>
                                 <th>Total Vendas</th>
                                 <th>Cadastro</th>
@@ -107,66 +46,29 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td data-label="ID">USR-001</td>
-                                <td data-label="Nome">João Silva</td>
-                                <td data-label="Email">joao.silva@email.com</td>
-                                <td data-label="Telefone">(11) 98765-4321</td>
-                                <td data-label="Produto Principal">Cavaco de Eucalipto</td>
-                                <td data-label="Total Vendas" class="value-green">R$ 45.000,00</td>
-                                <td data-label="Cadastro">10/12/2024</td>
-                                <td data-label="Status"><span class="status-badge status-ativo">Ativo</span></td>
+                          <% if (Array.isArray(usuarios) && usuarios.length > 0) { %>
+                            <% usuarios.forEach(function(u){ %>
+                              <tr>
+                                <td data-label="ID">USR-<%= u.id %></td>
+                                <td data-label="Nome"><%= u.nome %></td>
+                                <td data-label="Email"><%= u.email %></td>
+                                <td data-label="Produto Principal">-</td>
+                                <td data-label="Total Vendas" class="value-green">R$ 0,00</td>
+                                <td data-label="Cadastro"><%= u.Data_Criacao ? new Date(u.Data_Criacao).toLocaleDateString('pt-BR') : '' %></td>
+                                <td data-label="Status"><span class="status-badge status-ativo">-</span></td>
                                 <td data-label="Ações">
                                     <nav class="action-buttons">
-                                        <button class="action-icon view-icon" aria-label="Ver detalhes" onclick="verDetalhesUsuario('USR-001')">
+                                        <button class="action-icon view-icon" aria-label="Ver detalhes" onclick="verDetalhesUsuario('USR-<%= u.id %>')">
                                             <i class='bx bx-show'></i>
                                         </button>
                                     </nav>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td data-label="ID">USR-002</td>
-                                <td data-label="Nome">Maria Santos</td>
-                                <td data-label="Email">maria.santos@empresa.com</td>
-                                <td data-label="Telefone">(21) 97654-3210</td>
-                                <td data-label="Produto Principal">Serragem Compactada</td>
-                                <td data-label="Total Vendas" class="value-green">R$ 38.200,00</td>
-                                <td data-label="Cadastro">05/12/2024</td>
-                                <td data-label="Status"><span class="status-badge status-ativo">Ativo</span></td>
-                                <td data-label="Ações">
-                                    <nav class="action-buttons">
-                                        <button class="action-icon view-icon" aria-label="Ver detalhes" onclick="verDetalhesUsuario('USR-002')">
-                                            <i class='bx bx-show'></i>
-                                        </button>
-                                    </nav>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-label="ID">USR-003</td>
-                                <td data-label="Nome">Pedro Costa</td>
-                                <td data-label="Email">pedro.costa@biomassa.com</td>
-                                <td data-label="Telefone">(47) 98876-5432</td>
-                                <td data-label="Produto Principal">Casca de Arroz</td>
-                                <td data-label="Total Vendas" class="value-green">R$ 52.800,00</td>
-                                <td data-label="Cadastro">28/11/2024</td>
-                                <td data-label="Status"><span class="status-badge status-ativo">Ativo</span></td>
-                                <td data-label="Ações">
-                                    <nav class="action-buttons">
-                                        <button class="action-icon view-icon" aria-label="Ver detalhes" onclick="verDetalhesUsuario('USR-003')">
-                                            <i class='bx bx-show'></i>
-                                        </button>
-                                    </nav>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-label="ID">USR-004</td>
-                                <td data-label="Nome">Ana Oliveira</td>
-                                <td data-label="Email">ana.oliveira@energia.com</td>
-                                <td data-label="Telefone">(19) 98765-1234</td>
-                                <td data-label="Produto Principal">Bagaço de Cana</td>
-                                <td data-label="Total Vendas" class="value-green">R$ 15000,00</td>
-                                <td data-label="Cadastro">20/11/2024</td>
-                                <td data-label="Status"><span class="status-badge status-inativo">Inativo</span></td>
+                              </tr>
+                            <% }) %>
+                          <% } else { %>
+                            <tr><td colspan="8" class="empty-state">Nenhum usuário cadastrado.</td></tr>
+                          <% } %>
+                        </tbody>
                                 <td data-label="Ações">
                                     <nav class="action-buttons">
                                         <button class="action-icon view-icon" aria-label="Ver detalhes" onclick="verDetalhesUsuario('USR-004')">
