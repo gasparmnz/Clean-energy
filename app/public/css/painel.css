@@ -1,0 +1,470 @@
+:root {
+    --primary-color: #488D6A;
+    --secondary-color: #2d3436;
+    --background-light: #fdfdfd;
+    --background-dark: #ebebeb;
+    --text-primary: #222;
+    --text-secondary: #555;
+    --border-color: #e0e0e0;
+    --shadow-light: 0 4px 8px rgba(0, 0, 0, 0.05);
+    --border-radius: 8px;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.5rem;
+    --font-size-2xl: 2rem;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-primary);
+    background-color: var(--background-dark);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    display: block;
+    padding-top: 70px; /* espaço para header fixo */
+    width: 100%;
+    min-height: calc(100vh - 70px);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px; /* Largura padrão da sidebar */
+    background-color: var(--background-light);
+    padding: var(--spacing-lg) var(--spacing-md);
+    box-shadow: var(--shadow-light);
+    position: fixed;
+    height: calc(100% - 70px); /* Altura total menos o header */
+    overflow-y: auto;
+    z-index: 900;
+}
+
+.sidebar-header {
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-lg);
+    padding-top: var(--spacing-md); /* Espaço entre a foto e o header */
+}
+
+.sidebar-header h3 {
+    font-size: var(--font-size-lg);
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+}
+
+.sidebar-nav li {
+    margin-bottom: var(--spacing-sm);
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.sidebar-nav a i {
+    font-size: var(--font-size-lg);
+}
+
+/* Content Area */
+.content-area {
+    flex-grow: 1;
+    padding: var(--spacing-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    max-width: 100%;
+    margin-left: 0; /* <-- removido o margin-left global que causava o deslocamento */
+}
+
+h1, h2 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+}
+
+h1 {
+    font-size: var(--font-size-2xl);
+    text-align: center;
+}
+
+h2 {
+    font-size: var(--font-size-xl);
+}
+
+/* Dashboard Overview */
+.dashboard-overview {
+    background-color: var(--background-light);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+}
+
+.metrics-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.metric-card {
+    background-color: #fff;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.metric-card i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-sm);
+}
+
+.metric-card h2 {
+    font-size: var(--font-size-lg);
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.metric-card p {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.metric-card small {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+/* Recent Transactions */
+.recent-transactions {
+    background-color: var(--background-light);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    overflow-x: auto;
+}
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: var(--spacing-md);
+    min-width: 600px;
+}
+
+.transactions-table th,
+.transactions-table td {
+    padding: var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.transactions-table th {
+    background-color: #E6F0E9;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    font-size: var(--font-size-sm);
+}
+
+.transactions-table tbody tr:hover {
+    background-color: #F0F5F2;
+}
+
+.transactions-table td {
+    color: var(--text-secondary);
+}
+
+/* Status Badges */
+.transactions-table td:nth-child(5) {
+    font-weight: 600;
+}
+
+.transactions-table td:nth-child(5)::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.transactions-table td:nth-child(5):contains("Concluída") {
+    color: #28a745;
+}
+.transactions-table td:nth-child(5):contains("Concluída")::before {
+    background-color: #28a745;
+}
+
+.transactions-table td:nth-child(5):contains("Pendente") {
+    color: #ffc107;
+}
+.transactions-table td:nth-child(5):contains("Pendente")::before {
+    background-color: #ffc107;
+}
+
+.transactions-table td:nth-child(5):contains("Cancelada") {
+    color: #dc3545;
+}
+.transactions-table td:nth-child(5):contains("Cancelada")::before {
+    background-color: #dc3545;
+}
+
+/* Responsividade */
+
+/* Desktop (min-width: 1024px) */
+@media (min-width: 1024px) {
+    /* aplica deslocamento só em telas grandes */
+    main {
+        padding-left: 250px; /* espaço para a sidebar fixa */
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        height: calc(100vh - 70px);
+        width: 250px;
+        z-index: 900;
+    }
+
+    .content-area {
+        margin-left: 250px; /* só aqui, em desktop */
+        max-width: calc(100% - 250px);
+        width: 100%;
+    }
+
+    .dashboard-overview,
+    .recent-transactions {
+        width: 100%;
+    }
+}
+
+/* Tablets (min-width: 768px and max-width: 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    body {
+        flex-direction: column;
+    }
+    main {
+        flex-direction: column; /* Sidebar acima do conteúdo */
+        padding-left: 0;
+        align-items: center; /* Centraliza o conteúdo */
+    }
+
+    .sidebar {
+        order: 0; /* Sidebar primeiro */
+        position: relative;
+        width: 100%;
+        height: auto;
+        top: 0;
+        left: 0;
+        box-shadow: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    .sidebar-header {
+        text-align: center;
+        border-bottom: none;
+        margin-bottom: var(--spacing-sm);
+        padding-top: var(--spacing-md); /* Espaço entre a foto e o header */
+    }
+
+    .sidebar-nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--spacing-sm);
+    }
+
+    .sidebar-nav li {
+        margin-bottom: 0;
+    }
+
+    .sidebar-nav a {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
+        gap: var(--spacing-xs);
+    }
+
+    .sidebar-nav a i {
+        font-size: var(--font-size-md);
+    }
+
+    .content-area {
+        margin-left: 0;
+        max-width: 100%; /* Garante que ocupe a largura total */
+        padding: var(--spacing-lg);
+    }
+
+    .dashboard-overview,
+    .recent-transactions {
+        width: 100%;
+        max-width: 100%; /* Garante que ocupe a largura total */
+    }
+
+    .metrics-cards {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .transactions-table {
+        min-width: 700px;
+    }
+}
+
+/* Mobile (max-width: 767px) */
+@media (max-width: 767px) {
+    body {
+        flex-direction: column;
+    }
+    main {
+        flex-direction: column;
+        padding-left: 0;
+        align-items: center; /* Centraliza o conteúdo */
+    }
+
+    .sidebar {
+        order: 0; /* Sidebar primeiro */
+        position: relative;
+        width: 100%;
+        height: auto;
+        top: 0;
+        left: 0;
+        box-shadow: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    .sidebar-header {
+        text-align: center;
+        border-bottom: none;
+        margin-bottom: var(--spacing-sm);
+        padding-top: var(--spacing-md); /* Espaço entre a foto e o header */
+    }
+
+    .sidebar-nav ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--spacing-sm);
+    }
+
+    .sidebar-nav li {
+        margin-bottom: 0;
+    }
+
+    .sidebar-nav a {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
+        gap: var(--spacing-xs);
+    }
+
+    .sidebar-nav a i {
+        font-size: var(--font-size-md);
+    }
+
+    .content-area {
+        margin-left: 0;
+        max-width: 100%; /* Garante que ocupe a largura total */
+        padding: var(--spacing-md);
+    }
+
+    .dashboard-overview,
+    .recent-transactions {
+        width: 100%;
+        max-width: 100%; /* Garante que ocupe a largura total */
+    }
+
+    .metrics-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .metric-card {
+        padding: var(--spacing-md);
+        flex-direction: row;
+        text-align: left;
+        justify-content: flex-start;
+        gap: var(--spacing-md);
+    }
+
+    .metric-card i {
+        font-size: 2rem;
+        margin-bottom: 0;
+    }
+
+    .metric-card h2 {
+        font-size: var(--font-size-md);
+        flex-grow: 1;
+    }
+
+    .metric-card p {
+        font-size: var(--font-size-xl);
+    }
+
+    .metric-card small {
+        display: none;
+    }
+
+    .transactions-table {
+        min-width: unset;
+    }
+
+    .transactions-table th,
+    .transactions-table td {
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-sm);
+    }
+}
+
+/* Footer positioning for smaller screens */
+@media (max-width: 1023px) {
+    footer {
+        order: 1; /* Coloca o footer após o main e a sidebar */
+        width: 100%;
+    }
+    main {
+        order: 2; /* Coloca o main após o footer */
+    }
+    .sidebar {
+        order: 0; /* Coloca a sidebar antes do main e do footer */
+    }
+}
+

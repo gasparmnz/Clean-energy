@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Biomassa Hub - Produtos</title>
+  <link rel="stylesheet" href="/css/produtos.css" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imagem/ico.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/imagem/ico.png">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Clean Energy" />
+  <meta property="og:description" content="Conheça o melhor site em energia limpa" />
+  <meta property="og:type" content="website" />
+  <style>
+    .badge-perfil { font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+    .badge-comprador { background:#e8f5e9; color:#2e7d32; }
+    .badge-vendedor  { background:#fff3e0; color:#e65100; }
+    .dropdown-nome { display:block; padding:8px 16px; font-weight:700; color:#333; }
+    .dropdown-perfil { display:block; padding:0 16px 8px; font-size:0.8rem; color:#666; }
+    .dropdown-content hr { margin:4px 0; border-color:#eee; }
+    .acesso-restrito { background:#fff3e0; color:#e65100; padding:10px 18px; border-radius:8px; margin:12px 0; font-size:0.9rem; }
+  </style>
+</head>
+<body>
+  <%- include('../partial/header.ejs') %>
+  <main>
+
+    <% if (typeof filtros !== 'undefined' && typeof usuario === 'undefined' || !usuario) { %>
+    <% } %>
+
+    <!-- Filtro funcional via GET -->
+    <section class="filtro-container">
+      <form class="filtro-box" method="GET" action="/">
+
+        <!-- Barra de busca com nome "Buscar produtos" -->
+        <div class="filtro-topo">
+          <i class='bx bx-search'></i>
+          <input
+            type="text"
+            name="busca"
+            placeholder="Buscar produtos..."
+            value="<%= typeof filtros !== 'undefined' ? filtros.busca : '' %>"
+          />
+        </div>
+
+        <!-- Filtros -->
+        <div class="filtro-linha">
+          <select name="estado">
+            <option value="">Todos os estados</option>
+            <option value="Acre" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Acre') ? 'selected' : '' %>>Acre</option>
+            <option value="Alagoas" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Alagoas') ? 'selected' : '' %>>Alagoas</option>
+            <option value="Amapá" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Amapá') ? 'selected' : '' %>>Amapá</option>
+            <option value="Amazonas" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Amazonas') ? 'selected' : '' %>>Amazonas</option>
+            <option value="Bahia" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Bahia') ? 'selected' : '' %>>Bahia</option>
+            <option value="Ceará" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Ceará') ? 'selected' : '' %>>Ceará</option>
+            <option value="Distrito Federal" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Distrito Federal') ? 'selected' : '' %>>Distrito Federal</option>
+            <option value="Espírito Santo" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Espírito Santo') ? 'selected' : '' %>>Espírito Santo</option>
+            <option value="Goiás" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Goiás') ? 'selected' : '' %>>Goiás</option>
+            <option value="Maranhão" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Maranhão') ? 'selected' : '' %>>Maranhão</option>
+            <option value="Mato Grosso" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Mato Grosso') ? 'selected' : '' %>>Mato Grosso</option>
+            <option value="Mato Grosso do Sul" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Mato Grosso do Sul') ? 'selected' : '' %>>Mato Grosso do Sul</option>
+            <option value="Minas Gerais" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Minas Gerais') ? 'selected' : '' %>>Minas Gerais</option>
+            <option value="Pará" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Pará') ? 'selected' : '' %>>Pará</option>
+            <option value="Paraíba" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Paraíba') ? 'selected' : '' %>>Paraíba</option>
+            <option value="Paraná" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Paraná') ? 'selected' : '' %>>Paraná</option>
+            <option value="Pernambuco" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Pernambuco') ? 'selected' : '' %>>Pernambuco</option>
+            <option value="Piauí" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Piauí') ? 'selected' : '' %>>Piauí</option>
+            <option value="Rio de Janeiro" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Rio de Janeiro') ? 'selected' : '' %>>Rio de Janeiro</option>
+            <option value="Rio Grande do Norte" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Rio Grande do Norte') ? 'selected' : '' %>>Rio Grande do Norte</option>
+            <option value="Rio Grande do Sul" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Rio Grande do Sul') ? 'selected' : '' %>>Rio Grande do Sul</option>
+            <option value="Rondônia" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Rondônia') ? 'selected' : '' %>>Rondônia</option>
+            <option value="Roraima" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Roraima') ? 'selected' : '' %>>Roraima</option>
+            <option value="Santa Catarina" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Santa Catarina') ? 'selected' : '' %>>Santa Catarina</option>
+            <option value="São Paulo" <%= (typeof filtros !== 'undefined' && filtros.estado === 'São Paulo') ? 'selected' : '' %>>São Paulo</option>
+            <option value="Sergipe" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Sergipe') ? 'selected' : '' %>>Sergipe</option>
+            <option value="Tocantins" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Tocantins') ? 'selected' : '' %>>Tocantins</option>
+          </select>
+
+          <select name="categoria">
+            <option value="">Categoria</option>
+            <option value="materias-primas" <%= (typeof filtros !== 'undefined' && filtros.categoria === 'materias-primas') ? 'selected' : '' %>>Matérias-primas</option>
+            <option value="residuos-organicos" <%= (typeof filtros !== 'undefined' && filtros.categoria === 'residuos-organicos') ? 'selected' : '' %>>Resíduos Orgânicos</option>
+            <option value="biomassa-florestal" <%= (typeof filtros !== 'undefined' && filtros.categoria === 'biomassa-florestal') ? 'selected' : '' %>>Biomassa Florestal</option>
+            <option value="residuos-agricolas" <%= (typeof filtros !== 'undefined' && filtros.categoria === 'residuos-agricolas') ? 'selected' : '' %>>Resíduos Agrícolas</option>
+          </select>
+
+          <input
+            type="number"
+            name="precoMin"
+            placeholder="Preço mín."
+            value="<%= typeof filtros !== 'undefined' ? filtros.precoMin : '' %>"
+          />
+          <input
+            type="number"
+            name="precoMax"
+            placeholder="Preço máx."
+            value="<%= typeof filtros !== 'undefined' ? filtros.precoMax : '' %>"
+          />
+
+          <button type="submit" style="padding:8px 18px;background:#2e7d32;color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:600;">
+            <i class='bx bx-filter-alt'></i> Filtrar
+          </button>
+          <a href="/" style="padding:8px 14px;background:#eee;color:#333;border-radius:6px;text-decoration:none;font-size:0.85rem;">Limpar</a>
+        </div>
+
+      </form>
+    </section>
+
+    <ul class="produtos-scroll">
+      <% if (produtos.length === 0) { %>
+
+        <div class="sem-produtos">
+          <i class='bx bx-package'></i>
+          <h2>Nenhum produto encontrado</h2>
+          <p>Tente ajustar os filtros ou <a href="/">ver todos os produtos</a>.</p>
+        </div>
+
+      <% } else { %>
+
+        <% produtos.forEach(produto => { %>
+          <li>
+            <article class="produto-card" data-id="<%= produto.id %>">
+              <figure>
+                <a href="/item/<%= produto.id %>">
+                  <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>">
+                </a>
+                <figcaption>
+                  <h3><%= produto.nome %></h3>
+                  <p>R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %> / tonelada</p>
+                  <p>Disponível em <%= produto.local %></p>
+                  <a href="/item/<%= produto.id %>">Ver detalhes</a>
+                </figcaption>
+              </figure>
+            </article>
+          </li>
+        <% }) %>
+
+      <% } %>
+    </ul>
+
+    </section>
+
+  </main>
+  <%- include('../partial/footer.ejs') %>
+  <script src="/js/produto-delete.js"></script>
+</body>
+</html>

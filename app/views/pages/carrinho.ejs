@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrinho</title>
+  <link rel="stylesheet" href="/css/carrinho.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+  <%- include("../partial/header.ejs") %>
+
+  <main>
+    <nav class="back-navigation" aria-label="Navegação de retorno">
+      <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+        <i class='bx bx-arrow-back'></i>
+        <span>Voltar</span>
+      </button>
+    </nav>
+
+<br><br>
+
+<div class="carrinho-container">
+  
+  <!-- COLUNA ESQUERDA -->
+  <div class="coluna-produtos">
+    <section class="produtos">
+
+      <% if (!cart || cart.length === 0) { %>
+        <p>Seu carrinho está vazio.</p>
+      <% } else { %>
+
+        <% cart.forEach((produto, index) => { %>
+          <article class="produto-card"
+            data-nome="<%= produto.nome %>"
+            data-preco="<%= produto.preco %>"
+            data-max="5">
+
+            <div class="produto-top">
+              <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>" onerror="this.src='/imagem/sem-foto.png'">
+
+              <div class="produto-info">
+                <h3><%= produto.nome %></h3>
+
+                <p class="localizacao">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <%= produto.local || "Local não informado" %>
+                </p>
+
+                <p><%= produto.descricao || "Sem descrição" %></p>
+
+                <p class="disponivel">
+                  <strong>Disponível:</strong> 5 toneladas
+                </p>
+
+                <span class="preco">R$ <%= produto.preco %></span>
+
+                <nav class="quantidade-controls">
+                  <button class="quantidade-btn btn-menos">−</button>
+                  <span class="quantidade-num">1</span>
+                  <button class="quantidade-btn btn-mais">+</button>
+                </nav>
+              </div>
+            </div>
+
+            <!-- REMOVER -->
+            <form action="/cart/remove" method="POST">
+              <input type="hidden" name="index" value="<%= index %>">
+              <button type="submit" class="btn-remover">
+                <i class="fas fa-times"></i>
+              </button>
+            </form>
+
+          </article>
+        <% }) %>
+
+      <% } %>
+
+    </section>
+  </div>
+
+  <!-- COLUNA DIREITA -->
+  <div class="coluna-lateral">
+    
+    <aside class="resumo">
+      <header>
+        <h2>Resumo do Pedido</h2>
+      </header>
+
+      <ul class="resumo-lista"></ul>
+      <p class="total"></p>
+      
+      <a href="/minhascompras" class="btn-comprar">
+        Finalizar Compra
+      </a>
+    </aside>
+
+    <br>
+
+    <aside class="anuncio-transportadoras">
+      <div class="anuncio-icon">
+        <i class="fas fa-truck"></i>
+      </div>
+      <div class="anuncio-content">
+        <h3>Precisa de transporte?</h3>
+        <p>Conheça nossas transportadoras parceiras e escolha a melhor opção para sua entrega.</p>
+        <a href="/transporte" class="btn-anuncio">
+          Ver Transportadoras <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+
+  </main>
+
+  <script>
+    function atualizarResumo() {
+      const produtos = document.querySelectorAll(".produto-card");
+      const resumoLista = document.querySelector(".resumo-lista");
+      const totalElement = document.querySelector(".total");
+      let total = 0;
+      resumoLista.innerHTML = "";
+
+      produtos.forEach(card => {
+        const nome = card.dataset.nome;
+        const preco = Number(card.dataset.preco);
+        const quantidade = Number(card.querySelector(".quantidade-num").textContent);
+
+        if (quantidade > 0) {
+          const subtotal = preco * quantidade;
+          resumoLista.innerHTML += `<li><span>${nome} (x${quantidade})</span> <span>R$ ${subtotal.toFixed(2)}</span></li>`;
+          total += subtotal;
+        }
+      });
+
+      totalElement.innerHTML = `<span>Total:</span> <span>R$ ${total.toFixed(2)}</span>`;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+      document.querySelectorAll(".btn-mais").forEach(btn => {
+        btn.addEventListener("click", function () {
+          const card = this.closest(".produto-card");
+          const max = Number(card.dataset.max);
+          const num = this.parentElement.querySelector(".quantidade-num");
+          const atual = Number(num.textContent);
+
+          if (atual < max) {
+            num.textContent = atual + 1;
+            atualizarResumo();
+          } else {
+            alert(`Limite máximo atingido: ${max} unidades.`);
+          }
+        });
+      });
+
+      document.querySelectorAll(".btn-menos").forEach(btn => {
+        btn.addEventListener("click", function() {
+          const num = this.parentElement.querySelector(".quantidade-num");
+          if (Number(num.textContent) > 1) {
+            num.textContent = Number(num.textContent) - 1;
+            atualizarResumo();
+          }
+        });
+      });
+
+      document.querySelectorAll(".btn-remover").forEach(btn => {
+        btn.addEventListener("click", function(e) {
+          // Remover e.preventDefault() para permitir envio do formulário
+          // e.preventDefault(); // REMOVIDO
+          // const produtoCard = this.closest(".produto-card");
+          // produtoCard.remove();
+          // atualizarResumo();
+        });
+      });
+
+      atualizarResumo();
+    });
+  </script>
+
+<%- include("../partial/footer.ejs") %>
+
+  <script src="/js/darkmode.js"></script>
+
+</body>
+</html>
+
+ 
+
+

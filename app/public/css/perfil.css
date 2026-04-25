@@ -1,0 +1,144 @@
+:root {
+  --primary-color: #488D6A;
+  --bg-color: #f9f9f9;
+  --text-color: #222;
+}
+
+/* reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+main {
+  display: flex;
+  min-height: 100vh;
+  margin-top: 87px;
+}
+
+/* conteúdo */
+.content {
+  flex: 1;
+  padding: 25px;
+}
+
+/* botão voltar */
+.back-button {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+/* card perfil */
+.perfil-form {
+  background: white;
+  padding: 35px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.08);
+  max-width: 6500px;
+  margin-bottom: 20px;
+  font-size: 19px;
+  font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.perfil-form h2 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+/* formulário */
+form {
+  display: grid;
+  gap: 15px;
+}
+
+input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 18px;
+}
+
+button {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 13px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+}
+
+#btnCancelar {
+  background: #ef4444;
+  
+}
+
+/* utilitário */
+.hidden {
+  display: none;
+}
+
+
+#perfilVisualizacao {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* textos das infos */
+#perfilVisualizacao p {
+  font-size: 1px;    /* AQUI você controla o tamanho */
+  line-height: 1.5;
+  font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* títulos (Nome, Email, etc) */
+#perfilVisualizacao strong {
+  font-size: 20px;
+  color: #333;
+}
+
+/* valores (Usuário, email, etc) */
+#perfilVisualizacao span {
+  font-size: 20px;
+  color: #555;
+  margin-left: 6px;
+}
+
+/* botão editar */
+#perfilVisualizacao button {
+  margin-top: 10px;
+  width: 350px;
+  font-size: 20px;   
+  padding: 14px;
+}
+
+.perfil-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+/* FOTO */
+.perfil-foto img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-color);
+}
+
+.hidden {
+  display: none !important;
+}

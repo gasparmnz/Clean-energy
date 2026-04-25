@@ -1,0 +1,25 @@
+.darkmode{
+  width:24px;
+  cursor:pointer;
+  margin-right:10px;
+  transition:0.3s;
+}
+
+/* DARK MODE GERAL */
+
+body.dark-mode{
+  background:#121212;
+  color:white;
+}
+
+/* exemplo para header */
+
+body.dark-mode .header{
+  background:#1e1e1e;
+}
+
+/* exemplo links */
+
+body.dark-mode a{
+  color:white;
+}

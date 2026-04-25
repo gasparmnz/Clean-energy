@@ -1,0 +1,141 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produtos - Admin</title>
+
+  <link rel="stylesheet" href="/css/adm.css">
+  <link rel="stylesheet" href="/css/produtos_adm.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <%- include('../partial/header.ejs') %>
+  <section class="admin-container">
+    <%- include('../partial/sidebar_adm.ejs') %>
+
+    <main class="admin-main">
+
+      <nav class="back-navigation" aria-label="Navegação de retorno">
+        <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+          <i class='bx bx-arrow-back'></i>
+          <span>Voltar</span>
+        </button>
+      </nav>
+
+      <header class="page-header">
+        <h1>Produtos</h1>
+        <p class="page-subtitle">Gerenciamento de todos os produtos cadastrados na plataforma.</p>
+      </header>
+
+      <section class="products-summary">
+        <article class="summary-card">
+          <figure class="summary-card-icon accent">
+            <i class="bx bx-package"></i>
+          </figure>
+          <article>
+            <h3>Total de Produtos</h3>
+            <p id="totalProducts">0</p>
+          </article>
+        </article>
+
+        <article class="summary-card">
+          <figure class="summary-card-icon success">
+            <i class="bx bx-check-circle"></i>
+          </figure>
+          <article>
+            <h3>Produtos Ativos</h3>
+            <p id="activeProducts">0</p>
+          </article>
+        </article>
+
+        <article class="summary-card">
+          <figure class="summary-card-icon danger">
+            <i class="bx bx-block"></i>
+          </figure>
+          <article>
+            <h3>Produtos Suspensos</h3>
+            <p id="suspendedProductsSummary">0</p>
+          </article>
+        </article>
+      </section>
+
+      <nav class="products-controls">
+        <article class="search-box">
+          <i class="bx bx-search"></i>
+          <input type="text" id="searchInput" placeholder="Buscar por nome, ID ou descrição...">
+        </article>
+
+        <nav class="filter-controls">
+          <button class="filter-btn active" onclick="filterProducts(event, 'all')">Todos</button>
+          <button class="filter-btn" onclick="filterProducts(event, 'active')">Disponíveis</button>
+          <button class="filter-btn" onclick="filterProducts(event, 'suspended')">Suspensos</button>
+        </nav>
+      </nav>
+
+      <section id="availableSection" class="products-section">
+        <header class="section-header">
+          <h2>Disponíveis</h2>
+          <span id="availableBadge" class="badge">0</span>
+        </header>
+        <section id="availableProducts" class="products-grid"></section>
+      </section>
+
+      <section id="suspendedSection" class="products-section">
+        <header class="section-header">
+          <h2>Suspensos</h2>
+          <span id="suspendedBadge" class="badge danger">0</span>
+        </header>
+        <section id="suspendedProducts" class="products-grid"></section>
+      </section>
+
+    </main>
+  </section>
+
+  <dialog id="editModal" class="modal">
+    <article class="modal-content">
+      <header class="modal-header">
+        <h2>Editar Produto</h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </header>
+
+      <section class="modal-body">
+        <article class="form-group">
+          <label for="editName">Nome</label>
+          <input type="text" id="editName">
+        </article>
+
+        <article class="form-group">
+          <label for="editDescription">Descrição</label>
+          <input type="text" id="editDescription">
+        </article>
+
+        <article class="form-group">
+          <label for="editPrice">Preço</label>
+          <input type="number" id="editPrice" step="0.01">
+        </article>
+
+        <article class="form-group">
+          <label for="editStock">Estoque</label>
+          <input type="number" id="editStock">
+        </article>
+      </section>
+
+      <footer class="modal-footer">
+        <button class="modal-btn btn-secondary" onclick="closeModal()">Cancelar</button>
+        <button class="modal-btn btn-primary" onclick="saveProduct()">Salvar</button>
+      </footer>
+    </article>
+  </dialog>
+
+  <!-- JS separado -->
+  <script src="/js/produtos_adm.js"></script>
+  <script src="/js/darkmode.js"></script>
+
+</body>
+</html>
+```

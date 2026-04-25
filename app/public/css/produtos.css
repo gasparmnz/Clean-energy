@@ -1,0 +1,402 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: #f9f9f9;
+  color: #333;
+  overflow-x: hidden;
+}
+
+main {
+  padding: 2rem;
+  margin-top: 100px;
+}
+
+.filtro-container {
+  margin-bottom: 2rem;
+}
+
+.filtro-box {
+  background: #fff;
+  border-radius: 15px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border: 1px solid #eee;
+}
+
+/* Linha de busca */
+.filtro-topo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f5f5f5;
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.filtro-topo i {
+  font-size: 1.2rem;
+  color: #777;
+}
+
+.filtro-topo input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 1rem;
+}
+
+/* Linha de filtros */
+.filtro-linha {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filtro-linha select,
+.filtro-linha input {
+  flex: 1;
+  min-width: 140px;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fafafa;
+  font-size: 0.9rem;
+}
+
+/* Hover */
+.filtro-linha select:focus,
+.filtro-linha input:focus {
+  border-color: #488D6A;
+  background: #fff;
+}
+
+.sem-produtos {
+  width: 100%;
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #555;
+}
+
+.sem-produtos i {
+  font-size: 60px;
+  color: #cfcfcf;
+  margin-bottom: 1rem;
+}
+
+.sem-produtos h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.sem-produtos p {
+  font-size: 1rem;
+  color: #777;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.sem-produtos {
+  list-style: none;
+}
+
+.produtos-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 1rem;
+  -webkit-overflow-scrolling: touch;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  text-decoration: none;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.produtos-scroll li {
+  flex: 0 0 auto;
+  width: 220px;
+  scroll-snap-align: start;
+  list-style: none;
+}
+
+.produtos-scroll li article {
+  width: 100%;
+}
+
+.produtos-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.produtos-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* --- Correção final: alinhar "Ver detalhes" na base --- */
+.produtos-scroll li {
+  display: flex;
+  flex-direction: column;
+}
+
+.produtos-scroll li article {
+  min-height: 310px; /* aumenta ou diminui conforme o conteúdo */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+figure {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  height: 100%;
+}
+
+figcaption {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+figcaption a {
+  margin-top: auto;       /* Empurra o link para o fim */
+  display: inline-block;
+  padding-top: 0.8rem;    /* Espaço entre o texto e o link */
+}
+
+.produto-card figcaption p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+ 
+}
+
+main section {
+  margin-bottom: 2rem;
+}
+
+main section h2 {
+  margin-bottom: 1rem;
+}
+
+/* Mobile - mantém o scrolling horizontal */
+@media (max-width: 1023px) {
+  .produtos-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .produtos-scroll li {
+    width: 220px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  article {
+    display: block;
+    height: auto;
+  }
+}
+
+/* Desktop - grid layout (apenas para telas maiores) */
+@media (min-width: 1024px) {
+  .produtos-scroll {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .produtos-scroll li {
+    width: 100%;
+    height: 100%;
+  }
+
+  article {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .form-filtro-completo {
+    display: none;
+  }
+  .form-pesquisa-simples {
+    display: block;
+  }
+}
+
+article {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+article:hover {
+  transform: scale(1.03);
+}
+
+figure {
+  margin: 0;
+}
+
+figure img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+figcaption {
+  padding: 0.8rem;
+}
+
+figcaption h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+figcaption p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+figcaption a {
+  color: #000000;
+  text-decoration: none;
+  font-weight: 750;
+}
+
+figcaption a:hover {
+  color: #488D6A;
+  text-decoration: none;
+}
+
+.lupa{
+  height: 30px;
+  width: 30px;
+}
+
+.carinho{
+  color: #5f5f5f;
+  font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.carinho2{
+  color: #5f5f5f;
+  font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+h2{
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Desktop - grid layout (apenas para telas maiores) */
+@media (min-width: 1024px) {
+  .produtos-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 1.5rem;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    flex-wrap: nowrap;
+  }
+
+  .produtos-scroll li {
+    width: 280px; /* Largura fixa para os cards */
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  article {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+/* Remove as media queries anteriores para grid e adiciona estas: */
+@media (min-width: 1024px) and (max-width: 1599px) {
+  .produtos-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 1.5rem;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    flex-wrap: nowrap;
+  }
+
+  .produtos-scroll li {
+    width: 280px; /* Mesma largura dos cards grandes */
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+}
+
+@media (min-width: 1600px) {
+  .produtos-scroll {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* 6 produtos por linha em desktop grande */
+    gap: 1.5rem;
+    align-items: stretch;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .produtos-scroll li {
+    width: 100%;
+    height: 100%;
+  }
+  .sem-produtos{
+    grid-column: 1 / -1;
+  }
+}
+
+/* Para tablets mantém o scrolling */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .produtos-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .produtos-scroll li {
+    width: 220px;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  
+}
+@media (max-width: 768px) {
+  .filtro-linha {
+    flex-direction: column;
+  }
+}
