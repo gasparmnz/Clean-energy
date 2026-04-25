@@ -8,10 +8,36 @@ router.get("/", async (req, res) => {
   try {
     const [[{ totalUsers }]] = await pool.query("SELECT COUNT(*) AS totalUsers FROM Usuario");
     const [[{ totalProducts }]] = await pool.query("SELECT COUNT(*) AS totalProducts FROM produtos");
-    res.render("pages/adm", { totals: { users: totalUsers || 0, products: totalProducts || 0 } });
+    const [[{ activeProducts }]] = await pool.query("SELECT COUNT(*) AS activeProducts FROM produtos WHERE status = 'active'");
+    const [[{ suspendedProducts }]] = await pool.query("SELECT COUNT(*) AS suspendedProducts FROM produtos WHERE status = 'suspended'");
+
+    let compras = [];
+    let vendas = [];
+    let stats = { total: 0, pendentes: 0, canceladas: 0, concluidas: 0, totalValor: 0, comissao: 0 };
+
+    try {
+      const [tables] = await pool.query("SHOW TABLES LIKE 'pedidos'");
+      if (tables.length > 0) {
+        const [[s]] = await pool.query(`SELECT COUNT(*) AS total, SUM(CASE WHEN status='pendente' THEN 1 ELSE 0 END) AS pendentes, SUM(CASE WHEN status='cancelado' THEN 1 ELSE 0 END) AS canceladas, SUM(CASE WHEN status='concluido' THEN 1 ELSE 0 END) AS concluidas, COALESCE(SUM(valor_total),0) AS totalValor FROM pedidos`);
+        stats = { total: s.total||0, pendentes: s.pendentes||0, canceladas: s.canceladas||0, concluidas: s.concluidas||0, totalValor: parseFloat(s.totalValor)||0, comissao: (parseFloat(s.totalValor)||0)*0.05 };
+        const [comprasRows] = await pool.query(`SELECT p.id, u.Nome AS comprador, pr.nome AS produto, p.valor_total AS valor, p.criado_em AS data, p.status FROM pedidos p JOIN Usuario u ON p.comprador_id = u.Usuario_ID LEFT JOIN produtos pr ON p.produto_id = pr.id ORDER BY p.criado_em DESC LIMIT 5`);
+        compras = comprasRows;
+        const [vendasRows] = await pool.query(`SELECT p.id, u.Nome AS vendedor, pr.nome AS produto, p.valor_total AS valor, p.criado_em AS data, p.status FROM pedidos p JOIN produtos pr ON p.produto_id = pr.id JOIN Usuario u ON pr.usuario_id = u.Usuario_ID ORDER BY p.criado_em DESC LIMIT 5`);
+        vendas = vendasRows;
+      }
+    } catch (e) { /* tabela nao existe ainda */ }
+
+    res.render("pages/adm", {
+      totals: { users: totalUsers||0, products: totalProducts||0, active: activeProducts||0, suspended: suspendedProducts||0 },
+      stats, compras, vendas
+    });
   } catch (err) {
     console.error('Erro ao carregar dashboard admin', err);
-    res.render("pages/adm", { totals: { users: 0, products: 0 } });
+    res.render("pages/adm", {
+      totals: { users: 0, products: 0, active: 0, suspended: 0 },
+      stats: { total: 0, pendentes: 0, canceladas: 0, concluidas: 0, totalValor: 0, comissao: 0 },
+      compras: [], vendas: []
+    });
   }
 });
 

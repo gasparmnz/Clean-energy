@@ -20,7 +20,7 @@ var { validarCPF } = require("../helpers/validacao");
 
 async function getProdutos() {
   try {
-    return await produtosModel.findAll();
+    return await produtosModel.findAll({ apenasAtivos: true });
   } catch (err) {
     console.error('Erro ao buscar produtos:', err.message);
     return [];

@@ -1,3 +1,8 @@
+-- ================================================
+-- Script SQL atualizado - Biomassa Hub
+-- Inclui diferenciação de perfis comprador/vendedor
+-- ================================================
+
 CREATE DATABASE IF NOT EXISTS produtos;
 USE produtos;
 
@@ -42,6 +47,14 @@ CREATE TABLE IF NOT EXISTS produtos (
     local VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE produtos
+  ADD COLUMN status ENUM('active', 'suspended') NOT NULL DEFAULT 'active';
+
+SET SQL_SAFE_UPDATES = 0;
+-- Garante que produtos já cadastrados fiquem como ativos
+UPDATE produtos SET status = 'active' WHERE status IS NULL OR status = '';
+
 
 ALTER TABLE produtos MODIFY quantidade DECIMAL(10,2);
 
@@ -96,8 +109,5 @@ INSERT IGNORE INTO Categoria (Nome) VALUES
   ('Lenha'), ('Pellets'), ('Cavaco'), ('Bagaço de cana'),
   ('Lixo orgânico'), ('Casca de arroz'), ('Folhas secas'), ('Biomassa geral');
   
-  CREATE TABLE IF NOT EXISTS carrinho (
-  idCarrinho INT AUTO_INCREMENT PRIMARY KEY,
-  userId VARCHAR(255),
-  items JSON
-)
+  
+
