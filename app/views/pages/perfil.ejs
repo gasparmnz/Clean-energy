@@ -3,17 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Perfil - Biomassa Hub</title>
+  <title>Meu Perfil - Clean Energy</title>
   <link rel="stylesheet" href="/css/perfil.css">
+  <link rel="stylesheet" href="/css/darkmode.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-  <style>
-    .perfil-badge { display:inline-block; padding:4px 14px; border-radius:20px; font-size:0.85rem; font-weight:700; margin-bottom:16px; }
-    .badge-comprador { background:#e8f5e9; color:#2e7d32; }
-    .badge-vendedor  { background:#fff3e0; color:#e65100; }
-    .perfil-info p { margin:8px 0; font-size:1rem; }
-    .btn-logout { background:#e74c3c; color:#fff; border:none; padding:10px 24px; border-radius:8px; cursor:pointer; font-size:0.95rem; margin-top:20px; text-decoration:none; display:inline-block; }
-    .btn-cadastrar-produto { background:#2e7d32; color:#fff; padding:10px 24px; border-radius:8px; text-decoration:none; font-weight:600; display:inline-block; margin-top:10px; }
-  </style>
 </head>
 <body>
   <%- include('../partial/header.ejs') %>
@@ -27,47 +20,171 @@
       </button>
 
       <section class="perfil-form">
-        <h2>Meu Perfil</h2>
 
-        <section class="perfil-foto">
-          <img id="fotoPerfil" src="/imagem/avatar.png" alt="Foto do usuário">
-        </section>
+        <!-- Cabeçalho com avatar e saudação -->
+        <div class="perfil-header-row">
+          <section class="perfil-foto">
+            <img id="fotoPerfil" src="/imagem/avatar.png" alt="Foto do usuário">
+          </section>
+          <div class="perfil-greeting">
+            <h2>Olá, <strong><%= usuario ? usuario.Nome.split(' ')[0] : 'Usuário' %>!</strong></h2>
+            <% if (usuario) { %>
+              <span class="perfil-badge <%= usuario.Tipo === 'PJ' ? 'badge-vendedor' : 'badge-comprador' %>">
+                <%= usuario.Tipo === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
+              </span>
+            <% } %>
+          </div>
+        </div>
 
         <% if (usuario) { %>
-          <span class="perfil-badge <%= usuario.Tipo === 'PJ' ? 'badge-vendedor' : 'badge-comprador' %>">
-            <%= usuario.Tipo === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
-          </span>
 
-          <section class="perfil-info">
-            <p><strong>Nome:</strong> <%= usuario.Nome %></p>
-            <p><strong>E-mail:</strong> <%= usuario.Email %></p>
-            <p><strong>Tipo de conta:</strong> <%= usuario.Tipo === 'PJ' ? 'Pessoa Jurídica (Vendedor)' : 'Pessoa Física (Comprador)' %></p>
-            <% if (usuario.Data_Criacao) { %>
-              <p><strong>Membro desde:</strong> <%= new Date(usuario.Data_Criacao).toLocaleDateString('pt-BR') %></p>
-            <% } %>
-            <% if (usuario.Ultimo_Login) { %>
-              <p><strong>Último acesso:</strong> <%= new Date(usuario.Ultimo_Login).toLocaleString('pt-BR') %></p>
-            <% } %>
-          </section>
+        <!-- ── SEÇÃO CONTA ── -->
+        <div class="config-section">
+          <p class="config-section-title">CONTA</p>
 
-          <% if (usuario.Tipo === 'PJ') { %>
-            <a href="/cadastrar_produto" class="btn-cadastrar-produto">
-              <i class='bx bx-plus'></i> Cadastrar Produto
-            </a>
-            <br>
-            <a href="/listaprodutos" class="btn-cadastrar-produto" style="background:#1565c0; margin-top:8px;">
-              <i class='bx bx-list-ul'></i> Meus Produtos
-            </a>
-          <% } else { %>
-            <a href="/minhascompras" class="btn-cadastrar-produto">
-              <i class='bx bx-shopping-bag'></i> Minhas Compras
-            </a>
+          <a href="#" class="config-row" id="btnEditarPerfil">
+            <div class="config-icon-wrap" style="background:#16a34a;">
+              <i class='bx bx-user'></i>
+            </div>
+            <div class="config-text">
+              <span class="config-title">Editar perfil</span>
+              <span class="config-sub">Nome, foto e informações pessoais</span>
+            </div>
+            <i class='bx bx-chevron-right config-arrow'></i>
+          </a>
+
+          <div class="config-row non-link">
+            <div class="config-icon-wrap" style="background:#0284c7;">
+              <i class='bx bx-envelope'></i>
+            </div>
+            <div class="config-text">
+              <span class="config-title">E-mail cadastrado</span>
+              <span class="config-sub"><%= usuario.Email %></span>
+            </div>
+          </div>
+
+          <div class="config-row non-link">
+            <div class="config-icon-wrap" style="background:#7c3aed;">
+              <i class='bx bx-id-card'></i>
+            </div>
+            <div class="config-text">
+              <span class="config-title">Tipo de conta</span>
+              <span class="config-sub"><%= usuario.Tipo === 'PJ' ? 'Pessoa Jurídica (Vendedor)' : 'Pessoa Física (Comprador)' %></span>
+            </div>
+          </div>
+
+          <% if (usuario.Data_Criacao) { %>
+          <div class="config-row non-link">
+            <div class="config-icon-wrap" style="background:#d97706;">
+              <i class='bx bx-calendar'></i>
+            </div>
+            <div class="config-text">
+              <span class="config-title">Membro desde</span>
+              <span class="config-sub"><%= new Date(usuario.Data_Criacao).toLocaleDateString('pt-BR') %></span>
+            </div>
+          </div>
+          <% } %>
+        </div>
+
+        <!-- ── FORMULÁRIO EDIÇÃO (oculto por padrão) ── -->
+        <div class="config-section hidden" id="formEdicaoWrap">
+          <p class="config-section-title">EDITAR DADOS</p>
+          <form id="formEdicao" class="edit-form">
+            <label>Nome completo</label>
+            <input type="text" id="nomeInput" value="<%= usuario.Nome %>">
+            <label>Telefone</label>
+            <input type="tel" id="telefoneInput" value="<%= usuario.Biografia || '' %>" placeholder="(00) 00000-0000">
+            <div class="edit-actions">
+              <button type="submit" class="btn-salvar">Salvar alterações</button>
+              <button type="button" id="btnCancelar" class="btn-cancelar">Cancelar</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- ── SEÇÃO APARÊNCIA ── -->
+        <div class="config-section">
+          <p class="config-section-title">APARÊNCIA</p>
+
+          <div class="config-row non-link">
+            <div class="config-icon-wrap" style="background:#374151;">
+              <i class='bx bx-moon'></i>
+            </div>
+            <div class="config-text">
+              <span class="config-title">Modo de aparência</span>
+              <span class="config-sub">Escolha claro ou escuro</span>
+            </div>
+            <!-- Toggle switch -->
+            <label class="toggle-switch" aria-label="Ativar modo escuro">
+              <input type="checkbox" id="darkModeToggleSwitch">
+              <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- ── SEÇÃO ACESSO ── -->
+        <div class="config-section">
+          <p class="config-section-title">ACESSO</p>
+
+          <% if (usuario.Tipo === 'PF') { %>
+          <a href="/upgrade_vendedor" class="config-row">
+            <div class="config-icon-wrap" style="background:#ea580c;">
+              <i class='bx bx-store'></i>
+            </div>
+            <div class="config-text">
+              <span class="config-title">Tornar-se Vendedor</span>
+              <span class="config-sub">Ative a venda de produtos na sua conta</span>
+            </div>
+            <i class='bx bx-chevron-right config-arrow'></i>
+          </a>
           <% } %>
 
-          <br>
-          <a href="/logout" class="btn-logout">
-            <i class='bx bx-log-out'></i> Sair da Conta
+          <% if (usuario.Tipo === 'PJ') { %>
+          <a href="/cadastrar_produto" class="config-row">
+            <div class="config-icon-wrap" style="background:#16a34a;">
+              <i class='bx bx-plus-circle'></i>
+            </div>
+            <div class="config-text">
+              <span class="config-title">Cadastrar Produto</span>
+              <span class="config-sub">Anuncie um novo produto no marketplace</span>
+            </div>
+            <i class='bx bx-chevron-right config-arrow'></i>
           </a>
+          <a href="/listaprodutos" class="config-row">
+            <div class="config-icon-wrap" style="background:#1565c0;">
+              <i class='bx bx-list-ul'></i>
+            </div>
+            <div class="config-text">
+              <span class="config-title">Meus Produtos</span>
+              <span class="config-sub">Gerencie seus anúncios</span>
+            </div>
+            <i class='bx bx-chevron-right config-arrow'></i>
+          </a>
+          <% } %>
+
+          <a href="/minhascompras" class="config-row">
+            <div class="config-icon-wrap" style="background:#0891b2;">
+              <i class='bx bx-shopping-bag'></i>
+            </div>
+            <div class="config-text">
+              <span class="config-title">Minhas Compras</span>
+              <span class="config-sub">Histórico de pedidos e compras</span>
+            </div>
+            <i class='bx bx-chevron-right config-arrow'></i>
+          </a>
+
+          <a href="/logout" class="config-row config-row-danger">
+            <div class="config-icon-wrap" style="background:#dc2626;">
+              <i class='bx bx-log-out'></i>
+            </div>
+            <div class="config-text">
+              <span class="config-title">Sair da Conta</span>
+              <span class="config-sub">Encerrar sessão atual</span>
+            </div>
+            <i class='bx bx-chevron-right config-arrow'></i>
+          </a>
+        </div>
 
         <% } else { %>
           <p>Erro ao carregar dados do perfil.</p>
@@ -77,5 +194,7 @@
   </main>
 
   <%- include('../partial/footer.ejs') %>
+  <script src="/js/darkmode.js"></script>
+  <script src="/js/perfil.js"></script>
 </body>
 </html>

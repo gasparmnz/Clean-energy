@@ -144,14 +144,36 @@ router.post("/upgrade_vendedor",
 );
 router.get("/minhascompras", requireLogin, (req, res) => res.render("pages/minhascompras"));
 
+// ── Atualizar perfil ──────────────────────────────────────────
+router.post("/perfil/atualizar", requireLogin, async (req, res) => {
+  const { nome, biografia } = req.body;
+  if (!nome || nome.trim().length < 2) {
+    return res.json({ sucesso: false, erro: 'Nome muito curto.' });
+  }
+  try {
+    await pool.query(
+      "UPDATE Usuario SET Nome = ?, Biografia = ? WHERE Usuario_ID = ?",
+      [nome.trim(), biografia || null, req.session.userId]
+    );
+    req.session.nomeUsuario = nome.trim();
+    res.json({ sucesso: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ sucesso: false, erro: 'Erro ao atualizar.' });
+  }
+});
+
 router.get("/perfil", requireLogin, async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM Usuario WHERE Usuario_ID = ?", [req.session.userId]);
     const usuarioDados = rows[0] || null;
     if (usuarioDados) {
-      usuarioDados.perfil = req.session.perfil; // Adiciona o perfil da sessão para consistência
+      usuarioDados.perfil = req.session.perfil;
     }
-    res.render("pages/perfil", { usuario: usuarioDados });
+    res.render("pages/perfil", {
+      usuario: usuarioDados,
+      // sidebar também precisa de usuario
+    });
   } catch (err) {
     res.render("pages/perfil", { usuario: null });
   }
@@ -213,9 +235,69 @@ router.get("/item/:id", async function (req, res) {
   try {
     const produto = await produtosModel.findById(req.params.id);
     if (!produto) return res.status(404).send("Produto não encontrado");
-    res.render("pages/item", { produto });
+
+    // Busca avaliações reais do banco com JOIN para pegar nome do usuário
+    const [avaliacoes] = await pool.query(
+      `SELECT a.Avaliacao_ID, a.Nota, a.Comentario, a.criado_em,
+              COALESCE(u.Nome, a.nome_usuario, 'Usuário') AS nome_usuario
+       FROM Avaliacao a
+       LEFT JOIN Usuario u ON u.Usuario_ID = a.Usuario_ID
+       WHERE a.Produto_ID = ?
+       ORDER BY a.criado_em DESC`,
+      [req.params.id]
+    );
+
+    // Média das notas
+    const mediaNotas = avaliacoes.length
+      ? (avaliacoes.reduce((s, a) => s + (a.Nota || 0), 0) / avaliacoes.length).toFixed(1)
+      : null;
+
+    const usuarioSessao = req.session.userId
+      ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil }
+      : null;
+
+    res.render("pages/item", { produto, avaliacoes, mediaNotas, usuario: usuarioSessao });
   } catch (err) {
+    console.error(err);
     res.status(500).send('Erro interno do servidor');
+  }
+});
+
+// ── POST avaliação ────────────────────────────────────────────
+router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
+  const produtoId = req.params.id;
+  const { nota, comentario } = req.body;
+  const notaNum = parseInt(nota, 10);
+
+  if (!notaNum || notaNum < 1 || notaNum > 5) {
+    return res.redirect(`/item/${produtoId}?erro=nota`);
+  }
+
+  try {
+    // Verifica se usuário já avaliou este produto
+    const [jaAvaliou] = await pool.query(
+      "SELECT Avaliacao_ID FROM Avaliacao WHERE Usuario_ID = ? AND Produto_ID = ?",
+      [req.session.userId, produtoId]
+    );
+
+    if (jaAvaliou.length > 0) {
+      // Atualiza avaliação existente
+      await pool.query(
+        "UPDATE Avaliacao SET Nota = ?, Comentario = ?, criado_em = NOW() WHERE Usuario_ID = ? AND Produto_ID = ?",
+        [notaNum, comentario || '', req.session.userId, produtoId]
+      );
+    } else {
+      // Nova avaliação
+      await pool.query(
+        "INSERT INTO Avaliacao (Nota, Comentario, Usuario_ID, Produto_ID, nome_usuario, criado_em) VALUES (?, ?, ?, ?, ?, NOW())",
+        [notaNum, comentario || '', req.session.userId, produtoId, req.session.nomeUsuario]
+      );
+    }
+
+    res.redirect(`/item/${produtoId}#comentarios`);
+  } catch (err) {
+    console.error('Erro ao salvar avaliação:', err);
+    res.redirect(`/item/${produtoId}?erro=salvar`);
   }
 });
 

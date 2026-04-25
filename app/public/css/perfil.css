@@ -142,3 +142,86 @@ button {
 .hidden {
   display: none !important;
 }
+/* ══ NOVO LAYOUT PERFIL ESTILO CONFIGURAÇÕES ══ */
+
+.perfil-header-row {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.8rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid #eee;
+}
+body.dark-mode .perfil-header-row { border-bottom-color: #333; }
+
+.perfil-greeting h2 { font-size: 1.4rem; color: #222; font-weight: 700; }
+body.dark-mode .perfil-greeting h2 { color: #eee; }
+.perfil-greeting h2 strong { color: var(--primary-color); }
+
+.perfil-badge { display:inline-block; padding:3px 12px; border-radius:20px; font-size:0.78rem; font-weight:700; margin-top:.3rem; }
+.badge-comprador { background:#e8f5e9; color:#2e7d32; }
+.badge-vendedor  { background:#fff3e0; color:#e65100; }
+
+/* ── Seções de configuração ── */
+.config-section { margin-bottom: 1.5rem; }
+.config-section-title {
+  font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+  color: #9ca3af; text-transform: uppercase; margin-bottom: .6rem; padding-left: .2rem;
+}
+body.dark-mode .config-section-title { color: #6b7280; }
+
+.config-row {
+  display: flex; align-items: center; gap: 1rem;
+  padding: .95rem 1rem; background: #fff; border-radius: 10px;
+  margin-bottom: .5rem; text-decoration: none; color: inherit;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06); transition: background .15s;
+  border: 1px solid #f3f4f6;
+}
+body.dark-mode .config-row { background: #1e1e1e; border-color: #2a2a2a; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+.config-row:not(.non-link):hover { background: #f9fafb; }
+body.dark-mode .config-row:not(.non-link):hover { background: #262626; }
+.config-row-danger .config-text .config-title { color: #dc2626; }
+
+.config-icon-wrap {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.config-icon-wrap i { color: #fff; font-size: 1.2rem; }
+
+.config-text { flex: 1; }
+.config-title { display: block; font-size: .95rem; font-weight: 600; color: #1a1a1a; }
+body.dark-mode .config-title { color: #e5e7eb; }
+.config-sub { display: block; font-size: .78rem; color: #9ca3af; margin-top: .1rem; }
+
+.config-arrow { color: #d1d5db; font-size: 1.2rem; flex-shrink: 0; }
+body.dark-mode .config-arrow { color: #4b5563; }
+
+/* ── Toggle switch ── */
+.toggle-switch { position: relative; display: inline-flex; align-items: center; cursor: pointer; flex-shrink:0; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+.toggle-track {
+  width: 46px; height: 26px; background: #d1d5db; border-radius: 999px;
+  transition: background .25s; position: relative;
+}
+body.dark-mode .toggle-track { background: #4b5563; }
+.toggle-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  transition: transform .25s;
+}
+.toggle-switch input:checked + .toggle-track { background: #16a34a; }
+.toggle-switch input:checked + .toggle-track .toggle-thumb { transform: translateX(20px); }
+
+/* ── Formulário edição ── */
+.edit-form { display: grid; gap: .8rem; }
+.edit-form label { font-size: .85rem; font-weight: 600; color: #374151; }
+body.dark-mode .edit-form label { color: #d1d5db; }
+.edit-form input { padding: .65rem .9rem; border: 1.5px solid #e5e7eb; border-radius: 7px; font-size: .95rem; font-family: inherit; background: #fff; color: #1a1a1a; transition: border .15s; }
+body.dark-mode .edit-form input { background: #1e1e1e; border-color: #374151; color: #eee; }
+.edit-form input:focus { outline: none; border-color: #16a34a; }
+.edit-actions { display: flex; gap: .8rem; margin-top: .4rem; flex-wrap: wrap; }
+.btn-salvar { background: #16a34a; color: #fff; border: none; padding: .65rem 1.4rem; border-radius: 7px; font-size: .9rem; font-weight: 600; cursor: pointer; }
+.btn-salvar:hover { background: #15803d; }
+.btn-cancelar { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; padding: .65rem 1.2rem; border-radius: 7px; font-size: .9rem; cursor: pointer; }
+body.dark-mode .btn-cancelar { background: #374151; color: #d1d5db; border-color: #4b5563; }

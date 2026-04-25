@@ -1,25 +1,111 @@
-.darkmode{
-  width:24px;
-  cursor:pointer;
-  margin-right:10px;
-  transition:0.3s;
+/* ══ DARK MODE CSS GLOBAL - Clean Energy ══ */
+
+.darkmode { width:24px; cursor:pointer; margin-right:10px; transition:.3s; }
+
+/* ─── BASE ─── */
+body.dark-mode {
+  background: #121212 !important;
+  color: #e5e7eb !important;
 }
+body.dark-mode * { color: inherit; }
 
-/* DARK MODE GERAL */
+/* ─── HEADER ─── */
+body.dark-mode .header { background: #1a1a1a !important; border-bottom: 1px solid #2a2a2a; }
+body.dark-mode .header .navbar a { color: #d1d5db !important; }
+body.dark-mode .header .navbar a:hover { color: #86efac !important; }
+body.dark-mode .login-container a { color: #d1d5db !important; }
+body.dark-mode .logo img { filter: brightness(0.9); }
 
-body.dark-mode{
-  background:#121212;
-  color:white;
+/* ─── FOOTER ─── */
+body.dark-mode footer { background: #1a1a1a !important; border-top: 1px solid #2a2a2a; }
+
+/* ─── SIDEBAR ─── */
+body.dark-mode .sidebar { background: #1a1a1a !important; border-right: 1px solid #2a2a2a; }
+body.dark-mode .sidebar-nav ul li a { color: #d1d5db !important; }
+body.dark-mode .sidebar-nav ul li a:hover { background: #262626 !important; color: #86efac !important; }
+body.dark-mode .user-info .username { color: #e5e7eb !important; }
+
+/* ─── CARDS / SEÇÕES GERAIS ─── */
+body.dark-mode .product-main,
+body.dark-mode .product-container,
+body.dark-mode .product-left-column,
+body.dark-mode .product-right-column { background: transparent !important; }
+body.dark-mode .product-info,
+body.dark-mode .perfil-form,
+body.dark-mode .comment-item,
+body.dark-mode .config-row { background: #1e1e1e !important; border-color: #2a2a2a !important; }
+
+/* ─── TEXTOS ─── */
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
+body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 { color: #f3f4f6 !important; }
+body.dark-mode p { color: #d1d5db !important; }
+body.dark-mode strong { color: #f9fafb !important; }
+body.dark-mode span { color: inherit; }
+body.dark-mode cite { color: #e5e7eb !important; }
+body.dark-mode label { color: #d1d5db !important; }
+
+/* ─── INPUTS / TEXTAREA ─── */
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+  background: #2a2a2a !important;
+  color: #e5e7eb !important;
+  border-color: #374151 !important;
 }
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder { color: #6b7280 !important; }
 
-/* exemplo para header */
-
-body.dark-mode .header{
-  background:#1e1e1e;
+/* ─── BOTÕES ─── */
+body.dark-mode button:not(.buy-button):not(.back-button):not(.submit-btn) {
+  background: #2a2a2a;
+  color: #e5e7eb;
+  border-color: #374151;
 }
+body.dark-mode .back-button { background: transparent !important; color: #d1d5db !important; }
+body.dark-mode .buy-button { background: #16a34a !important; color: #fff !important; }
 
-/* exemplo links */
+/* ─── LINKS ─── */
+body.dark-mode a { color: #86efac; }
+body.dark-mode a:hover { color: #4ade80; }
 
-body.dark-mode a{
-  color:white;
-}
+/* ─── PRODUTOS (listagem) ─── */
+body.dark-mode .product-card,
+body.dark-mode .card-produto { background: #1e1e1e !important; border-color: #2a2a2a !important; }
+body.dark-mode .product-card h3,
+body.dark-mode .card-produto h3 { color: #f3f4f6 !important; }
+body.dark-mode .product-card p { color: #9ca3af !important; }
+
+/* ─── FORMULÁRIOS (login, cadastro) ─── */
+body.dark-mode .form-section,
+body.dark-mode .login-form,
+body.dark-mode .cadastro-form { background: #1a1a1a !important; }
+body.dark-mode .form-input { background: #2a2a2a !important; color: #e5e7eb !important; border-color: #374151 !important; }
+body.dark-mode .hero-section { background: #1a2e1a !important; }
+
+/* ─── ADM ─── */
+body.dark-mode .admin-main { background: #121212 !important; }
+body.dark-mode .summary-card,
+body.dark-mode .summary-card-user { background: #1e1e1e !important; border-color: #2a2a2a !important; }
+body.dark-mode .users-table th { background: #1a1a1a !important; color: #9ca3af !important; }
+body.dark-mode .users-table td { border-color: #2a2a2a !important; color: #d1d5db !important; }
+body.dark-mode .users-table tr:hover td { background: #1e1e1e !important; }
+body.dark-mode .search-box input { background: #1e1e1e !important; color: #e5e7eb !important; border-color: #374151 !important; }
+
+/* ─── CARRINHO ─── */
+body.dark-mode .cart-item { background: #1e1e1e !important; border-color: #2a2a2a !important; }
+body.dark-mode .cart-summary { background: #1e1e1e !important; }
+
+/* ─── ITEM PRODUTO ─── */
+body.dark-mode .product-image-wrapper { background: #1a1a1a !important; }
+body.dark-mode .product-title { color: #f3f4f6 !important; }
+body.dark-mode .product-price { color: #86efac !important; }
+body.dark-mode .terms-section { background: #1e1e1e !important; border-color: #2a2a2a !important; }
+body.dark-mode .terms-list li { color: #9ca3af !important; }
+body.dark-mode .avg-rating { background: #1e1e1e !important; }
+body.dark-mode .review-form-section { background: #1a2e1a !important; border-color: #2d5a2d !important; }
+body.dark-mode .review-form-section textarea { background: #1e1e1e !important; color: #e5e7eb !important; border-color: #2d5a2d !important; }
+
+/* ─── SCROLLBAR ─── */
+body.dark-mode ::-webkit-scrollbar { width: 8px; }
+body.dark-mode ::-webkit-scrollbar-track { background: #1a1a1a; }
+body.dark-mode ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }

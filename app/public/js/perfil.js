@@ -1,47 +1,46 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', function () {
+  const btnEditar   = document.getElementById('btnEditarPerfil');
+  const btnCancelar = document.getElementById('btnCancelar');
+  const formWrap    = document.getElementById('formEdicaoWrap');
+  const form        = document.getElementById('formEdicao');
 
-  const btnEditar = document.getElementById("btnEditar");
-  const btnCancelar = document.getElementById("btnCancelar");
-  const form = document.getElementById("formEdicao");
-  const view = document.getElementById("perfilVisualizacao");
+  if (!btnEditar) return;
 
-  const nomeInput = document.getElementById("nomeInput");
-  const emailInput = document.getElementById("emailInput");
-  const telefoneInput = document.getElementById("telefoneInput");
-  const cpfInput = document.getElementById("cpfInput");
-
-  const nomeDisplay = document.getElementById("nomeDisplay");
-  const emailDisplay = document.getElementById("emailDisplay");
-  const telefoneDisplay = document.getElementById("telefoneDisplay");
-  const cpfDisplay = document.getElementById("cpfDisplay");
-
-  function abrirEdicao() {
-    nomeInput.value = nomeDisplay.textContent;
-    emailInput.value = emailDisplay.textContent;
-    telefoneInput.value = telefoneDisplay.textContent;
-    cpfInput.value = cpfDisplay.textContent;
-
-    view.classList.add("hidden");
-    form.classList.remove("hidden");
-  }
-
-  function cancelarEdicao() {
-    form.classList.add("hidden");
-    view.classList.remove("hidden");
-  }
-
-  btnEditar.addEventListener("click", abrirEdicao);
-  btnCancelar.addEventListener("click", cancelarEdicao);
-
-  form.addEventListener("submit", (e) => {
+  btnEditar.addEventListener('click', function (e) {
     e.preventDefault();
-
-    nomeDisplay.textContent = nomeInput.value;
-    emailDisplay.textContent = emailInput.value;
-    telefoneDisplay.textContent = telefoneInput.value;
-    cpfDisplay.textContent = cpfInput.value;
-
-    cancelarEdicao();
+    formWrap.classList.remove('hidden');
+    formWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
 
+  btnCancelar.addEventListener('click', function () {
+    formWrap.classList.add('hidden');
+  });
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const nome      = document.getElementById('nomeInput').value.trim();
+    const telefone  = document.getElementById('telefoneInput').value.trim();
+    if (!nome) { alert('Nome não pode estar vazio.'); return; }
+
+    try {
+      const resp = await fetch('/perfil/atualizar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, biografia: telefone })
+      });
+      const json = await resp.json();
+      if (json.sucesso) {
+        // Atualiza o nome exibido na saudação sem reload
+        const greet = document.querySelector('.perfil-greeting h2 strong');
+        if (greet) greet.textContent = nome.split(' ')[0];
+        const sidebar = document.querySelector('.sidebar .username');
+        if (sidebar) sidebar.textContent = nome.split(' ')[0];
+        formWrap.classList.add('hidden');
+      } else {
+        alert(json.erro || 'Erro ao salvar. Tente novamente.');
+      }
+    } catch (err) {
+      alert('Erro de conexão. Tente novamente.');
+    }
+  });
 });
