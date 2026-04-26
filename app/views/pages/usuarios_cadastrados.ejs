@@ -7,161 +7,131 @@
     <link rel="stylesheet" href="/css/adm.css">
     <link rel="stylesheet" href="/css/usuarios_cadastrados.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* === Lovable-style overrides === */
-        .uc-page { padding: 0; }
-        .uc-header { margin-bottom: 28px; }
-        .uc-title { font-size: 2rem; font-weight: 700; color: #111827; margin: 0 0 4px; }
-        .uc-subtitle { font-size: 0.95rem; color: #6b7280; margin: 0; }
-
-        /* Stats bar */
-        .uc-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
-        .uc-stat { background: #fff; border-radius: 12px; padding: 20px 22px; box-shadow: 0 1px 4px rgba(0,0,0,.07); display: flex; align-items: center; gap: 14px; }
-        .uc-stat-icon { width: 46px; height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .uc-stat-icon i { font-size: 1.5rem; }
-        .uc-stat-icon.purple { background: #ede9fe; color: #7c3aed; }
-        .uc-stat-icon.green  { background: #d1fae5; color: #059669; }
-        .uc-stat-icon.orange { background: #ffedd5; color: #ea580c; }
-        .uc-stat-label { font-size: 0.8rem; color: #6b7280; font-weight: 500; margin-bottom: 2px; }
-        .uc-stat-value { font-size: 1.6rem; font-weight: 700; color: #111827; line-height: 1; }
-
-        /* Table card */
-        .uc-table-card { background: #fff; border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,.07); overflow: hidden; }
-        .uc-table-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid #f3f4f6; gap: 12px; flex-wrap: wrap; }
-        .uc-table-title { font-size: 1.05rem; font-weight: 700; color: #111827; margin: 0; }
-        .uc-table-sub   { font-size: 0.85rem; color: #6b7280; margin: 2px 0 0; }
-        .uc-search { display: flex; align-items: center; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 9px 14px; min-width: 260px; gap: 8px; }
-        .uc-search i { color: #9ca3af; font-size: 1.1rem; }
-        .uc-search input { border: none; background: transparent; outline: none; font-size: 0.9rem; color: #374151; width: 100%; }
-        .uc-search input::placeholder { color: #9ca3af; }
-        .btn-novo { display: inline-flex; align-items: center; gap: 6px; background: #7c3aed; color: #fff; border: none; border-radius: 8px; padding: 9px 18px; font-size: 0.9rem; font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap; transition: background .2s; }
-        .btn-novo:hover { background: #6d28d9; }
-
-        /* Table */
-        .uc-table { width: 100%; border-collapse: collapse; }
-        .uc-table thead { background: #f9fafb; }
-        .uc-table th { padding: 11px 16px; text-align: left; font-size: 0.78rem; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: .05em; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
-        .uc-table td { padding: 14px 16px; border-bottom: 1px solid #f3f4f6; font-size: 0.9rem; color: #374151; }
-        .uc-table tbody tr:last-child td { border-bottom: none; }
-        .uc-table tbody tr:hover { background: #fafafa; }
-
-        /* Avatar cell */
-        .uc-user-cell { display: flex; align-items: center; gap: 10px; }
-        .uc-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700; color: #fff; flex-shrink: 0; }
-        .uc-user-name { font-weight: 600; color: #111827; }
-        .uc-user-id   { font-size: 0.78rem; color: #9ca3af; }
-
-        /* Role badge */
-        .badge-tipo { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
-        .badge-PJ { background: #fef3c7; color: #92400e; }
-        .badge-PF { background: #dbeafe; color: #1e40af; }
-
-        /* Status */
-        .status-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; }
-        .status-ativo   { background: #d1fae5; color: #065f46; }
-        .status-inativo { background: #fee2e2; color: #991b1b; }
-
-        /* Actions */
-        .uc-actions { display: flex; gap: 6px; }
-        .uc-btn { background: none; border: none; cursor: pointer; padding: 7px; border-radius: 6px; display: flex; align-items: center; justify-content: center; transition: background .2s; }
-        .uc-btn i { font-size: 1.15rem; }
-        .uc-btn.view { color: #3b82f6; }
-        .uc-btn.view:hover { background: #dbeafe; }
-        .uc-btn.edit { color: #10b981; }
-        .uc-btn.edit:hover { background: #d1fae5; }
-        .uc-btn.del  { color: #ef4444; }
-        .uc-btn.del:hover  { background: #fee2e2; }
-
-        /* Dropdown */
-        .uc-dropdown { position: relative; }
-        .uc-menu { display: none; position: absolute; right: 0; top: 100%; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.1); z-index: 100; min-width: 160px; overflow: hidden; }
-        .uc-dropdown.open .uc-menu { display: block; }
-        .uc-menu-item { display: flex; align-items: center; gap: 8px; padding: 10px 14px; font-size: 0.88rem; color: #374151; cursor: pointer; transition: background .15s; border: none; background: none; width: 100%; text-align: left; }
-        .uc-menu-item:hover { background: #f9fafb; }
-        .uc-menu-item.danger { color: #ef4444; }
-        .uc-menu-item.danger:hover { background: #fee2e2; }
-        .uc-dots { color: #9ca3af; }
-        .uc-dots:hover { background: #f3f4f6; }
-
-        /* Empty */
-        .uc-empty { text-align: center; padding: 60px 24px; color: #6b7280; }
-        .uc-empty i { font-size: 3rem; color: #d1d5db; display: block; margin-bottom: 12px; }
-
-        /* Colors for avatar bg */
-        .av-0{background:#7c3aed;} .av-1{background:#059669;} .av-2{background:#ea580c;}
-        .av-3{background:#2563eb;} .av-4{background:#db2777;} .av-5{background:#0891b2;}
-        .av-6{background:#65a30d;} .av-7{background:#9333ea;}
+        .uc-page{padding:0;}
+        .uc-header{margin-bottom:28px;}
+        .uc-title{font-size:2rem;font-weight:700;color:#111827;margin:0 0 4px;}
+        .uc-subtitle{font-size:.95rem;color:#6b7280;margin:0;}
+        .uc-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px;}
+        .uc-stat{background:#fff;border-radius:12px;padding:20px 22px;box-shadow:0 1px 4px rgba(0,0,0,.07);display:flex;align-items:center;gap:14px;}
+        .uc-stat-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+        .uc-stat-icon i{font-size:1.5rem;}
+        .uc-stat-icon.purple{background:#ede9fe;color:#7c3aed;}
+        .uc-stat-icon.green{background:#d1fae5;color:#059669;}
+        .uc-stat-icon.orange{background:#ffedd5;color:#ea580c;}
+        .uc-stat-icon.red{background:#fee2e2;color:#dc2626;}
+        .uc-stat-label{font-size:.8rem;color:#6b7280;font-weight:500;margin-bottom:2px;}
+        .uc-stat-value{font-size:1.6rem;font-weight:700;color:#111827;line-height:1;}
+        .uc-table-card{background:#fff;border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden;margin-bottom:28px;}
+        .uc-table-card.suspended-card{border-left:4px solid #ef4444;}
+        .uc-table-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #f3f4f6;gap:12px;flex-wrap:wrap;}
+        .uc-table-title{font-size:1.05rem;font-weight:700;color:#111827;margin:0;display:flex;align-items:center;gap:8px;}
+        .uc-table-title.danger{color:#dc2626;}
+        .uc-table-sub{font-size:.85rem;color:#6b7280;margin:2px 0 0;}
+        .uc-search{display:flex;align-items:center;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:9px 14px;min-width:250px;gap:8px;}
+        .uc-search i{color:#9ca3af;font-size:1.1rem;}
+        .uc-search input{border:none;background:transparent;outline:none;font-size:.9rem;color:#374151;width:100%;}
+        .uc-search input::placeholder{color:#9ca3af;}
+        .uc-table{width:100%;border-collapse:collapse;}
+        .uc-table thead{background:#f9fafb;}
+        .uc-table th{padding:11px 16px;text-align:left;font-size:.78rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #e5e7eb;white-space:nowrap;}
+        .uc-table td{padding:14px 16px;border-bottom:1px solid #f3f4f6;font-size:.9rem;color:#374151;}
+        .uc-table tbody tr:last-child td{border-bottom:none;}
+        .uc-table tbody tr:hover{background:#fafafa;}
+        .uc-table.suspended-table tbody tr:hover{background:#fff5f5;}
+        .uc-user-cell{display:flex;align-items:center;gap:10px;}
+        .uc-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#fff;flex-shrink:0;}
+        .uc-user-name{font-weight:600;color:#111827;}
+        .av-susp{background:#9ca3af!important;}
+        .badge-tipo{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
+        .badge-PJ{background:#fef3c7;color:#92400e;}
+        .badge-PF{background:#dbeafe;color:#1e40af;}
+        .badge-suspendido{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;background:#fee2e2;color:#991b1b;}
+        .uc-dropdown{position:relative;display:inline-block;}
+        .uc-menu{display:none;position:absolute;right:0;top:100%;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:200;min-width:170px;overflow:hidden;}
+        .uc-dropdown.open .uc-menu{display:block;}
+        .uc-menu-item{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:.88rem;color:#374151;cursor:pointer;transition:background .15s;border:none;background:none;width:100%;text-align:left;}
+        .uc-menu-item:hover{background:#f9fafb;}
+        .uc-menu-item.danger{color:#ef4444;}
+        .uc-menu-item.danger:hover{background:#fee2e2;}
+        .uc-menu-item.warning{color:#d97706;}
+        .uc-menu-item.warning:hover{background:#fef3c7;}
+        .uc-menu-item.success{color:#059669;}
+        .uc-menu-item.success:hover{background:#d1fae5;}
+        .uc-btn{background:none;border:none;cursor:pointer;padding:7px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+        .uc-dots{color:#9ca3af;}
+        .uc-dots:hover{background:#f3f4f6;}
+        .uc-dots i{font-size:1.3rem;}
+        .uc-empty{text-align:center;padding:48px 24px;color:#6b7280;}
+        .uc-empty i{font-size:2.5rem;color:#d1d5db;display:block;margin-bottom:10px;}
+        .av-0{background:#7c3aed;}.av-1{background:#059669;}.av-2{background:#ea580c;}
+        .av-3{background:#2563eb;}.av-4{background:#db2777;}.av-5{background:#0891b2;}
+        .av-6{background:#65a30d;}.av-7{background:#9333ea;}
+        .uc-toast{position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:12px 20px;border-radius:10px;font-size:.9rem;font-weight:500;z-index:9999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;display:flex;align-items:center;gap:8px;}
+        .uc-toast.show{opacity:1;transform:translateY(0);}
+        .menu-divider{height:1px;background:#f3f4f6;margin:4px 0;}
     </style>
 </head>
 <body>
     <%- include('../partial/header.ejs') %>
     <section class="admin-container">
         <%- include('../partial/sidebar_adm.ejs') %>
-
         <main class="admin-main uc-page">
 
-            <nav class="back-navigation" aria-label="Navegação de retorno">
-                <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+            <nav class="back-navigation">
+                <button class="back-button" onclick="history.back()">
                   <i class='bx bx-arrow-back'></i><span>Voltar</span>
                 </button>
             </nav>
 
-            <!-- Header -->
             <header class="uc-header">
                 <h1 class="uc-title">Usuários</h1>
                 <p class="uc-subtitle">Visualize e gerencie todas as contas cadastradas na plataforma.</p>
             </header>
 
-            <!-- Stats -->
             <%
-              var totalU = Array.isArray(usuarios) ? usuarios.length : 0;
-              var totalPJ = Array.isArray(usuarios) ? usuarios.filter(function(u){ return u.Tipo === 'PJ'; }).length : 0;
-              var totalPF = Array.isArray(usuarios) ? usuarios.filter(function(u){ return u.Tipo === 'PF'; }).length : 0;
+              var listaAtivos = Array.isArray(usuarios)  ? usuarios  : [];
+              var listaSusp   = Array.isArray(suspensos) ? suspensos : [];
+              var totalPJ = listaAtivos.filter(function(u){ return u.Tipo==='PJ'; }).length;
+              var totalPF = listaAtivos.filter(function(u){ return u.Tipo==='PF'; }).length;
             %>
+
             <section class="uc-stats">
                 <article class="uc-stat">
                     <figure class="uc-stat-icon purple"><i class='bx bx-group'></i></figure>
-                    <div>
-                        <div class="uc-stat-label">Total de Usuários</div>
-                        <div class="uc-stat-value"><%= totalU %></div>
-                    </div>
+                    <div><div class="uc-stat-label">Total Ativos</div><div class="uc-stat-value"><%= listaAtivos.length %></div></div>
                 </article>
                 <article class="uc-stat">
                     <figure class="uc-stat-icon green"><i class='bx bx-store'></i></figure>
-                    <div>
-                        <div class="uc-stat-label">Vendedores (PJ)</div>
-                        <div class="uc-stat-value"><%= totalPJ %></div>
-                    </div>
+                    <div><div class="uc-stat-label">Vendedores (PJ)</div><div class="uc-stat-value"><%= totalPJ %></div></div>
                 </article>
                 <article class="uc-stat">
                     <figure class="uc-stat-icon orange"><i class='bx bx-user'></i></figure>
-                    <div>
-                        <div class="uc-stat-label">Compradores (PF)</div>
-                        <div class="uc-stat-value"><%= totalPF %></div>
-                    </div>
+                    <div><div class="uc-stat-label">Compradores (PF)</div><div class="uc-stat-value"><%= totalPF %></div></div>
+                </article>
+                <article class="uc-stat">
+                    <figure class="uc-stat-icon red"><i class='bx bx-block'></i></figure>
+                    <div><div class="uc-stat-label">Suspensos</div><div class="uc-stat-value"><%= listaSusp.length %></div></div>
                 </article>
             </section>
 
-            <!-- Table card -->
+            <!-- TABELA ATIVOS -->
             <section class="uc-table-card">
                 <header class="uc-table-header">
                     <div>
                         <h2 class="uc-table-title">Usuários cadastrados</h2>
-                        <p class="uc-table-sub">Gerencie todos os usuários do sistema</p>
+                        <p class="uc-table-sub">Gerencie todos os usuários ativos do sistema</p>
                     </div>
                     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
                         <div class="uc-search">
                             <i class='bx bx-search'></i>
-                            <input type="text" id="ucSearch" placeholder="Buscar por nome, email ou ID..." oninput="filterTable()">
+                            <input type="text" id="ucSearch" placeholder="Buscar por nome, email ou ID..." oninput="filterTable('ucTable','ucSearch')">
                         </div>
-                        <i class='bx bx-filter-alt' style="font-size:1.4rem;color:#6b7280;cursor:pointer;" title="Filtros"></i>
-                        <i class='bx bx-download' style="font-size:1.4rem;color:#6b7280;cursor:pointer;" title="Exportar"></i>
+                        <i class='bx bx-filter-alt' style="font-size:1.4rem;color:#6b7280;cursor:pointer;"></i>
+                        <i class='bx bx-download' style="font-size:1.4rem;color:#6b7280;cursor:pointer;"></i>
                     </div>
                 </header>
-
                 <div style="overflow-x:auto;">
                     <table class="uc-table" id="ucTable">
                         <thead>
@@ -175,63 +145,115 @@
                             </tr>
                         </thead>
                         <tbody>
-                          <% if (Array.isArray(usuarios) && usuarios.length > 0) { %>
-                            <% usuarios.forEach(function(u, idx) { %>
+                          <% if (listaAtivos.length > 0) { %>
+                            <% listaAtivos.forEach(function(u, idx) { %>
                             <%
-                              var initials = (u.nome || u.Nome || '?').trim().split(' ').slice(0,2).map(function(w){ return w[0]; }).join('').toUpperCase();
-                              var colorClass = 'av-' + (idx % 8);
-                              var displayId = 'USR-' + String(u.id || idx+1).padStart(5,'0');
-                              var tipo = u.Tipo || u.tipo || 'PF';
-                              var nome = u.nome || u.Nome || '-';
-                              var email = u.email || u.Email || '-';
+                              var nomeExibir  = u.nome || u.Nome || '-';
+                              var emailExibir = u.email || u.Email || '-';
+                              var initials    = nomeExibir.trim().split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();
+                              var colorClass  = 'av-' + (idx % 8);
+                              var displayId   = 'USR-' + String(u.id).padStart(5,'0');
+                              var tipo        = u.Tipo || u.tipo || 'PF';
                               var dataCriacao = u.Data_Criacao ? new Date(u.Data_Criacao).toLocaleDateString('pt-BR') : '-';
+                              var nomeSafe    = nomeExibir.replace(/'/g, "\\'");
                             %>
-                            <tr data-search="<%= (nome + ' ' + email + ' ' + displayId).toLowerCase() %>">
+                            <tr data-search="<%= (nomeExibir+' '+emailExibir+' '+displayId).toLowerCase() %>">
                                 <td style="color:#9ca3af;font-size:.82rem;font-weight:600;"><%= displayId %></td>
                                 <td>
                                     <div class="uc-user-cell">
                                         <div class="uc-avatar <%= colorClass %>"><%= initials %></div>
-                                        <div>
-                                            <div class="uc-user-name"><%= nome %></div>
-                                        </div>
+                                        <div class="uc-user-name"><%= nomeExibir %></div>
                                     </div>
                                 </td>
-                                <td style="color:#6b7280;"><%= email %></td>
-                                <td>
-                                    <span class="badge-tipo badge-<%= tipo %>">
-                                        <%= tipo === 'PJ' ? 'Vendedor' : 'Comprador' %>
-                                    </span>
-                                </td>
+                                <td style="color:#6b7280;"><%= emailExibir %></td>
+                                <td><span class="badge-tipo badge-<%= tipo %>"><%= tipo==='PJ'?'Vendedor':'Comprador' %></span></td>
                                 <td style="color:#6b7280;font-size:.85rem;"><%= dataCriacao %></td>
                                 <td>
-                                    <div class="uc-dropdown" id="dropdown-<%= idx %>">
-                                        <button class="uc-btn uc-dots" onclick="toggleDropdown('<%= idx %>')" title="Ações">
-                                            <i class='bx bx-dots-horizontal-rounded' style="font-size:1.3rem;"></i>
-                                        </button>
+                                    <div class="uc-dropdown" id="dd-a-<%= idx %>">
+                                        <button class="uc-btn uc-dots" onclick="toggleDD('dd-a-<%= idx %>')"><i class='bx bx-dots-horizontal-rounded'></i></button>
                                         <div class="uc-menu">
-                                            <button class="uc-menu-item" onclick="verDetalhesUsuario('<%= displayId %>')">
-                                                <i class='bx bx-show'></i> Ver detalhes
-                                            </button>
-                                            <button class="uc-menu-item">
-                                                <i class='bx bx-edit'></i> Editar
-                                            </button>
-                                            <button class="uc-menu-item danger">
-                                                <i class='bx bx-trash'></i> Excluir
-                                            </button>
+                                            <button class="uc-menu-item" onclick="verDetalhes('<%= displayId %>')"><i class='bx bx-show'></i>Ver detalhes</button>
+                                            <button class="uc-menu-item" onclick="verDetalhes('<%= displayId %>')"><i class='bx bx-edit'></i>Editar</button>
+                                            <div class="menu-divider"></div>
+                                            <button class="uc-menu-item warning" onclick="suspenderUsuario(<%= u.id %>, '<%= nomeSafe %>', 'dd-a-<%= idx %>')"><i class='bx bx-block'></i>Suspender</button>
+                                            <button class="uc-menu-item danger" onclick="excluirUsuario(<%= u.id %>, '<%= nomeSafe %>', 'dd-a-<%= idx %>')"><i class='bx bx-trash'></i>Excluir</button>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
                             <% }) %>
                           <% } else { %>
+                            <tr><td colspan="6"><div class="uc-empty"><i class='bx bx-user-x'></i><p>Nenhum usuário ativo encontrado.</p></div></td></tr>
+                          <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TABELA SUSPENSOS -->
+            <section class="uc-table-card suspended-card">
+                <header class="uc-table-header">
+                    <div>
+                        <h2 class="uc-table-title danger"><i class='bx bx-block'></i> Usuários Suspensos</h2>
+                        <p class="uc-table-sub">Contas suspensas pelo administrador</p>
+                    </div>
+                    <div class="uc-search">
+                        <i class='bx bx-search'></i>
+                        <input type="text" id="ucSearchSusp" placeholder="Buscar suspensos..." oninput="filterTable('ucTableSusp','ucSearchSusp')">
+                    </div>
+                </header>
+                <div style="overflow-x:auto;">
+                    <table class="uc-table suspended-table" id="ucTableSusp">
+                        <thead>
                             <tr>
-                                <td colspan="6">
-                                    <div class="uc-empty">
-                                        <i class='bx bx-user-x'></i>
-                                        <p>Nenhum usuário cadastrado.</p>
+                                <th>ID</th>
+                                <th>USUÁRIO</th>
+                                <th>EMAIL</th>
+                                <th>FUNÇÃO</th>
+                                <th>CADASTRO</th>
+                                <th>STATUS</th>
+                                <th>AÇÕES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <% if (listaSusp.length > 0) { %>
+                            <% listaSusp.forEach(function(u, idx) { %>
+                            <%
+                              var nomeS     = u.nome || u.Nome || '-';
+                              var emailS    = u.email || u.Email || '-';
+                              var initialsS = nomeS.trim().split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();
+                              var displayIdS = 'USR-' + String(u.id).padStart(5,'0');
+                              var tipoS     = u.Tipo || u.tipo || 'PF';
+                              var dataCriacaoS = u.Data_Criacao ? new Date(u.Data_Criacao).toLocaleDateString('pt-BR') : '-';
+                              var nomeSS = nomeS.replace(/'/g, "\\'");
+                            %>
+                            <tr data-search="<%= (nomeS+' '+emailS+' '+displayIdS).toLowerCase() %>">
+                                <td style="color:#9ca3af;font-size:.82rem;font-weight:600;"><%= displayIdS %></td>
+                                <td>
+                                    <div class="uc-user-cell">
+                                        <div class="uc-avatar av-susp"><%= initialsS %></div>
+                                        <div class="uc-user-name" style="color:#9ca3af;"><%= nomeS %></div>
+                                    </div>
+                                </td>
+                                <td style="color:#9ca3af;"><%= emailS %></td>
+                                <td><span class="badge-tipo badge-<%= tipoS %>"><%= tipoS==='PJ'?'Vendedor':'Comprador' %></span></td>
+                                <td style="color:#9ca3af;font-size:.85rem;"><%= dataCriacaoS %></td>
+                                <td><span class="badge-suspendido">Suspenso</span></td>
+                                <td>
+                                    <div class="uc-dropdown" id="dd-s-<%= idx %>">
+                                        <button class="uc-btn uc-dots" onclick="toggleDD('dd-s-<%= idx %>')"><i class='bx bx-dots-horizontal-rounded'></i></button>
+                                        <div class="uc-menu">
+                                            <button class="uc-menu-item" onclick="verDetalhes('<%= displayIdS %>')"><i class='bx bx-show'></i>Ver detalhes</button>
+                                            <div class="menu-divider"></div>
+                                            <button class="uc-menu-item success" onclick="reativarUsuario(<%= u.id %>, '<%= nomeSS %>', 'dd-s-<%= idx %>')"><i class='bx bx-check-circle'></i>Reativar</button>
+                                            <button class="uc-menu-item danger" onclick="excluirUsuario(<%= u.id %>, '<%= nomeSS %>', 'dd-s-<%= idx %>')"><i class='bx bx-trash'></i>Excluir</button>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
+                            <% }) %>
+                          <% } else { %>
+                            <tr><td colspan="7"><div class="uc-empty"><i class='bx bx-check-shield'></i><p>Nenhum usuário suspenso no momento.</p></div></td></tr>
                           <% } %>
                         </tbody>
                     </table>
@@ -241,30 +263,71 @@
         </main>
     </section>
 
+    <div class="uc-toast" id="ucToast"><i class='bx bx-check-circle'></i><span id="ucToastMsg"></span></div>
+
     <script>
-        function verDetalhesUsuario(userId) {
-            window.location.href = `/adm/detalhes_user?userId=${userId}`;
-        }
+        function verDetalhes(userId) { window.location.href = '/adm/detalhes_user?userId=' + userId; }
 
-        function toggleDropdown(idx) {
-            document.querySelectorAll('.uc-dropdown').forEach(function(d) {
-                if (d.id !== 'dropdown-' + idx) d.classList.remove('open');
+        function toggleDD(id) {
+            document.querySelectorAll('.uc-dropdown').forEach(function(d){
+                if(d.id!==id) d.classList.remove('open');
             });
-            document.getElementById('dropdown-' + idx).classList.toggle('open');
+            document.getElementById(id).classList.toggle('open');
         }
-
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.uc-dropdown')) {
-                document.querySelectorAll('.uc-dropdown').forEach(function(d){ d.classList.remove('open'); });
-            }
+        document.addEventListener('click', function(e){
+            if(!e.target.closest('.uc-dropdown')) document.querySelectorAll('.uc-dropdown').forEach(function(d){d.classList.remove('open');});
         });
 
-        function filterTable() {
-            var q = document.getElementById('ucSearch').value.toLowerCase();
-            document.querySelectorAll('#ucTable tbody tr').forEach(function(row) {
-                var text = row.getAttribute('data-search') || '';
-                row.style.display = (!q || text.includes(q)) ? '' : 'none';
+        function filterTable(tableId, inputId) {
+            var q = document.getElementById(inputId).value.toLowerCase();
+            document.querySelectorAll('#'+tableId+' tbody tr').forEach(function(row){
+                var text = row.getAttribute('data-search')||'';
+                row.style.display=(!q||text.includes(q))?'':'none';
             });
+        }
+
+        function showToast(msg, type) {
+            var t = document.getElementById('ucToast');
+            var icon = t.querySelector('i');
+            document.getElementById('ucToastMsg').textContent = msg;
+            icon.className = type==='error' ? 'bx bx-x-circle' : 'bx bx-check-circle';
+            icon.style.color = type==='error' ? '#ef4444' : '#10b981';
+            t.className = 'uc-toast show';
+            setTimeout(function(){ t.classList.remove('show'); }, 3000);
+        }
+
+        async function apiPost(endpoint, id, nome, ddId, confirmMsg, successMsg) {
+            document.getElementById(ddId).classList.remove('open');
+            if(!confirm(confirmMsg)) return;
+            try {
+                var res = await fetch(endpoint, {
+                    method:'POST', headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify({id: id})
+                });
+                var data = await res.json();
+                if(res.ok && data.success) {
+                    showToast(successMsg, 'success');
+                    setTimeout(function(){ location.reload(); }, 1200);
+                } else {
+                    showToast('Erro: '+(data.error||'tente novamente.'), 'error');
+                }
+            } catch(e) { showToast('Erro de conexão com o servidor.', 'error'); }
+        }
+
+        function suspenderUsuario(id, nome, ddId) {
+            apiPost('/adm/usuarios/suspender', id, nome, ddId,
+                'Tem certeza que deseja suspender a conta de '+nome+'?\nO usuário não poderá mais acessar a plataforma.',
+                nome+' foi suspenso com sucesso.');
+        }
+        function reativarUsuario(id, nome, ddId) {
+            apiPost('/adm/usuarios/reativar', id, nome, ddId,
+                'Deseja reativar a conta de '+nome+'?',
+                nome+' foi reativado com sucesso.');
+        }
+        function excluirUsuario(id, nome, ddId) {
+            apiPost('/adm/usuarios/excluir', id, nome, ddId,
+                '⚠️ ATENÇÃO: Deseja excluir permanentemente a conta de '+nome+'?\nEsta ação não pode ser desfeita.',
+                'Conta de '+nome+' excluída permanentemente.');
         }
     </script>
     <script src="/js/darkmode.js"></script>

@@ -368,6 +368,15 @@ router.post("/login", async (req, res) => {
       });
     }
     const usuario = rows[0];
+
+    // Bloqueia login de conta suspensa
+    if (usuario.status === 'suspended') {
+      return res.render("pages/login", {
+        erro: "⚠️ Sua conta foi suspensa pelo administrador. Entre em contato com o suporte para mais informações.",
+        sucesso: false, valores: { usuarioDigitado, senhaDigitada: '' }
+      });
+    }
+
     req.session.userId = usuario.Usuario_ID;
     req.session.nomeUsuario = usuario.Nome;
     req.session.emailUsuario = usuario.Email;

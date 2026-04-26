@@ -99,17 +99,40 @@
       let user = null;
       if (window.__SERVER_USER__) {
         const s = window.__SERVER_USER__;
+
+        function fmtCPF(v) {
+          if (!v) return null;
+          const d = String(v).replace(/\D/g,'');
+          if (d.length !== 11) return v;
+          return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        }
+        function fmtCNPJ(v) {
+          if (!v) return null;
+          const d = String(v).replace(/\D/g,'');
+          if (d.length !== 14) return v;
+          return d.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+        }
+
+        const isPJ     = s.Tipo === 'PJ';
+        const docLabel = isPJ ? 'CNPJ' : 'CPF';
+        const docValue = isPJ ? fmtCNPJ(s.CNPJ) : fmtCPF(s.CPF);
+
         user = {
           name: s.Nome || s.name || '',
           email: s.Email || s.email || '',
-          cpf: s.CPF || s.cpf || '',
+          cpf: docValue,
+          docLabel: docLabel,
+          tipo: isPJ ? 'Vendedor (PJ)' : 'Comprador (PF)',
+          biografia: s.Biografia || null,
+          ultimoLogin: s.Ultimo_Login ? new Date(s.Ultimo_Login).toLocaleString('pt-BR') : null,
+          dataCriacao: s.Data_Criacao ? new Date(s.Data_Criacao).toLocaleDateString('pt-BR') : null,
           address: s.Endereco || s.address || '',
           salesCount: s.salesCount || 0,
           salesTotal: s.salesTotal || 'R$ 0,00',
           purchasesCount: s.purchasesCount || 0,
           purchasesTotal: s.purchasesTotal || 'R$ 0,00',
           rating: s.rating || null,
-          status: (s.Tipo === 'PJ' ? 'ativo' : 'ativo'),
+          status: s.status || 'active',
           given: s.given || [],
           received: s.received || [],
           products: s.products || [],
@@ -134,10 +157,18 @@
               <article>
                 <h2>${user.name}</h2>
                 <p>${user.email || 'Não informado'}</p>
-                <span class="status-badge status-${user.status}">${user.status.toUpperCase()}</span>
+                <span class="status-badge" style="\${window.__SERVER_USER__ && window.__SERVER_USER__.status === 'suspended' ? 'background:#fee2e2;color:#991b1b;' : 'background:#d1fae5;color:#065f46;'}">\${window.__SERVER_USER__ && window.__SERVER_USER__.status === 'suspended' ? 'SUSPENSO' : 'ATIVO'}</span>
                 <nav class="profile-actions">
-                  <button class="action-btn-small btn-suspend" onclick="suspendAccount('${userId}')">
-                    <i class='bx bx-block'></i>Suspender Conta
+                  ${(window.__SERVER_USER__ && window.__SERVER_USER__.status === 'suspended')
+                    ? `<button class="action-btn-small" onclick="suspendAccount('${userId}')" style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;padding:8px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600;">
+                         <i class='bx bx-check-circle'></i>Reativar Conta
+                       </button>`
+                    : `<button class="action-btn-small btn-suspend" onclick="suspendAccount('${userId}')">
+                         <i class='bx bx-block'></i>Suspender Conta
+                       </button>`
+                  }
+                  <button class="action-btn-small btn-delete" onclick="deleteAccount('${userId}')" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;padding:8px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600;margin-left:8px;">
+                    <i class='bx bx-trash'></i>Excluir Conta
                   </button>
                 </nav>
               </article>
@@ -166,21 +197,44 @@
                   <p>${user.email || 'Não informado'}</p>
                 </article>
               </article>
-              <!-- telefone removido conforme solicitação -->
               <article class="info-item">
                 <i class="info-icon bx bx-id-card"></i>
                 <article>
-                  <label>CPF</label>
+                  <label>${user.docLabel || 'CPF'}</label>
                   <p>${user.cpf || 'Não informado'}</p>
                 </article>
               </article>
               <article class="info-item">
-                <i class="info-icon bx bx-map"></i>
+                <i class="info-icon bx bx-user-badge"></i>
                 <article>
-                  <label>Endereço</label>
-                  <p>${user.address || 'Não informado'}</p>
+                  <label>Tipo de conta</label>
+                  <p>${user.tipo || 'Não informado'}</p>
                 </article>
               </article>
+              ${user.biografia ? `
+              <article class="info-item">
+                <i class="info-icon bx bx-text"></i>
+                <article>
+                  <label>Biografia</label>
+                  <p>${user.biografia}</p>
+                </article>
+              </article>` : ''}
+              ${user.dataCriacao ? `
+              <article class="info-item">
+                <i class="info-icon bx bx-calendar"></i>
+                <article>
+                  <label>Membro desde</label>
+                  <p>${user.dataCriacao}</p>
+                </article>
+              </article>` : ''}
+              ${user.ultimoLogin ? `
+              <article class="info-item">
+                <i class="info-icon bx bx-log-in-circle"></i>
+                <article>
+                  <label>Último login</label>
+                  <p>${user.ultimoLogin}</p>
+                </article>
+              </article>` : ''}
             </section>
           </section>
 
@@ -421,12 +475,65 @@
       document.body.classList.remove('modal-open');
     }
 
-    function suspendAccount(userId) {
-      const user = usersData[userId];
-      if (confirm(`Tem certeza que deseja suspender a conta de ${user.name}?`)) {
-        alert(`Conta de ${user.name} foi suspensa.`);
-        // Aqui você pode implementar a lógica de suspensão
+    async function suspendAccount(userId) {
+      const s = window.__SERVER_USER__;
+      if (!s || !s.id) { alert('Usuário não identificado.'); return; }
+      const nome = s.Nome || s.name || 'este usuário';
+      const isSuspended = s.status === 'suspended';
+      const endpoint = isSuspended ? '/adm/usuarios/reativar' : '/adm/usuarios/suspender';
+      const confirmMsg = isSuspended
+        ? `Deseja reativar a conta de ${nome}?`
+        : `Tem certeza que deseja suspender a conta de ${nome}?\nO usuário não poderá mais acessar a plataforma.`;
+      if (!confirm(confirmMsg)) return;
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: s.id })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          showToastDU(isSuspended ? nome+' foi reativado.' : nome+' foi suspenso.', 'success');
+          setTimeout(() => location.reload(), 1200);
+        } else {
+          showToastDU('Erro: ' + (data.error || 'tente novamente.'), 'error');
+        }
+      } catch(e) { showToastDU('Erro de conexão.', 'error'); }
+    }
+
+    async function deleteAccount(userId) {
+      const s = window.__SERVER_USER__;
+      if (!s || !s.id) { alert('Usuário não identificado.'); return; }
+      const nome = s.Nome || s.name || 'este usuário';
+      if (!confirm('⚠️ ATENÇÃO: Deseja excluir permanentemente a conta de ' + nome + '?\nEsta ação não pode ser desfeita.')) return;
+      try {
+        const res = await fetch('/adm/usuarios/excluir', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: s.id })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          showToastDU('Conta de ' + nome + ' excluída.', 'success');
+          setTimeout(() => window.location.href = '/adm/usuarios_cadastrados', 1500);
+        } else {
+          showToastDU('Erro ao excluir: ' + (data.error || 'tente novamente.'), 'error');
+        }
+      } catch(e) { showToastDU('Erro de conexão.', 'error'); }
+    }
+
+    function showToastDU(msg, type) {
+      let t = document.getElementById('duToast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'duToast';
+        t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:12px 20px;border-radius:10px;font-size:.9rem;font-weight:500;z-index:9999;display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(10px);transition:all .3s;';
+        document.body.appendChild(t);
       }
+      const icon = type==='error'
+        ? '<i class="bx bx-x-circle" style="color:#ef4444;font-size:1.2rem;"></i>'
+        : '<i class="bx bx-check-circle" style="color:#10b981;font-size:1.2rem;"></i>';
+      t.innerHTML = icon + '<span>' + msg + '</span>';
+      t.style.opacity='1'; t.style.transform='translateY(0)';
+      setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(10px)'; }, 3000);
     }
 
     document.addEventListener('DOMContentLoaded', () => {

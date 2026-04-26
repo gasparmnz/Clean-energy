@@ -44,11 +44,54 @@ router.get("/", async (req, res) => {
 // Lista usuários cadastrados
 router.get("/usuarios_cadastrados", async (req, res) => {
   try {
-    const [users] = await pool.query("SELECT Usuario_ID AS id, Nome AS nome, Email AS email, Tipo, Data_Criacao FROM Usuario ORDER BY Data_Criacao DESC");
-    res.render("pages/usuarios_cadastrados", { usuarios: users });
+    // Verifica se coluna status já existe
+    const [cols] = await pool.query(
+      "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Usuario' AND COLUMN_NAME = 'status'"
+    );
+
+    if (cols.length === 0) {
+      // Coluna não existe — cria agora
+      await pool.query("ALTER TABLE Usuario ADD COLUMN status ENUM('active','suspended') NOT NULL DEFAULT 'active'");
+    }
+
+    // Agora busca todos com status garantido
+    const [todos] = await pool.query(
+      "SELECT Usuario_ID AS id, Nome AS nome, Email AS email, Tipo, Data_Criacao, status FROM Usuario ORDER BY Data_Criacao DESC"
+    );
+
+    const ativos    = todos.filter(u => u.status !== 'suspended');
+    const suspensos = todos.filter(u => u.status === 'suspended');
+
+    res.render("pages/usuarios_cadastrados", { usuarios: ativos, suspensos });
   } catch (err) {
     console.error('Erro ao obter usuários', err);
-    res.render("pages/usuarios_cadastrados", { usuarios: [] });
+    res.render("pages/usuarios_cadastrados", { usuarios: [], suspensos: [] });
+  }
+});
+
+// Suspender usuário
+router.post("/usuarios/suspender", async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'ID obrigatório' });
+    await pool.query("UPDATE Usuario SET status = 'suspended' WHERE Usuario_ID = ?", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Erro ao suspender usuário', err);
+    res.status(500).json({ error: 'Erro interno' });
+  }
+});
+
+// Reativar usuário
+router.post("/usuarios/reativar", async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'ID obrigatório' });
+    await pool.query("UPDATE Usuario SET status = 'active' WHERE Usuario_ID = ?", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Erro ao reativar usuário', err);
+    res.status(500).json({ error: 'Erro interno' });
   }
 });
 
@@ -121,8 +164,25 @@ router.get("/detalhes_user", async (req, res) => {
     const idToQuery = numeric ? Number(numeric[1]) : Number(userId);
     if (Number.isNaN(idToQuery)) return res.render('pages/detalhes_user', { usuario: null });
 
+    // Garante coluna status
+    const [colCheck] = await pool.query(
+      "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Usuario' AND COLUMN_NAME = 'status'"
+    );
+    if (colCheck.length === 0) {
+      await pool.query("ALTER TABLE Usuario ADD COLUMN status ENUM('active','suspended') NOT NULL DEFAULT 'active'");
+    }
+
+    // JOIN com Pessoa_Fisica (CPF) e Pessoa_Juridica (CNPJ)
     const [rows] = await pool.query(
-      'SELECT Usuario_ID AS id, Nome, Email, Tipo, Data_Criacao, Ultimo_Login FROM Usuario WHERE Usuario_ID = ?',
+      `SELECT u.Usuario_ID AS id, u.Nome, u.Email, u.Tipo, u.Biografia,
+              u.Data_Criacao, u.Ultimo_Login,
+              IFNULL(u.status,'active') AS status,
+              pf.CPF,
+              pj.CNPJ
+       FROM Usuario u
+       LEFT JOIN Pessoa_Fisica   pf ON pf.Usuario_ID = u.Usuario_ID
+       LEFT JOIN Pessoa_Juridica pj ON pj.Usuario_ID = u.Usuario_ID
+       WHERE u.Usuario_ID = ?`,
       [idToQuery]
     );
     const usuario = rows[0] || null;
@@ -130,6 +190,44 @@ router.get("/detalhes_user", async (req, res) => {
   } catch (err) {
     console.error('Erro ao obter detalhes do usuário', err);
     res.render('pages/detalhes_user', { usuario: null });
+  }
+});
+
+// Excluir usuário — apaga tudo manualmente contornando FKs sem CASCADE
+router.post("/usuarios/excluir", async (req, res) => {
+  let conn;
+  try {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'ID obrigatório' });
+
+    conn = await pool.getConnection();
+    await conn.query("SET FOREIGN_KEY_CHECKS = 0");
+
+    // Dependências de compras
+    await conn.query("DELETE ic FROM Item_Compra ic INNER JOIN Compra c ON ic.Compra_ID = c.Compra_ID WHERE c.Usuario_ID = ?", [id]);
+    await conn.query("DELETE FROM Compra WHERE Usuario_ID = ?", [id]);
+
+    // Avaliações feitas pelo usuário
+    await conn.query("DELETE FROM Avaliacao WHERE Usuario_ID = ?", [id]);
+
+    // Dados pessoais (PF ou PJ)
+    await conn.query("DELETE FROM Pessoa_Fisica   WHERE Usuario_ID = ?", [id]);
+    await conn.query("DELETE FROM Pessoa_Juridica WHERE Usuario_ID = ?", [id]);
+
+    // Por último o próprio usuário
+    await conn.query("DELETE FROM Usuario WHERE Usuario_ID = ?", [id]);
+
+    await conn.query("SET FOREIGN_KEY_CHECKS = 1");
+    conn.release();
+
+    res.json({ success: true });
+  } catch (err) {
+    if (conn) {
+      await conn.query("SET FOREIGN_KEY_CHECKS = 1").catch(() => {});
+      conn.release();
+    }
+    console.error('Erro ao excluir usuário:', err);
+    res.status(500).json({ error: err.message || 'Erro interno' });
   }
 });
 
