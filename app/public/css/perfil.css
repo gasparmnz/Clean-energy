@@ -225,3 +225,63 @@ body.dark-mode .edit-form input { background: #1e1e1e; border-color: #374151; co
 .btn-salvar:hover { background: #15803d; }
 .btn-cancelar { background: #f3f4f6; color: #374151; border: 1px solid #e5e7eb; padding: .65rem 1.2rem; border-radius: 7px; font-size: .9rem; cursor: pointer; }
 body.dark-mode .btn-cancelar { background: #374151; color: #d1d5db; border-color: #4b5563; }
+
+/* ══ PERFIL SEM SIDEBAR — layout centralizado ══ */
+
+.perfil-main-solo {
+  min-height: 100vh;
+  margin-top: 87px;
+  background: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem 4rem;
+}
+
+.perfil-page-wrapper {
+  width: 100%;
+  max-width: 680px;
+}
+
+/* ── Avatar com botão de câmera ── */
+.perfil-foto-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.perfil-foto-wrap img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-color);
+  display: block;
+}
+
+.foto-edit-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  background: #16a34a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid #fff;
+  transition: background .2s;
+}
+.foto-edit-btn:hover { background: #15803d; }
+.foto-edit-btn i { color: #fff; font-size: .9rem; }
+
+body.dark-mode .foto-edit-btn { border-color: #1e1e1e; }
+
+/* Upload feedback */
+.foto-upload-msg {
+  font-size: .78rem;
+  margin-top: .4rem;
+  color: #16a34a;
+  display: none;
+}
+.foto-upload-msg.show { display: block; }

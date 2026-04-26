@@ -10,10 +10,11 @@
 </head>
 <body>
   <%- include('../partial/header.ejs') %>
-  <main>
-    <%- include('../partial/sidebar.ejs') %>
 
-    <section class="content">
+  <!-- SEM sidebar — tudo nos cards do centro -->
+  <main class="perfil-main-solo">
+
+    <div class="perfil-page-wrapper">
       <button class="back-button" onclick="history.back()">
         <i class='bx bx-arrow-back'></i>
         <span>Voltar</span>
@@ -21,13 +22,21 @@
 
       <section class="perfil-form">
 
-        <!-- Cabeçalho com avatar e saudação -->
+        <!-- ── Cabeçalho: avatar + saudação ── -->
         <div class="perfil-header-row">
-          <section class="perfil-foto">
-            <img id="fotoPerfil" src="/imagem/avatar.png" alt="Foto do usuário">
-          </section>
+          <!-- Avatar com botão de troca -->
+          <div class="perfil-foto-wrap">
+            <img id="fotoPerfil"
+              src="/imagem/<%= usuario && usuario.foto ? usuario.foto : 'avatar.png' %>"
+              alt="Foto do usuário">
+            <label class="foto-edit-btn" for="inputFoto" title="Alterar foto">
+              <i class='bx bx-camera'></i>
+            </label>
+            <input type="file" id="inputFoto" accept="image/*" style="display:none">
+          </div>
+
           <div class="perfil-greeting">
-            <h2>Olá, <strong><%= usuario ? usuario.Nome.split(' ')[0] : 'Usuário' %>!</strong></h2>
+            <h2>Olá, <strong id="nomeDisplay"><%= usuario ? usuario.Nome.split(' ')[0] : 'Usuário' %></strong>!</h2>
             <% if (usuario) { %>
               <span class="perfil-badge <%= usuario.Tipo === 'PJ' ? 'badge-vendedor' : 'badge-comprador' %>">
                 <%= usuario.Tipo === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
@@ -38,7 +47,7 @@
 
         <% if (usuario) { %>
 
-        <!-- ── SEÇÃO CONTA ── -->
+        <!-- ── CONTA ── -->
         <div class="config-section">
           <p class="config-section-title">CONTA</p>
 
@@ -48,7 +57,7 @@
             </div>
             <div class="config-text">
               <span class="config-title">Editar perfil</span>
-              <span class="config-sub">Nome, foto e informações pessoais</span>
+              <span class="config-sub">Nome e telefone</span>
             </div>
             <i class='bx bx-chevron-right config-arrow'></i>
           </a>
@@ -86,14 +95,16 @@
           <% } %>
         </div>
 
-        <!-- ── FORMULÁRIO EDIÇÃO (oculto por padrão) ── -->
+        <!-- ── FORMULÁRIO DE EDIÇÃO (oculto) ── -->
         <div class="config-section hidden" id="formEdicaoWrap">
           <p class="config-section-title">EDITAR DADOS</p>
           <form id="formEdicao" class="edit-form">
             <label>Nome completo</label>
             <input type="text" id="nomeInput" value="<%= usuario.Nome %>">
             <label>Telefone</label>
-            <input type="tel" id="telefoneInput" value="<%= usuario.Biografia || '' %>" placeholder="(00) 00000-0000">
+            <input type="tel" id="telefoneInput"
+              value="<%= usuario.Biografia || '' %>"
+              placeholder="(00) 00000-0000">
             <div class="edit-actions">
               <button type="submit" class="btn-salvar">Salvar alterações</button>
               <button type="button" id="btnCancelar" class="btn-cancelar">Cancelar</button>
@@ -101,7 +112,7 @@
           </form>
         </div>
 
-        <!-- ── SEÇÃO APARÊNCIA ── -->
+        <!-- ── APARÊNCIA ── -->
         <div class="config-section">
           <p class="config-section-title">APARÊNCIA</p>
 
@@ -111,9 +122,8 @@
             </div>
             <div class="config-text">
               <span class="config-title">Modo de aparência</span>
-              <span class="config-sub">Escolha claro ou escuro</span>
+              <span class="config-sub">Escolha claro ou escuro para todo o site</span>
             </div>
-            <!-- Toggle switch -->
             <label class="toggle-switch" aria-label="Ativar modo escuro">
               <input type="checkbox" id="darkModeToggleSwitch">
               <span class="toggle-track">
@@ -123,7 +133,7 @@
           </div>
         </div>
 
-        <!-- ── SEÇÃO ACESSO ── -->
+        <!-- ── ACESSO ── -->
         <div class="config-section">
           <p class="config-section-title">ACESSO</p>
 
@@ -157,7 +167,7 @@
             </div>
             <div class="config-text">
               <span class="config-title">Meus Produtos</span>
-              <span class="config-sub">Gerencie seus anúncios</span>
+              <span class="config-sub">Somente os produtos da sua conta</span>
             </div>
             <i class='bx bx-chevron-right config-arrow'></i>
           </a>
@@ -190,7 +200,7 @@
           <p>Erro ao carregar dados do perfil.</p>
         <% } %>
       </section>
-    </section>
+    </div>
   </main>
 
   <%- include('../partial/footer.ejs') %>

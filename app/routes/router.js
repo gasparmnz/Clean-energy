@@ -163,6 +163,35 @@ router.post("/perfil/atualizar", requireLogin, async (req, res) => {
   }
 });
 
+// ── Upload de foto de perfil ──────────────────────────────────
+const uploadFoto = multer({
+  storage: multer.diskStorage({
+    destination: path.join(__dirname, '../public/imagem'),
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname);
+      cb(null, `perfil_${req.session.userId}_${Date.now()}${ext}`);
+    }
+  }),
+  fileFilter: (req, file, cb) => {
+    const allowed = /jpeg|jpg|png|webp|gif/;
+    cb(null, allowed.test(path.extname(file.originalname).toLowerCase()));
+  },
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+});
+
+router.post("/perfil/foto", requireLogin, uploadFoto.single('foto'), async (req, res) => {
+  if (!req.file) return res.json({ sucesso: false, erro: 'Nenhuma imagem enviada.' });
+  try {
+    const filename = req.file.filename;
+    await pool.query("UPDATE Usuario SET foto = ? WHERE Usuario_ID = ?", [filename, req.session.userId]);
+    req.session.fotoUsuario = filename;
+    res.json({ sucesso: true, foto: `/imagem/${filename}` });
+  } catch (err) {
+    console.error(err);
+    res.json({ sucesso: false, erro: 'Erro ao salvar foto.' });
+  }
+});
+
 router.get("/perfil", requireLogin, async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM Usuario WHERE Usuario_ID = ?", [req.session.userId]);
@@ -183,8 +212,13 @@ router.get("/painel", requireLogin, (req, res) => res.render("pages/painel"));
 router.get("/meus_produtos", requireLogin, (req, res) => res.render("pages/meus_produtos"));
 
 router.get("/listaprodutos", requireLogin, async (req, res) => {
-  const produtos = await getProdutos();
-  res.render("pages/listaprodutos", { produtos });
+  try {
+    const produtos = await produtosModel.findByUsuario(req.session.userId);
+    res.render("pages/listaprodutos", { produtos });
+  } catch (err) {
+    console.error('Erro ao buscar produtos do usuário:', err);
+    res.render("pages/listaprodutos", { produtos: [] });
+  }
 });
 
 router.get("/carrinho", async (req, res) => {
@@ -323,7 +357,7 @@ router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), asyn
   const quantidadeNumerica = parseFloat(quantidadeLimpa) || 0;
 
   try {
-    await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem, estado });
+    await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem, estado, usuario_id: req.session.userId });
     res.redirect('/listaprodutos');
   } catch (err) {
     console.error('Erro ao cadastrar produto:', err);
