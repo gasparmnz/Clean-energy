@@ -1,296 +1,66 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
- 
-body {
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-}
- 
-.header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 80px;
-    padding: 0 5%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 1000;
-    background-color: #488D6A;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
- 
-.logo {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-}
- 
-.logo img {
-    height: 50px;
-    width: auto;
-}
- 
-.navbar {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    flex-grow: 1;
-    justify-content: center;
-}
- 
-.navbar a {
-    font-size: 0.95rem;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    transition: 0.3s;
-    white-space: nowrap;
-    text-transform: uppercase;
-}
- 
-.navbar a:hover {
-    color: #f0f0f0;
-    opacity: 0.8;
-}
- 
-.login-container {
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    flex-shrink: 0;
-}
- 
-.btn-vendedor {
-    background-color: #fff;
-    color: #488D6A !important;
-    padding: 7px 17px;
-    border-radius: 40px;
-    font-weight: 600;
-    text-decoration: none;
-    font-size: 0.75rem;
-    transition: 0.2s;
-    border: 1.5px solid #fff;
-    text-transform: uppercase;
-    white-space: nowrap;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
- 
-.btn-vendedor:hover {
-    background-color: transparent;
-    color: #fff !important;
-}
- 
-.login-links {
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 550;
-    white-space: nowrap;
-}
- 
-.login-links a {
-    color: #fff;
-    text-decoration: none;
-}
- 
-.carrinho {
-    height: 28px;
-    width: auto;
-    filter: invert(1);
-    cursor: pointer;
-    transition: 0.3s;
-}
- 
-.carrinho:hover {
-    transform: scale(1.1);
-}
- 
-.dropdown {
-    position: relative;
-    display: none; /* Escondido por padrão no desktop */
-    align-items: center;
-}
- 
-.avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.3s;
-}
- 
-.avatar:hover {
-    transform: scale(1.1);
-}
- 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background: #fff;
-    min-width: 150px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    border-radius: 8px;
-    margin-top: 10px;
-    z-index: 1005;
-}
- 
-.dropdown-content.show {
-    display: block;
-}
- 
-.dropdown-content a {
-    color: #333;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    font-size: 0.9rem;
-    font-weight: 600;
-    transition: 0.2s;
-}
- 
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-    color: #488D6A;
-    border-radius: 8px;
-}
- 
-#check {
-    display: none;
-}
- 
-.icons {
-    display: none;
-    font-size: 2.2rem;
-    color: #fff;
-    cursor: pointer;
-    z-index: 1001;
-    margin-left: 10px;
-}
- 
-@media (max-width: 1150px) {
-    .navbar {
-        gap: 1.2rem;
-    }
-    .navbar a {
-        font-size: 0.85rem;
-    }
-    .btn-vendedor {
-        padding: 8px 18px;
-        font-size: 0.8rem;
-    }
-    .login-links {
-        display: none;
-    }
-}
- 
-@media (max-width: 950px) {
-    .icons {
-        display: inline-flex;
-        order: 3;
-    }
- 
-    #check:checked ~ .icons #menu-icon {
-        display: none;
-    }
- 
-    #check:checked ~ .icons #close-icon {
-        display: block;
-    }
- 
-    #close-icon {
-        display: none;
-    }
- 
-    .logo { order: 1; }
-    .login-container { order: 2; margin-left: auto; }
- 
-    .login-links {
-        display: none !important;
-    }
-   
-    .dropdown {
-        display: flex; /* Exibido no mobile */
-    }
- 
-    .navbar {
-        position: absolute;
-        top: 80px;
-        left: 0;
-        width: 100%;
-        height: 0;
-        background-color: #488D6A;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 1.2rem;
-        transition: 0.4s ease-in-out;
-        overflow: hidden;
-        z-index: 999;
-        padding: 0;
-    }
- 
-    #check:checked ~ .navbar {
-        height: 320px;
-        padding: 2.5rem 0;
-        border-bottom: 2px solid rgba(255,255,255,0.1);
-    }
- 
-    .navbar a {
-        font-size: 1.1rem;
-        opacity: 0;
-        transform: translateY(-15px);
-        transition: 0.3s;
-    }
- 
-    #check:checked ~ .navbar a {
-        opacity: 1;
-        transform: translateY(0);
-        transition-delay: 0.2s;
-    }
-    .login-container .btn-vendedor {
-        display: none;
-    }
- 
-    #check:checked ~ .login-container .btn-vendedor {
-        display: flex;
-        position: absolute;
-        top: 240px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.95rem;
-        padding: 12px 25px;
-        z-index: 1000;
-        opacity: 1;
-        transition-delay: 0.4s;
-    }
-}
-@media (max-width: 480px) {
-    .logo img {
-        height: 40px;
-    }
-    .header {
-        padding: 0 4%;
-    }
-    .login-container {
-        gap: 0.8rem;
-    }
-   
-    #check:checked ~ .navbar {
-        height: 350px;
-    }
- 
-    #check:checked ~ .login-container .btn-vendedor {
-        top: 260px;
-        width: 85%;
-    }
-}
+<link rel="stylesheet" href="/css/header.css">
+<link rel="stylesheet" href="/css/darkmode.css">
+<header class="header">
+  <a href="/" class="logo">
+    <img src="/imagem/logo-curva.svg" alt="Logo do site">
+  </a>
+
+  <input type="checkbox" id="check">
+  <label for="check" class="icons">
+    <i class="bx bx-menu" id="menu-icon"></i>
+    <i class="bx bx-x" id="close-icon"></i>
+  </label>
+
+  <nav class="navbar">
+    <a href="/" style="--i:0;">PRODUTOS</a>
+    <a href="/sobre_nos" style="--i:1;">SOBRE NÓS</a>
+    <a href="/transporte" style="--i:2;">TRANSPORTE</a>
+  </nav>
+
+  <section class="login-container">
+    <% if (typeof usuario !== 'undefined' && usuario) { %>
+      <% if (usuario.perfil === 'vendedor') { %>
+        <a href="/cadastrar_produto" class="btn-vendedor">CADASTRAR PRODUTO</a>
+      <% } else { %>
+        <a href="/adicione_produto" class="btn-vendedor">TORNE-SE VENDEDOR</a>
+        <span class="badge-perfil badge-comprador"><i class='bx bx-user'></i> Comprador</span>
+      <% } %>
+
+      <a href="/carrinho">
+        <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
+      </a>
+
+      <section class="dropdown">
+        <img id="dropdownBtn" src="/imagem/avatar.png" alt="Usuário" class="avatar">
+        <section id="dropdownMenu" class="dropdown-content">
+          <span class="dropdown-nome"><%= usuario.nome %></span>
+          <span class="dropdown-perfil"><%= usuario.perfil === 'vendedor' ? '🏪 Vendedor' : '🛒 Comprador' %></span>
+          <hr>
+          <a href="/perfil">Meu Perfil</a>
+          <a href="/logout" style="color:#e74c3c;">Sair</a>
+        </section>
+      </section>
+
+    <% } else { %>
+      <a href="/adicione_produto" class="btn-vendedor">TORNE-SE VENDEDOR</a>
+
+      <a href="/carrinho">
+        <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
+      </a>
+
+      <span class="login-links">
+        <a href="/login">LOGIN</a> | <a href="/cadastro">CADASTRE-SE</a>
+      </span>
+
+      <section class="dropdown">
+        <img id="dropdownBtn" src="/imagem/avatar.png" alt="Usuário" class="avatar">
+        <section id="dropdownMenu" class="dropdown-content">
+          <a href="/login">Login</a>
+          <a href="/cadastro">Cadastre-se</a>
+        </section>
+      </section>
+    <% } %>
+  </section>
+</header>
+
+<script src="/js/script.js"></script>
