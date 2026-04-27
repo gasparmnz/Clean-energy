@@ -133,9 +133,10 @@
   </dialog>
 
   <!-- JS separado -->
+  <script id="admin-products-data" type="application/json"><%- JSON.stringify(produtos || []) %></script>
   <script>
     // server-provided products (if route set them)
-  window.__ADMIN_PRODUCTS__ = <%- JSON.stringify(produtos || []) %>;
+  window.__ADMIN_PRODUCTS__ = JSON.parse(document.getElementById('admin-products-data').textContent);
   </script>
   <script src="/js/produtos_adm.js"></script>
   <script src="/js/darkmode.js"></script>

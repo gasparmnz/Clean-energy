@@ -20,7 +20,7 @@ var { validarCPF } = require("../helpers/validacao");
 
 async function getProdutos() {
   try {
-    return await produtosModel.findAll();
+    return await produtosModel.findAll({ apenasAtivos: true });
   } catch (err) {
     console.error('Erro ao buscar produtos:', err.message);
     return [];
@@ -368,6 +368,15 @@ router.post("/login", async (req, res) => {
       });
     }
     const usuario = rows[0];
+
+    // Bloqueia login de conta suspensa
+    if (usuario.status === 'suspended') {
+      return res.render("pages/login", {
+        erro: "⚠️ Sua conta foi suspensa pelo administrador. Entre em contato com o suporte para mais informações.",
+        sucesso: false, valores: { usuarioDigitado, senhaDigitada: '' }
+      });
+    }
+
     req.session.userId = usuario.Usuario_ID;
     req.session.nomeUsuario = usuario.Nome;
     req.session.emailUsuario = usuario.Email;
