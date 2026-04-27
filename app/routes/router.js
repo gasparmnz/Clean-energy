@@ -87,7 +87,6 @@ router.get("/upgrade_vendedor", requireLogin, async (req, res) => {
 router.post("/upgrade_vendedor",
   requireLogin,
   body("company_name").trim().notEmpty().withMessage("*Campo obrigatório!").isLength({ min:3 }).withMessage("*Nome da empresa muito curto"),
-  body("company_email").trim().notEmpty().withMessage("*Campo obrigatório!").isEmail().withMessage("*E-mail inválido!"),
   body("cnpj").notEmpty().withMessage("*Campo obrigatório!").custom((value) => { if (value.replace(/\D/g,'').length !== 14) throw new Error("*O CNPJ deve conter 14 números!"); return true; }),
   async (req, res) => {
     // Verifica se é comprador
@@ -111,20 +110,7 @@ router.post("/upgrade_vendedor",
 
     try {
       const companyName = req.body.company_name.trim();
-      const companyEmail = req.body.company_email.trim();
       const cnpjNumeros = req.body.cnpj.replace(/\D/g, '');
-
-      // Verifica se email da empresa já existe em outra conta
-      const [emailExists] = await pool.query("SELECT Usuario_ID FROM Usuario WHERE Email = ? AND Usuario_ID != ?", [companyEmail, req.session.userId]);
-      if (emailExists.length > 0) {
-        return res.render("pages/upgrade_vendedor", {
-          valoresEmpresa,
-          erroValidacaoEmpresa: { company_email: 'erro' },
-          msgErroEmpresa: { company_email: '*Este e-mail já está em uso em outra conta!' }
-        });
-      }
-
-      // Verifica se CNPJ já existe
       const [existing] = await pool.query("SELECT Usuario_ID FROM Pessoa_Juridica WHERE CNPJ = ?", [cnpjNumeros]);
       if (existing.length > 0) {
         return res.render("pages/upgrade_vendedor", {
@@ -134,17 +120,20 @@ router.post("/upgrade_vendedor",
         });
       }
 
-      // Converte usuário para vendedor (PJ) e atualiza dados da conta para dados da empresa
-      await pool.query("UPDATE Usuario SET Tipo = 'PJ', Nome = ?, Email = ? WHERE Usuario_ID = ?", [companyName, companyEmail, req.session.userId]);
+      // Converte usuário para vendedor (PJ) — preserva o Email original de login,
+      // apenas muda o Tipo e salva o nome da empresa em Biografia
+      await pool.query(
+        "UPDATE Usuario SET Tipo = 'PJ', Biografia = ? WHERE Usuario_ID = ?",
+        [`Empresa: ${companyName}`, req.session.userId]
+      );
       
       // Adiciona registro em Pessoa_Juridica
       await pool.query("INSERT INTO Pessoa_Juridica (Usuario_ID, CNPJ) VALUES (?, ?)", [req.session.userId, cnpjNumeros]);
       
-      // Atualiza sessão
+      // Atualiza sessão — email de login permanece o original (req.session.emailUsuario inalterado)
       req.session.perfil = 'vendedor';
       req.session.tipo = 'PJ';
-      req.session.nomeUsuario = companyName;
-      req.session.emailUsuario = companyEmail;
+      // req.session.nomeUsuario e req.session.emailUsuario permanecem com os dados originais de cadastro
 
       return res.redirect('/perfil');
     } catch (err) {
@@ -155,14 +144,65 @@ router.post("/upgrade_vendedor",
 );
 router.get("/minhascompras", requireLogin, (req, res) => res.render("pages/minhascompras"));
 
+// ── Atualizar perfil ──────────────────────────────────────────
+router.post("/perfil/atualizar", requireLogin, async (req, res) => {
+  const { nome, biografia } = req.body;
+  if (!nome || nome.trim().length < 2) {
+    return res.json({ sucesso: false, erro: 'Nome muito curto.' });
+  }
+  try {
+    await pool.query(
+      "UPDATE Usuario SET Nome = ?, Biografia = ? WHERE Usuario_ID = ?",
+      [nome.trim(), biografia || null, req.session.userId]
+    );
+    req.session.nomeUsuario = nome.trim();
+    res.json({ sucesso: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ sucesso: false, erro: 'Erro ao atualizar.' });
+  }
+});
+
+// ── Upload de foto de perfil ──────────────────────────────────
+const uploadFoto = multer({
+  storage: multer.diskStorage({
+    destination: path.join(__dirname, '../public/imagem'),
+    filename: (req, file, cb) => {
+      const ext = path.extname(file.originalname);
+      cb(null, `perfil_${req.session.userId}_${Date.now()}${ext}`);
+    }
+  }),
+  fileFilter: (req, file, cb) => {
+    const allowed = /jpeg|jpg|png|webp|gif/;
+    cb(null, allowed.test(path.extname(file.originalname).toLowerCase()));
+  },
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+});
+
+router.post("/perfil/foto", requireLogin, uploadFoto.single('foto'), async (req, res) => {
+  if (!req.file) return res.json({ sucesso: false, erro: 'Nenhuma imagem enviada.' });
+  try {
+    const filename = req.file.filename;
+    await pool.query("UPDATE Usuario SET foto = ? WHERE Usuario_ID = ?", [filename, req.session.userId]);
+    req.session.fotoUsuario = filename;
+    res.json({ sucesso: true, foto: `/imagem/${filename}` });
+  } catch (err) {
+    console.error(err);
+    res.json({ sucesso: false, erro: 'Erro ao salvar foto.' });
+  }
+});
+
 router.get("/perfil", requireLogin, async (req, res) => {
   try {
     const [rows] = await pool.query("SELECT * FROM Usuario WHERE Usuario_ID = ?", [req.session.userId]);
     const usuarioDados = rows[0] || null;
     if (usuarioDados) {
-      usuarioDados.perfil = req.session.perfil; // Adiciona o perfil da sessão para consistência
+      usuarioDados.perfil = req.session.perfil;
     }
-    res.render("pages/perfil", { usuario: usuarioDados });
+    res.render("pages/perfil", {
+      usuario: usuarioDados,
+      // sidebar também precisa de usuario
+    });
   } catch (err) {
     res.render("pages/perfil", { usuario: null });
   }
@@ -172,8 +212,13 @@ router.get("/painel", requireLogin, (req, res) => res.render("pages/painel"));
 router.get("/meus_produtos", requireLogin, (req, res) => res.render("pages/meus_produtos"));
 
 router.get("/listaprodutos", requireLogin, async (req, res) => {
-  const produtos = await getProdutos();
-  res.render("pages/listaprodutos", { produtos });
+  try {
+    const produtos = await produtosModel.findByUsuario(req.session.userId);
+    res.render("pages/listaprodutos", { produtos });
+  } catch (err) {
+    console.error('Erro ao buscar produtos do usuário:', err);
+    res.render("pages/listaprodutos", { produtos: [] });
+  }
 });
 
 router.get("/carrinho", async (req, res) => {
@@ -224,9 +269,69 @@ router.get("/item/:id", async function (req, res) {
   try {
     const produto = await produtosModel.findById(req.params.id);
     if (!produto) return res.status(404).send("Produto não encontrado");
-    res.render("pages/item", { produto });
+
+    // Busca avaliações reais do banco com JOIN para pegar nome do usuário
+    const [avaliacoes] = await pool.query(
+      `SELECT a.Avaliacao_ID, a.Nota, a.Comentario, a.criado_em,
+              COALESCE(u.Nome, a.nome_usuario, 'Usuário') AS nome_usuario
+       FROM Avaliacao a
+       LEFT JOIN Usuario u ON u.Usuario_ID = a.Usuario_ID
+       WHERE a.Produto_ID = ?
+       ORDER BY a.criado_em DESC`,
+      [req.params.id]
+    );
+
+    // Média das notas
+    const mediaNotas = avaliacoes.length
+      ? (avaliacoes.reduce((s, a) => s + (a.Nota || 0), 0) / avaliacoes.length).toFixed(1)
+      : null;
+
+    const usuarioSessao = req.session.userId
+      ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil }
+      : null;
+
+    res.render("pages/item", { produto, avaliacoes, mediaNotas, usuario: usuarioSessao });
   } catch (err) {
+    console.error(err);
     res.status(500).send('Erro interno do servidor');
+  }
+});
+
+// ── POST avaliação ────────────────────────────────────────────
+router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
+  const produtoId = req.params.id;
+  const { nota, comentario } = req.body;
+  const notaNum = parseInt(nota, 10);
+
+  if (!notaNum || notaNum < 1 || notaNum > 5) {
+    return res.redirect(`/item/${produtoId}?erro=nota`);
+  }
+
+  try {
+    // Verifica se usuário já avaliou este produto
+    const [jaAvaliou] = await pool.query(
+      "SELECT Avaliacao_ID FROM Avaliacao WHERE Usuario_ID = ? AND Produto_ID = ?",
+      [req.session.userId, produtoId]
+    );
+
+    if (jaAvaliou.length > 0) {
+      // Atualiza avaliação existente
+      await pool.query(
+        "UPDATE Avaliacao SET Nota = ?, Comentario = ?, criado_em = NOW() WHERE Usuario_ID = ? AND Produto_ID = ?",
+        [notaNum, comentario || '', req.session.userId, produtoId]
+      );
+    } else {
+      // Nova avaliação
+      await pool.query(
+        "INSERT INTO Avaliacao (Nota, Comentario, Usuario_ID, Produto_ID, nome_usuario, criado_em) VALUES (?, ?, ?, ?, ?, NOW())",
+        [notaNum, comentario || '', req.session.userId, produtoId, req.session.nomeUsuario]
+      );
+    }
+
+    res.redirect(`/item/${produtoId}#comentarios`);
+  } catch (err) {
+    console.error('Erro ao salvar avaliação:', err);
+    res.redirect(`/item/${produtoId}?erro=salvar`);
   }
 });
 
@@ -252,7 +357,7 @@ router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), asyn
   const quantidadeNumerica = parseFloat(quantidadeLimpa) || 0;
 
   try {
-    await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem, estado });
+    await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem, estado, usuario_id: req.session.userId });
     res.redirect('/listaprodutos');
   } catch (err) {
     console.error('Erro ao cadastrar produto:', err);

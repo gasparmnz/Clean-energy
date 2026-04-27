@@ -1,8 +1,3 @@
-===================================
--- Script SQL atualizado - Biomassa Hub
--- Inclui diferenciação de perfis comprador/vendedor
--- ================================================
-
 CREATE DATABASE IF NOT EXISTS produtos;
 USE produtos;
 
@@ -100,3 +95,9 @@ CREATE TABLE IF NOT EXISTS Avaliacao (
 INSERT IGNORE INTO Categoria (Nome) VALUES
   ('Lenha'), ('Pellets'), ('Cavaco'), ('Bagaço de cana'),
   ('Lixo orgânico'), ('Casca de arroz'), ('Folhas secas'), ('Biomassa geral');
+  
+  CREATE TABLE IF NOT EXISTS carrinho (
+  idCarrinho INT AUTO_INCREMENT PRIMARY KEY,
+  userId VARCHAR(255),
+  items JSON
+)
