@@ -62,11 +62,9 @@
   <script id="server-user-data" type="application/json"><%- JSON.stringify(typeof usuario !== 'undefined' ? usuario : null) %></script>
   <script>
     // server-provided single user object (if route provided `usuario`)
-<<<<<<< HEAD
-    window.__SERVER_USER__ = <%= JSON.stringify(usuario || null) %>;
-=======
+
     window.__SERVER_USER__ = JSON.parse(document.getElementById('server-user-data').textContent);
->>>>>>> 9c2ee0cb0089cfd2bd83a138cefc8d9c3ce8740d
+
 
     let currentUserId = '';
 
