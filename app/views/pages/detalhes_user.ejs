@@ -61,9 +61,7 @@
 
   <script>
     // server-provided single user object (if route provided `usuario`)
-    window.__SERVER_USER__ = <%-
-     JSON.stringify(typeof usuario !== 'undefined' ? usuario : null)
-      %>;
+    window.__SERVER_USER__ = <%= JSON.stringify(usuario || null) %>;
 
     let currentUserId = '';
 
