@@ -32,7 +32,7 @@
         <p class="page-subtitle">Gerenciamento de todos os produtos cadastrados na plataforma.</p>
       </header>
 
-      <section class="products-summary">
+  <section class="products-summary">
         <article class="summary-card">
           <figure class="summary-card-icon accent">
             <i class="bx bx-package"></i>
@@ -133,6 +133,11 @@
   </dialog>
 
   <!-- JS separado -->
+  <script id="admin-products-data" type="application/json"><%- JSON.stringify(produtos || []) %></script>
+  <script>
+    // server-provided products (if route set them)
+  window.__ADMIN_PRODUCTS__ = JSON.parse(document.getElementById('admin-products-data').textContent);
+  </script>
   <script src="/js/produtos_adm.js"></script>
   <script src="/js/darkmode.js"></script>
 

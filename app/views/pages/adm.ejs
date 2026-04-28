@@ -3,187 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Compras e Vendas</title>
+    <title>Admin - Painel</title>
     <link rel="stylesheet" href="/css/adm.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .empty-transactions{text-align:center;padding:48px 24px;color:#6b7280;}
+        .empty-transactions i{font-size:3rem;color:#d1d5db;display:block;margin-bottom:12px;}
+        .empty-transactions p{font-size:1rem;margin:0;}
+        .status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:.8rem;font-weight:600;}
+        .status-concluido{background:#d1fae5;color:#065f46;}
+        .status-pendente{background:#fef3c7;color:#92400e;}
+        .status-andamento{background:#dbeafe;color:#1e40af;}
+        .status-cancelado{background:#fee2e2;color:#991b1b;}
+        .real-data-tag{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:#10b981;background:#d1fae5;padding:2px 8px;border-radius:10px;margin-left:8px;font-weight:600;}
+    </style>
 </head>
 <body>
     <%- include('../partial/header1.ejs') %>
 <section class="admin-container">
  <%- include('../partial/sidebar_adm.ejs') %>
-
- 
-
-
-
- 
     <main class="admin-main">
-
         <nav class="back-navigation" aria-label="Navegação de retorno">
         <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
-          <i class='bx bx-arrow-back'></i>
-          <span>Voltar</span>
+          <i class='bx bx-arrow-back'></i><span>Voltar</span>
         </button>
     </nav>
-
         <section class="dashboard-summary" aria-labelledby="dashboard-heading">
-            <h2 id="dashboard-heading">Visão Geral</h2>
+            <h2 id="dashboard-heading">Visão Geral <span class="real-data-tag"><i class='bx bx-check-circle'></i> Dados em tempo real</span></h2>
             <section class="summary-cards">
-                <article class="summary-card">
-                    <i class="bx bx-cart-alt"></i>
-                    <h3>Total de Compras e vendas</h3>
-                    <p>1.250</p>
-                </article>
-                <article class="summary-card">
-                    <i class="bx bx-time-five"></i>
-                    <h3>Pedidos Pendentes</h3>
-                    <p>45</p>
-                </article>
-                <article class="summary-card">
-                    <i class='bx bx-x-circle'></i> 
-                    <h3>Transações Canceladas</h3>
-                    <p>65</p>
-                </article>
-                <article class="summary-card">
-                    <i class="bx bx-check-circle"></i>
-                    <h3>Transações Concluídas</h3>
-                    <p>1.195</p>
-                </article>
-                <article class="summary-card">
-                    <i class="bx bx-money"></i>
-                    <h3>Total Transacionado</h3>
-                    <p>R$ 6.750,00</p>
-                </article>
-                <article class="summary-card">
-                    <i class="bx bx-wallet"></i>
-                    <h3>Comissão (5%)</h3>
-                    <p>R$ 337,50</p>
-                </article>
+                <article class="summary-card"><i class="bx bx-group"></i><h3>Total de Usuários</h3><p><%= totals.users %></p></article>
+                <article class="summary-card"><i class="bx bx-package"></i><h3>Total de Produtos</h3><p><%= totals.products %></p></article>
+                <article class="summary-card"><i class="bx bx-check-circle"></i><h3>Produtos Ativos</h3><p><%= totals.active %></p></article>
+                <article class="summary-card"><i class='bx bx-block'></i><h3>Produtos Suspensos</h3><p><%= totals.suspended %></p></article>
+                <article class="summary-card"><i class="bx bx-cart-alt"></i><h3>Total de Transações</h3><p><%= stats.total %></p></article>
+                <article class="summary-card"><i class="bx bx-time-five"></i><h3>Pedidos Pendentes</h3><p><%= stats.pendentes %></p></article>
+                <article class="summary-card"><i class='bx bx-x-circle'></i><h3>Transações Canceladas</h3><p><%= stats.canceladas %></p></article>
+                <article class="summary-card"><i class="bx bx-check-circle"></i><h3>Transações Concluídas</h3><p><%= stats.concluidas %></p></article>
+                <article class="summary-card"><i class="bx bx-money"></i><h3>Total Transacionado</h3><p>R$ <%= stats.totalValor.toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}) %></p></article>
+                <article class="summary-card"><i class="bx bx-wallet"></i><h3>Comissão (5%)</h3><p>R$ <%= stats.comissao.toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}) %></p></article>
             </section>
         </section>
 
         <section class="transactions-section" aria-labelledby="compras-heading">
             <h2 id="compras-heading">Últimas Compras</h2>
+            <% if (compras && compras.length > 0) { %>
             <section class="table-responsive">
                 <table class="transactions-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID Pedido</th>
-                            <th scope="col">Comprador</th>
-                            <th scope="col">Produto</th>
-                            <th scope="col">Valor</th>
-                            <th scope="col">Data</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Ações</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>ID Pedido</th><th>Comprador</th><th>Produto</th><th>Valor</th><th>Data</th><th>Status</th></tr></thead>
                     <tbody>
+                        <% compras.forEach(function(c) { %>
                         <tr>
-                            <td data-label="ID Pedido">#00123</td>
-                            <td data-label="Comprador">João Silva</td>
-                            <td data-label="Produto">Cavaco de Eucalipto</td>
-                            <td data-label="Valor">R$ 1.500,00</td>
-                            <td data-label="Data">15/10/2025</td>
-                            <td data-label="Status"><span class="status-badge status-concluido">Concluído</span></td>
-                            <td data-label="Ações">
-                                <button class="action-button view-button" aria-label="Ver detalhes do pedido #00123"><i class="bx bx-show"></i></button>
-                                <button class="action-button edit-button" aria-label="Editar pedido #00123"><i class="bx bx-edit"></i></button>
-                            </td>
+                            <td data-label="ID Pedido">#<%= String(c.id).padStart(5,'0') %></td>
+                            <td data-label="Comprador"><%= c.comprador %></td>
+                            <td data-label="Produto"><%= c.produto || '-' %></td>
+                            <td data-label="Valor">R$ <%= parseFloat(c.valor||0).toLocaleString('pt-BR',{minimumFractionDigits:2}) %></td>
+                            <td data-label="Data"><%= c.data ? new Date(c.data).toLocaleDateString('pt-BR') : '-' %></td>
+                            <td data-label="Status"><span class="status-badge status-<%= c.status === 'concluido' ? 'concluido' : c.status === 'cancelado' ? 'cancelado' : c.status === 'pendente' ? 'pendente' : 'andamento' %>"><%= c.status === 'concluido' ? 'Concluído' : c.status === 'cancelado' ? 'Cancelado' : c.status === 'pendente' ? 'Pendente' : 'Em Andamento' %></span></td>
                         </tr>
-                        <tr>
-                            <td data-label="ID Pedido">#00124</td>
-                            <td data-label="Comprador">Maria Oliveira</td>
-                            <td data-label="Produto">Bagaço de Cana</td>
-                            <td data-label="Valor">R$ 800,00</td>
-                            <td data-label="Data">14/10/2025</td>
-                            <td data-label="Status"><span class="status-badge status-pendente">Pendente</span></td>
-                            <td data-label="Ações">
-                                <button class="action-button view-button" aria-label="Ver detalhes do pedido #00124"><i class="bx bx-show"></i></button>
-                                <button class="action-button edit-button" aria-label="Editar pedido #00124"><i class="bx bx-edit"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td data-label="ID Pedido">#00125</td>
-                            <td data-label="Comprador">Pedro Souza</td>
-                            <td data-label="Produto">Casca de Arroz</td>
-                            <td data-label="Valor">R$ 500,00</td>
-                            <td data-label="Data">13/10/2025</td>
-                            <td data-label="Status"><span class="status-badge status-andamento">Em Andamento</span></td>
-                            <td data-label="Ações">
-                                <button class="action-button view-button" aria-label="Ver detalhes do pedido #00125"><i class="bx bx-show"></i></button>
-                                <button class="action-button edit-button" aria-label="Editar pedido #00125"><i class="bx bx-edit"></i></button>
-                            </td>
-                        </tr>
+                        <% }) %>
                     </tbody>
                 </table>
             </section>
-            <a href="#" class="view-all-link">Ver todas as compras <i class="bx bx-right-arrow-alt"></i></a>
+            <% } else { %>
+            <article class="empty-transactions">
+                <i class='bx bx-cart'></i>
+                <p>Nenhuma compra registrada ainda. As compras aparecerão aqui assim que forem realizadas.</p>
+            </article>
+            <% } %>
         </section>
 
         <section class="transactions-section" aria-labelledby="vendas-heading">
             <h2 id="vendas-heading">Últimas Vendas</h2>
+            <% if (vendas && vendas.length > 0) { %>
             <section class="table-responsive">
                 <table class="transactions-table">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID Pedido</th>
-                            <th scope="col">Vendedor</th>
-                            <th scope="col">Produto</th>
-                            <th scope="col">Valor</th>
-                            <th scope="col">Data</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Ações</th>
-                        </tr>
-                    </thead>
+                    <thead><tr><th>ID Pedido</th><th>Vendedor</th><th>Produto</th><th>Valor</th><th>Data</th><th>Status</th></tr></thead>
                     <tbody>
+                        <% vendas.forEach(function(v) { %>
                         <tr>
-                            <td data-label="ID Pedido">#00120</td>
-                            <td data-label="Vendedor">Fazenda Verde</td>
-                            <td data-label="Produto">Lenha de Reflorestamento</td>
-                            <td data-label="Valor">R$ 2.000,00</td>
-                            <td data-label="Data">16/10/2025</td>
-                            <td data-label="Status"><span class="status-badge status-concluido">Concluído</span></td>
-                            <td data-label="Ações">
-                                <button class="action-button view-button" aria-label="Ver detalhes do pedido #00120"><i class="bx bx-show"></i></button>
-                                <button class="action-button edit-button" aria-label="Editar pedido #00120"><i class="bx bx-edit"></i></button>
-                            </td>
+                            <td data-label="ID Pedido">#<%= String(v.id).padStart(5,'0') %></td>
+                            <td data-label="Vendedor"><%= v.vendedor %></td>
+                            <td data-label="Produto"><%= v.produto || '-' %></td>
+                            <td data-label="Valor">R$ <%= parseFloat(v.valor||0).toLocaleString('pt-BR',{minimumFractionDigits:2}) %></td>
+                            <td data-label="Data"><%= v.data ? new Date(v.data).toLocaleDateString('pt-BR') : '-' %></td>
+                            <td data-label="Status"><span class="status-badge status-<%= v.status === 'concluido' ? 'concluido' : v.status === 'cancelado' ? 'cancelado' : v.status === 'pendente' ? 'pendente' : 'andamento' %>"><%= v.status === 'concluido' ? 'Concluído' : v.status === 'cancelado' ? 'Cancelado' : v.status === 'pendente' ? 'Pendente' : 'Em Andamento' %></span></td>
                         </tr>
-                        <tr>
-                            <td data-label="ID Pedido">#00121</td>
-                            <td data-label="Vendedor">Bioenergia Ltda.</td>
-                            <td data-label="Produto">Serragem de Pinus</td>
-                            <td data-label="Valor">R$ 1.200,00</td>
-                            <td data-label="Data">15/10/2025</td>
-                            <td data-label="Status"><span class="status-badge status-pendente">Pendente</span></td>
-                            <td data-label="Ações">
-                                <button class="action-button view-button" aria-label="Ver detalhes do pedido #00121"><i class="bx bx-show"></i></button>
-                                <button class="action-button edit-button" aria-label="Editar pedido #00121"><i class="bx bx-edit"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td data-label="ID Pedido">#00122</td>
-                            <td data-label="Vendedor">Agro Resíduos S.A.</td>
-                            <td data-label="Produto">Palha de Milho</td>
-                            <td data-label="Valor">R$ 750,00</td>
-                            <td data-label="Data">14/10/2025</td>
-                            <td data-label="Status"><span class="status-badge status-andamento">Em Andamento</span></td>
-                            <td data-label="Ações">
-                                <button class="action-button view-button" aria-label="Ver detalhes do pedido #00122"><i class="bx bx-show"></i></button>
-                                <button class="action-button edit-button" aria-label="Editar pedido #00122"><i class="bx bx-edit"></i></button>
-                            </td>
-                        </tr>
+                        <% }) %>
                     </tbody>
                 </table>
             </section>
-            <a href="#" class="view-all-link">Ver todas as vendas <i class="bx bx-right-arrow-alt"></i></a>
+            <% } else { %>
+            <article class="empty-transactions">
+                <i class='bx bx-store'></i>
+                <p>Nenhuma venda registrada ainda. As vendas aparecerão aqui assim que forem realizadas.</p>
+            </article>
+            <% } %>
         </section>
-
     </main>
 </section>
 <script src="/js/darkmode.js"></script>
 </body>
 </html>
-
