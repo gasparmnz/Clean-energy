@@ -1,15 +1,13 @@
-let productsData = [
-  { id: 'PROD-001', name: 'Serragem', description: 'Serragem compacta de alta densidade energética, ideal para queima em caldeiras de biomassa.', price: 150.00, stock: 200, status: 'active', image: '/imagem/serragem.png' },
-  { id: 'PROD-002', name: 'Casca de Arroz', description: 'Subproduto do arroz com alto poder calorífico, excelente para geração de energia em usinas de biomassa.', price: 80.00, stock: 500, status: 'active', image: '/imagem/cascadearroz.png' },
-  { id: 'PROD-003', name: 'Bagaço de Cana', description: 'Resíduo da cana-de-açúcar com alta eficiência energética, amplamente utilizado em termelétricas de biomassa.', price: 120.00, stock: 350, status: 'active', image: '/imagem/cana.png' },
-  { id: 'PROD-004', name: 'Resíduos de Café', description: 'Borras de café com bom poder calorífico, utilizadas como complemento em misturas para energia biomassa.', price: 200.00, stock: 150, status: 'active', image: '/imagem/residuosdecafe.png' },
-  { id: 'PROD-005', name: 'Pallet', description: 'Pallets de madeira triturados, matéria-prima de alta qualidade para produção de pellets energéticos.', price: 60.00, stock: 800, status: 'suspended', image: '/imagem/pellets.png' },
-  { id: 'PROD-006', name: 'Folhas Secas', description: 'Biomassa vegetal compactada, utilizada como fonte renovável em sistemas de queima controlada.', price: 90.00, stock: 400, status: 'active', image: '/imagem/folhassecas.png' },
-  { id: 'PROD-007', name: 'Lixo Orgânico', description: 'Resíduos orgânicos processados para biodigestão e geração de biogás para energia.', price: 70.00, stock: 600, status: 'suspended', image: '/imagem/lixo organico.png' },
-  { id: 'PROD-008', name: 'Palha de Milho', description: 'Palha de milho com alto teor de celulose, excelente para queima em fornalhas de biomassa.', price: 180.00, stock: 250, status: 'active', image: '/imagem/palhademilho.png' },
-  { id: 'PROD-009', name: 'Resto de Colheita', description: 'Resíduos agrícolas diversos com potencial energético para transformação em biomassa.', price: 250.00, stock: 100, status: 'suspended', image: '/imagem/restodecolheita.png' },
-  { id: 'PROD-010', name: 'Pallet', description: 'Pallets de madeira triturados, matéria-prima de alta qualidade para produção de pellets energéticos.', price: 60.00, stock: 800, status: 'active', image: '/imagem/pellets.png' }
+// default mock data (usado só se o servidor não passar produtos)
+const MOCK_PRODUCTS = [
+  { id: 'PROD-001', name: 'Serragem', description: 'Serragem compacta de alta densidade energética.', price: 150.00, stock: 200, status: 'active', image: '/imagem/serragem.png' },
+  { id: 'PROD-002', name: 'Casca de Arroz', description: 'Subproduto do arroz com alto poder calorífico.', price: 80.00, stock: 500, status: 'active', image: '/imagem/cascadearroz.png' },
+  { id: 'PROD-003', name: 'Bagaço de Cana', description: 'Resíduo da cana-de-açúcar com alta eficiência energética.', price: 120.00, stock: 350, status: 'active', image: '/imagem/cana.png' }
 ];
+
+let productsData = (window.__ADMIN_PRODUCTS__ && Array.isArray(window.__ADMIN_PRODUCTS__) && window.__ADMIN_PRODUCTS__.length > 0)
+  ? window.__ADMIN_PRODUCTS__
+  : MOCK_PRODUCTS;
 
 let currentFilter = 'all';
 let currentEditingProduct = null;
@@ -38,7 +36,6 @@ function displayProducts() {
   const suspendedSection = document.getElementById('suspendedSection');
 
   let filteredData = productsData;
-
   if (searchInput) {
     filteredData = productsData.filter(p =>
       p.name.toLowerCase().includes(searchInput) ||
@@ -74,8 +71,8 @@ function createProductCard(product) {
   return `
     <article class="product-card ${cardClass}">
       <figure class="product-image">
-        <img src="${product.image}" alt="${product.name}" 
-             onerror="this.onerror=null; this.src='/imagem/placeholder.png'; this.alt='Imagem não disponível'; this.style.backgroundColor='#f5f5f5';">
+        <img src="${product.image}" alt="${product.name}"
+             onerror="this.onerror=null; this.src='/imagem/placeholder.png'; this.style.backgroundColor='#f5f5f5';">
         <span class="product-status-badge ${statusClass}">${statusText}</span>
       </figure>
       <article class="product-info">
@@ -83,7 +80,7 @@ function createProductCard(product) {
         <h3 class="product-name">${product.name}</h3>
         <p class="product-description">${product.description}</p>
         <article class="product-meta">
-          <span class="product-price">R$ ${product.price.toFixed(2)}</span>
+          <span class="product-price">R$ ${Number(product.price).toFixed(2)}</span>
           <article class="product-stock"><strong>${product.stock}</strong> em estoque</article>
         </article>
         <nav class="product-actions">
@@ -91,8 +88,8 @@ function createProductCard(product) {
             <i class='bx bx-edit'></i>Editar
           </button>
           ${product.status === 'active'
-            ? `<button class="action-btn btn-suspend" onclick="toggleProductStatus('${product.id}')"><i class='bx bx-block'></i>Suspender</button>`
-            : `<button class="action-btn btn-activate" onclick="toggleProductStatus('${product.id}')"><i class='bx bx-check'></i>Ativar</button>`
+            ? `<button class="action-btn btn-suspend" onclick="toggleProductStatus('${product.id}', 'suspended')"><i class='bx bx-block'></i>Suspender</button>`
+            : `<button class="action-btn btn-activate" onclick="toggleProductStatus('${product.id}', 'active')"><i class='bx bx-check'></i>Ativar</button>`
           }
         </nav>
       </article>
@@ -100,24 +97,41 @@ function createProductCard(product) {
   `;
 }
 
-function toggleProductStatus(productId) {
+// Salva o novo status no banco via POST, depois atualiza a tela
+async function toggleProductStatus(productId, newStatus) {
   const product = productsData.find(p => p.id === productId);
-  if (product) {
-    product.status = product.status === 'active' ? 'suspended' : 'active';
+  if (!product) return;
+
+  try {
+    const res = await fetch('/adm/produtos_adm/toggle_status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: productId, status: newStatus })
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      alert('Erro ao alterar status: ' + (data.error || 'tente novamente'));
+      return;
+    }
+
+    // Atualiza localmente só após confirmar que o banco salvou
+    product.status = newStatus;
     displayProducts();
     updateSummary();
+  } catch (err) {
+    console.error('Erro ao alterar status:', err);
+    alert('Erro de conexão ao alterar status do produto.');
   }
 }
 
 function openEditModal(productId) {
   currentEditingProduct = productsData.find(p => p.id === productId);
-
   if (currentEditingProduct) {
     document.getElementById('editName').value = currentEditingProduct.name;
     document.getElementById('editDescription').value = currentEditingProduct.description;
     document.getElementById('editPrice').value = currentEditingProduct.price;
     document.getElementById('editStock').value = currentEditingProduct.stock;
-
     document.getElementById('editModal').classList.add('show');
   }
 }
@@ -127,32 +141,56 @@ function closeModal() {
   currentEditingProduct = null;
 }
 
-function saveProduct() {
-  if (currentEditingProduct) {
-    currentEditingProduct.name = document.getElementById('editName').value;
-    currentEditingProduct.description = document.getElementById('editDescription').value;
-    currentEditingProduct.price = parseFloat(document.getElementById('editPrice').value);
-    currentEditingProduct.stock = parseInt(document.getElementById('editStock').value);
+// Salva edição no banco via POST
+async function saveProduct() {
+  if (!currentEditingProduct) return;
+
+  const updatedData = {
+    id: currentEditingProduct.id,
+    name: document.getElementById('editName').value,
+    description: document.getElementById('editDescription').value,
+    price: parseFloat(document.getElementById('editPrice').value),
+    stock: parseInt(document.getElementById('editStock').value)
+  };
+
+  try {
+    const res = await fetch('/adm/produtos_adm/edit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedData)
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.success) {
+      alert('Erro ao salvar: ' + (data.error || 'tente novamente'));
+      return;
+    }
+
+    // Atualiza localmente após confirmar
+    currentEditingProduct.name = updatedData.name;
+    currentEditingProduct.description = updatedData.description;
+    currentEditingProduct.price = updatedData.price;
+    currentEditingProduct.stock = updatedData.stock;
 
     displayProducts();
     updateSummary();
     closeModal();
+  } catch (err) {
+    console.error('Erro ao salvar produto:', err);
+    alert('Erro de conexão ao salvar produto.');
   }
 }
 
 function filterProducts(event, filter) {
   currentFilter = filter;
-
   document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
   event.currentTarget.classList.add('active');
-
   document.getElementById('searchInput').value = '';
   displayProducts();
 }
 
 function setupEventListeners() {
   document.getElementById('searchInput').addEventListener('input', displayProducts);
-
   document.getElementById('editModal').addEventListener('click', (e) => {
     if (e.target.id === 'editModal') closeModal();
   });

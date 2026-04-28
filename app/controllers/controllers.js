@@ -4,10 +4,9 @@ const multer = require('multer');
 const produtosModel = require('../models/models.js');
 const cartModel = require('../models/cartModel');
 
-
 const router = express.Router();
 
-// Multer config: salva em app/public/imagem
+// Multer config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, '..', 'public', 'imagem'));
@@ -20,32 +19,23 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Rota: página de cadastro
+// Página de cadastro
 router.get('/cadastrar_produto', (req, res) => {
   res.render('pages/cadastrar_produto');
 });
 
-// Rota: processa cadastro (multipart/form-data)
+// Processa cadastro
 router.post('/cadastrar_produto', upload.single('imagem'), async (req, res) => {
   try {
     const body = req.body;
-    // monta campo local a partir do endereço (ajuste conforme seu form)
-    const local = [
-      body.cidade || '',
-      body.bairro || '',
-      body.rua || '',
-      body.numero || ''
-    ].filter(Boolean).join(' - ');
+    const local = [body.cidade || '', body.bairro || '', body.rua || '', body.numero || '']
+      .filter(Boolean).join(' - ');
 
-    // Converter preço de formato brasileiro (1.000,00) para número decimal
-    let precoFormatado = (body.preco || '0').trim();
-    // Remove espaços
-    precoFormatado = precoFormatado.replace(/\s/g, '');
-    // Remove "R$" se existir
-    precoFormatado = precoFormatado.replace(/R\$\s*/g, '');
-    // Converte formato brasileiro para número
-    // Primeiro remove todos os pontos, depois troca vírgula por ponto
-    precoFormatado = precoFormatado.replace(/\./g, '').replace(',', '.');
+    let precoFormatado = (body.preco || '0').trim()
+      .replace(/\s/g, '')
+      .replace(/R\$\s*/g, '')
+      .replace(/\./g, '')
+      .replace(',', '.');
     const precoNumerico = parseFloat(precoFormatado) || 0;
 
     const produto = {
@@ -55,7 +45,8 @@ router.post('/cadastrar_produto', upload.single('imagem'), async (req, res) => {
       quantidade: body.quantidade,
       categoria: body.categoria,
       local,
-      imagem: req.file ? `/imagem/${req.file.filename}` : null
+      imagem: req.file ? `/imagem/${req.file.filename}` : null,
+      estado: body.estado || null   // estado = UF (SP, RJ...)
     };
 
     await produtosModel.create(produto);
@@ -66,10 +57,10 @@ router.post('/cadastrar_produto', upload.single('imagem'), async (req, res) => {
   }
 });
 
-// Rota: lista produtos
+// Lista produtos para clientes — só produtos com status = 'active'
 router.get('/produtos', async (req, res) => {
   try {
-    const produtos = await produtosModel.findAll();
+    const produtos = await produtosModel.findAll({ apenasAtivos: true });
     res.render('pages/produtos', { produtos });
   } catch (err) {
     console.error(err);
@@ -77,12 +68,12 @@ router.get('/produtos', async (req, res) => {
   }
 });
 
-// Rota: detalhe do item
+// Detalhe do item — bloqueia acesso a produto suspenso
 router.get('/item/:id', async (req, res) => {
   try {
     const produto = await produtosModel.findById(req.params.id);
     if (!produto) return res.status(404).send('Produto não encontrado');
-    // criar view pages/item.ejs ou reutilizar produtos.ejs conforme necessário
+    if (produto.status === 'suspended') return res.status(404).send('Produto não disponível');
     res.render('pages/item', { produto });
   } catch (err) {
     console.error(err);
@@ -90,10 +81,7 @@ router.get('/item/:id', async (req, res) => {
   }
 });
 
-
-
-
-
+// Carrinho
 router.post('/cart/add', async (req, res) => {
   try {
     const { productId, quantidade } = req.body;
@@ -101,6 +89,7 @@ router.post('/cart/add', async (req, res) => {
 
     const produto = await produtosModel.findById(productId);
     if (!produto) return res.status(404).send('Produto não encontrado');
+    if (produto.status === 'suspended') return res.status(400).send('Produto não disponível');
 
     const item = {
       productId,
@@ -113,7 +102,6 @@ router.post('/cart/add', async (req, res) => {
 
     const userId = req.session?.userId || 'guest';
     await cartModel.addItem(userId, item);
-
     res.redirect('/carrinho');
   } catch (err) {
     console.error(err);
@@ -121,7 +109,6 @@ router.post('/cart/add', async (req, res) => {
   }
 });
 
-// Rota: mostra carrinho do usuário
 router.get('/carrinho', async (req, res) => {
   try {
     const userId = req.session?.userId || 'guest';
