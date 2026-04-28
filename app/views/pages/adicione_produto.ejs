@@ -60,7 +60,10 @@
     </ol>
  
     <nav class="acoes" role="navigation" aria-label="Ações">
+      <a href="/" class="voltar">Voltar</a>
+
       <a href="/produtoscomconta" class="voltar">Voltar</a>
+
       <% if (typeof usuario !== 'undefined' && usuario && usuario.perfil === 'comprador') { %>
         <a href="/upgrade_vendedor" class="comecar">Continuar como vendedor</a>
       <% } else { %>

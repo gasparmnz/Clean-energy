@@ -4,17 +4,65 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= produto.nome %> - Clean Energy</title>
-  
   <link rel="stylesheet" href="/css/item.css">
-  
+  <link rel="stylesheet" href="/css/darkmode.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Avaliações ── */
+    .community-main-title { font-size:1.2rem; font-weight:700; margin-bottom:1rem; color:var(--text,#222); }
+    .avg-rating { display:flex; align-items:center; gap:.6rem; margin-bottom:1.2rem; padding:.8rem 1rem; background:#f9f9f9; border-radius:8px; }
+    body.dark-mode .avg-rating { background:#2a2a2a; }
+    .avg-number { font-size:2rem; font-weight:800; color:#f59e0b; }
+    .avg-stars i { color:#f59e0b; font-size:1.1rem; }
+    .avg-count { font-size:.85rem; color:#888; }
+    .comment-item { display:flex; gap:.9rem; margin-bottom:1.1rem; padding:.9rem; background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.07); }
+    body.dark-mode .comment-item { background:#2a2a2a; box-shadow:0 1px 4px rgba(0,0,0,.3); }
+    .comment-author-avatar img { width:42px; height:42px; border-radius:50%; object-fit:cover; }
+    .comment-body { flex:1; }
+    .comment-header { display:flex; align-items:center; flex-wrap:wrap; gap:.4rem; margin-bottom:.3rem; }
+    .comment-rating i { color:#f59e0b; font-size:.9rem; }
+    .comment-author-name { font-weight:700; font-size:.9rem; color:#222; }
+    body.dark-mode .comment-author-name { color:#eee; }
+    .comment-author-handle { font-size:.78rem; color:#999; }
+    .comment-date { font-size:.72rem; color:#bbb; margin-left:auto; }
+    .comment-body p { font-size:.9rem; color:#444; line-height:1.5; }
+    body.dark-mode .comment-body p { color:#ccc; }
+    .no-comments { text-align:center; padding:1.5rem; color:#aaa; font-size:.9rem; }
+    /* ── Formulário de avaliação ── */
+    .review-form-section { margin-top:1.5rem; padding:1rem; background:#f0fdf4; border-radius:10px; border:1px solid #bbf7d0; }
+    body.dark-mode .review-form-section { background:#1a2e1a; border-color:#2d5a2d; }
+    .review-form-section h3 { font-size:1rem; font-weight:700; margin-bottom:.8rem; color:#166534; }
+    body.dark-mode .review-form-section h3 { color:#86efac; }
+    .star-selector { display:flex; gap:.3rem; margin-bottom:.8rem; }
+    .star-selector input[type=radio] { display:none; }
+    .star-selector label { font-size:1.6rem; color:#d1d5db; cursor:pointer; transition:color .15s; }
+    .star-selector label:hover,
+    .star-selector label:hover ~ label,
+    .star-selector input:checked ~ label { color:#d1d5db; }
+    .star-selector label:hover,
+    .star-selector input:checked + label,
+    .star-selector input:checked ~ label { color:#d1d5db; }
+    /* RTL trick for star rating */
+    .star-selector { flex-direction:row-reverse; justify-content:flex-end; }
+    .star-selector label:hover,
+    .star-selector label:hover ~ label { color:#f59e0b; }
+    .star-selector input:checked ~ label,
+    .star-selector input:checked + label { color:#f59e0b; }
+    .review-form-section textarea { width:100%; padding:.65rem; border:1px solid #d1fae5; border-radius:6px; font-size:.9rem; resize:vertical; min-height:80px; font-family:inherit; background:#fff; color:#222; }
+    body.dark-mode .review-form-section textarea { background:#1e1e1e; border-color:#2d5a2d; color:#eee; }
+    .review-form-section button { margin-top:.6rem; background:#16a34a; color:#fff; border:none; padding:.6rem 1.4rem; border-radius:6px; font-size:.9rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:.4rem; }
+    .review-form-section button:hover { background:#15803d; }
+    .login-to-review { text-align:center; padding:1rem; background:#fef3c7; border-radius:8px; border:1px solid #fde68a; font-size:.88rem; color:#92400e; margin-top:1rem; }
+    body.dark-mode .login-to-review { background:#2a1f00; border-color:#713f12; color:#fbbf24; }
+    .login-to-review a { color:#16a34a; font-weight:700; }
+    .erro-avaliacao { background:#fee2e2; border:1px solid #fca5a5; border-radius:6px; padding:.7rem 1rem; color:#dc2626; font-size:.88rem; margin-bottom:.8rem; }
+  </style>
 </head>
 <body>
   <%- include('../partial/header.ejs') %>
 
   <main class="product-main">
- 
     <nav class="back-navigation" aria-label="Navegação de retorno">
       <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
         <i class='bx bx-arrow-back'></i>
@@ -22,9 +70,9 @@
       </button>
     </nav>
 
-    
     <nav class="product-container">
-      
+
+      <!-- COLUNA ESQUERDA -->
       <nav class="product-left-column">
         <section class="product-gallery" aria-labelledby="gallery-title">
           <h2 id="gallery-title" class="visually-hidden">Galeria do Produto</h2>
@@ -33,81 +81,85 @@
           </figure>
         </section>
 
-        <!-- Seção de Comentários na coluna esquerda (APENAS DESKTOP) -->
-        <section class="product-community desktop-comments" aria-labelledby="community-title">
+        <!-- COMENTÁRIOS DESKTOP -->
+        <section class="product-community desktop-comments" id="comentarios" aria-labelledby="community-title">
           <h2 id="community-title" class="community-main-title">Comentários da Comunidade</h2>
-          
-         
-          <article class="comment-item">
-            <figure class="comment-author-avatar">
-              <img src="/imagem/perfil_com.png" alt="Avatar de Samara Kilsman">
-            </figure>
-            <nav class="comment-body">
-              <header class="comment-header">
-                <nav class="comment-rating">
-                  <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
-                </nav>
-                <cite class="comment-author-name">Samara Kilsman</cite>
-                <span class="comment-author-handle">@samarakilsman</span>
-              </header>
-              <p>Ótimo produto! A eficiência energética é notável.</p>
-            </nav>
-          </article>
 
-          
-          <article class="comment-item">
-            <figure class="comment-author-avatar">
-              <img src="/imagem/perfil_com.png" alt="Avatar de Cleiton Amanco">
-            </figure>
-            <nav class="comment-body">
-              <header class="comment-header">
-                <nav class="comment-rating">
-                  <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
-                </nav>
-                <cite class="comment-author-name">Cleiton Amanco</cite>
-                <span class="comment-author-handle">@Cleitonprof</span>
-              </header>
-              <p>Vendedor Confiavel e comprometido</p>
-            </nav>
-          </article>
+          <!-- Média -->
+          <% if (avaliacoes && avaliacoes.length > 0) { %>
+          <div class="avg-rating">
+            <span class="avg-number"><%= mediaNotas %></span>
+            <div class="avg-stars">
+              <% for(let i=1; i<=5; i++) { %>
+                <i class='bx <%= i <= Math.round(mediaNotas) ? "bxs-star" : "bx-star" %>'></i>
+              <% } %>
+            </div>
+            <span class="avg-count">(<%= avaliacoes.length %> avaliação<%= avaliacoes.length !== 1 ? 'ões' : '' %>)</span>
+          </div>
 
-          
+          <% avaliacoes.forEach(av => { %>
           <article class="comment-item">
             <figure class="comment-author-avatar">
-              <img src="/imagem/perfil_com.png" alt="Avatar de Otávio Luccas">
+              <img src="/imagem/perfil_com.png" alt="Avatar de <%= av.nome_usuario %>">
             </figure>
             <nav class="comment-body">
               <header class="comment-header">
                 <nav class="comment-rating">
-                  <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+                  <% for(let i=1; i<=5; i++) { %><i class='bx <%= i <= av.Nota ? "bxs-star" : "bx-star" %>'></i><% } %>
                 </nav>
-                <cite class="comment-author-name">Otávio Luccas</cite>
-                <span class="comment-author-handle">@LuccasOt</span>
+                <cite class="comment-author-name"><%= av.nome_usuario %></cite>
+                <% if (av.criado_em) { %>
+                  <span class="comment-date"><%= new Date(av.criado_em).toLocaleDateString('pt-BR') %></span>
+                <% } %>
               </header>
-              <p>Minha experiencia foi satisfatória</p>
+              <% if (av.Comentario) { %><p><%= av.Comentario %></p><% } %>
             </nav>
           </article>
+          <% }) %>
+          <% } else { %>
+          <div class="no-comments">
+            <i class='bx bx-message-dots' style="font-size:2rem;display:block;margin-bottom:.5rem;"></i>
+            Nenhuma avaliação ainda. Seja o primeiro!
+          </div>
+          <% } %>
 
-         
-          <article class="comment-item">
-            <figure class="comment-author-avatar">
-              <img src="/imagem/perfil_com.png" alt="Avatar de Kaique Klein Costa">
-            </figure>
-            <nav class="comment-body">
-              <header class="comment-header">
-                <nav class="comment-rating">
-                  <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
-                </nav>
-                <cite class="comment-author-name">Kaique Klein Costa</cite>
-                <span class="comment-author-handle">@KaiqueKc</span>
-              </header>
-              <p>Vou comprar novamente</p>
-            </nav>
-          </article>
+          <!-- FORMULÁRIO DE AVALIAÇÃO -->
+          <% if (typeof req !== 'undefined' && req.session && req.session.userId) { %>
+          <%# Fallback: verificar via usuario passado na view %>
+          <% } %>
+          <% if (typeof usuario !== 'undefined' && usuario) { %>
+          <div class="review-form-section">
+            <h3><i class='bx bx-edit'></i> Deixar minha avaliação</h3>
+            <% if (typeof req !== 'undefined' && req.query && req.query.erro) { %>
+              <div class="erro-avaliacao">
+                <% if (req.query.erro === 'nota') { %>Selecione uma nota de 1 a 5 estrelas.<% } %>
+                <% if (req.query.erro === 'salvar') { %>Erro ao salvar avaliação. Tente novamente.<% } %>
+              </div>
+            <% } %>
+            <form action="/item/<%= produto.id %>/avaliar" method="POST">
+              <!-- Seletor de estrelas (RTL trick) -->
+              <div class="star-selector">
+                <% for(let i=5; i>=1; i--) { %>
+                  <input type="radio" name="nota" id="star<%= i %>" value="<%= i %>">
+                  <label for="star<%= i %>"><i class='bx bxs-star'></i></label>
+                <% } %>
+              </div>
+              <textarea name="comentario" placeholder="Conte sua experiência com este produto (opcional)..." maxlength="255"></textarea>
+              <button type="submit">
+                <i class='bx bx-send'></i> Enviar avaliação
+              </button>
+            </form>
+          </div>
+          <% } else { %>
+          <div class="login-to-review">
+            <i class='bx bx-lock-alt'></i>
+            <a href="/login">Faça login</a> para deixar sua avaliação
+          </div>
+          <% } %>
         </section>
       </nav>
 
-    
+      <!-- COLUNA DIREITA -->
       <nav class="product-right-column">
         <section class="product-info" aria-label="Informações do produto">
           <header class="product-header">
@@ -148,94 +200,81 @@
           </section>
 
           <section class="user-rating" aria-labelledby="rating-title">
-            <h2 id="rating-title" class="rating-main-title">Avaliação do Vendedor</h2>
+            <h2 id="rating-title" class="rating-main-title">Avaliação do Produto</h2>
             <nav class="rating-content">
               <figure class="user-avatar">
-                <img src="/imagem/avatar.png" alt="Avatar do vendedor" class="avatar-image">
+                <img src="/imagem/avatar.png" alt="Avaliação" class="avatar-image">
               </figure>
               <nav class="rating-details">
-                <cite class="username">Vendedor_Exemplo</cite>
-                <p class="rating-score" aria-label="Pontuação 4,5 de 5 estrelas">
-                  <span class="score-number">4,5</span>
-                  <span class="stars" role="img">
-                    <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star-half'></i>
-                  </span>
-                </p>
+                <% if (mediaNotas) { %>
+                  <cite class="username">Média das avaliações</cite>
+                  <p class="rating-score">
+                    <span class="score-number"><%= mediaNotas %></span>
+                    <span class="stars" role="img">
+                      <% for(let i=1; i<=5; i++) { %><i class='bx <%= i <= Math.round(mediaNotas) ? "bxs-star" : "bx-star" %>'></i><% } %>
+                    </span>
+                  </p>
+                <% } else { %>
+                  <cite class="username">Sem avaliações ainda</cite>
+                  <p class="rating-score"><span class="stars"><i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i></span></p>
+                <% } %>
               </nav>
             </nav>
           </section>
 
-          <!-- Seção de Comentários na coluna direita (APENAS MOBILE/TABLET) -->
+          <!-- COMENTÁRIOS MOBILE -->
           <section class="product-community mobile-comments" aria-labelledby="community-title-mobile">
             <h2 id="community-title-mobile" class="community-main-title">Comentários da Comunidade</h2>
-            
-           
-            <article class="comment-item">
-              <figure class="comment-author-avatar">
-                <img src="/imagem/perfil_com.png" alt="Avatar de Samara Kilsman">
-              </figure>
-              <nav class="comment-body">
-                <header class="comment-header">
-                  <nav class="comment-rating">
-                    <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
-                  </nav>
-                  <cite class="comment-author-name">Samara Kilsman</cite>
-                  <span class="comment-author-handle">@samarakilsman</span>
-                </header>
-                <p>Ótimo produto! A eficiência energética é notável.</p>
-              </nav>
-            </article>
 
-            
+            <% if (avaliacoes && avaliacoes.length > 0) { %>
+            <div class="avg-rating">
+              <span class="avg-number"><%= mediaNotas %></span>
+              <div class="avg-stars">
+                <% for(let i=1; i<=5; i++) { %>
+                  <i class='bx <%= i <= Math.round(mediaNotas) ? "bxs-star" : "bx-star" %>'></i>
+                <% } %>
+              </div>
+              <span class="avg-count">(<%= avaliacoes.length %>)</span>
+            </div>
+            <% avaliacoes.forEach(av => { %>
             <article class="comment-item">
               <figure class="comment-author-avatar">
-                <img src="/imagem/perfil_com.png" alt="Avatar de Cleiton Amanco">
+                <img src="/imagem/perfil_com.png" alt="<%= av.nome_usuario %>">
               </figure>
               <nav class="comment-body">
                 <header class="comment-header">
                   <nav class="comment-rating">
-                    <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
+                    <% for(let i=1; i<=5; i++) { %><i class='bx <%= i <= av.Nota ? "bxs-star" : "bx-star" %>'></i><% } %>
                   </nav>
-                  <cite class="comment-author-name">Cleiton Amanco</cite>
-                  <span class="comment-author-handle">@Cleitonprof</span>
+                  <cite class="comment-author-name"><%= av.nome_usuario %></cite>
                 </header>
-                <p>Vendedor Confiavel e comprometido</p>
+                <% if (av.Comentario) { %><p><%= av.Comentario %></p><% } %>
               </nav>
             </article>
+            <% }) %>
+            <% } else { %>
+            <div class="no-comments">Nenhuma avaliação ainda. Seja o primeiro!</div>
+            <% } %>
 
-            
-            <article class="comment-item">
-              <figure class="comment-author-avatar">
-                <img src="/imagem/perfil_com.png" alt="Avatar de Otávio Luccas">
-              </figure>
-              <nav class="comment-body">
-                <header class="comment-header">
-                  <nav class="comment-rating">
-                    <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
-                  </nav>
-                  <cite class="comment-author-name">Otávio Luccas</cite>
-                  <span class="comment-author-handle">@LuccasOt</span>
-                </header>
-                <p>Minha experiencia foi satisfatória</p>
-              </nav>
-            </article>
-
-           
-            <article class="comment-item">
-              <figure class="comment-author-avatar">
-                <img src="/imagem/perfil_com.png" alt="Avatar de Kaique Klein Costa">
-              </figure>
-              <nav class="comment-body">
-                <header class="comment-header">
-                  <nav class="comment-rating">
-                    <i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i><i class='bx bxs-star'></i>
-                  </nav>
-                  <cite class="comment-author-name">Kaique Klein Costa</cite>
-                  <span class="comment-author-handle">@KaiqueKc</span>
-                </header>
-                <p>Vou comprar novamente</p>
-              </nav>
-            </article>
+            <% if (typeof usuario !== 'undefined' && usuario) { %>
+            <div class="review-form-section">
+              <h3><i class='bx bx-edit'></i> Deixar minha avaliação</h3>
+              <form action="/item/<%= produto.id %>/avaliar" method="POST">
+                <div class="star-selector">
+                  <% for(let i=5; i>=1; i--) { %>
+                    <input type="radio" name="nota" id="mstar<%= i %>" value="<%= i %>">
+                    <label for="mstar<%= i %>"><i class='bx bxs-star'></i></label>
+                  <% } %>
+                </div>
+                <textarea name="comentario" placeholder="Conte sua experiência..." maxlength="255"></textarea>
+                <button type="submit"><i class='bx bx-send'></i> Enviar</button>
+              </form>
+            </div>
+            <% } else { %>
+            <div class="login-to-review">
+              <a href="/login">Faça login</a> para avaliar
+            </div>
+            <% } %>
           </section>
 
           <section class="terms-section" aria-labelledby="terms-title">
@@ -247,7 +286,7 @@
           </section>
         </section>
       </nav>
-    </nav> 
+    </nav>
   </main>
 
   <%- include('../partial/footer.ejs') %>
