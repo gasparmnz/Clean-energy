@@ -1,8 +1,3 @@
--- ================================================
--- Script SQL atualizado - Biomassa Hub
--- Inclui diferenciação de perfis comprador/vendedor
--- ================================================
-
 CREATE DATABASE IF NOT EXISTS produtos;
 USE produtos;
 
@@ -35,7 +30,6 @@ CREATE TABLE IF NOT EXISTS Categoria (
     Nome VARCHAR(50) NOT NULL UNIQUE
 );
 
--- Tabela produtos usada pelo Node.js (nome em minúsculo, colunas em minúsculo)
 CREATE TABLE IF NOT EXISTS produtos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -52,7 +46,7 @@ ALTER TABLE produtos
   ADD COLUMN status ENUM('active', 'suspended') NOT NULL DEFAULT 'active';
 
 SET SQL_SAFE_UPDATES = 0;
--- Garante que produtos já cadastrados fiquem como ativos
+
 UPDATE produtos SET status = 'active' WHERE status IS NULL OR status = '';
 
 
@@ -104,7 +98,6 @@ CREATE TABLE IF NOT EXISTS Avaliacao (
     FOREIGN KEY (Produto_ID) REFERENCES produtos(id)
 );
 
--- Inserir categorias padrão
 INSERT IGNORE INTO Categoria (Nome) VALUES
   ('Lenha'), ('Pellets'), ('Cavaco'), ('Bagaço de cana'),
   ('Lixo orgânico'), ('Casca de arroz'), ('Folhas secas'), ('Biomassa geral');
