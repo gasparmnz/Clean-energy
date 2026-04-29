@@ -23,7 +23,7 @@
         <a href="/cadastrar_produto" class="btn-vendedor">CADASTRAR PRODUTO</a>
       <% } else { %>
         <a href="/adicione_produto" class="btn-vendedor">TORNE-SE VENDEDOR</a>
-        <span class="badge-perfil badge-comprador"><i class='bx bx-user'></i> Comprador</span>
+
       <% } %>
 
       <a href="/carrinho">
@@ -31,7 +31,10 @@
       </a>
 
       <section class="dropdown">
-        <img id="dropdownBtn" src="/imagem/avatar.png" alt="Usuário" class="avatar">
+        <button id="dropdownBtn" class="dropdown-trigger">
+          <img src="/imagem/avatar.png" alt="Usuário" class="avatar">
+          <span class="header-greeting">Olá, <%= (usuario.nome || usuario.nomeUsuario || '').split(' ')[0] %></span>
+        </button>
         <section id="dropdownMenu" class="dropdown-content">
           <span class="dropdown-nome"><%= usuario.nome %></span>
           <span class="dropdown-perfil"><%= usuario.perfil === 'vendedor' ? '🏪 Vendedor' : '🛒 Comprador' %></span>
@@ -53,7 +56,15 @@
       </span>
 
       <section class="dropdown">
-        <img id="dropdownBtn" src="/imagem/avatar.png" alt="Usuário" class="avatar">
+        <button id="dropdownBtn" class="dropdown-trigger">
+          <img src="/imagem/avatar.png" alt="Usuário" class="avatar">
+        <span class="header-greeting">
+  Olá, 
+  <%= usuario 
+    ? ((usuario.nome || usuario.nomeUsuario || usuario.username || 'Usuário').split(' ')[0])
+    : 'Visitante' %>
+</span>
+        </button>
         <section id="dropdownMenu" class="dropdown-content">
           <a href="/login">Login</a>
           <a href="/cadastro">Cadastre-se</a>

@@ -97,33 +97,7 @@ function createProductCard(product) {
   `;
 }
 
-// Salva o novo status no banco via POST, depois atualiza a tela
-async function toggleProductStatus(productId, newStatus) {
-  const product = productsData.find(p => p.id === productId);
-  if (!product) return;
 
-  try {
-    const res = await fetch('/adm/produtos_adm/toggle_status', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: productId, status: newStatus })
-    });
-
-    const data = await res.json();
-    if (!res.ok || !data.success) {
-      alert('Erro ao alterar status: ' + (data.error || 'tente novamente'));
-      return;
-    }
-
-    // Atualiza localmente só após confirmar que o banco salvou
-    product.status = newStatus;
-    displayProducts();
-    updateSummary();
-  } catch (err) {
-    console.error('Erro ao alterar status:', err);
-    alert('Erro de conexão ao alterar status do produto.');
-  }
-}
 
 function openEditModal(productId) {
   currentEditingProduct = productsData.find(p => p.id === productId);
@@ -194,4 +168,68 @@ function setupEventListeners() {
   document.getElementById('editModal').addEventListener('click', (e) => {
     if (e.target.id === 'editModal') closeModal();
   });
+}
+
+async function toggleProductStatus(productId, newStatus) {
+  const product = productsData.find(p => p.id === productId);
+  if (!product) return;
+
+  const isSuspending = newStatus === 'suspended';
+
+  const title = isSuspending ? "Suspender Produto" : "Reativar Produto";
+  const message = isSuspending
+    ? `Deseja suspender o produto "${product.name}"?`
+    : `Deseja reativar o produto "${product.name}"?`;
+
+  openCustomModal(title, message, async () => {
+    try {
+      const res = await fetch('/adm/produtos_adm/toggle_status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: productId, status: newStatus })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Erro ao alterar status');
+      }
+
+      product.status = newStatus;
+      displayProducts();
+      updateSummary();
+
+    } catch (err) {
+      console.error(err);
+      alert('Erro: ' + err.message);
+    }
+  });
+}
+
+function openCustomModal(title, message, onConfirm) {
+  const modal = document.getElementById("customModal");
+
+  if (!modal) {
+    console.error("Modal não encontrado no HTML");
+    return;
+  }
+
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("modalMessage").textContent = message;
+
+  const confirmBtn = document.getElementById("confirmBtn");
+
+  confirmBtn.onclick = null;
+
+  confirmBtn.onclick = () => {
+    onConfirm();
+    closeCustomModal();
+  };
+
+  modal.classList.add("show");
+}
+
+function closeCustomModal() {
+  const modal = document.getElementById("customModal");
+  if (modal) modal.classList.remove("show");
 }

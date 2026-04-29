@@ -36,7 +36,7 @@
           </div>
 
           <div class="perfil-greeting">
-            <h2>Olá, <strong id="nomeDisplay"><%= usuario ? usuario.Nome.split(' ')[0] : 'Usuário' %></strong>!</h2>
+            <p><%= usuario.nome %></p>
             <% if (usuario) { %>
               <span class="perfil-badge <%= usuario.Tipo === 'PJ' ? 'badge-vendedor' : 'badge-comprador' %>">
                 <%= usuario.Tipo === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>

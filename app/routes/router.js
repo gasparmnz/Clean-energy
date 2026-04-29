@@ -194,14 +194,20 @@ router.post("/perfil/foto", requireLogin, uploadFoto.single('foto'), async (req,
 
 router.get("/perfil", requireLogin, async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM Usuario WHERE Usuario_ID = ?", [req.session.userId]);
+    const [rows] = await pool.query(
+      "SELECT * FROM Usuario WHERE Usuario_ID = ?",
+      [req.session.userId]
+    );
+
     const usuarioDados = rows[0] || null;
+
     if (usuarioDados) {
       usuarioDados.perfil = req.session.perfil;
+      usuarioDados.nome = usuarioDados.Nome;
     }
+
     res.render("pages/perfil", {
       usuario: usuarioDados,
-      // sidebar também precisa de usuario
     });
   } catch (err) {
     res.render("pages/perfil", { usuario: null });
@@ -503,5 +509,29 @@ router.delete('/produtos/:id', requireVendedor, async (req, res) => {
     res.status(500).json({ success: false, message: 'Erro ao deletar produto' });
   }
 });
+
+router.get("/adm-login", (req, res) => {
+  res.render("pages/adm-login");
+});
+
+router.post("/adm-login", (req, res) => {
+  const { senha } = req.body;
+
+  if (senha === process.env.ADMIN_SECRET) {
+    req.session.isAdmin = true;
+    return res.redirect("/adm");
+  }
+
+  res.send("Senha incorreta");
+});
+
+function requireAdmin(req, res, next) {
+  if (!req.session.isAdmin) {
+    return res.redirect("/adm-login");
+  }
+  next();
+}
+
+
 
 module.exports = router;
