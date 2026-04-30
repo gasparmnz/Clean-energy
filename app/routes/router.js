@@ -180,15 +180,31 @@ const uploadFoto = multer({
 });
 
 router.post("/perfil/foto", requireLogin, uploadFoto.single('foto'), async (req, res) => {
-  if (!req.file) return res.json({ sucesso: false, erro: 'Nenhuma imagem enviada.' });
   try {
+    if (!req.file) {
+      return res.status(400).json({ sucesso: false, erro: 'Nenhuma imagem enviada.' });
+    }
+
     const filename = req.file.filename;
-    await pool.query("UPDATE Usuario SET foto = ? WHERE Usuario_ID = ?", [filename, req.session.userId]);
+
+    await pool.query(
+      "UPDATE Usuario SET foto = ? WHERE Usuario_ID = ?",
+      [filename, req.session.userId]
+    );
+
     req.session.fotoUsuario = filename;
-    res.json({ sucesso: true, foto: `/imagem/${filename}` });
+
+    return res.json({
+      sucesso: true,
+      foto: `/imagem/${filename}`
+    });
+
   } catch (err) {
-    console.error(err);
-    res.json({ sucesso: false, erro: 'Erro ao salvar foto.' });
+    console.error('Erro upload foto:', err);
+    return res.status(500).json({
+      sucesso: false,
+      erro: 'Erro interno ao salvar foto.'
+    });
   }
 });
 
@@ -204,6 +220,10 @@ router.get("/perfil", requireLogin, async (req, res) => {
     if (usuarioDados) {
       usuarioDados.perfil = req.session.perfil;
       usuarioDados.nome = usuarioDados.Nome;
+      // Sincroniza foto na sessão caso tenha sido atualizada
+      if (usuarioDados.foto) req.session.fotoUsuario = usuarioDados.foto;
+      // Atualiza res.locals para o header pegar a foto correta
+      res.locals.usuario = { ...res.locals.usuario, ...usuarioDados, foto: usuarioDados.foto || null };
     }
 
     res.render("pages/perfil", {
@@ -293,10 +313,10 @@ router.get("/item/:id", async function (req, res) {
       : null;
 
     const usuarioSessao = req.session.userId
-      ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil }
+      ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil, foto: req.session.fotoUsuario || null }
       : null;
 
-    res.render("pages/item", { produto, avaliacoes, mediaNotas, usuario: usuarioSessao });
+    res.render("pages/item", { produto, avaliacoes, mediaNotas });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro interno do servidor');
@@ -493,6 +513,7 @@ router.post("/login", async (req, res) => {
     req.session.emailUsuario = usuario.Email;
     req.session.perfil = usuario.Tipo === 'PJ' ? 'vendedor' : 'comprador';
     req.session.tipo = usuario.Tipo;
+    req.session.fotoUsuario = usuario.foto || null;
     await pool.query("UPDATE Usuario SET Ultimo_Login = NOW() WHERE Usuario_ID = ?", [usuario.Usuario_ID]);
     return res.redirect("/perfil");
   } catch (err) {

@@ -32,7 +32,7 @@
 
       <section class="dropdown">
         <button id="dropdownBtn" class="dropdown-trigger">
-          <img src="/imagem/avatar.png" alt="Usuário" class="avatar">
+          <img src="/imagem/user.png" alt="Usuário" class="avatar">
           <span class="header-greeting">Olá, <%= (usuario.nome || usuario.nomeUsuario || '').split(' ')[0] %></span>
         </button>
         <section id="dropdownMenu" class="dropdown-content">
@@ -54,22 +54,6 @@
       <span class="login-links">
         <a href="/login">LOGIN</a> | <a href="/cadastro">CADASTRE-SE</a>
       </span>
-
-      <section class="dropdown">
-        <button id="dropdownBtn" class="dropdown-trigger">
-          <img src="/imagem/avatar.png" alt="Usuário" class="avatar">
-        <span class="header-greeting">
-  Olá, 
-  <%= usuario 
-    ? ((usuario.nome || usuario.nomeUsuario || usuario.username || 'Usuário').split(' ')[0])
-    : 'Visitante' %>
-</span>
-        </button>
-        <section id="dropdownMenu" class="dropdown-content">
-          <a href="/login">Login</a>
-          <a href="/cadastro">Cadastre-se</a>
-        </section>
-      </section>
     <% } %>
   </section>
 </header>
