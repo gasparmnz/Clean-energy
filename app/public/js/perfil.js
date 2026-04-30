@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nome, biografia: telefone })
         });
+
         const json = await resp.json();
         if (json.sucesso) {
           const nomeEl = document.getElementById('nomeDisplay');
@@ -49,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
           showToast(json.erro || 'Erro ao salvar.', 'erro');
         }
+
       } catch {
         showToast('Erro de conexão.', 'erro');
       }
@@ -147,9 +149,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const inputFoto = document.getElementById('inputFoto');
   const imgPerfil = document.getElementById('fotoPerfil');
 
-    nomeDisplay.textContent = nomeInput.value;
-    emailDisplay.textContent = emailInput.value;
-    cpfDisplay.textContent = cpfInput.value;
   if (inputFoto) {
     inputFoto.addEventListener('change', async function () {
       const file = this.files[0];
@@ -184,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
           showToast(json.erro || 'Erro ao enviar foto.', 'erro');
         }
+
       } catch {
         showToast('Erro de conexão ao enviar foto.', 'erro');
       }
