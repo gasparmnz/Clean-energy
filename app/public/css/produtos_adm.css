@@ -362,7 +362,6 @@ img{
         font-size: 1.8rem;
     }
 
-    /* Cards de Resumo de Produtos - tablet */
     .products-summary {
         grid-template-columns: repeat(3, 1fr);
         gap: 16px;
@@ -390,7 +389,6 @@ img{
         font-size: 1.6rem;
     }
 
-    /* Controles de Produtos - tablet */
     .products-controls {
         flex-direction: column;
         align-items: stretch;
@@ -414,7 +412,6 @@ img{
         text-align: center;
     }
 
-    /* CARROSSEL PARA TABLET */
     .products-grid {
         display: flex;
         overflow-x: auto;
@@ -477,7 +474,6 @@ img{
         font-size: 0.95rem;
     }
 
-    /* Modal de Edição - tablet */
     .modal-content {
         width: 90%;
         max-width: 450px;
@@ -489,7 +485,6 @@ img{
     }
 }
 
-/* MOBILE (até 768px) - CARROSSEL MAIS COMPACTO */
 @media (max-width: 768px) {
     /* Ajustes para mobile */
     .admin-main {
@@ -504,7 +499,7 @@ img{
         font-size: 0.9rem;
     }
 
-    /* Cards de Resumo de Produtos - mobile */
+
     .products-summary {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -531,7 +526,6 @@ img{
         font-size: 1.5rem;
     }
 
-    /* Controles de Produtos - mobile */
     .filter-controls {
         flex-direction: column;
         gap: 8px;
@@ -541,7 +535,7 @@ img{
         width: 100%;
     }
 
-    /* CARROSSEL PARA MOBILE */
+
     .products-grid {
         gap: 16px;
         padding: 8px 4px 16px 4px;
@@ -597,7 +591,6 @@ img{
         font-size: 0.9rem;
     }
 
-    /* Modal de Edição - mobile */
     .modal-content {
         width: 95%;
         max-width: 95%;
@@ -625,8 +618,6 @@ img{
         font-size: 0.9rem;
     }
 }
-
-/* MOBILE PEQUENO (até 480px) */
 @media (max-width: 480px) {
     .product-card {
         flex: 0 0 90%;

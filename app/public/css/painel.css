@@ -37,19 +37,19 @@ body {
 
 main {
     display: block;
-    padding-top: 70px; /* espaço para header fixo */
+    padding-top: 70px;
     width: 100%;
     min-height: calc(100vh - 70px);
 }
 
 /* Sidebar */
 .sidebar {
-    width: 250px; /* Largura padrão da sidebar */
+    width: 250px;
     background-color: var(--background-light);
     padding: var(--spacing-lg) var(--spacing-md);
     box-shadow: var(--shadow-light);
     position: fixed;
-    height: calc(100% - 70px); /* Altura total menos o header */
+    height: calc(100% - 70px);
     overflow-y: auto;
     z-index: 900;
 }
@@ -104,7 +104,7 @@ main {
     flex-direction: column;
     gap: var(--spacing-xl);
     max-width: 100%;
-    margin-left: 0; /* <-- removido o margin-left global que causava o deslocamento */
+    margin-left: 0;
 }
 
 h1, h2 {
@@ -249,12 +249,9 @@ h2 {
 }
 
 /* Responsividade */
-
-/* Desktop (min-width: 1024px) */
 @media (min-width: 1024px) {
-    /* aplica deslocamento só em telas grandes */
     main {
-        padding-left: 250px; /* espaço para a sidebar fixa */
+        padding-left: 250px;
     }
 
     .sidebar {
@@ -267,7 +264,7 @@ h2 {
     }
 
     .content-area {
-        margin-left: 250px; /* só aqui, em desktop */
+        margin-left: 250px;
         max-width: calc(100% - 250px);
         width: 100%;
     }
@@ -284,13 +281,13 @@ h2 {
         flex-direction: column;
     }
     main {
-        flex-direction: column; /* Sidebar acima do conteúdo */
+        flex-direction: column;
         padding-left: 0;
-        align-items: center; /* Centraliza o conteúdo */
+        align-items: center;
     }
 
     .sidebar {
-        order: 0; /* Sidebar primeiro */
+        order: 0;
         position: relative;
         width: 100%;
         height: auto;
@@ -305,7 +302,7 @@ h2 {
         text-align: center;
         border-bottom: none;
         margin-bottom: var(--spacing-sm);
-        padding-top: var(--spacing-md); /* Espaço entre a foto e o header */
+        padding-top: var(--spacing-md);
     }
 
     .sidebar-nav ul {
@@ -331,14 +328,14 @@ h2 {
 
     .content-area {
         margin-left: 0;
-        max-width: 100%; /* Garante que ocupe a largura total */
+        max-width: 100%;
         padding: var(--spacing-lg);
     }
 
     .dashboard-overview,
     .recent-transactions {
         width: 100%;
-        max-width: 100%; /* Garante que ocupe a largura total */
+        max-width: 100%;
     }
 
     .metrics-cards {
@@ -358,11 +355,11 @@ h2 {
     main {
         flex-direction: column;
         padding-left: 0;
-        align-items: center; /* Centraliza o conteúdo */
+        align-items: center;
     }
 
     .sidebar {
-        order: 0; /* Sidebar primeiro */
+        order: 0;
         position: relative;
         width: 100%;
         height: auto;
@@ -377,7 +374,7 @@ h2 {
         text-align: center;
         border-bottom: none;
         margin-bottom: var(--spacing-sm);
-        padding-top: var(--spacing-md); /* Espaço entre a foto e o header */
+        padding-top: var(--spacing-md);
     }
 
     .sidebar-nav ul {
@@ -403,14 +400,14 @@ h2 {
 
     .content-area {
         margin-left: 0;
-        max-width: 100%; /* Garante que ocupe a largura total */
+        max-width: 100%;
         padding: var(--spacing-md);
     }
 
     .dashboard-overview,
     .recent-transactions {
         width: 100%;
-        max-width: 100%; /* Garante que ocupe a largura total */
+        max-width: 100%;
     }
 
     .metrics-cards {
@@ -457,14 +454,14 @@ h2 {
 /* Footer positioning for smaller screens */
 @media (max-width: 1023px) {
     footer {
-        order: 1; /* Coloca o footer após o main e a sidebar */
+        order: 1;
         width: 100%;
     }
     main {
-        order: 2; /* Coloca o main após o footer */
+        order: 2;
     }
     .sidebar {
-        order: 0; /* Coloca a sidebar antes do main e do footer */
+        order: 0;
     }
 }
 

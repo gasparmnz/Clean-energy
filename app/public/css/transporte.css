@@ -100,28 +100,19 @@ main{
   color: white;
 }
 
-/* camada escura por cima da imagem */
+
 .transport-hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5); /* transparência */
+  background: rgba(0, 0, 0, 0.5);
 }
 
-/* garante que o texto fique acima do overlay */
+
 .hero-content {
   position: relative;
   z-index: 1;
 }
-/*.transport-hero {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-  color: var(--background);
-  padding: var(--spacing-3xl) var(--spacing-xl);
-  text-align: center;
-  margin-bottom: var(--spacing-2xl);
-
-  
-}*/
 
 .hero-content {
   max-width: 900px;

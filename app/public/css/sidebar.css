@@ -88,24 +88,23 @@
   outline: none;
 }
 
-/* ...existing code... */
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
     bottom: 0;
     left: 0;
-    right: 0;                     /* garante que ocupe toda a largura da viewport */
+    right: 0;                    
     width: 100%;
     max-width: 100%;
-    box-sizing: border-box;       /* inclui padding na largura para evitar overflow */
+    box-sizing: border-box; 
     padding: calc(8px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-left, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-right, 0px));
     background-color: #fff;
     border-top: 2px solid var(--accent);
     box-shadow: 0 -6px 18px rgba(0,0,0,0.06);
     z-index: 1000;
-    margin: 0;                     /* remove margens que podem cortar */
-    border-radius: 12px 12px 0 0;  /* opcional: canto arredondado superior */
-    overflow: visible;             /* garante que conteúdo não seja cortado */
+    margin: 0; 
+    border-radius: 12px 12px 0 0; 
+    overflow: visible;
   }
 
   .user-info {
@@ -161,8 +160,6 @@
   }
 
 }
-/* ...existing code... */
-
 
 .has-bottom-nav {
   padding-bottom: 80px; 

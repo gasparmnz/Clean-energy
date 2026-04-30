@@ -77,7 +77,7 @@
         <section class="product-gallery" aria-labelledby="gallery-title">
           <h2 id="gallery-title" class="visually-hidden">Galeria do Produto</h2>
           <figure class="product-image-wrapper">
-            <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>" class="product-image" loading="lazy">
+            <img src="<%= produto.imagem && produto.imagem.startsWith('data:') ? produto.imagem : '/imagem/' + (produto.imagem || 'sem-foto.png') %>" alt="<%= produto.nome %>" class="product-image" loading="lazy">
           </figure>
         </section>
 
