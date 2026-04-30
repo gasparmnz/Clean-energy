@@ -44,17 +44,14 @@ router.get("/", async (req, res) => {
 // Lista usuários cadastrados
 router.get("/usuarios_cadastrados", async (req, res) => {
   try {
-    // Verifica se coluna status já existe
     const [cols] = await pool.query(
       "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Usuario' AND COLUMN_NAME = 'status'"
     );
 
     if (cols.length === 0) {
-      // Coluna não existe — cria agora
+
       await pool.query("ALTER TABLE Usuario ADD COLUMN status ENUM('active','suspended') NOT NULL DEFAULT 'active'");
     }
-
-    // Agora busca todos com status garantido
     const [todos] = await pool.query(
       "SELECT Usuario_ID AS id, Nome AS nome, Email AS email, Tipo, Data_Criacao, status FROM Usuario ORDER BY Data_Criacao DESC"
     );
@@ -120,7 +117,7 @@ router.get("/produtos_adm", async (req, res) => {
   }
 });
 
-// Alterna status do produto (active <-> suspended)
+// Alterna status do produto (ativo <-> suspendido)
 router.post("/produtos_adm/toggle_status", async (req, res) => {
   try {
     const { id, status } = req.body;
@@ -164,7 +161,6 @@ router.get("/detalhes_user", async (req, res) => {
     const idToQuery = numeric ? Number(numeric[1]) : Number(userId);
     if (Number.isNaN(idToQuery)) return res.render('pages/detalhes_user', { usuario: null });
 
-    // Garante coluna status
     const [colCheck] = await pool.query(
       "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Usuario' AND COLUMN_NAME = 'status'"
     );
@@ -193,7 +189,7 @@ router.get("/detalhes_user", async (req, res) => {
   }
 });
 
-// Excluir usuário — apaga tudo manualmente contornando FKs sem CASCADE
+// Excluir usuário
 router.post("/usuarios/excluir", async (req, res) => {
   let conn;
   try {
@@ -203,18 +199,18 @@ router.post("/usuarios/excluir", async (req, res) => {
     conn = await pool.getConnection();
     await conn.query("SET FOREIGN_KEY_CHECKS = 0");
 
-    // Dependências de compras
+
     await conn.query("DELETE ic FROM Item_Compra ic INNER JOIN Compra c ON ic.Compra_ID = c.Compra_ID WHERE c.Usuario_ID = ?", [id]);
     await conn.query("DELETE FROM Compra WHERE Usuario_ID = ?", [id]);
 
-    // Avaliações feitas pelo usuário
+
     await conn.query("DELETE FROM Avaliacao WHERE Usuario_ID = ?", [id]);
 
-    // Dados pessoais (PF ou PJ)
+
     await conn.query("DELETE FROM Pessoa_Fisica   WHERE Usuario_ID = ?", [id]);
     await conn.query("DELETE FROM Pessoa_Juridica WHERE Usuario_ID = ?", [id]);
 
-    // Por último o próprio usuário
+
     await conn.query("DELETE FROM Usuario WHERE Usuario_ID = ?", [id]);
 
     await conn.query("SET FOREIGN_KEY_CHECKS = 1");

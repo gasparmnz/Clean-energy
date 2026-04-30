@@ -1,3 +1,32 @@
+.btn-novo-produto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(135deg, #16a34a, #15803d);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  box-shadow: 0 2px 8px rgba(22,163,74,0.25);
+}
+
+.btn-novo-produto i {
+  font-size: 1.2rem;
+}
+
+.btn-novo-produto:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  color: #fff;
+}
+
 :root {
   --primary-color: #488D6A;
   --text-color: #222;
@@ -19,12 +48,9 @@ body {
   color: var(--text-color);
 }
 
-/* Layout principal */
 main {
-  display: flex;
-  flex-direction: row;
-  min-height: 100vh;
-  margin-top: 87px;
+  flex: 1;
+  min-width: 0;
 }
 
 .content {
@@ -270,9 +296,7 @@ main {
   transform: translateY(-2px);
 }
 
-/* =========================
-   Responsividade para Tablet
-   ========================= */
+
 @media (max-width: 1024px) {
   .modal-dialog {
     max-width: 90%;
@@ -284,9 +308,6 @@ main {
   }
 }
 
-/* =========================
-   Responsividade para Mobile
-   ========================= */
 @media (max-width: 768px) {
   main {
     flex-direction: column;

@@ -134,14 +134,13 @@ main {
   scrollbar-width: none;
 }
 
-/* --- Correção final: alinhar "Ver detalhes" na base --- */
 .produtos-scroll li {
   display: flex;
   flex-direction: column;
 }
 
 .produtos-scroll li article {
-  min-height: 310px; /* aumenta ou diminui conforme o conteúdo */
+  min-height: 310px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -161,9 +160,9 @@ figcaption {
   justify-content: space-between;
 }
 figcaption a {
-  margin-top: auto;       /* Empurra o link para o fim */
+  margin-top: auto;
   display: inline-block;
-  padding-top: 0.8rem;    /* Espaço entre o texto e o link */
+  padding-top: 0.8rem;
 }
 
 .produto-card figcaption p {
@@ -181,7 +180,6 @@ main section h2 {
   margin-bottom: 1rem;
 }
 
-/* Mobile - mantém o scrolling horizontal */
 @media (max-width: 1023px) {
   .produtos-scroll {
     display: flex;
@@ -206,7 +204,6 @@ main section h2 {
   }
 }
 
-/* Desktop - grid layout (apenas para telas maiores) */
 @media (min-width: 1024px) {
   .produtos-scroll {
     display: grid;
@@ -306,7 +303,6 @@ h2{
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Desktop - grid layout (apenas para telas maiores) */
 @media (min-width: 1024px) {
   .produtos-scroll {
     display: flex;
@@ -321,7 +317,7 @@ h2{
   }
 
   .produtos-scroll li {
-    width: 280px; /* Largura fixa para os cards */
+    width: 280px;
     flex: 0 0 auto;
     scroll-snap-align: start;
   }
@@ -335,7 +331,6 @@ h2{
   }
 }
 
-/* Remove as media queries anteriores para grid e adiciona estas: */
 @media (min-width: 1024px) and (max-width: 1599px) {
   .produtos-scroll {
     display: flex;
@@ -350,7 +345,7 @@ h2{
   }
 
   .produtos-scroll li {
-    width: 280px; /* Mesma largura dos cards grandes */
+    width: 280px;
     flex: 0 0 auto;
     scroll-snap-align: start;
   }
@@ -359,7 +354,7 @@ h2{
 @media (min-width: 1600px) {
   .produtos-scroll {
     display: grid;
-    grid-template-columns: repeat(6, 1fr); /* 6 produtos por linha em desktop grande */
+    grid-template-columns: repeat(6, 1fr);
     gap: 1.5rem;
     align-items: stretch;
     overflow: visible;
@@ -375,7 +370,6 @@ h2{
   }
 }
 
-/* Para tablets mantém o scrolling */
 @media (min-width: 768px) and (max-width: 1023px) {
   .produtos-scroll {
     display: flex;

@@ -74,7 +74,6 @@
 
   <script id="server-user-data" type="application/json"><%- JSON.stringify(typeof usuario !== 'undefined' ? usuario : null) %></script>
   <script>
-    // server-provided single user object (if route provided `usuario`)
 
     window.__SERVER_USER__ = JSON.parse(document.getElementById('server-user-data').textContent);
 
@@ -109,8 +108,6 @@
 
     function displayUserContent(userId) {
       const contentDiv = document.getElementById('userContent');
-
-      // Prefer server-provided single user object (from EJS). If present, map it to the UI shape.
       let user = null;
       if (window.__SERVER_USER__) {
         const s = window.__SERVER_USER__;

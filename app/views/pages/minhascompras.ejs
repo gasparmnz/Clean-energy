@@ -5,16 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minhas Compras</title>
   <link rel="stylesheet" href="/css/minhascompras.css">
+  <link rel="stylesheet" href="/css/sidebar_perfil.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
   <%- include('../partial/header.ejs') %>
 
-  <main class="page-layout">
-    <%- include('../partial/sidebar.ejs') %>
+  <div class="perfil-layout">
+    <% const activePage = 'compras'; %>
+    <%- include('../partial/sidebar_perfil.ejs') %>
 
-    <section class="content">
+    <main class="perfil-layout__content">
+    <section class="content" style="padding:0;">
       <nav class="back-navigation" aria-label="Navegação de retorno">
         <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
           <i class='bx bx-arrow-back'></i>
@@ -130,7 +133,11 @@
     </section>
   </main>
 
-  <!-- MODAL PAGAMENTO (desktop-friendly, integrado) -->
+    </section>
+    </main>
+  </div>
+
+  <!-- MODAL PAGAMENTO -->
   <section class="modal fade" id="pagamentoModal" tabindex="-1" aria-labelledby="pagamentoModalLabel" aria-hidden="true">
     <section class="modal-dialog modal-dialog-centered modal-xl">
       <section class="modal-content">
@@ -352,7 +359,6 @@
 
   const toast = new bootstrap.Toast(document.getElementById('toastAvaliacao'));
 
-  // ---------- Attach handlers básicos (cancelar, detalhes, avaliar) ----------
   function cancelarHandler() {
     cardParaCancelar = this.closest('.produto-card');
     cancelarModal.show();
@@ -493,11 +499,11 @@
         return;
       }
 
-      // limpar mensagem de erro
+
       document.getElementById('mensagemPagamentoErro').style.display = 'none';
       document.getElementById('mensagemPagamentoErro').textContent = '';
 
-      // Mover card para "Em andamento"
+
       const card = produtoSelecionadoParaPagamento;
       const emAndamentoGrid = document.querySelector('#emAndamento .produtos-grid');
 
@@ -533,7 +539,6 @@
       alert('Pagamento simulado criado com sucesso! O pedido agora está "Em andamento".');
 
     } else {
-      // Pix ou Boleto não concluem
       document.getElementById('mensagemPagamentoErro').style.display = 'block';
       document.getElementById('mensagemPagamentoErro').textContent = 'Pagamento ainda não confirmado.';
       return;
@@ -631,28 +636,27 @@ document.querySelectorAll('.confirmar-coleta').forEach(btn => {
 
 document.getElementById('confirmarColetaBtn').addEventListener('click', function() {
   if (cardParaConfirmarColeta) {
-    // Clona o card para manter a estrutura original
+
     const cardClone = cardParaConfirmarColeta.cloneNode(true);
-    
-    // Remove o botão "Confirmar Coleta"
+
     const confirmarBtn = cardClone.querySelector('.confirmar-coleta');
     if (confirmarBtn) {
       confirmarBtn.remove();
     }
     
-    // Remove o status de andamento se existir
+
     const statusAndamento = cardClone.querySelector('.andamento');
     if (statusAndamento) {
       statusAndamento.remove();
     }
     
-    // Remove os botões de ação antigos
+
     const acoesAntigas = cardClone.querySelector('.acoes');
     if (acoesAntigas) {
       acoesAntigas.innerHTML = '';
     }
     
-    // Adiciona os botões de "Concluídos"
+  
     const acoes = cardClone.querySelector('.acoes');
     if (acoes) {
       acoes.innerHTML = `
@@ -661,21 +665,20 @@ document.getElementById('confirmarColetaBtn').addEventListener('click', function
       `;
     }
     
-    // Adiciona o status "Concluído"
     const statusConcluido = document.createElement('p');
     statusConcluido.classList.add('concluido');
     statusConcluido.textContent = 'Concluído';
     cardClone.appendChild(statusConcluido);
     
-    // Adiciona os event listeners aos novos botões
+
     cardClone.querySelectorAll('.btn-detalhes').forEach(b => b.addEventListener('click', detalhesHandler));
     cardClone.querySelectorAll('.btn-avaliar').forEach(b => b.addEventListener('click', avaliarHandler));
     
-    // Adiciona o card à aba "Concluídos"
+
     const concluidosGrid = document.querySelector('#concluidos .produtos-grid');
     concluidosGrid.appendChild(cardClone);
     
-    // Remove o card original da aba "Em andamento"
+
     cardParaConfirmarColeta.remove();
   }
   coletaModal.hide();

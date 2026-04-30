@@ -141,7 +141,9 @@ body {
     border-radius: 0;
     cursor: pointer;
     transition: 0.3s;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: center;
+    background: #f0f0f0;
     display: block;
     flex-shrink: 0;
 }

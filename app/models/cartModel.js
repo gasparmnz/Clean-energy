@@ -4,29 +4,23 @@ const cartModel = {
   // Adiciona um item ao carrinho do usuário
   addItem: async (userId, item) => {
     try {
-      // Verifica se já existe um carrinho para o usuário
       let [cartRows] = await pool.query("SELECT idCarrinho, items FROM carrinho WHERE userId = ?", [userId]);
       let cartId, items;
 
       if (cartRows.length === 0) {
-        // Cria novo carrinho
         items = [item];
         const [result] = await pool.query("INSERT INTO carrinho (userId, items) VALUES (?, ?)", [userId, JSON.stringify(items)]);
         cartId = result.insertId;
       } else {
-        // Atualiza carrinho existente
         cartId = cartRows[0].idCarrinho;
         const existingItems = cartRows[0].items;
-        // Verificar se já é um array ou precisa ser parseado
         if (Array.isArray(existingItems)) {
           items = existingItems;
         } else if (typeof existingItems === 'string') {
           items = JSON.parse(existingItems || '[]');
         } else {
-          // Se for um objeto, tentar converter
           items = Array.isArray(existingItems) ? existingItems : [existingItems];
         }
-        // Verifica se o produto já está no carrinho, se sim, aumenta quantidade
         const existingIndex = items.findIndex(i => i.productId === item.productId);
         if (existingIndex >= 0) {
           items[existingIndex].quantidade += item.quantidade;
@@ -69,14 +63,14 @@ const cartModel = {
       if (rows.length === 0) return;
       const cartId = rows[0].idCarrinho;
       const existingItems = rows[0].items;
-      // Verificar se já é um array ou precisa ser parseado
+
       let items;
       if (Array.isArray(existingItems)) {
         items = existingItems;
       } else if (typeof existingItems === 'string') {
         items = JSON.parse(existingItems || '[]');
       } else {
-        // Se for um objeto, tentar converter
+
         items = Array.isArray(existingItems) ? existingItems : [existingItems];
       }
       if (index >= 0 && index < items.length) {
