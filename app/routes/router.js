@@ -7,15 +7,18 @@ const bcrypt = require('bcryptjs');
 const pool = require("../../config/pool_conexoes");
 const produtosModel = require("../models/models");
 const cartModel = require("../models/cartModel");
-
-const storage = multer.diskStorage({
+const storage = multer.memoryStorage();
+const _diskStorage_unused = multer.diskStorage({
   destination: path.join(__dirname, '../public/imagem'),
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
   }
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }
+});
 var { validarCPF } = require("../helpers/validacao");
 
 async function getProdutos() {
@@ -89,7 +92,6 @@ router.post("/upgrade_vendedor",
   body("company_name").trim().notEmpty().withMessage("*Campo obrigatório!").isLength({ min:3 }).withMessage("*Nome da empresa muito curto"),
   body("cnpj").notEmpty().withMessage("*Campo obrigatório!").custom((value) => { if (value.replace(/\D/g,'').length !== 14) throw new Error("*O CNPJ deve conter 14 números!"); return true; }),
   async (req, res) => {
-    // Verifica se é comprador
     if (req.session.perfil !== 'comprador') {
       return res.redirect('/?erro=acesso_restrito');
     }
@@ -127,13 +129,11 @@ router.post("/upgrade_vendedor",
         [`Empresa: ${companyName}`, req.session.userId]
       );
       
-      // Adiciona registro em Pessoa_Juridica
       await pool.query("INSERT INTO Pessoa_Juridica (Usuario_ID, CNPJ) VALUES (?, ?)", [req.session.userId, cnpjNumeros]);
       
-      // Atualiza sessão — email de login permanece o original (req.session.emailUsuario inalterado)
+
       req.session.perfil = 'vendedor';
       req.session.tipo = 'PJ';
-      // req.session.nomeUsuario e req.session.emailUsuario permanecem com os dados originais de cadastro
 
       return res.redirect('/perfil');
     } catch (err) {
@@ -144,7 +144,7 @@ router.post("/upgrade_vendedor",
 );
 router.get("/minhascompras", requireLogin, (req, res) => res.render("pages/minhascompras"));
 
-// ── Atualizar perfil ──────────────────────────────────────────
+// ── Atualizar perfil
 router.post("/perfil/atualizar", requireLogin, async (req, res) => {
   const { nome, biografia } = req.body;
   if (!nome || nome.trim().length < 2) {
@@ -163,7 +163,7 @@ router.post("/perfil/atualizar", requireLogin, async (req, res) => {
   }
 });
 
-// ── Upload de foto de perfil ──────────────────────────────────
+// ── Upload de foto de perfil
 const uploadFoto = multer({
   storage: multer.diskStorage({
     destination: path.join(__dirname, '../public/imagem'),
@@ -276,7 +276,7 @@ router.get("/item/:id", async function (req, res) {
     const produto = await produtosModel.findById(req.params.id);
     if (!produto) return res.status(404).send("Produto não encontrado");
 
-    // Busca avaliações reais do banco com JOIN para pegar nome do usuário
+
     const [avaliacoes] = await pool.query(
       `SELECT a.Avaliacao_ID, a.Nota, a.Comentario, a.criado_em,
               COALESCE(u.Nome, a.nome_usuario, 'Usuário') AS nome_usuario
@@ -303,7 +303,7 @@ router.get("/item/:id", async function (req, res) {
   }
 });
 
-// ── POST avaliação ────────────────────────────────────────────
+// ── POST avaliação
 router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
   const produtoId = req.params.id;
   const { nota, comentario } = req.body;
@@ -314,20 +314,20 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
   }
 
   try {
-    // Verifica se usuário já avaliou este produto
+
     const [jaAvaliou] = await pool.query(
       "SELECT Avaliacao_ID FROM Avaliacao WHERE Usuario_ID = ? AND Produto_ID = ?",
       [req.session.userId, produtoId]
     );
 
     if (jaAvaliou.length > 0) {
-      // Atualiza avaliação existente
+
       await pool.query(
         "UPDATE Avaliacao SET Nota = ?, Comentario = ?, criado_em = NOW() WHERE Usuario_ID = ? AND Produto_ID = ?",
         [notaNum, comentario || '', req.session.userId, produtoId]
       );
     } else {
-      // Nova avaliação
+
       await pool.query(
         "INSERT INTO Avaliacao (Nota, Comentario, Usuario_ID, Produto_ID, nome_usuario, criado_em) VALUES (?, ?, ?, ?, ?, NOW())",
         [notaNum, comentario || '', req.session.userId, produtoId, req.session.nomeUsuario]
@@ -341,13 +341,19 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
   }
 });
 
-/* FIX DO PREÇO: limpa máscara antes de parsear */
 router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), async (req, res) => {
   const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
-  const imagem = req.file ? req.file.filename : 'sem-foto.png';
   const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
 
-  // Remove R$, espaços, pontos de milhar; troca vírgula por ponto
+  let imagemData = null;
+  let imagemFilename = 'sem-foto.png';
+  if (req.file) {
+    const mime = req.file.mimetype;
+    const base64 = req.file.buffer.toString('base64');
+    imagemData = `data:${mime};base64,${base64}`;
+    imagemFilename = imagemData;
+  }
+
   let precoLimpo = (preco || '0').toString().trim()
     .replace(/R\$\s*/g, '')
     .replace(/\s/g, '')
@@ -355,7 +361,7 @@ router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), asyn
     .replace(',', '.');
   const precoNumerico = parseFloat(precoLimpo) || 0;
 
-  // Limpa quantidade: remove 't', espaços; troca vírgula por ponto
+
   let quantidadeLimpa = (quantidade || '0').toString().trim()
     .replace(/ t$/i, '')
     .replace(/\s/g, '')
@@ -363,7 +369,7 @@ router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), asyn
   const quantidadeNumerica = parseFloat(quantidadeLimpa) || 0;
 
   try {
-    await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem, estado, usuario_id: req.session.userId });
+    await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem: imagemFilename, estado, usuario_id: req.session.userId });
     res.redirect('/listaprodutos');
   } catch (err) {
     console.error('Erro ao cadastrar produto:', err);
@@ -493,6 +499,7 @@ router.post("/login", async (req, res) => {
     req.session.emailUsuario = usuario.Email;
     req.session.perfil = usuario.Tipo === 'PJ' ? 'vendedor' : 'comprador';
     req.session.tipo = usuario.Tipo;
+    req.session.fotoUsuario = usuario.foto || null;
     await pool.query("UPDATE Usuario SET Ultimo_Login = NOW() WHERE Usuario_ID = ?", [usuario.Usuario_ID]);
     return res.redirect("/perfil");
   } catch (err) {

@@ -57,7 +57,7 @@ router.post('/cadastrar_produto', upload.single('imagem'), async (req, res) => {
   }
 });
 
-// Lista produtos para clientes — só produtos com status = 'active'
+// Lista produtos para clientes
 router.get('/produtos', async (req, res) => {
   try {
     const produtos = await produtosModel.findAll({ apenasAtivos: true });
@@ -68,7 +68,7 @@ router.get('/produtos', async (req, res) => {
   }
 });
 
-// Detalhe do item — bloqueia acesso a produto suspenso
+// Detalhe do item
 router.get('/item/:id', async (req, res) => {
   try {
     const produto = await produtosModel.findById(req.params.id);

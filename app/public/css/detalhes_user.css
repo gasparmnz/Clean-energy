@@ -29,7 +29,7 @@ body {
 .admin-main {
   flex-grow: 1;
   padding: 30px;
-  overflow-x: hidden; /* Evita overflow horizontal */
+  overflow-x: hidden;
   overflow-y: auto;
   margin-top: 87px;
 }
@@ -85,8 +85,8 @@ body {
   padding: 30px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   margin-bottom: 30px;
-  width: 100%; /* Garante que o card ocupe toda a largura disponível */
-  max-width: 100%; /* Garante que o card não ultrapasse a largura do pai */
+  width: 100%;
+  max-width: 100%;
 }
 
 .profile-header {
@@ -102,8 +102,8 @@ body {
   display: flex;
   gap: 20px;
   align-items: flex-start;
-  flex-wrap: wrap; /* Adicionado para permitir que os itens quebrem a linha */
-  justify-content: center; /* Centraliza itens em telas pequenas */
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .profile-avatar {
@@ -187,8 +187,8 @@ body {
   display: flex;
   gap: 12px;
   margin-top: 15px;
-  flex-wrap: wrap; /* Adicionado para permitir que os botões quebrem a linha */
-  justify-content: center; /* Centraliza botões em telas pequenas */
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .action-btn-small {
@@ -582,7 +582,7 @@ body.modal-open {
   color: #9ca3af;
 }
 
-/* Fix sidebar admin text weight */
+
 .sidebar-header h2,
 .sidebar-header p {
   font-weight: 700 !important;
@@ -641,7 +641,6 @@ body.modal-open {
 
 /* ========== RESPONSIVIDADE CORRIGIDA ========== */
 
-/* Tablet (768px - 1024px) */
 @media (max-width: 1024px) {
   .admin-main {
     padding: 20px;
@@ -649,18 +648,18 @@ body.modal-open {
   
   .profile-header {
     flex-direction: column;
-    align-items: center; /* Centraliza o cabeçalho do perfil */
+    align-items: center; 
     gap: 20px;
     text-align: center;
   }
   
   .profile-rating {
-    text-align: center; /* Centraliza a avaliação */
-    align-self: center; /* Centraliza o item de avaliação */
+    text-align: center;
+    align-self: center;
   }
   
   .rating-display {
-    justify-content: center; /* Centraliza as estrelas */
+    justify-content: center;
   }
   
   .products-container {
@@ -690,7 +689,6 @@ body.modal-open {
   }
 }
 
-/* Mobile (768px para baixo) */
 @media (max-width: 768px) {
   .admin-container {
     flex-direction: column;
@@ -711,7 +709,7 @@ body.modal-open {
     align-items: center;
     text-align: center;
     gap: 15px;
-    width: 100%; /* Garante que o profile-info ocupe toda a largura */
+    width: 100%;
   }
   
   .profile-actions {
@@ -774,7 +772,6 @@ body.modal-open {
   }
 }
 
-/* Mobile Pequeno (480px para baixo) */
 @media (max-width: 480px) {
   .admin-main {
     padding: 10px;
@@ -843,7 +840,6 @@ body.modal-open {
   }
 }
 
-/* Ajustes para orientação paisagem em mobile */
 @media (max-height: 500px) and (orientation: landscape) {
   .avaliacoes-content {
     max-height: 70vh;

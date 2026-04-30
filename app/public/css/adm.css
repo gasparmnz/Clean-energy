@@ -1,4 +1,3 @@
-/* Variáveis CSS */
 :root {
     --primary-color: #1b814e;
     --secondary-color: #28a745;
@@ -10,7 +9,6 @@
     --shadow-medium: rgba(0, 0, 0, 0.1);
 }
 
-/* Reset e Tipografia */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -24,7 +22,6 @@ body {
     line-height: 1.6;
 }
 
-/* Layout geral com sidebar */
 .admin-container {
     display: flex;
     min-height: 100vh;
@@ -67,18 +64,18 @@ body {
     left: 0;
     top: 0;
     bottom: 0;
-    margin: 87px 0 0 0; /* para ficar abaixo do header */
+    margin: 87px 0 0 0;
 }
 
 .admin-main {
-    margin-left: 250px; /* espaço da sidebar */
+    margin-left: 250px;
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 30px;
     padding: 30px;
-    margin-top: 87px; /* distância do header */
-    width: calc(100% - 250px); /* ocupa o resto da tela */
+    margin-top: 87px;
+    width: calc(100% - 250px);
     box-sizing: border-box;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
@@ -154,7 +151,7 @@ body {
 .transactions-table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 700px; /* Garante que a tabela não fique muito estreita em telas pequenas */
+    min-width: 700px;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -190,18 +187,18 @@ body {
 }
 
 .status-concluido {
-    background-color: #28a745; /* Verde */
+    background-color: #28a745; 
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .status-pendente {
-    background-color: #ffc107; /* Amarelo */
+    background-color: #ffc107; 
     color: #333;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .status-andamento {
-    background-color: #17a2b8; /* Azul */
+    background-color: #17a2b8; 
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -236,48 +233,45 @@ body {
 }
 
 /* Responsividade */
-
-/* Mobile (max-width: 767px) */
-/* Estilos para exibir produtos lado a lado em telas menores */
 @media (max-width: 767px) {
-    /* Ajustes para as seções de transações */
+
     .transactions-section .table-responsive {
-        overflow-x: hidden; /* Esconde a barra de rolagem horizontal se houver */
+        overflow-x: hidden;
     }
 
     .transactions-table {
-        display: grid; /* Usa grid para organizar os itens */
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Colunas flexíveis */
-        gap: 20px; /* Espaçamento entre os 'cards' de produto */
-        min-width: unset; /* Remove o min-width para mobile */
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px; 
+        min-width: unset;
     }
 
     .transactions-table thead {
-        display: none; /* Esconde o cabeçalho da tabela em mobile */
+        display: none; 
     }
 
     .transactions-table tbody {
-        display: contents; /* Permite que os tr's sejam itens do grid */
+        display: contents; 
     }
 
     .transactions-table tr {
-        display: flex; /* Cada linha se torna um flex container */
-        flex-direction: column; /* Itens da linha empilhados verticalmente */
+        display: flex;
+        flex-direction: column; 
         border: 1px solid var(--border-color);
         border-radius: 8px;
         box-shadow: 0 2px 8px var(--shadow-light);
         padding: 15px;
-        margin-bottom: 0; /* Remove margem inferior, pois o gap do grid já cuida disso */
+        margin-bottom: 0;
         background-color: var(--card-bg);
     }
 
     .transactions-table td {
-        display: flex; /* Cada célula se torna um flex container */
-        justify-content: space-between; /* Alinha label e valor */
-        padding: 5px 0; /* Padding vertical para as células */
-        text-align: left; /* Alinha o texto à esquerda */
-        border-bottom: none; /* Remove borda inferior das células */
-        position: static; /* Remove posicionamento absoluto */
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0; 
+        text-align: left; 
+        border-bottom: none; 
+        position: static; 
         width: 100%;
     }
 
@@ -285,12 +279,12 @@ body {
         content: attr(data-label);
         font-weight: 600;
         color: var(--text-color);
-        flex-shrink: 0; /* Impede que o label encolha */
-        margin-right: 10px; /* Espaçamento entre label e valor */
+        flex-shrink: 0;
+        margin-right: 10px; /
     }
 
     .transactions-table td:last-child {
-        border-bottom: none; /* Garante que a última célula não tenha borda */
+        border-bottom: none; 
         padding-bottom: 0;
     }
 
@@ -302,19 +296,15 @@ body {
         font-size: 1rem;
     }
 
-    /* Ajuste para os botões de ação dentro do td */
     .transactions-table td[data-label="Ações"] {
-        justify-content: flex-start; /* Alinha os botões à esquerda */
-        gap: 10px; /* Espaçamento entre os botões */
+        justify-content: flex-start;
+        gap: 10px;
         padding-top: 10px;
-        border-top: 1px solid var(--border-color); /* Separador visual */
+        border-top: 1px solid var(--border-color);
         margin-top: 10px;
     }
 }
 
-
-
-/* Tablet (min-width: 768px and max-width: 1023px) */
 @media (min-width: 768px) and (max-width: 1023px) {
    
    
@@ -354,7 +344,7 @@ body {
     }
 
     .transactions-table {
-        min-width: 600px; /* Ajusta o min-width para tablet */
+        min-width: 600px;
     }
 
     .transactions-table th,
@@ -370,8 +360,6 @@ body {
         font-size: 1.1rem;
     }
 }
-
-/* Desktop (min-width: 1024px) */
 @media (min-width: 1024px) {
     .admin-main {
         padding: 30px;
@@ -387,6 +375,6 @@ body {
     }
 
     .dashboard-summary .summary-cards {
-        grid-template-columns: repeat(4, 1fr); /* 4 colunas para desktop */
+        grid-template-columns: repeat(4, 1fr);
     }
 }

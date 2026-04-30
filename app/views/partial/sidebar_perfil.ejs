@@ -1,0 +1,111 @@
+<link rel="stylesheet" href="/css/sidebar_perfil.css">
+
+<aside class="perfil-aside" aria-label="Menu do perfil">
+  <!-- Avatar + info do usuário -->
+  <header class="perfil-aside__header">
+    <figure class="perfil-aside__avatar-wrap">
+      <img
+        src="/imagem/<%= usuario && usuario.foto ? usuario.foto : 'avatar.png' %>"
+        alt="Foto do usuário"
+        class="perfil-aside__avatar"
+      >
+    </figure>
+    <div class="perfil-aside__user-info">
+      <strong class="perfil-aside__name">
+        <%= usuario ? (usuario.Nome || usuario.nome || 'Usuário') : 'Usuário' %>
+      </strong>
+      <% if (usuario) { %>
+        <span class="perfil-aside__badge <%= (usuario.Tipo || usuario.tipo) === 'PJ' ? 'badge--vendedor' : 'badge--comprador' %>">
+          <%= (usuario.Tipo || usuario.tipo) === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
+        </span>
+      <% } %>
+    </div>
+  </header>
+
+  <!-- Divisor -->
+  <hr class="perfil-aside__divider">
+
+  <!-- Navegação principal -->
+  <nav class="perfil-aside__nav" aria-label="Navegação do perfil">
+
+    <p class="perfil-aside__section-label">Minha Conta</p>
+
+    <ul class="perfil-aside__list">
+      <li>
+        <a href="/perfil"
+           class="perfil-aside__link <% if (typeof activePage !== 'undefined' && activePage === 'perfil') { %>is-active<% } %>">
+          <span class="perfil-aside__icon" style="background:#16a34a;">
+            <i class='bx bx-user'></i>
+          </span>
+          <span>Ver Perfil</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/minhascompras"
+           class="perfil-aside__link <% if (typeof activePage !== 'undefined' && activePage === 'compras') { %>is-active<% } %>">
+          <span class="perfil-aside__icon" style="background:#0891b2;">
+            <i class='bx bx-shopping-bag'></i>
+          </span>
+          <span>Minhas Compras</span>
+        </a>
+      </li>
+
+      <% if (typeof usuario !== 'undefined' && usuario && (usuario.Tipo === 'PJ' || usuario.tipo === 'PJ')) { %>
+      <li>
+        <a href="/listaprodutos"
+           class="perfil-aside__link <% if (typeof activePage !== 'undefined' && activePage === 'produtos') { %>is-active<% } %>">
+          <span class="perfil-aside__icon" style="background:#1565c0;">
+            <i class='bx bx-list-ul'></i>
+          </span>
+          <span>Meus Produtos</span>
+        </a>
+      </li>
+
+      <li>
+        <a href="/cadastrar_produto"
+           class="perfil-aside__link <% if (typeof activePage !== 'undefined' && activePage === 'cadastrar') { %>is-active<% } %>">
+          <span class="perfil-aside__icon" style="background:#16a34a;">
+            <i class='bx bx-plus-circle'></i>
+          </span>
+          <span>Cadastrar Produto</span>
+        </a>
+      </li>
+      <% } %>
+    </ul>
+
+    <p class="perfil-aside__section-label" style="margin-top:1.2rem;">Configurações</p>
+
+    <ul class="perfil-aside__list">
+      <li>
+        <a href="/perfil#configuracoes"
+           class="perfil-aside__link <% if (typeof activePage !== 'undefined' && activePage === 'configuracoes') { %>is-active<% } %>">
+          <span class="perfil-aside__icon" style="background:#7c3aed;">
+            <i class='bx bx-cog'></i>
+          </span>
+          <span>Configurações</span>
+        </a>
+      </li>
+
+      <% if (typeof usuario !== 'undefined' && usuario && (usuario.Tipo === 'PF' || usuario.tipo === 'PF')) { %>
+      <li>
+        <a href="/upgrade_vendedor" class="perfil-aside__link">
+          <span class="perfil-aside__icon" style="background:#ea580c;">
+            <i class='bx bx-store'></i>
+          </span>
+          <span>Tornar-se Vendedor</span>
+        </a>
+      </li>
+      <% } %>
+
+      <li>
+        <a href="/logout" class="perfil-aside__link perfil-aside__link--danger">
+          <span class="perfil-aside__icon" style="background:#dc2626;">
+            <i class='bx bx-log-out'></i>
+          </span>
+          <span>Sair da Conta</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>

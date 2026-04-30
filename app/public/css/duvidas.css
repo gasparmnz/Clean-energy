@@ -378,7 +378,7 @@
   padding-top: 0;
   padding-bottom: 0;;
   padding: 1rem 1.25rem;
-  background-color: #f0f0f0; /* leve tom para diferenciar, combine com suas variáveis se quiser */
+  background-color: #f0f0f0;
   
   border-radius: 0.5rem;
   box-shadow: var(--shadow-sm);
@@ -397,13 +397,13 @@
 
 /* Quando estiver visível (removendo hidden no JS) */
 .info-extra.show {
- max-height: 500px; /* suficiente para o texto */
+ max-height: 500px;
   opacity: 1;
   padding-top: 1rem;
   padding-bottom: 1rem;
   
-  border: 2px solid var(--primary-color); /* borda mais visível */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12); /* sombra mais evidente */
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 
 }
 

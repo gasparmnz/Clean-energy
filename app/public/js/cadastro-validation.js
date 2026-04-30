@@ -398,7 +398,6 @@ class FormValidator {
 
   // Utilitários
   isValidCPF(cpf) {
-    // Algoritmo de validação do CPF
     let sum = 0;
     let remainder;
 
@@ -423,7 +422,6 @@ class FormValidator {
   }
 
   isValidCNPJ(cnpj) {
-    // Algoritmo de validação do CNPJ
     const weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
     const weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
@@ -550,8 +548,6 @@ class FormValidator {
     };
   }
 }
-
-// Função para alternar entre formulários (já existente no HTML)
 function mostrarFormulario(tipo) {
   const formPessoaFisica = document.getElementById('formPessoaFisica');
   const formEmpresa = document.getElementById('formEmpresa');
@@ -575,10 +571,8 @@ function mostrarFormulario(tipo) {
   }
 }
 
-// Inicializar validação
 let validator;
 
-// Aguardar o DOM estar carregado
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', function() {
     validator = new FormValidator();
@@ -592,7 +586,7 @@ if (document.readyState === 'loading') {
 }
 
 function setupAccessibility() {
-  // Melhorar navegação por teclado
+
   const inputs = document.querySelectorAll('.form-input');
   inputs.forEach((input, index) => {
     input.addEventListener('keydown', (e) => {
@@ -611,7 +605,6 @@ function setupAccessibility() {
     });
   });
 
-  // Anunciar mudanças para leitores de tela
   const errorMessages = document.querySelectorAll('.error-message');
   errorMessages.forEach(message => {
     const observer = new MutationObserver((mutations) => {
@@ -633,13 +626,13 @@ function setupAccessibility() {
 }
 
 function setupAnimations() {
-  // Adicionar animações de entrada escalonadas
+
   const inputGroups = document.querySelectorAll('.input-group');
   inputGroups.forEach((group, index) => {
     group.style.animationDelay = `${index * 0.1}s`;
   });
 
-  // Animação de foco nos inputs
+
   const inputs = document.querySelectorAll('.form-input');
   inputs.forEach(input => {
     input.addEventListener('focus', () => {
@@ -658,7 +651,7 @@ function setupAnimations() {
   });
 }
 
-// Exportar para uso em outros scripts se necessário
+
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = FormValidator;
 }

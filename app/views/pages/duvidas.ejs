@@ -312,16 +312,12 @@
           }
         });
       });
-
-      // Funções de acessibilidade + animação
       function expand(panel, button) {
-        panel.hidden = false; // remove hidden para acessibilidade
-        // força reflow para garantir transição
+        panel.hidden = false;
         panel.offsetHeight;
         panel.classList.add('show');
         button.setAttribute('aria-expanded', 'true');
 
-        // opcional: rolar levemente para mostrar o conteúdo recém aberto (bom em telas pequenas)
         const rect = panel.getBoundingClientRect();
         if (rect.bottom > (window.innerHeight || document.documentElement.clientHeight)) {
           panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -332,9 +328,8 @@
         panel.classList.remove('show');
         button.setAttribute('aria-expanded', 'false');
 
-        // após a transição terminar, adiciona hidden de novo
         const onTransitionEnd = (e) => {
-          // garantir que seja a transição do max-height/opacity
+
           if (e.propertyName !== 'max-height') return;
           panel.hidden = true;
           panel.removeEventListener('transitionend', onTransitionEnd);
@@ -342,13 +337,13 @@
         panel.addEventListener('transitionend', onTransitionEnd);
       }
 
-      // Adiciona funcionalidade para as abas
+
       const tabs = document.querySelectorAll('[role="tab"]');
       const panels = document.querySelectorAll('.content-panel');
 
       tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-          // Remove a classe active de todas as abas e painéis
+
           tabs.forEach(t => {
             t.setAttribute('aria-selected', 'false');
           });
@@ -356,7 +351,6 @@
             p.classList.remove('active');
           });
 
-          // Adiciona a classe active à aba clicada e ao painel correspondente
           tab.setAttribute('aria-selected', 'true');
           const panelId = tab.getAttribute('aria-controls');
           document.getElementById(panelId).classList.add('active');

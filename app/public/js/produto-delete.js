@@ -1,22 +1,15 @@
-/**
- * Script para gerenciar exclusão de produtos
- * Funciona em listaprodutos.ejs, produtos.ejs e produtoscomconta.ejs
- */
-
 document.addEventListener('DOMContentLoaded', function() {
-  // Adicionar event listener a todos os botões de excluir
+
   const botoesExcluir = document.querySelectorAll('.btn-excluir');
   
   botoesExcluir.forEach(botao => {
     botao.addEventListener('click', function(e) {
       e.preventDefault();
       
-      // Obter o card do produto
+
       const produtoCard = this.closest('.produto-card');
       if (!produtoCard) return;
       
-      // Obter o id do produto (pode estar em um atributo data ou precisa extrair)
-      // Vamos procurar por um atributo data-id ou obter a URL do link de detalhes
       let produtoId = produtoCard.getAttribute('data-id');
       
       if (!produtoId) {
@@ -57,19 +50,18 @@ function excluirProduto(cardElement, produtoId) {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      // Animar a remoção do card
       cardElement.style.transition = 'all 0.3s ease-out';
       cardElement.style.opacity = '0';
       cardElement.style.transform = 'scale(0.95)';
       
-      // Remover após a animação
+
       setTimeout(() => {
         cardElement.remove();
         
-        // Verificar se não há mais produtos
+
         const container = cardElement.closest('.produtos-grid') || cardElement.closest('.produtos-scroll');
         if (container && container.querySelectorAll('.produto-card').length === 0) {
-          // Se é a primeira seção que ficou vazia, pode adicionar mensagem
+
           const pai = container.closest('section');
           if (pai) {
             const h2 = pai.querySelector('h2');
@@ -84,7 +76,7 @@ function excluirProduto(cardElement, produtoId) {
           }
         }
         
-        // Mostrar notificação de sucesso
+
         mostrarNotificacao('✓ Produto deletado com sucesso!', 'success');
       }, 300);
     } else {
@@ -102,7 +94,7 @@ function excluirProduto(cardElement, produtoId) {
 }
 
 function mostrarNotificacao(mensagem, tipo) {
-  // Criar elemento de notificação
+
   const notificacao = document.createElement('div');
   notificacao.className = `notificacao notificacao-${tipo}`;
   notificacao.textContent = mensagem;
@@ -122,14 +114,13 @@ function mostrarNotificacao(mensagem, tipo) {
   
   document.body.appendChild(notificacao);
   
-  // Remover após 3 segundos
+
   setTimeout(() => {
     notificacao.style.animation = 'slideOutRight 0.3s ease-out';
     setTimeout(() => notificacao.remove(), 300);
   }, 3000);
 }
 
-// Adicionar keyframe de animação ao style
 if (!document.getElementById('produto-delete-styles')) {
   const style = document.createElement('style');
   style.id = 'produto-delete-styles';
