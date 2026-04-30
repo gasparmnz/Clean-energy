@@ -1,8 +1,3 @@
-/* Usuários Cadastrados - Estilos Específicos */
-/* IMPORTANTE: Este arquivo NÃO deve redefinir .admin-container ou .admin-main */
-/* Essas definições estão em adm.css e devem permanecer intocáveis */
-
-/* Avatar Circle na Sidebar */
 .avatar-circle {
     width: 60px;
     height: 60px;
@@ -41,7 +36,6 @@
   vertical-align: middle;
 }
   
-  /* Active State na Sidebar */
   .sidebar-nav a.active {
     background: var(--accent);
     color: #ffffff;
@@ -51,8 +45,7 @@
     background: var(--accent-dark);
     color: #ffffff;
   }
-  
-  /* Page Header */
+
   .page-header {
     margin-bottom: 30px;
   }
@@ -71,8 +64,7 @@
     font-weight: 400;
     text-align: center;
   }
-  
-  /* Users Summary Cards */
+ 
   .users-summary {
     margin-bottom: 30px;
   }
@@ -116,7 +108,6 @@
     font-size: 3rem;
   }
   
-  /* Color Variations */
   .number-teal {
     color: #14b8a6;
   }
@@ -148,8 +139,7 @@
   .icon-blue {
     color: #3b82f6;
   }
-  
-  /* Users Table Section */
+
   .users-table-section {
     background: #ffffff;
     border-radius: 12px;
@@ -157,7 +147,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
   
-  /* Table Controls */
+
   .table-controls {
     display: flex;
     justify-content: space-between;
@@ -225,7 +215,7 @@
     box-shadow: 0 0 0 3px rgba(72, 141, 106, 0.1);
   }
   
-  /* Users Table */
+
   .users-table {
     width: 100%;
     border-collapse: collapse;
@@ -261,7 +251,7 @@
     background-color: #f9fafb;
   }
   
-  /* Badges */
+
   .badge-vendedor {
     display: inline-block;
     padding: 6px 14px;
@@ -302,7 +292,7 @@
     font-weight: 600;
   }
   
-  /* Action Buttons */
+
   .action-buttons {
     display: flex;
     gap: 8px;
@@ -340,7 +330,7 @@
     background-color: #fee2e2;
   }
 
-  /* Modal Base */
+
 .modal {
   position: fixed;
   top: 0; left: 0;
@@ -382,7 +372,6 @@
   cursor: pointer;
 }
 
-/* Corpo do modal dividido horizontalmente */
 .modal-body-horizontal {
   display: flex;
   flex: 1;
@@ -466,7 +455,6 @@
   font-style: italic;
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
   .modal-body-horizontal {
     flex-direction: column;
@@ -481,16 +469,9 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
-  
-  /* Responsive Design */
- /* Usuários Cadastrados - Estilos Específicos para Responsividade */
-
-/* IMPORTANTE: Este arquivo deve ser carregado DEPOIS de adm.css e do CSS original de usuarios_cadastrados.css */
-
 @media (max-width: 768px) {
-    /* Ajustes para o cabeçalho da página */
     .page-title-green {
-        font-size: 1.8rem; /* Aumenta um pouco o título para melhor leitura */
+        font-size: 1.8rem;
     }
 
     .page-subtitle {
@@ -499,71 +480,69 @@
 
     /* Cards de Resumo de Usuários */
     .summary-cards-users {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Permite 2 cards por linha em telas menores, se houver espaço */
-        gap: 15px; /* Reduz o espaçamento entre os cards */
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+        gap: 15px; 
     }
 
     .summary-card-user {
-        padding: 18px; /* Ajusta o padding do card */
+        padding: 18px; 
     }
 
     .summary-card-user p {
-        font-size: 2rem; /* Mantém um bom tamanho para o número */
+        font-size: 2rem;
     }
 
     .summary-card-user i {
-        font-size: 2.8rem; /* Ajusta o tamanho do ícone */
+        font-size: 2.8rem;
     }
 
-    /* Controles da Tabela (Pesquisa e Filtros) */
     .table-controls {
-        flex-direction: column; /* Empilha a pesquisa e os filtros */
+        flex-direction: column;
         align-items: stretch;
         gap: 10px;
     }
 
     .search-box {
-        min-width: unset; /* Remove o min-width para se ajustar melhor */
-        width: 100%; /* Ocupa a largura total */
+        min-width: unset;
+        width: 100%; 
         max-width: 100%;
     }
 
     .filters {
-        flex-direction: column; /* Empilha os filtros */
+        flex-direction: column;
         width: 100%;
         gap: 10px;
     }
 
     .filter-select {
-        width: 100%; /* Ocupa a largura total */
+        width: 100%;
     }
 
-    /* Tabela de Usuários (transformada em cards) */
     .users-table-section {
-        padding: 15px; /* Ajusta o padding da seção da tabela */
+        padding: 15px;
     }
 
     .users-table thead {
-        display: none; /* Esconde o cabeçalho da tabela */
+        display: none; 
     }
 
     .users-table tbody tr {
-        display: flex; /* Cada linha se torna um card */
+        display: flex; 
         flex-direction: column;
-        margin-bottom: 15px; /* Espaçamento entre os cards de usuário */
+        margin-bottom: 15px; 
         padding: 15px;
     }
 
     .users-table td {
         display: flex;
         justify-content: space-between;
-        align-items: center; /* Alinha verticalmente label e valor */
-        padding: 8px 0; /* Padding vertical para as células */
-        border-bottom: 1px solid #f3f4f6; /* Adiciona uma borda sutil */
+        align-items: center;
+        padding: 8px 0; 
+        border-bottom: 1px solid #f3f4f6; 
     }
 
     .users-table td:last-child {
-        border-bottom: none; /* Remove a borda da última célula */
+        border-bottom: none;
         padding-bottom: 0;
     }
 
@@ -571,19 +550,18 @@
         content: attr(data-label);
         font-weight: 600;
         color: var(--text-color);
-        flex-shrink: 0; /* Impede que o label encolha */
+        flex-shrink: 0; 
         margin-right: 10px;
     }
 
     .action-buttons {
-        justify-content: flex-end; /* Alinha os botões de ação à direita */
-        margin-top: 10px; /* Adiciona um espaço acima dos botões */
+        justify-content: flex-end;
+        margin-top: 10px;
     }
 
-    /* Modal de Detalhes do Usuário */
     .modal-content {
         width: 95%;
-        max-width: 95%; /* Garante que o modal ocupe quase toda a largura */
+        max-width: 95%;
         max-height: 90vh;
     }
 
@@ -596,7 +574,7 @@
     }
 
     .ratings-summary {
-        grid-template-columns: 1fr; /* Empilha os itens de resumo de avaliação */
+        grid-template-columns: 1fr;
         gap: 15px;
         padding: 15px;
     }
@@ -653,7 +631,7 @@
 
 @media (max-width: 480px) {
     .summary-cards-users {
-        grid-template-columns: 1fr; /* Um card por linha em telas muito pequenas */
+        grid-template-columns: 1fr;
     }
 }
 
@@ -838,8 +816,7 @@
     color: #10b981;
     margin: 0;
   }
-  
-  /* Ratings Container */
+
   .ratings-container {
     display: flex;
     flex-direction: column;
@@ -942,7 +919,6 @@
     color: #6b7280;
   }
   
-  /* Responsive Design for Modal */
   @media (max-width: 768px) {
     .modal-content {
       width: 95%;

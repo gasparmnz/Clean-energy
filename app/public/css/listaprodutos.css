@@ -1,5 +1,3 @@
-
-/* Botão Novo Produto - full width */
 .btn-novo-produto {
   display: flex;
   align-items: center;
@@ -50,7 +48,6 @@ body {
   color: var(--text-color);
 }
 
-/* Layout principal — controlado por sidebar_perfil.css (.perfil-layout) */
 main {
   flex: 1;
   min-width: 0;
@@ -299,9 +296,7 @@ main {
   transform: translateY(-2px);
 }
 
-/* =========================
-   Responsividade para Tablet
-   ========================= */
+
 @media (max-width: 1024px) {
   .modal-dialog {
     max-width: 90%;
@@ -313,9 +308,6 @@ main {
   }
 }
 
-/* =========================
-   Responsividade para Mobile
-   ========================= */
 @media (max-width: 768px) {
   main {
     flex-direction: column;

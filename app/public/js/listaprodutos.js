@@ -1,16 +1,11 @@
-// ===================================
-// Variáveis Globais
-// ===================================
-let cardParaExcluir = null;
+ let cardParaExcluir = null;
 let cardParaEditar = null;
 const excluirModal = new bootstrap.Modal(document.getElementById('excluirModal'));
 const editarModal = new bootstrap.Modal(document.getElementById('editarModal'));
 
-// ===================================
-// Validação em Tempo Real
-// ===================================
 
-// Objeto para armazenar o estado de validação de cada campo
+// Validação em Tempo Real
+
 const validationState = {
   nome: false,
   endereco: false,
@@ -23,7 +18,6 @@ function validarNome(valor) {
   const errorElement = document.getElementById('errorNome');
   const inputElement = document.getElementById('editarNome');
   
-  // Remove espaços em branco no início e fim
   valor = valor.trim();
   
   if (valor.length === 0) {
@@ -40,8 +34,7 @@ function validarNome(valor) {
     mostrarErro(inputElement, errorElement, 'O nome não pode exceder 100 caracteres.');
     return false;
   }
-  
-  // Verifica se contém apenas letras, números e espaços
+
   const regex = /^[a-zA-ZÀ-ÿ0-9\s]+$/;
   if (!regex.test(valor)) {
     mostrarErro(inputElement, errorElement, 'O nome deve conter apenas letras, números e espaços.');
@@ -52,7 +45,7 @@ function validarNome(valor) {
   return true;
 }
 
-// Função para validar o campo Endereço
+// Endereco
 function validarEndereco(valor) {
   const errorElement = document.getElementById('errorEndereco');
   const inputElement = document.getElementById('editarEndereco');
@@ -73,8 +66,7 @@ function validarEndereco(valor) {
     mostrarErro(inputElement, errorElement, 'O endereço não pode exceder 200 caracteres.');
     return false;
   }
-  
-  // Verifica se contém pelo menos uma vírgula ou hífen (formato de endereço)
+
   if (!valor.includes(',') && !valor.includes('-')) {
     mostrarErro(inputElement, errorElement, 'O endereço deve conter vírgula ou hífen (Ex: Rua X, 123 - Cidade).');
     return false;
@@ -84,7 +76,7 @@ function validarEndereco(valor) {
   return true;
 }
 
-// Função para validar o campo Preço
+// Preco
 function validarPreco(valor) {
   const errorElement = document.getElementById('errorPreco');
   const inputElement = document.getElementById('editarPreco');
@@ -96,17 +88,14 @@ function validarPreco(valor) {
     return false;
   }
   
-  // Remove "R$" e espaços se existirem
   valor = valor.replace(/R\$\s*/g, '').trim();
-  
-  // Verifica se o formato é válido (aceita 1500,00 ou 1.500,00 ou 1500)
+
   const regexPreco = /^(\d{1,3}(\.\d{3})*|\d+)(,\d{2})?$/;
   if (!regexPreco.test(valor)) {
     mostrarErro(inputElement, errorElement, 'Formato inválido. Use: 1500,00 ou 1.500,00');
     return false;
   }
-  
-  // Converte para número para validar valor mínimo
+
   const valorNumerico = parseFloat(valor.replace(/\./g, '').replace(',', '.'));
   
   if (valorNumerico <= 0) {
@@ -123,7 +112,7 @@ function validarPreco(valor) {
   return true;
 }
 
-// Função para validar o campo Quantidade
+// Quantidade
 function validarQuantidade(valor) {
   const errorElement = document.getElementById('errorQuantidade');
   const inputElement = document.getElementById('editarQuantidade');
@@ -135,7 +124,6 @@ function validarQuantidade(valor) {
     return false;
   }
   
-  // Extrai o número da string (ex: "20 Tonelada(s)" -> 20)
   const regexQuantidade = /^(\d+(?:,\d+)?)\s*(Tonelada\(s\)|Kg|Quilograma\(s\)|Unidade\(s\))?$/i;
   const match = valor.match(regexQuantidade);
   
@@ -160,7 +148,6 @@ function validarQuantidade(valor) {
   return true;
 }
 
-// Função auxiliar para mostrar erro
 function mostrarErro(inputElement, errorElement, mensagem) {
   inputElement.classList.add('is-invalid');
   inputElement.classList.remove('is-valid');
@@ -168,7 +155,6 @@ function mostrarErro(inputElement, errorElement, mensagem) {
   errorElement.style.display = 'block';
 }
 
-// Função auxiliar para mostrar sucesso
 function mostrarSucesso(inputElement, errorElement) {
   inputElement.classList.remove('is-invalid');
   inputElement.classList.add('is-valid');
@@ -176,7 +162,6 @@ function mostrarSucesso(inputElement, errorElement) {
   errorElement.style.display = 'none';
 }
 
-// Função para verificar se todos os campos são válidos
 function verificarFormularioValido() {
   const todosValidos = Object.values(validationState).every(estado => estado === true);
   const salvarBtn = document.getElementById('salvarEdicaoBtn');
@@ -190,35 +175,32 @@ function verificarFormularioValido() {
   }
 }
 
-// ===================================
-// Event Listeners para Validação
-// ===================================
 
-// Validação em tempo real para o campo Nome
+// NOME
 document.getElementById('editarNome').addEventListener('input', function(e) {
   validationState.nome = validarNome(e.target.value);
   verificarFormularioValido();
 });
 
-// Validação em tempo real para o campo Endereço
+//ENdereco
 document.getElementById('editarEndereco').addEventListener('input', function(e) {
   validationState.endereco = validarEndereco(e.target.value);
   verificarFormularioValido();
 });
 
-// Validação em tempo real para o campo Preço
+// Preco
 document.getElementById('editarPreco').addEventListener('input', function(e) {
   validationState.preco = validarPreco(e.target.value);
   verificarFormularioValido();
 });
 
-// Validação em tempo real para o campo Quantidade
+// QUAntidade
 document.getElementById('editarQuantidade').addEventListener('input', function(e) {
   validationState.quantidade = validarQuantidade(e.target.value);
   verificarFormularioValido();
 });
 
-// Validação ao perder o foco (blur)
+
 document.getElementById('editarNome').addEventListener('blur', function(e) {
   validationState.nome = validarNome(e.target.value);
   verificarFormularioValido();
@@ -239,9 +221,9 @@ document.getElementById('editarQuantidade').addEventListener('blur', function(e)
   verificarFormularioValido();
 });
 
-// ===================================
+
 // Funcionalidade de Exclusão
-// ===================================
+
 document.querySelectorAll('.btn-excluir').forEach(btn => {
   btn.addEventListener('click', function() {
     cardParaExcluir = this.closest('.produto-card');
@@ -257,9 +239,9 @@ document.getElementById('confirmarExcluirBtn').addEventListener('click', functio
   }
 });
 
-// ===================================
+
 // Funcionalidade de Edição
-// ===================================
+
 document.querySelectorAll('.btn-warning').forEach(btn => {
   btn.addEventListener('click', function() {
     cardParaEditar = this.closest('.produto-card');
@@ -269,13 +251,12 @@ document.querySelectorAll('.btn-warning').forEach(btn => {
     const preco = cardParaEditar.querySelector('.preco').textContent;
     const quantidade = cardParaEditar.querySelector('.quantidade').textContent;
 
-    // Preenche os campos do modal
+
     document.getElementById('editarNome').value = nome;
     document.getElementById('editarEndereco').value = endereco;
     document.getElementById('editarPreco').value = preco;
     document.getElementById('editarQuantidade').value = quantidade;
 
-    // Valida todos os campos ao abrir o modal
     validationState.nome = validarNome(nome);
     validationState.endereco = validarEndereco(endereco);
     validationState.preco = validarPreco(preco);
@@ -290,7 +271,7 @@ document.querySelectorAll('.btn-warning').forEach(btn => {
 // Salvar alterações
 document.getElementById('salvarEdicaoBtn').addEventListener('click', function() {
   if (cardParaEditar) {
-    // Valida todos os campos antes de salvar
+
     const nomeValido = validarNome(document.getElementById('editarNome').value);
     const enderecoValido = validarEndereco(document.getElementById('editarEndereco').value);
     const precoValido = validarPreco(document.getElementById('editarPreco').value);
@@ -302,13 +283,12 @@ document.getElementById('salvarEdicaoBtn').addEventListener('click', function() 
       const preco = document.getElementById('editarPreco').value;
       const quantidade = document.getElementById('editarQuantidade').value;
 
-      // Atualiza o card com os novos valores
       cardParaEditar.querySelector('h3').textContent = nome;
       cardParaEditar.querySelector('.endereco').textContent = endereco;
       cardParaEditar.querySelector('.preco').textContent = preco;
       cardParaEditar.querySelector('.quantidade').textContent = quantidade;
 
-      // Limpa os estados de validação
+
       document.querySelectorAll('.form-control').forEach(input => {
         input.classList.remove('is-valid', 'is-invalid');
       });
@@ -323,7 +303,7 @@ document.getElementById('salvarEdicaoBtn').addEventListener('click', function() 
   }
 });
 
-// Limpa validações ao fechar o modal
+
 document.getElementById('editarModal').addEventListener('hidden.bs.modal', function () {
   document.querySelectorAll('.form-control').forEach(input => {
     input.classList.remove('is-valid', 'is-invalid');
@@ -333,8 +313,7 @@ document.getElementById('editarModal').addEventListener('hidden.bs.modal', funct
     error.style.display = 'none';
     error.textContent = '';
   });
-  
-  // Reseta o estado de validação
+
   validationState.nome = false;
   validationState.endereco = false;
   validationState.preco = false;

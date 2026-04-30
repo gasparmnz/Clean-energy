@@ -214,11 +214,6 @@ body.dark-mode .toggle-track { background: #4b5563; }
 @media (max-width: 480px) {
   .perfil-cards-grid { grid-template-columns: 1fr; }
 }
-
-/* ════════════════════════════
-   FORMULÁRIO DE EDIÇÃO EXPANDIDO
-   ════════════════════════════ */
-
 .edit-section-label {
   font-size: .68rem;
   font-weight: 700;
@@ -251,7 +246,6 @@ body.dark-mode .toggle-track { background: #4b5563; }
 }
 body.dark-mode .edit-divider { border-top-color: #2a2a2a; }
 
-/* Sub-sections (email / senha) */
 .edit-sub-section {
   margin-bottom: .5rem;
 }

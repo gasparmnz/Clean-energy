@@ -25,7 +25,6 @@ const produtosModel = {
 
   create: async (dados) => {
     try {
-      // imagem pode ser um data URI base64 (salvo direto no banco) ou nome de arquivo
       const sql = `INSERT INTO produtos
         (nome, descricao, preco, quantidade, categoria, local, imagem, estado, status, usuario_id)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)`;

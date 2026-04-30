@@ -1,7 +1,3 @@
-/* ═══════════════════════════════════════════
-   SIDEBAR DO PERFIL  –  sidebar_perfil.css
-   ═══════════════════════════════════════════ */
-
 .perfil-aside {
   width: 260px;
   min-width: 260px;
@@ -76,7 +72,7 @@ body.dark-mode .perfil-aside__name { color: #f0f0f0; }
 .badge--comprador { background: #e8f5e9; color: #2e7d32; }
 .badge--vendedor  { background: #fff3e0; color: #e65100; }
 
-/* ── Divisor ── */
+
 .perfil-aside__divider {
   border: none;
   border-top: 1px solid #e5e7eb;
@@ -85,7 +81,7 @@ body.dark-mode .perfil-aside__name { color: #f0f0f0; }
 
 body.dark-mode .perfil-aside__divider { border-top-color: #2a2a2a; }
 
-/* ── Rótulo de seção ── */
+
 .perfil-aside__section-label {
   font-size: 0.68rem;
   font-weight: 700;
@@ -96,7 +92,6 @@ body.dark-mode .perfil-aside__divider { border-top-color: #2a2a2a; }
   margin-bottom: 0.4rem;
 }
 
-/* ── Lista de links ── */
 .perfil-aside__list {
   list-style: none;
   padding: 0;
@@ -106,7 +101,6 @@ body.dark-mode .perfil-aside__divider { border-top-color: #2a2a2a; }
   gap: 2px;
 }
 
-/* ── Link individual ── */
 .perfil-aside__link {
   display: flex;
   align-items: center;
@@ -163,10 +157,6 @@ body.dark-mode .perfil-aside__link--danger:hover { background: #2d0a0a; color: #
   font-size: 1rem;
 }
 
-/* ══════════════════════════════════════════
-   LAYOUT GERAL DAS PÁGINAS COM ESTA SIDEBAR
-   ══════════════════════════════════════════ */
-
 .perfil-layout {
   display: flex;
   min-height: calc(100vh - 87px);
@@ -186,10 +176,6 @@ body.dark-mode .perfil-layout { background: #111; }
 @media (max-width: 1024px) {
   .perfil-layout__content { padding: 1.5rem 1.5rem; }
 }
-
-/* ══════════════════════════════════════════
-   MOBILE  –  sidebar vira bottom nav
-   ══════════════════════════════════════════ */
 
 @media (max-width: 768px) {
   .perfil-aside {
@@ -228,13 +214,11 @@ body.dark-mode .perfil-layout { background: #111; }
     width: 100%;
   }
 
-  /* Apenas a primeira lista fica visível no mobile (links principais) */
   .perfil-aside__list {
     flex-direction: row;
     justify-content: space-around;
   }
 
-  /* Segunda lista (configurações) some no mobile */
   .perfil-aside__nav .perfil-aside__list + p,
   .perfil-aside__nav .perfil-aside__list ~ .perfil-aside__list {
     display: none;

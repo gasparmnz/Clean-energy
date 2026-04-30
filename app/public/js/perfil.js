@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-  /* ─────────────────────────────────────────
-     Toggle do formulário de edição
-  ───────────────────────────────────────── */
   const btnEditar   = document.getElementById('btnEditarPerfil');
   const btnCancelar = document.getElementById('btnCancelar');
   const formWrap    = document.getElementById('formEdicaoWrap');
@@ -46,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (nomeEl) nomeEl.textContent = nome;
           formWrap.classList.add('hidden');
           showToast('Dados atualizados com sucesso!', 'sucesso');
-          // Atualiza nome no aside
+
           const asideName = document.querySelector('.perfil-aside__name');
           if (asideName) asideName.textContent = nome;
         } else {
@@ -158,17 +155,16 @@ document.addEventListener('DOMContentLoaded', function () {
       const file = this.files[0];
       if (!file) return;
 
-      // Preview imediato
+
       const reader = new FileReader();
       reader.onload = e => {
         if (imgPerfil) imgPerfil.src = e.target.result;
-        // Atualiza também o avatar no aside
+
         const asideAvatar = document.querySelector('.perfil-aside__avatar');
         if (asideAvatar) asideAvatar.src = e.target.result;
       };
       reader.readAsDataURL(file);
 
-      // Envia para o servidor
       const formData = new FormData();
       formData.append('foto', file);
 
@@ -194,9 +190,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ─────────────────────────────────────────
-     Dark Mode toggle no perfil
-  ───────────────────────────────────────── */
+
   const dmSwitch = document.getElementById('darkModeToggleSwitch');
   if (dmSwitch) {
     dmSwitch.checked = document.body.classList.contains('dark-mode');
@@ -206,9 +200,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ─────────────────────────────────────────
-     Toast notifications
-  ───────────────────────────────────────── */
   function showToast(msg, tipo = 'sucesso') {
     let toast = document.getElementById('profileToast');
     if (!toast) {
