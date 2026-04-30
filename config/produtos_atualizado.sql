@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS Categoria (
     Nome VARCHAR(50) NOT NULL UNIQUE
 );
 
--- Tabela produtos usada pelo Node.js (nome em minúsculo, colunas em minúsculo)
 CREATE TABLE IF NOT EXISTS produtos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
@@ -42,6 +41,14 @@ CREATE TABLE IF NOT EXISTS produtos (
     local VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE produtos
+  ADD COLUMN status ENUM('active', 'suspended') NOT NULL DEFAULT 'active';
+
+SET SQL_SAFE_UPDATES = 0;
+
+UPDATE produtos SET status = 'active' WHERE status IS NULL OR status = '';
+
 
 ALTER TABLE produtos MODIFY quantidade DECIMAL(10,2);
 
@@ -91,13 +98,9 @@ CREATE TABLE IF NOT EXISTS Avaliacao (
     FOREIGN KEY (Produto_ID) REFERENCES produtos(id)
 );
 
--- Inserir categorias padrão
 INSERT IGNORE INTO Categoria (Nome) VALUES
   ('Lenha'), ('Pellets'), ('Cavaco'), ('Bagaço de cana'),
   ('Lixo orgânico'), ('Casca de arroz'), ('Folhas secas'), ('Biomassa geral');
   
-  CREATE TABLE IF NOT EXISTS carrinho (
-  idCarrinho INT AUTO_INCREMENT PRIMARY KEY,
-  userId VARCHAR(255),
-  items JSON
-)
+  
+

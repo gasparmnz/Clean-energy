@@ -59,179 +59,12 @@
     </article>
   </dialog>
 
+  <script id="server-user-data" type="application/json"><%- JSON.stringify(typeof usuario !== 'undefined' ? usuario : null) %></script>
   <script>
-    const usersData = {
-      'USR-001': {
-        name: 'João Silva',
-        email: 'joao.silva@email.com',
-        phone: '(11) 98765-4321',
-        cpf: '123.456.789-00',
-        address: 'Rua das Flores, 123 - São Paulo, SP',
-        salesCount: 15,
-        salesTotal: 'R$ 45.000,00',
-        purchasesCount: 10,
-        purchasesTotal: 'R$ 15.000,00',
-        rating: 4.8,
-        status: 'ativo',
-        given: [
-          { to: 'Maria Santos', product: 'Lenha Tratada', score: 4.5, date: '12/12/2024', comment: 'Ótima compradora, muito responsável.' }
-        ],
-        received: [
-          { from: 'Maria Santos', product: 'Lenha Tratada', score: 5.0, date: '15/12/2024', comment: 'Produto excelente!' }
-        ],
-        products: [
-          { name: 'Casca de Arroz', price: 'R$ 1.200,00', quantity: 50, date: '20/12/2024', image: '/imagem/cascadearroz.png' },
-          { name: 'Serragem', price: 'R$ 800,00', quantity: 30, date: '18/12/2024', image: '/imagem/serragem.png' },
-          { name: 'Palha de Milho', price: 'R$ 600,00', quantity: 25, date: '15/12/2024', image: '/imagem/palhademilho.png' }
-        ],
-        purchasedProducts: [
-          { name: 'Casca de Arroz', price: 'R$ 950,00', quantity: 40, date: '18/12/2024', image: '/imagem/cascadearroz.png' },
-          { name: 'Resíduos de Café', price: 'R$ 550,00', quantity: 20, date: '14/12/2024', image: '/imagem/residuosdecafe.png' }
-        ]
-      },
-      'USR-002': {
-        name: 'Maria Santos',
-        email: 'maria.santos@email.com',
-        phone: '(11) 97654-3210',
-        cpf: '234.567.890-11',
-        address: 'Av. Paulista, 1000 - São Paulo, SP',
-        salesCount: 8,
-        salesTotal: 'R$ 25.000,00',
-        purchasesCount: 5,
-        purchasesTotal: 'R$ 8.000,00',
-        rating: 4.5,
-        status: 'ativo',
-        given: [
-          { to: 'Pedro Costa', product: 'Casca de Arroz', score: 4.0, date: '10/12/2024', comment: 'Bom vendedor.' }
-        ],
-        received: [
-          { from: 'João Silva', product: 'Lenha Tratada', score: 5.0, date: '15/12/2024', comment: 'Excelente compradora!' }
-        ],
-        products: [
-          { name: 'Casca de Arroz', price: 'R$ 900,00', quantity: 40, date: '19/12/2024', image: '/imagem/cascadearroz.png' },
-          { name: 'Pallet', price: 'R$ 750,00', quantity: 35, date: '16/12/2024', image: '/imagem/pellets.png' }
-        ],
-        purchasedProducts: [
-          { name: 'Casca de Arroz', price: 'R$ 1.100,00', quantity: 45, date: '17/12/2024', image: '/imagem/cascadearroz.png' },
-          { name: 'Bagaco de Cana', price: 'R$ 600,00', quantity: 30, date: '12/12/2024', image: '/imagem/cana.png' },
-          { name: 'Folhas Secas', price: 'R$ 700,00', quantity: 25, date: '10/12/2024', image: '/imagem/folhassecas.png' }
-        ]
-      },
-      'USR-003': {
-        name: 'Pedro Costa',
-        email: 'pedro.costa@email.com',
-        phone: '(11) 96543-2109',
-        cpf: '345.678.901-22',
-        address: 'Rua Augusta, 500 - São Paulo, SP',
-        salesCount: 12,
-        salesTotal: 'R$ 35.000,00',
-        purchasesCount: 7,
-        purchasesTotal: 'R$ 12.000,00',
-        rating: 4.7,
-        status: 'ativo',
-        given: [],
-        received: [
-          { from: 'Maria Santos', product: 'Casca de Arroz', score: 5.0, date: '10/12/2024', comment: 'Produto excelente!' },
-          { from: 'Ana Oliveira', product: 'Casca de Arroz', score: 5.0, date: '05/12/2024', comment: 'Qualidade impecável.' }
-        ],
-        products: [
-          { name: 'Serragem', price: 'R$ 550,00', quantity: 20, date: '21/12/2024', image: '/imagem/serragem.png' },
-          { name: 'Resíduos de Colheita', price: 'R$ 700,00', quantity: 28, date: '14/12/2024', image: '/imagem/restodecolheita.png' },
-          { name: 'Lixo Orgânico', price: 'R$ 650,00', quantity: 32, date: '12/12/2024', image: '/imagem/lixo organico.png' }
-        ],
-        purchasedProducts: [
-          { name: 'Pallet ', price: 'R$ 1.300,00', quantity: 50, date: '19/12/2024', image: '/imagem/pellets.png' },
-          { name: 'Serragem ', price: 'R$ 800,00', quantity: 35, date: '15/12/2024', image: '/imagem/serragem.png' }
-        ]
-      },
-      'USR-004': {
-        name: 'Ana Oliveira',
-        email: 'ana.oliveira@email.com',
-        phone: '(11) 95432-1098',
-        cpf: '456.789.012-33',
-        address: 'Rua Consolação, 250 - São Paulo, SP',
-        salesCount: 6,
-        salesTotal: 'R$ 18.000,00',
-        purchasesCount: 9,
-        purchasesTotal: 'R$ 20.000,00',
-        rating: 4.6,
-        status: 'ativo',
-        given: [],
-        received: [
-          { from: 'Juliana Mendes', product: 'Serragem', score: 5.0, date: '20/12/2024', comment: 'Muito atenciosa!' },
-          { from: 'Roberto Alves', product: 'Pellets de Madeira', score: 4.0, date: '17/12/2024', comment: 'Bom produto.' }
-        ],
-        products: [
-          { name: 'Resíduos de Café', price: 'R$ 480,00', quantity: 15, date: '22/12/2024', image: '/imagem/residuosdecafe.png' },
-          { name: 'Casca de Arroz', price: 'R$ 1.100,00', quantity: 45, date: '19/12/2024', image: '/imagem/cascadearroz.png' }
-        ],
-        purchasedProducts: [
-          { name: 'Palha de Milho', price: 'R$ 750,00', quantity: 30, date: '20/12/2024', image: '/imagem/palhademilho.png' },
-          { name: 'Bagaco de Cana', price: 'R$ 950,00', quantity: 40, date: '16/12/2024', image: '/imagem/cana.png' },
-          { name: 'Folhas Secas', price: 'R$ 650,00', quantity: 28, date: '13/12/2024', image: '/imagem/folhassecas.png' }
-        ]
-      },
-      'USR-005': {
-        name: 'Carlos Ferreira',
-        email: 'carlos.ferreira@email.com',
-        phone: '(11) 94321-0987',
-        cpf: '567.890.123-44',
-        address: 'Rua Oscar Freire, 800 - São Paulo, SP',
-        salesCount: 20,
-        salesTotal: 'R$ 60.000,00',
-        purchasesCount: 3,
-        purchasesTotal: 'R$ 5.000,00',
-        rating: 4.9,
-        status: 'ativo',
-        given: [
-          { to: 'Juliana Mendes', product: 'Casca de Arroz', score: 4.0, date: '15/12/2024', comment: 'Produto de boa qualidade.' }
-        ],
-        received: [
-          { from: 'Juliana Mendes', product: 'Bagaco de Cana', score: 4.0, date: '15/12/2024', comment: 'Produto de boa qualidade.' }
-        ],
-        products: [
-          { name: 'Casca de Arroz', price: 'R$ 1.500,00', quantity: 60, date: '23/12/2024', image: '/imagem/cascadearroz.png' },
-          { name: 'Serragem', price: 'R$ 650,00', quantity: 38, date: '20/12/2024', image: '/imagem/serragem.png' },
-          { name: 'Resíduos de Colheita', price: 'R$ 700,00', quantity: 42, date: '17/12/2024', image: '/imagem/restodecolheita.png' },
-          { name: 'Bagaco de Cana', price: 'R$ 950,00', quantity: 55, date: '13/12/2024', image: '/imagem/cana.png' }
-        ],
-        purchasedProducts: [
-          { name: 'Serragem', price: 'R$ 920,00', quantity: 35, date: '21/12/2024', image: '/imagem/serragem.png' },
-          { name: 'Resto de Colheita', price: 'R$ 850,00', quantity: 38, date: '18/12/2024', image: '/imagem/restodecolheita.png' },
-          { name: 'Pallet', price: 'R$ 1.100,00', quantity: 50, date: '14/12/2024', image: '/imagem/pellets.png' }
-        ]
-      },
-      'USR-006': {
-        name: 'Juliana Mendes',
-        email: 'juliana.mendes@email.com',
-        phone: '(11) 93210-9876',
-        cpf: '678.901.234-55',
-        address: 'Av. Brigadeiro Faria Lima, 1500 - São Paulo, SP',
-        salesCount: 11,
-        salesTotal: 'R$ 33.000,00',
-        purchasesCount: 8,
-        purchasesTotal: 'R$ 14.000,00',
-        rating: 4.4,
-        status: 'ativo',
-        given: [
-          { to: 'Ana Oliveira', product: 'Serragem Compressada', score: 5.0, date: '20/12/2024', comment: 'Muito atenciosa!' },
-          { to: 'Carlos Ferreira', product: 'Casca de Arroz', score: 4.0, date: '15/12/2024', comment: 'Produto de boa qualidade.' }
-        ],
-        received: [
-          { from: 'Carlos Ferreira', product: 'Casca de Arroz', score: 4.0, date: '15/12/2024', comment: 'Produto de boa qualidade.' }
-        ],
-        products: [
-          { name: 'Resíduos de Café', price: 'R$ 920,00', quantity: 35, date: '21/12/2024', image: '/imagem/residuosdecafe.png' },
-          { name: 'Palha de Milho', price: 'R$ 780,00', quantity: 40, date: '18/12/2024', image: '/imagem/palhademilho.png' },
-          { name: 'Casca de Arroz', price: 'R$ 850,00', quantity: 38, date: '16/12/2024', image: '/imagem/cascadearroz.png' }
-        ],
-        purchasedProducts: [
-          { name: 'Folhas Secas', price: 'R$ 1.200,00', quantity: 45, date: '19/12/2024', image: '/imagem/folhassecas.png' },
-          { name: 'Lixo Orgânico', price: 'R$ 550,00', quantity: 25, date: '15/12/2024', image: '/imagem/lixo organico.png' },
-          { name: 'Casca de Arroz', price: 'R$ 600,00', quantity: 30, date: '12/12/2024', image: '/imagem/cascadearroz.png' }
-        ]
-      }
-    };
+    // server-provided single user object (if route provided `usuario`)
+
+    window.__SERVER_USER__ = JSON.parse(document.getElementById('server-user-data').textContent);
+
 
     let currentUserId = '';
 
@@ -262,8 +95,54 @@
     }
 
     function displayUserContent(userId) {
-      const user = usersData[userId];
       const contentDiv = document.getElementById('userContent');
+
+      // Prefer server-provided single user object (from EJS). If present, map it to the UI shape.
+      let user = null;
+      if (window.__SERVER_USER__) {
+        const s = window.__SERVER_USER__;
+
+        function fmtCPF(v) {
+          if (!v) return null;
+          const d = String(v).replace(/\D/g,'');
+          if (d.length !== 11) return v;
+          return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        }
+        function fmtCNPJ(v) {
+          if (!v) return null;
+          const d = String(v).replace(/\D/g,'');
+          if (d.length !== 14) return v;
+          return d.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+        }
+
+        const isPJ     = s.Tipo === 'PJ';
+        const docLabel = isPJ ? 'CNPJ' : 'CPF';
+        const docValue = isPJ ? fmtCNPJ(s.CNPJ) : fmtCPF(s.CPF);
+
+        user = {
+          name: s.Nome || s.name || '',
+          email: s.Email || s.email || '',
+          cpf: docValue,
+          docLabel: docLabel,
+          tipo: isPJ ? 'Vendedor (PJ)' : 'Comprador (PF)',
+          biografia: s.Biografia || null,
+          ultimoLogin: s.Ultimo_Login ? new Date(s.Ultimo_Login).toLocaleString('pt-BR') : null,
+          dataCriacao: s.Data_Criacao ? new Date(s.Data_Criacao).toLocaleDateString('pt-BR') : null,
+          address: s.Endereco || s.address || '',
+          salesCount: s.salesCount || 0,
+          salesTotal: s.salesTotal || 'R$ 0,00',
+          purchasesCount: s.purchasesCount || 0,
+          purchasesTotal: s.purchasesTotal || 'R$ 0,00',
+          rating: s.rating || null,
+          status: s.status || 'active',
+          given: s.given || [],
+          received: s.received || [],
+          products: s.products || [],
+          purchasedProducts: s.purchasedProducts || []
+        };
+      } else if (typeof usersData !== 'undefined') {
+        user = usersData[userId];
+      }
 
       if (!user) {
         contentDiv.innerHTML = '<article class="empty-state"><p>Usuário não encontrado.</p></article>';
@@ -280,10 +159,18 @@
               <article>
                 <h2>${user.name}</h2>
                 <p>${user.email || 'Não informado'}</p>
-                <span class="status-badge status-${user.status}">${user.status.toUpperCase()}</span>
+                <span class="status-badge" style="\${window.__SERVER_USER__ && window.__SERVER_USER__.status === 'suspended' ? 'background:#fee2e2;color:#991b1b;' : 'background:#d1fae5;color:#065f46;'}">\${window.__SERVER_USER__ && window.__SERVER_USER__.status === 'suspended' ? 'SUSPENSO' : 'ATIVO'}</span>
                 <nav class="profile-actions">
-                  <button class="action-btn-small btn-suspend" onclick="suspendAccount('${userId}')">
-                    <i class='bx bx-block'></i>Suspender Conta
+                  ${(window.__SERVER_USER__ && window.__SERVER_USER__.status === 'suspended')
+                    ? `<button class="action-btn-small" onclick="suspendAccount('${userId}')" style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;padding:8px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600;">
+                         <i class='bx bx-check-circle'></i>Reativar Conta
+                       </button>`
+                    : `<button class="action-btn-small btn-suspend" onclick="suspendAccount('${userId}')">
+                         <i class='bx bx-block'></i>Suspender Conta
+                       </button>`
+                  }
+                  <button class="action-btn-small btn-delete" onclick="deleteAccount('${userId}')" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;padding:8px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600;margin-left:8px;">
+                    <i class='bx bx-trash'></i>Excluir Conta
                   </button>
                 </nav>
               </article>
@@ -313,26 +200,43 @@
                 </article>
               </article>
               <article class="info-item">
-                <i class="info-icon bx bx-phone"></i>
-                <article>
-                  <label>Telefone</label>
-                  <p>${user.phone || 'Não informado'}</p>
-                </article>
-              </article>
-              <article class="info-item">
                 <i class="info-icon bx bx-id-card"></i>
                 <article>
-                  <label>CPF</label>
+                  <label>${user.docLabel || 'CPF'}</label>
                   <p>${user.cpf || 'Não informado'}</p>
                 </article>
               </article>
               <article class="info-item">
-                <i class="info-icon bx bx-map"></i>
+                <i class="info-icon bx bx-user-badge"></i>
                 <article>
-                  <label>Endereço</label>
-                  <p>${user.address || 'Não informado'}</p>
+                  <label>Tipo de conta</label>
+                  <p>${user.tipo || 'Não informado'}</p>
                 </article>
               </article>
+              ${user.biografia ? `
+              <article class="info-item">
+                <i class="info-icon bx bx-text"></i>
+                <article>
+                  <label>Biografia</label>
+                  <p>${user.biografia}</p>
+                </article>
+              </article>` : ''}
+              ${user.dataCriacao ? `
+              <article class="info-item">
+                <i class="info-icon bx bx-calendar"></i>
+                <article>
+                  <label>Membro desde</label>
+                  <p>${user.dataCriacao}</p>
+                </article>
+              </article>` : ''}
+              ${user.ultimoLogin ? `
+              <article class="info-item">
+                <i class="info-icon bx bx-log-in-circle"></i>
+                <article>
+                  <label>Último login</label>
+                  <p>${user.ultimoLogin}</p>
+                </article>
+              </article>` : ''}
             </section>
           </section>
 
@@ -573,12 +477,65 @@
       document.body.classList.remove('modal-open');
     }
 
-    function suspendAccount(userId) {
-      const user = usersData[userId];
-      if (confirm(`Tem certeza que deseja suspender a conta de ${user.name}?`)) {
-        alert(`Conta de ${user.name} foi suspensa.`);
-        // Aqui você pode implementar a lógica de suspensão
+    async function suspendAccount(userId) {
+      const s = window.__SERVER_USER__;
+      if (!s || !s.id) { alert('Usuário não identificado.'); return; }
+      const nome = s.Nome || s.name || 'este usuário';
+      const isSuspended = s.status === 'suspended';
+      const endpoint = isSuspended ? '/adm/usuarios/reativar' : '/adm/usuarios/suspender';
+      const confirmMsg = isSuspended
+        ? `Deseja reativar a conta de ${nome}?`
+        : `Tem certeza que deseja suspender a conta de ${nome}?\nO usuário não poderá mais acessar a plataforma.`;
+      if (!confirm(confirmMsg)) return;
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: s.id })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          showToastDU(isSuspended ? nome+' foi reativado.' : nome+' foi suspenso.', 'success');
+          setTimeout(() => location.reload(), 1200);
+        } else {
+          showToastDU('Erro: ' + (data.error || 'tente novamente.'), 'error');
+        }
+      } catch(e) { showToastDU('Erro de conexão.', 'error'); }
+    }
+
+    async function deleteAccount(userId) {
+      const s = window.__SERVER_USER__;
+      if (!s || !s.id) { alert('Usuário não identificado.'); return; }
+      const nome = s.Nome || s.name || 'este usuário';
+      if (!confirm('⚠️ ATENÇÃO: Deseja excluir permanentemente a conta de ' + nome + '?\nEsta ação não pode ser desfeita.')) return;
+      try {
+        const res = await fetch('/adm/usuarios/excluir', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: s.id })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          showToastDU('Conta de ' + nome + ' excluída.', 'success');
+          setTimeout(() => window.location.href = '/adm/usuarios_cadastrados', 1500);
+        } else {
+          showToastDU('Erro ao excluir: ' + (data.error || 'tente novamente.'), 'error');
+        }
+      } catch(e) { showToastDU('Erro de conexão.', 'error'); }
+    }
+
+    function showToastDU(msg, type) {
+      let t = document.getElementById('duToast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'duToast';
+        t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:12px 20px;border-radius:10px;font-size:.9rem;font-weight:500;z-index:9999;display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(10px);transition:all .3s;';
+        document.body.appendChild(t);
       }
+      const icon = type==='error'
+        ? '<i class="bx bx-x-circle" style="color:#ef4444;font-size:1.2rem;"></i>'
+        : '<i class="bx bx-check-circle" style="color:#10b981;font-size:1.2rem;"></i>';
+      t.innerHTML = icon + '<span>' + msg + '</span>';
+      t.style.opacity='1'; t.style.transform='translateY(0)';
+      setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(10px)'; }, 3000);
     }
 
     document.addEventListener('DOMContentLoaded', () => {

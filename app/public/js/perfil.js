@@ -150,6 +150,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const inputFoto = document.getElementById('inputFoto');
   const imgPerfil = document.getElementById('fotoPerfil');
 
+    nomeDisplay.textContent = nomeInput.value;
+    emailDisplay.textContent = emailInput.value;
+    cpfDisplay.textContent = cpfInput.value;
   if (inputFoto) {
     inputFoto.addEventListener('change', async function () {
       const file = this.files[0];

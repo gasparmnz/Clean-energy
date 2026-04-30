@@ -92,5 +92,3 @@ const produtosModel = {
 };
 
 module.exports = produtosModel;
-
-// findByUsuario was added as a patch below (the original object already has delete as last method)
