@@ -5,16 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minhas Compras</title>
   <link rel="stylesheet" href="/css/minhascompras.css">
+  <link rel="stylesheet" href="/css/sidebar_perfil.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 </head>
 <body>
   <%- include('../partial/header.ejs') %>
 
-  <main class="page-layout">
-    <%- include('../partial/sidebar.ejs') %>
+  <div class="perfil-layout">
+    <% const activePage = 'compras'; %>
+    <%- include('../partial/sidebar_perfil.ejs') %>
 
-    <section class="content">
+    <main class="perfil-layout__content">
+    <section class="content" style="padding:0;">
       <nav class="back-navigation" aria-label="Navegação de retorno">
         <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
           <i class='bx bx-arrow-back'></i>
@@ -129,6 +132,10 @@
       </section>
     </section>
   </main>
+
+    </section>
+    </main>
+  </div>
 
   <!-- MODAL PAGAMENTO (desktop-friendly, integrado) -->
   <section class="modal fade" id="pagamentoModal" tabindex="-1" aria-labelledby="pagamentoModalLabel" aria-hidden="true">

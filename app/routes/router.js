@@ -8,19 +8,25 @@ const pool = require("../../config/pool_conexoes");
 const produtosModel = require("../models/models");
 const cartModel = require("../models/cartModel");
 
-const storage = multer.diskStorage({
+// Usa memoryStorage para converter imagem em base64 e salvar no banco
+// Isso evita que imagens sumam após resets do servidor
+const storage = multer.memoryStorage();
+const _diskStorage_unused = multer.diskStorage({
   destination: path.join(__dirname, '../public/imagem'),
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
   }
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB max
+});
 var { validarCPF } = require("../helpers/validacao");
 
 async function getProdutos() {
   try {
-    return await produtosModel.findAll();
+    return await produtosModel.findAll({ apenasAtivos: true });
   } catch (err) {
     console.error('Erro ao buscar produtos:', err.message);
     return [];
@@ -338,8 +344,17 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
 /* FIX DO PREÇO: limpa máscara antes de parsear */
 router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), async (req, res) => {
   const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
-  const imagem = req.file ? req.file.filename : 'sem-foto.png';
   const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
+
+  // Converte imagem para base64 e salva no banco (não depende de filesystem)
+  let imagemData = null;
+  let imagemFilename = 'sem-foto.png';
+  if (req.file) {
+    const mime = req.file.mimetype;
+    const base64 = req.file.buffer.toString('base64');
+    imagemData = `data:${mime};base64,${base64}`;
+    imagemFilename = imagemData; // usa base64 como src direto
+  }
 
   // Remove R$, espaços, pontos de milhar; troca vírgula por ponto
   let precoLimpo = (preco || '0').toString().trim()
@@ -357,7 +372,7 @@ router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), asyn
   const quantidadeNumerica = parseFloat(quantidadeLimpa) || 0;
 
   try {
-    await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem, estado, usuario_id: req.session.userId });
+    await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem: imagemFilename, estado, usuario_id: req.session.userId });
     res.redirect('/listaprodutos');
   } catch (err) {
     console.error('Erro ao cadastrar produto:', err);
@@ -473,11 +488,21 @@ router.post("/login", async (req, res) => {
       });
     }
     const usuario = rows[0];
+
+    // Bloqueia login de conta suspensa
+    if (usuario.status === 'suspended') {
+      return res.render("pages/login", {
+        erro: "⚠️ Sua conta foi suspensa pelo administrador. Entre em contato com o suporte para mais informações.",
+        sucesso: false, valores: { usuarioDigitado, senhaDigitada: '' }
+      });
+    }
+
     req.session.userId = usuario.Usuario_ID;
     req.session.nomeUsuario = usuario.Nome;
     req.session.emailUsuario = usuario.Email;
     req.session.perfil = usuario.Tipo === 'PJ' ? 'vendedor' : 'comprador';
     req.session.tipo = usuario.Tipo;
+    req.session.fotoUsuario = usuario.foto || null;
     await pool.query("UPDATE Usuario SET Ultimo_Login = NOW() WHERE Usuario_ID = ?", [usuario.Usuario_ID]);
     return res.redirect("/perfil");
   } catch (err) {
@@ -492,6 +517,59 @@ router.delete('/produtos/:id', requireVendedor, async (req, res) => {
     res.json({ success: true, message: 'Produto deletado com sucesso' });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Erro ao deletar produto' });
+  }
+});
+
+
+// ── Redefinir senha ───────────────────────────────────────────
+router.post("/perfil/redefinir-senha", requireLogin, async (req, res) => {
+  const { senhaAtual, novaSenha, confirmarSenha } = req.body;
+  if (!senhaAtual || !novaSenha || !confirmarSenha) {
+    return res.json({ sucesso: false, erro: 'Preencha todos os campos.' });
+  }
+  if (novaSenha !== confirmarSenha) {
+    return res.json({ sucesso: false, erro: 'As senhas não conferem.' });
+  }
+  if (novaSenha.length < 8) {
+    return res.json({ sucesso: false, erro: 'A nova senha deve ter pelo menos 8 caracteres.' });
+  }
+  try {
+    const [rows] = await pool.query("SELECT Senha FROM Usuario WHERE Usuario_ID = ?", [req.session.userId]);
+    if (!rows[0]) return res.json({ sucesso: false, erro: 'Usuário não encontrado.' });
+    const senhaOk = await bcrypt.compare(senhaAtual, rows[0].Senha);
+    if (!senhaOk) return res.json({ sucesso: false, erro: 'Senha atual incorreta.' });
+    const novoHash = await bcrypt.hash(novaSenha, 10);
+    await pool.query("UPDATE Usuario SET Senha = ? WHERE Usuario_ID = ?", [novoHash, req.session.userId]);
+    res.json({ sucesso: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ sucesso: false, erro: 'Erro ao redefinir senha.' });
+  }
+});
+
+// ── Redefinir email ───────────────────────────────────────────
+router.post("/perfil/redefinir-email", requireLogin, async (req, res) => {
+  const { novoEmail, senhaConfirmacao } = req.body;
+  if (!novoEmail || !senhaConfirmacao) {
+    return res.json({ sucesso: false, erro: 'Preencha todos os campos.' });
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(novoEmail)) {
+    return res.json({ sucesso: false, erro: 'E-mail inválido.' });
+  }
+  try {
+    const [rows] = await pool.query("SELECT Senha, Email FROM Usuario WHERE Usuario_ID = ?", [req.session.userId]);
+    if (!rows[0]) return res.json({ sucesso: false, erro: 'Usuário não encontrado.' });
+    const senhaOk = await bcrypt.compare(senhaConfirmacao, rows[0].Senha);
+    if (!senhaOk) return res.json({ sucesso: false, erro: 'Senha incorreta.' });
+    const [existing] = await pool.query("SELECT Usuario_ID FROM Usuario WHERE Email = ? AND Usuario_ID != ?", [novoEmail, req.session.userId]);
+    if (existing.length > 0) return res.json({ sucesso: false, erro: 'Este e-mail já está em uso.' });
+    await pool.query("UPDATE Usuario SET Email = ? WHERE Usuario_ID = ?", [novoEmail, req.session.userId]);
+    req.session.emailUsuario = novoEmail;
+    res.json({ sucesso: true });
+  } catch (err) {
+    console.error(err);
+    res.json({ sucesso: false, erro: 'Erro ao redefinir e-mail.' });
   }
 });
 

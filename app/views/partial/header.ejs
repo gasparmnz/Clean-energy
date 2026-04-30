@@ -30,8 +30,8 @@
         <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
       </a>
 
-      <section class="dropdown">
-        <img id="dropdownBtn" src="/imagem/avatar.png" alt="Usuário" class="avatar">
+      <section class="dropdown" id="dropdownBtn">
+        <img src="<%= (typeof usuario !== 'undefined' && usuario && usuario.foto) ? (usuario.foto.startsWith('data:') ? usuario.foto : '/imagem/' + usuario.foto) : '/imagem/avatar.png' %>" alt="Usuário" class="avatar">
         <section id="dropdownMenu" class="dropdown-content">
           <span class="dropdown-nome"><%= usuario.nome %></span>
           <span class="dropdown-perfil"><%= usuario.perfil === 'vendedor' ? '🏪 Vendedor' : '🛒 Comprador' %></span>
@@ -52,8 +52,8 @@
         <a href="/login">LOGIN</a> | <a href="/cadastro">CADASTRE-SE</a>
       </span>
 
-      <section class="dropdown">
-        <img id="dropdownBtn" src="/imagem/avatar.png" alt="Usuário" class="avatar">
+      <section class="dropdown" id="dropdownBtn">
+        <img id="headerAvatar" src="<%= (typeof usuario !== 'undefined' && usuario && usuario.foto) ? (usuario.foto.startsWith('data:') ? usuario.foto : '/imagem/' + usuario.foto) : '/imagem/avatar.png' %>" alt="Usuário" class="avatar">
         <section id="dropdownMenu" class="dropdown-content">
           <a href="/login">Login</a>
           <a href="/cadastro">Cadastre-se</a>
