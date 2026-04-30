@@ -141,6 +141,11 @@ body {
     border-radius: 50%;
     cursor: pointer;
     transition: 0.3s;
+    object-fit: cover;
+    object-position: center;
+    background: #f0f0f0;
+    display: block;
+    flex-shrink: 0;
 }
 
 .avatar:hover {

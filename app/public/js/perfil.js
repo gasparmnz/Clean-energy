@@ -25,7 +25,11 @@ document.addEventListener('DOMContentLoaded', function () {
       e.preventDefault();
       const nome     = document.getElementById('nomeInput').value.trim();
       const telefone = document.getElementById('telefoneInput').value.trim();
-      if (!nome) { alert('Nome não pode estar vazio.'); return; }
+
+      if (!nome) {
+        alert('Nome não pode estar vazio.');
+        return;
+      }
 
       try {
         const resp = await fetch('/perfil/atualizar', {
@@ -33,51 +37,60 @@ document.addEventListener('DOMContentLoaded', function () {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nome, biografia: telefone })
         });
+
         const json = await resp.json();
-        if (json.sucesso) {
-          // Atualiza nome na saudação sem reload
+
+        if (json.success) {
           const nomeEl = document.getElementById('nomeDisplay');
           if (nomeEl) nomeEl.textContent = nome.split(' ')[0];
           formWrap.classList.add('hidden');
         } else {
-          alert(json.erro || 'Erro ao salvar. Tente novamente.');
+          alert(json.error || 'Erro ao salvar.');
         }
+
       } catch {
-        alert('Erro de conexão. Tente novamente.');
+        alert('Erro de conexão.');
       }
     });
   }
 
-  /* ── Upload de foto de perfil ── */
+  /* ── Upload de foto ── */
   const inputFoto = document.getElementById('inputFoto');
   const imgPerfil = document.getElementById('fotoPerfil');
 
-    nomeDisplay.textContent = nomeInput.value;
-    emailDisplay.textContent = emailInput.value;
-    cpfDisplay.textContent = cpfInput.value;
   if (inputFoto) {
     inputFoto.addEventListener('change', async function () {
       const file = this.files[0];
       if (!file) return;
 
-      // Preview imediato
+      // Preview
       const reader = new FileReader();
-      reader.onload = e => { if (imgPerfil) imgPerfil.src = e.target.result; };
+      reader.onload = e => {
+        if (imgPerfil) imgPerfil.src = e.target.result;
+      };
       reader.readAsDataURL(file);
 
-      // Envia para o servidor
+      // Enviar pro servidor
       const formData = new FormData();
       formData.append('foto', file);
 
       try {
-        const resp = await fetch('/perfil/foto', { method: 'POST', body: formData });
-        const json = await resp.json();
-        if (json.sucesso) {
-          // Atualiza src com URL real do servidor
-          if (imgPerfil) imgPerfil.src = json.foto + '?t=' + Date.now();
+       const resp = await fetch('/perfil/foto', { method: 'POST', body: formData });
+
+if (!resp.ok) {
+  throw new Error('Erro no servidor');
+}
+
+const json = await resp.json();
+
+        if (json.success) {
+          if (imgPerfil) {
+            imgPerfil.src = json.foto + '?t=' + Date.now();
+          }
         } else {
-          alert(json.erro || 'Erro ao enviar foto.');
+          alert(json.error || 'Erro ao enviar foto.');
         }
+
       } catch {
         alert('Erro de conexão ao enviar foto.');
       }
