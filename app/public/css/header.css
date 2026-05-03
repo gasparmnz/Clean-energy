@@ -136,11 +136,15 @@ body {
 }
 
 .avatar {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    border-radius: 0;
     cursor: pointer;
     transition: 0.3s;
+    object-fit: contain;
+    
+    display: block;
+    flex-shrink: 0;
 }
 
 .avatar:hover {
@@ -296,6 +300,9 @@ body {
     }
     .login-container {
         gap: 0.8rem;
+    }
+    .header-greeting {
+        display: none;
     }
     
     #check:checked ~ .navbar {
