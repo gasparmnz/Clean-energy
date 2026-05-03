@@ -1,6 +1,5 @@
-/* ══ DARK MODE GLOBAL - Clean Energy ══ */
 (function () {
-  // Aplica imediatamente ao carregar (sem flash)
+
   if (localStorage.getItem('darkmode') === 'ativo') {
     document.body.classList.add('dark-mode');
   }
@@ -8,9 +7,9 @@
   function ativar() {
     document.body.classList.add('dark-mode');
     localStorage.setItem('darkmode', 'ativo');
-    // Atualiza todos os toggles da página
+
     document.querySelectorAll('.dark-mode-toggle-input').forEach(el => el.checked = true);
-    // Atualiza ícone do botão antigo (header)
+
     const icon = document.getElementById('darkModeIcon');
     if (icon) icon.src = '/imagem/sol.png';
   }
@@ -26,7 +25,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     const isDark = localStorage.getItem('darkmode') === 'ativo';
 
-    // ── Toggle switch (perfil) ──
+
     const switchInput = document.getElementById('darkModeToggleSwitch');
     if (switchInput) {
       switchInput.checked = isDark;
@@ -35,7 +34,6 @@
       });
     }
 
-    // ── Botão antigo com img (header) ──
     const botaoAntigo = document.getElementById('darkModeToggle');
     if (botaoAntigo) {
       const icon = document.getElementById('darkModeIcon');

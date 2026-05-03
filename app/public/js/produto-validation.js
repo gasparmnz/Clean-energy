@@ -1,8 +1,3 @@
-/**
- * Sistema de Validação em Tempo Real para Cadastro de Produto
- * Valida todos os campos do formulário sem desabilitar o botão de submit
- */
-
 class ProductFormValidator {
   constructor() {
     this.form = null;
@@ -13,7 +8,7 @@ class ProductFormValidator {
   }
 
   init() {
-    // Aguardar o DOM estar completamente carregado
+  
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
         this.setupElements();
@@ -34,7 +29,6 @@ class ProductFormValidator {
   }
 
   setupElements() {
-    // Buscar elementos do formulário
     this.form = document.querySelector('.product-form') || document.querySelector('form');
     
     // Mapear todos os campos
@@ -180,27 +174,23 @@ class ProductFormValidator {
   }
 
   setupEventListeners() {
-    // Configurar validação para cada campo
+
     Object.keys(this.fields).forEach(fieldName => {
       const field = this.fields[fieldName];
       if (!field) return;
 
-      // Validação ao sair do campo (blur)
       field.addEventListener('blur', () => {
         this.validateField(fieldName);
       });
 
-      // Validação durante a digitação (input) com debounce
       field.addEventListener('input', this.debounce(() => {
         this.validateField(fieldName);
-        
-        // Atualizar contador de caracteres para descrição
+
         if (fieldName === 'descricao') {
           this.updateCharCounter(field);
         }
       }, 300));
 
-      // Validação especial para select
       if (field.tagName === 'SELECT') {
         field.addEventListener('change', () => {
           this.validateField(fieldName);
@@ -214,7 +204,7 @@ class ProductFormValidator {
         this.validateAllFields();
         this.showLoadingState();
         
-        // Permitir envio mesmo com erros (backend validará)
+
         console.log('📤 Formulário enviado para validação backend');
       });
     }
@@ -230,7 +220,7 @@ class ProductFormValidator {
 
     let result = { isValid: true, message: '' };
 
-    // Validação especial para arquivo
+
     if (fieldName === 'imagem') {
       result = this.validateFile(field, rules);
     } else {
@@ -251,7 +241,6 @@ class ProductFormValidator {
       return { isValid: false, message: rules.message.required };
     }
 
-    // Se campo não é obrigatório e está vazio, é válido
     if (!rules.required && !value) {
       return { isValid: true, message: '' };
     }
@@ -335,16 +324,15 @@ class ProductFormValidator {
     const inputGroup = field.closest('.input-group');
     if (!inputGroup) return;
 
-    // Buscar elementos de feedback
+
     let errorElement = inputGroup.querySelector('.error-message');
     let successElement = inputGroup.querySelector('.success-message');
 
-    // Remover classes anteriores
     inputGroup.classList.remove('valid', 'invalid');
     field.classList.remove('valid', 'invalid');
 
     if (result.isValid) {
-      // Estado válido
+
       inputGroup.classList.add('valid');
       field.classList.add('valid');
       
@@ -387,7 +375,7 @@ class ProductFormValidator {
         const result = this.validateField('imagem');
         
         if (result.isValid) {
-          // Mostrar preview
+
           const reader = new FileReader();
           reader.onload = (e) => {
             const previewImg = filePreview.querySelector('.preview-image');
@@ -397,7 +385,7 @@ class ProductFormValidator {
           };
           reader.readAsDataURL(file);
         } else {
-          // Limpar se inválido
+
           this.clearFilePreview();
         }
       } else {
@@ -405,7 +393,7 @@ class ProductFormValidator {
       }
     });
 
-    // Botão de remover arquivo
+
     const removeBtn = filePreview.querySelector('.remove-file');
     if (removeBtn) {
       removeBtn.addEventListener('click', () => {
@@ -415,7 +403,6 @@ class ProductFormValidator {
       });
     }
 
-    // Drag and drop
     fileLabel.addEventListener('dragover', (e) => {
       e.preventDefault();
       fileLabel.style.borderColor = 'var(--primary-color)';
@@ -454,7 +441,7 @@ class ProductFormValidator {
   }
 
   setupFormatters() {
-    // Formatador de preço
+
     const precoField = this.fields.preco;
     if (precoField) {
       precoField.addEventListener('input', (e) => {
@@ -483,7 +470,6 @@ class ProductFormValidator {
       });
     }
 
-    // Formatador de quantidade
     const quantidadeField = this.fields.quantidade;
     if (quantidadeField) {
       quantidadeField.addEventListener('input', (e) => {
@@ -571,7 +557,6 @@ class ProductFormValidator {
 // Inicializar validação
 let productValidator;
 
-// Aguardar o DOM estar carregado
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', function() {
     productValidator = new ProductFormValidator();
@@ -585,7 +570,7 @@ if (document.readyState === 'loading') {
 }
 
 function setupAccessibility() {
-  // Melhorar navegação por teclado
+
   const inputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
   inputs.forEach((input, index) => {
     input.addEventListener('keydown', (e) => {
@@ -604,7 +589,6 @@ function setupAccessibility() {
     });
   });
 
-  // Melhorar acessibilidade do upload de arquivo
   const fileInput = document.getElementById('imagem');
   const fileLabel = document.querySelector('.file-upload-label');
   
@@ -619,13 +603,13 @@ function setupAccessibility() {
 }
 
 function setupAnimations() {
-  // Adicionar animações de entrada escalonadas
+
   const inputGroups = document.querySelectorAll('.input-group');
   inputGroups.forEach((group, index) => {
     group.style.animationDelay = `${index * 0.1}s`;
   });
 
-  // Animação de foco nos inputs
+
   const inputs = document.querySelectorAll('.form-input, .form-textarea, .form-select');
   inputs.forEach(input => {
     input.addEventListener('focus', () => {
@@ -643,7 +627,7 @@ function setupAnimations() {
     });
   });
 
-  // Animação para o upload de arquivo
+
   const fileLabel = document.querySelector('.file-upload-label');
   if (fileLabel) {
     fileLabel.addEventListener('mouseenter', () => {
