@@ -213,8 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const src = json.foto + '?t=' + Date.now();
           if (imgPerfil) imgPerfil.src = src;
           fotoOriginal = src; // atualiza referência
-          const headerAvatar = document.querySelector('header .avatar');
-          if (headerAvatar) headerAvatar.src = src;
+          // Não atualiza o avatar do header para evitar bug visual — o header atualiza no reload
           const asideAvatar = document.querySelector('.perfil-aside__avatar');
           if (asideAvatar) asideAvatar.src = src;
           arquivoSelecionado = null;
