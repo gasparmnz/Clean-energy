@@ -30,20 +30,22 @@ body {
 }
 
 .logo img {
-    height: 50px;
+    height: 70px;
     width: auto;
 }
 
 .navbar {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 4rem;
     flex-grow: 1;
     justify-content: center;
+    position: relative;
+    left: 95px;
 }
 
 .navbar a {
-    font-size: 0.95rem;
+    font-size: 1.0rem;
     color: #fff;
     text-decoration: none;
     font-weight: 600;
