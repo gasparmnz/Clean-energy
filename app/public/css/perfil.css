@@ -39,7 +39,7 @@ main {
 
 /* card perfil */
 .perfil-form {
-background: url('/imagem/selva.png') no-repeat center center;
+background: url('/imagem/') no-repeat center center;
   background-size: cover;
 
   padding: 35px;
