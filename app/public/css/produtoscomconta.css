@@ -150,7 +150,7 @@ form {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1rem;
-    align-items: stretch; /* <-- faz os cards terem mesma altura */
+    align-items: stretch;
     overflow: visible;
     padding: 0;
   }
@@ -161,10 +161,10 @@ form {
   }
 
   article {
-    display: flex;                  /* distribui o conteúdo */
+    display: flex;
     flex-direction: column;
-    justify-content: space-between; /* mantém proporção */
-    height: 100%;                   /* garante que ocupe toda a célula */
+    justify-content: space-between; 
+    height: 100%; 
   }
 
  

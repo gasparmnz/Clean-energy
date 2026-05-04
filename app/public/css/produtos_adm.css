@@ -301,6 +301,56 @@ img{
     object-fit: cover;
 }
 
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.custom-modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  width: 350px;
+  max-width: 90%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-cancel {
+  background: #e5e7eb;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-confirm {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
 /* TABLET (768px - 1024px) - CARROSSEL */
 @media (max-width: 1024px) {
     /* Ajustes gerais para tablet */
@@ -312,7 +362,6 @@ img{
         font-size: 1.8rem;
     }
 
-    /* Cards de Resumo de Produtos - tablet */
     .products-summary {
         grid-template-columns: repeat(3, 1fr);
         gap: 16px;
@@ -340,7 +389,6 @@ img{
         font-size: 1.6rem;
     }
 
-    /* Controles de Produtos - tablet */
     .products-controls {
         flex-direction: column;
         align-items: stretch;
@@ -364,7 +412,6 @@ img{
         text-align: center;
     }
 
-    /* CARROSSEL PARA TABLET */
     .products-grid {
         display: flex;
         overflow-x: auto;
@@ -427,7 +474,6 @@ img{
         font-size: 0.95rem;
     }
 
-    /* Modal de Edição - tablet */
     .modal-content {
         width: 90%;
         max-width: 450px;
@@ -439,7 +485,6 @@ img{
     }
 }
 
-/* MOBILE (até 768px) - CARROSSEL MAIS COMPACTO */
 @media (max-width: 768px) {
     /* Ajustes para mobile */
     .admin-main {
@@ -454,7 +499,7 @@ img{
         font-size: 0.9rem;
     }
 
-    /* Cards de Resumo de Produtos - mobile */
+
     .products-summary {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -481,7 +526,6 @@ img{
         font-size: 1.5rem;
     }
 
-    /* Controles de Produtos - mobile */
     .filter-controls {
         flex-direction: column;
         gap: 8px;
@@ -491,7 +535,7 @@ img{
         width: 100%;
     }
 
-    /* CARROSSEL PARA MOBILE */
+
     .products-grid {
         gap: 16px;
         padding: 8px 4px 16px 4px;
@@ -547,7 +591,6 @@ img{
         font-size: 0.9rem;
     }
 
-    /* Modal de Edição - mobile */
     .modal-content {
         width: 95%;
         max-width: 95%;
@@ -575,8 +618,6 @@ img{
         font-size: 0.9rem;
     }
 }
-
-/* MOBILE PEQUENO (até 480px) */
 @media (max-width: 480px) {
     .product-card {
         flex: 0 0 90%;

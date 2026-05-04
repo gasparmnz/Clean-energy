@@ -45,16 +45,35 @@ filters.forEach(filter => {
 });
 
 
-const dropdownBtn = document.getElementById("dropdownBtn");
+// ── Dropdown logado ───────────────────────────────────────────────────────
+const dropdownBtn  = document.getElementById("dropdownBtn");
 const dropdownMenu = document.getElementById("dropdownMenu");
 
+if (dropdownBtn && dropdownMenu) {
+  dropdownBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdownMenu.classList.toggle("show");
+    // Fecha o guest se estiver aberto
+    const gm = document.getElementById("dropdownGuestMenu");
+    if (gm) gm.classList.remove("show");
+  });
+}
 
-dropdownBtn.addEventListener("click", (e) => {
-  e.stopPropagation(); 
-  dropdownMenu.classList.toggle("show");
-});
+// ── Dropdown guest (deslogado, mobile/tablet) ──────────────────────────────
+const dropdownGuestBtn  = document.getElementById("dropdownGuestBtn");
+const dropdownGuestMenu = document.getElementById("dropdownGuestMenu");
 
+if (dropdownGuestBtn && dropdownGuestMenu) {
+  dropdownGuestBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    dropdownGuestMenu.classList.toggle("show");
+    // Fecha o logado se estiver aberto
+    if (dropdownMenu) dropdownMenu.classList.remove("show");
+  });
+}
 
+// ── Fecha todos ao clicar fora ─────────────────────────────────────────────
 document.addEventListener("click", () => {
-  dropdownMenu.classList.remove("show");
+  if (dropdownMenu)      dropdownMenu.classList.remove("show");
+  if (dropdownGuestMenu) dropdownGuestMenu.classList.remove("show");
 });

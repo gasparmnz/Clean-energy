@@ -1,16 +1,16 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-  /* ── Edição de dados ── */
   const btnEditar   = document.getElementById('btnEditarPerfil');
   const btnCancelar = document.getElementById('btnCancelar');
   const formWrap    = document.getElementById('formEdicaoWrap');
-  const form        = document.getElementById('formEdicao');
 
   if (btnEditar) {
     btnEditar.addEventListener('click', function (e) {
       e.preventDefault();
-      formWrap.classList.remove('hidden');
-      formWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      formWrap.classList.toggle('hidden');
+      if (!formWrap.classList.contains('hidden')) {
+        formWrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     });
   }
 
@@ -20,12 +20,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* ─────────────────────────────────────────
+     Salvar dados do perfil (nome + telefone)
+  ───────────────────────────────────────── */
+  const form = document.getElementById('formEdicao');
   if (form) {
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
       const nome     = document.getElementById('nomeInput').value.trim();
       const telefone = document.getElementById('telefoneInput').value.trim();
-      if (!nome) { alert('Nome não pode estar vazio.'); return; }
+      if (!nome) { showToast('Nome não pode estar vazio.', 'erro'); return; }
 
       try {
         const resp = await fetch('/perfil/atualizar', {
@@ -33,55 +37,231 @@ document.addEventListener('DOMContentLoaded', function () {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ nome, biografia: telefone })
         });
+
         const json = await resp.json();
         if (json.sucesso) {
-          // Atualiza nome na saudação sem reload
           const nomeEl = document.getElementById('nomeDisplay');
-          if (nomeEl) nomeEl.textContent = nome.split(' ')[0];
+          if (nomeEl) nomeEl.textContent = nome;
           formWrap.classList.add('hidden');
+          showToast('Dados atualizados com sucesso!', 'sucesso');
+
+          const asideName = document.querySelector('.perfil-aside__name');
+          if (asideName) asideName.textContent = nome;
         } else {
-          alert(json.erro || 'Erro ao salvar. Tente novamente.');
+          showToast(json.erro || 'Erro ao salvar.', 'erro');
         }
+
       } catch {
-        alert('Erro de conexão. Tente novamente.');
+        showToast('Erro de conexão.', 'erro');
       }
     });
   }
 
-  /* ── Upload de foto de perfil ── */
-  const inputFoto = document.getElementById('inputFoto');
-  const imgPerfil = document.getElementById('fotoPerfil');
+  /* ─────────────────────────────────────────
+     Redefinir senha
+  ───────────────────────────────────────── */
+  const formSenha = document.getElementById('formRedefinirSenha');
+  if (formSenha) {
+    formSenha.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const senhaAtual     = document.getElementById('senhaAtualInput').value;
+      const novaSenha      = document.getElementById('novaSenhaInput').value;
+      const confirmarSenha = document.getElementById('confirmarNovaSenhaInput').value;
 
-    nomeDisplay.textContent = nomeInput.value;
-    emailDisplay.textContent = emailInput.value;
-    cpfDisplay.textContent = cpfInput.value;
+      if (novaSenha !== confirmarSenha) {
+        showToast('As novas senhas não conferem.', 'erro'); return;
+      }
+      if (novaSenha.length < 8) {
+        showToast('A nova senha deve ter pelo menos 8 caracteres.', 'erro'); return;
+      }
+
+      try {
+        const resp = await fetch('/perfil/redefinir-senha', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ senhaAtual, novaSenha, confirmarSenha })
+        });
+        const json = await resp.json();
+        if (json.sucesso) {
+          showToast('Senha redefinida com sucesso!', 'sucesso');
+          formSenha.reset();
+          document.getElementById('formSenhaWrap').classList.add('hidden');
+        } else {
+          showToast(json.erro || 'Erro ao redefinir senha.', 'erro');
+        }
+      } catch {
+        showToast('Erro de conexão.', 'erro');
+      }
+    });
+  }
+
+  /* ─────────────────────────────────────────
+     Redefinir email
+  ───────────────────────────────────────── */
+  const formEmail = document.getElementById('formRedefinirEmail');
+  if (formEmail) {
+    formEmail.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const novoEmail        = document.getElementById('novoEmailInput').value.trim();
+      const senhaConfirmacao = document.getElementById('senhaEmailInput').value;
+
+      try {
+        const resp = await fetch('/perfil/redefinir-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ novoEmail, senhaConfirmacao })
+        });
+        const json = await resp.json();
+        if (json.sucesso) {
+          showToast('E-mail atualizado com sucesso!', 'sucesso');
+          const emailEl = document.querySelector('.perfil-hero__email');
+          if (emailEl) emailEl.innerHTML = `<i class='bx bx-envelope'></i> ${novoEmail}`;
+          formEmail.reset();
+          document.getElementById('formEmailWrap').classList.add('hidden');
+        } else {
+          showToast(json.erro || 'Erro ao atualizar e-mail.', 'erro');
+        }
+      } catch {
+        showToast('Erro de conexão.', 'erro');
+      }
+    });
+  }
+
+  /* ─────────────────────────────────────────
+     Toggle de sub-formulários de edição
+  ───────────────────────────────────────── */
+  document.querySelectorAll('[data-toggle-form]').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const targetId = this.getAttribute('data-toggle-form');
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.classList.toggle('hidden');
+        if (!target.classList.contains('hidden')) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    });
+  });
+
+  /* ─────────────────────────────────────────
+     Upload de foto de perfil + atualiza header
+  ───────────────────────────────────────── */
+  const inputFoto     = document.getElementById('inputFoto');
+  const imgPerfil     = document.getElementById('fotoPerfil');
+  const btnConfirmarFoto = document.getElementById('btnConfirmarFoto');
+  const btnCancelarFoto  = document.getElementById('btnCancelarFoto');
+  const fotoActions   = document.getElementById('fotoActions');
+  const labelFoto     = document.getElementById('labelFoto');
+
+  let arquivoSelecionado = null;
+  let fotoOriginal = imgPerfil ? imgPerfil.src : null; // guarda a foto atual antes de trocar
+
+  function mostrarAcoes(mostrar) {
+    if (fotoActions) fotoActions.style.display = mostrar ? 'flex' : 'none';
+    if (labelFoto)   labelFoto.style.display   = mostrar ? 'none' : 'flex';
+  }
+
   if (inputFoto) {
-    inputFoto.addEventListener('change', async function () {
+    inputFoto.addEventListener('change', function () {
       const file = this.files[0];
       if (!file) return;
 
-      // Preview imediato
-      const reader = new FileReader();
-      reader.onload = e => { if (imgPerfil) imgPerfil.src = e.target.result; };
-      reader.readAsDataURL(file);
+      arquivoSelecionado = file;
+      fotoOriginal = imgPerfil ? imgPerfil.src : null; // salva a src atual ANTES do preview
 
-      // Envia para o servidor
+      const reader = new FileReader();
+      reader.onload = e => {
+        // Mostra preview da nova foto
+        if (imgPerfil) imgPerfil.src = e.target.result;
+        const asideAvatar = document.querySelector('.perfil-aside__avatar');
+        if (asideAvatar) asideAvatar.src = e.target.result;
+        // Exibe botões confirmar/cancelar
+        mostrarAcoes(true);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ── Cancelar: volta para a foto anterior ───────────────────────────────────
+  if (btnCancelarFoto) {
+    btnCancelarFoto.addEventListener('click', function () {
+      if (imgPerfil && fotoOriginal) imgPerfil.src = fotoOriginal;
+      const asideAvatar = document.querySelector('.perfil-aside__avatar');
+      if (asideAvatar && fotoOriginal) asideAvatar.src = fotoOriginal;
+      arquivoSelecionado = null;
+      inputFoto.value = ''; // limpa o input para permitir selecionar mesmo arquivo novamente
+      mostrarAcoes(false);
+    });
+  }
+
+  // ── Confirmar: envia para o servidor ───────────────────────────────────────
+  if (btnConfirmarFoto) {
+    btnConfirmarFoto.addEventListener('click', async function () {
+      if (!arquivoSelecionado) return;
+
+      btnConfirmarFoto.disabled = true;
+      btnConfirmarFoto.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Enviando...';
+
       const formData = new FormData();
-      formData.append('foto', file);
+      formData.append('foto', arquivoSelecionado);
 
       try {
         const resp = await fetch('/perfil/foto', { method: 'POST', body: formData });
+        if (!resp.ok) throw new Error('Erro no servidor');
         const json = await resp.json();
         if (json.sucesso) {
-          // Atualiza src com URL real do servidor
-          if (imgPerfil) imgPerfil.src = json.foto + '?t=' + Date.now();
+          const src = json.foto + '?t=' + Date.now();
+          if (imgPerfil) imgPerfil.src = src;
+          fotoOriginal = src; // atualiza referência
+          // Não atualiza o avatar do header para evitar bug visual — o header atualiza no reload
+          const asideAvatar = document.querySelector('.perfil-aside__avatar');
+          if (asideAvatar) asideAvatar.src = src;
+          arquivoSelecionado = null;
+          inputFoto.value = '';
+          mostrarAcoes(false);
+          showToast('Foto atualizada com sucesso!', 'sucesso');
         } else {
-          alert(json.erro || 'Erro ao enviar foto.');
+          showToast(json.erro || 'Erro ao enviar foto.', 'erro');
+          btnConfirmarFoto.disabled = false;
+          btnConfirmarFoto.innerHTML = '<i class="bx bx-check"></i> Confirmar';
         }
       } catch {
-        alert('Erro de conexão ao enviar foto.');
+        showToast('Erro de conexão ao enviar foto.', 'erro');
+        btnConfirmarFoto.disabled = false;
+        btnConfirmarFoto.innerHTML = '<i class="bx bx-check"></i> Confirmar';
       }
     });
+  }
+
+
+  const dmSwitch = document.getElementById('darkModeToggleSwitch');
+  if (dmSwitch) {
+    dmSwitch.checked = document.body.classList.contains('dark-mode');
+    dmSwitch.addEventListener('change', function () {
+      document.body.classList.toggle('dark-mode', this.checked);
+      localStorage.setItem('darkMode', this.checked ? 'true' : 'false');
+    });
+  }
+
+  function showToast(msg, tipo = 'sucesso') {
+    let toast = document.getElementById('profileToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'profileToast';
+      toast.style.cssText = `
+        position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+        padding: 12px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 600;
+        box-shadow: 0 4px 16px rgba(0,0,0,.15); transition: opacity .3s;
+        display: flex; align-items: center; gap: 8px; max-width: 320px;
+      `;
+      document.body.appendChild(toast);
+    }
+    toast.style.background = tipo === 'sucesso' ? '#16a34a' : '#dc2626';
+    toast.style.color = '#fff';
+    toast.innerHTML = (tipo === 'sucesso' ? '<i class="bx bx-check-circle"></i>' : '<i class="bx bx-error-circle"></i>') + msg;
+    toast.style.opacity = '1';
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => { toast.style.opacity = '0'; }, 3500);
   }
 
 });

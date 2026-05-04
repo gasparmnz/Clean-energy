@@ -29,7 +29,7 @@ body {
 .admin-main {
   flex-grow: 1;
   padding: 30px;
-  overflow-x: hidden; /* Evita overflow horizontal */
+  overflow-x: hidden;
   overflow-y: auto;
   margin-top: 87px;
 }
@@ -85,8 +85,8 @@ body {
   padding: 30px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   margin-bottom: 30px;
-  width: 100%; /* Garante que o card ocupe toda a largura disponível */
-  max-width: 100%; /* Garante que o card não ultrapasse a largura do pai */
+  width: 100%;
+  max-width: 100%;
 }
 
 .profile-header {
@@ -102,8 +102,8 @@ body {
   display: flex;
   gap: 20px;
   align-items: flex-start;
-  flex-wrap: wrap; /* Adicionado para permitir que os itens quebrem a linha */
-  justify-content: center; /* Centraliza itens em telas pequenas */
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .profile-avatar {
@@ -187,8 +187,8 @@ body {
   display: flex;
   gap: 12px;
   margin-top: 15px;
-  flex-wrap: wrap; /* Adicionado para permitir que os botões quebrem a linha */
-  justify-content: center; /* Centraliza botões em telas pequenas */
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .action-btn-small {
@@ -331,39 +331,144 @@ body {
 }
 
 /* Reviews Section */
+/* ── Reviews container ────────────────────────────────────────────────── */
 .reviews-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
+/* Card base */
 .review-card {
-  background: white;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-  transition: transform 0.2s;
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 20px 22px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  transition: border-color .2s, box-shadow .2s;
+  position: relative;
+}
+.review-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,.09);
 }
 
+/* Card suspenso — borda vermelha */
+.review-card.review-suspensa {
+  border-color: #ef4444;
+  background: linear-gradient(135deg, #fff5f5, #fff);
+  box-shadow: 0 0 0 3px rgba(239,68,68,.1), 0 2px 8px rgba(0,0,0,.05);
+}
+
+/* Header do card */
 .review-header {
   display: flex;
   justify-content: space-between;
-  align-items: start;
-  margin-bottom: 15px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.review-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .review-person {
-  font-weight: 600;
-  color: var(--text-color);
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #111827;
+  font-size: .95rem;
+}
+.review-person i {
+  color: var(--accent, #1e8e3e);
+  font-size: 1.1rem;
 }
 
 .review-date {
-  color: #6b7280;
-  font-size: 0.85rem;
+  color: #9ca3af;
+  font-size: .8rem;
+  white-space: nowrap;
 }
 
+/* Estrelas */
+.review-rating {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+.review-rating i { color: #f59e0b; font-size: 1.05rem; }
+
+/* Comentário */
+.review-comment {
+  color: #4b5563;
+  line-height: 1.65;
+  font-style: italic;
+  font-size: .9rem;
+  border-left: 3px solid #e5e7eb;
+  padding-left: 12px;
+  margin: 8px 0 14px;
+}
+.review-card.review-suspensa .review-comment {
+  border-left-color: #ef4444;
+  color: #9ca3af;
+}
+.review-no-comment {
+  color: #9ca3af;
+  font-size: .85rem;
+  font-style: italic;
+  margin-bottom: 12px;
+}
+
+/* Footer de ações */
+.review-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+.review-card.review-suspensa .review-footer {
+  border-top-color: #fecaca;
+}
+
+/* Botão suspender */
+.btn-suspender-comment {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 16px; border-radius: 8px;
+  border: 1.5px solid #fca5a5;
+  background: #fff5f5; color: #dc2626;
+  font-size: .82rem; font-weight: 600;
+  cursor: pointer; transition: background .2s, transform .1s;
+}
+.btn-suspender-comment:hover { background: #fee2e2; transform: scale(1.02); }
+
+/* Botão reverter */
+.btn-reativar-comment {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 16px; border-radius: 8px;
+  border: 1.5px solid #6ee7b7;
+  background: #f0fdf4; color: #059669;
+  font-size: .82rem; font-weight: 600;
+  cursor: pointer; transition: background .2s, transform .1s;
+}
+.btn-reativar-comment:hover { background: #d1fae5; transform: scale(1.02); }
+
+/* Badge suspenso */
+.badge-suspensa {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px;
+  background: #fee2e2; color: #991b1b;
+  font-size: .75rem; font-weight: 700;
+  letter-spacing: .02em;
+}
+
+/* review-product (mantém compatibilidade) */
 .review-product {
   background: #f3f4f6;
   color: var(--accent);
@@ -375,22 +480,66 @@ body {
   font-size: 0.85rem;
 }
 
-.review-rating {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 15px;
+/* ── Modal de confirmação ─────────────────────────────────────────────── */
+.confirm-modal-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 9999;
+  align-items: center; justify-content: center;
+  backdrop-filter: blur(3px);
+}
+.confirm-modal-overlay.show { display: flex; }
+
+.confirm-modal {
+  background: #fff;
+  border-radius: 18px;
+  padding: 36px 32px;
+  max-width: 420px; width: 90%;
+  box-shadow: 0 25px 70px rgba(0,0,0,.22);
+  animation: modalIn .22s cubic-bezier(.34,1.56,.64,1);
+  text-align: center;
+}
+@keyframes modalIn {
+  from { transform: scale(.88); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
 }
 
-.review-rating i {
-  color: #ffc107;
+.confirm-modal-icon {
+  font-size: 2.8rem;
+  margin-bottom: 14px;
+  display: block;
 }
+.confirm-modal h3 {
+  font-size: 1.15rem; font-weight: 700;
+  color: #111827; margin-bottom: 10px;
+}
+.confirm-modal p {
+  font-size: .9rem; color: #6b7280;
+  line-height: 1.65; margin-bottom: 28px;
+}
+.confirm-modal-actions {
+  display: flex; gap: 10px; justify-content: center;
+}
+.confirm-btn-cancel {
+  padding: 10px 24px; border-radius: 9px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff; color: #374151;
+  font-weight: 600; font-size: .92rem;
+  cursor: pointer; transition: background .2s;
+}
+.confirm-btn-cancel:hover { background: #f9fafb; }
 
-.review-comment {
-  color: #555;
-  line-height: 1.6;
-  font-style: italic;
-  font-size: 0.95rem;
+.confirm-btn-confirm {
+  padding: 10px 24px; border-radius: 9px; border: none;
+  background: #dc2626; color: #fff;
+  font-weight: 600; font-size: .92rem;
+  cursor: pointer; transition: background .2s, transform .1s;
 }
+.confirm-btn-confirm:hover  { background: #b91c1c; }
+.confirm-btn-confirm:active { transform: scale(.97); }
+.confirm-btn-confirm.green  { background: #059669; }
+.confirm-btn-confirm.green:hover { background: #047857; }
 
 .empty-state {
   text-align: center;
@@ -582,15 +731,65 @@ body.modal-open {
   color: #9ca3af;
 }
 
-/* Fix sidebar admin text weight */
+
 .sidebar-header h2,
 .sidebar-header p {
   font-weight: 700 !important;
 }
 
+
+.custom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.custom-modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  width: 350px;
+  max-width: 90%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-cancel {
+  background: #e5e7eb;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-confirm {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
 /* ========== RESPONSIVIDADE CORRIGIDA ========== */
 
-/* Tablet (768px - 1024px) */
 @media (max-width: 1024px) {
   .admin-main {
     padding: 20px;
@@ -598,18 +797,18 @@ body.modal-open {
   
   .profile-header {
     flex-direction: column;
-    align-items: center; /* Centraliza o cabeçalho do perfil */
+    align-items: center; 
     gap: 20px;
     text-align: center;
   }
   
   .profile-rating {
-    text-align: center; /* Centraliza a avaliação */
-    align-self: center; /* Centraliza o item de avaliação */
+    text-align: center;
+    align-self: center;
   }
   
   .rating-display {
-    justify-content: center; /* Centraliza as estrelas */
+    justify-content: center;
   }
   
   .products-container {
@@ -639,7 +838,6 @@ body.modal-open {
   }
 }
 
-/* Mobile (768px para baixo) */
 @media (max-width: 768px) {
   .admin-container {
     flex-direction: column;
@@ -660,7 +858,7 @@ body.modal-open {
     align-items: center;
     text-align: center;
     gap: 15px;
-    width: 100%; /* Garante que o profile-info ocupe toda a largura */
+    width: 100%;
   }
   
   .profile-actions {
@@ -723,7 +921,6 @@ body.modal-open {
   }
 }
 
-/* Mobile Pequeno (480px para baixo) */
 @media (max-width: 480px) {
   .admin-main {
     padding: 10px;
@@ -792,7 +989,6 @@ body.modal-open {
   }
 }
 
-/* Ajustes para orientação paisagem em mobile */
 @media (max-height: 500px) and (orientation: landscape) {
   .avaliacoes-content {
     max-height: 70vh;

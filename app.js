@@ -32,6 +32,7 @@ app.use((req, res, next) => {
       tipo: req.session.tipo,
       Nome: req.session.nomeUsuario,
       Email: req.session.emailUsuario,
+       foto: req.session.fotoUsuario
     };
   } else {
     res.locals.usuario = null;

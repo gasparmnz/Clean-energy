@@ -132,6 +132,19 @@
     </article>
   </dialog>
 
+  <!-- MODAL DE CONFIRMAÇÃO -->
+<section id="customModal" class="custom-modal">
+  <section class="modal-content">
+    <h3 id="modalTitle">Confirmação</h3>
+    <p id="modalMessage"></p>
+
+    <section class="modal-actions">
+      <button class="btn-cancel" onclick="closeCustomModal()">Cancelar</button>
+      <button class="btn-confirm" id="confirmBtn">Confirmar</button>
+    </section>
+  </section>
+</section>
+
   <!-- JS separado -->
   <script id="admin-products-data" type="application/json"><%- JSON.stringify(produtos || []) %></script>
   <script>
@@ -140,6 +153,7 @@
   </script>
   <script src="/js/produtos_adm.js"></script>
   <script src="/js/darkmode.js"></script>
+ 
 
 </body>
 </html>
