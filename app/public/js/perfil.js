@@ -146,35 +146,61 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ─────────────────────────────────────────
      Upload de foto de perfil + atualiza header
   ───────────────────────────────────────── */
-  const inputFoto = document.getElementById('inputFoto');
-  const imgPerfil = document.getElementById('fotoPerfil');
-  const btnConfirmar = document.getElementById('btnConfirmarFoto');
+  const inputFoto     = document.getElementById('inputFoto');
+  const imgPerfil     = document.getElementById('fotoPerfil');
+  const btnConfirmarFoto = document.getElementById('btnConfirmarFoto');
+  const btnCancelarFoto  = document.getElementById('btnCancelarFoto');
+  const fotoActions   = document.getElementById('fotoActions');
+  const labelFoto     = document.getElementById('labelFoto');
+
   let arquivoSelecionado = null;
+  let fotoOriginal = imgPerfil ? imgPerfil.src : null; // guarda a foto atual antes de trocar
+
+  function mostrarAcoes(mostrar) {
+    if (fotoActions) fotoActions.style.display = mostrar ? 'flex' : 'none';
+    if (labelFoto)   labelFoto.style.display   = mostrar ? 'none' : 'flex';
+  }
 
   if (inputFoto) {
     inputFoto.addEventListener('change', function () {
       const file = this.files[0];
       if (!file) return;
-      arquivoSelecionado = file;
 
+      arquivoSelecionado = file;
+      fotoOriginal = imgPerfil ? imgPerfil.src : null; // salva a src atual ANTES do preview
 
       const reader = new FileReader();
       reader.onload = e => {
+        // Mostra preview da nova foto
         if (imgPerfil) imgPerfil.src = e.target.result;
-
         const asideAvatar = document.querySelector('.perfil-aside__avatar');
         if (asideAvatar) asideAvatar.src = e.target.result;
+        // Exibe botões confirmar/cancelar
+        mostrarAcoes(true);
       };
       reader.readAsDataURL(file);
     });
   }
 
-  if (btnConfirmar) {
-    btnConfirmar.addEventListener('click', async function () {
+  // ── Cancelar: volta para a foto anterior ───────────────────────────────────
+  if (btnCancelarFoto) {
+    btnCancelarFoto.addEventListener('click', function () {
+      if (imgPerfil && fotoOriginal) imgPerfil.src = fotoOriginal;
+      const asideAvatar = document.querySelector('.perfil-aside__avatar');
+      if (asideAvatar && fotoOriginal) asideAvatar.src = fotoOriginal;
+      arquivoSelecionado = null;
+      inputFoto.value = ''; // limpa o input para permitir selecionar mesmo arquivo novamente
+      mostrarAcoes(false);
+    });
+  }
+
+  // ── Confirmar: envia para o servidor ───────────────────────────────────────
+  if (btnConfirmarFoto) {
+    btnConfirmarFoto.addEventListener('click', async function () {
       if (!arquivoSelecionado) return;
 
-      btnConfirmar.disabled = true;
-      btnConfirmar.textContent = 'Enviando...';
+      btnConfirmarFoto.disabled = true;
+      btnConfirmarFoto.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Enviando...';
 
       const formData = new FormData();
       formData.append('foto', arquivoSelecionado);
@@ -186,19 +212,24 @@ document.addEventListener('DOMContentLoaded', function () {
         if (json.sucesso) {
           const src = json.foto + '?t=' + Date.now();
           if (imgPerfil) imgPerfil.src = src;
-          // Atualiza avatar no HEADER (dropdown)
+          fotoOriginal = src; // atualiza referência
           const headerAvatar = document.querySelector('header .avatar');
           if (headerAvatar) headerAvatar.src = src;
-          // Atualiza avatar no aside
           const asideAvatar = document.querySelector('.perfil-aside__avatar');
           if (asideAvatar) asideAvatar.src = src;
+          arquivoSelecionado = null;
+          inputFoto.value = '';
+          mostrarAcoes(false);
           showToast('Foto atualizada com sucesso!', 'sucesso');
         } else {
           showToast(json.erro || 'Erro ao enviar foto.', 'erro');
+          btnConfirmarFoto.disabled = false;
+          btnConfirmarFoto.innerHTML = '<i class="bx bx-check"></i> Confirmar';
         }
-
       } catch {
         showToast('Erro de conexão ao enviar foto.', 'erro');
+        btnConfirmarFoto.disabled = false;
+        btnConfirmarFoto.innerHTML = '<i class="bx bx-check"></i> Confirmar';
       }
     });
   }

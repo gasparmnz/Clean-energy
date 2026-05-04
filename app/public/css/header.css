@@ -197,6 +197,36 @@ body {
     margin-left: 10px;
 }
 
+/* ── Dropdown guest (deslogado mobile/tablet) ──────────────── */
+.dropdown-guest {
+    display: none; /* escondido no desktop — login-links aparece */
+}
+
+.dropdown-content--guest {
+    min-width: 180px;
+    padding: 8px 0;
+}
+
+.dropdown-guest-title {
+    display: block;
+    padding: 8px 16px 4px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.dropdown-content--guest a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.dropdown-content--guest a i {
+    font-size: 1.1rem;
+    color: #1e8e3e;
+}
+
 @media (max-width: 1150px) {
     .navbar {
         gap: 1.2rem;
@@ -208,8 +238,12 @@ body {
         padding: 8px 18px;
         font-size: 0.8rem;
     }
+    /* Esconde login-links texto, mostra ícone guest */
     .login-links {
         display: none;
+    }
+    .dropdown-guest {
+        display: block;
     }
 }
 
@@ -301,10 +335,11 @@ body {
     .login-container {
         gap: 0.8rem;
     }
+    /* Logado: esconde "Olá, Nome" — mantém só o avatar */
     .header-greeting {
         display: none;
     }
-    
+
     #check:checked ~ .navbar {
         height: 350px;
     }

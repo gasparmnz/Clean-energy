@@ -51,9 +51,22 @@
         <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
       </a>
 
+      <!-- Desktop: links normais -->
       <span class="login-links">
         <a href="/login">LOGIN</a> | <a href="/cadastro">CADASTRE-SE</a>
       </span>
+
+      <!-- Mobile/Tablet: ícone avatar com dropdown -->
+      <section class="dropdown dropdown-guest" id="dropdownGuest">
+        <button class="dropdown-trigger" id="dropdownGuestBtn">
+          <img src="/imagem/user.png" alt="Entrar" class="avatar">
+        </button>
+        <section class="dropdown-content dropdown-content--guest" id="dropdownGuestMenu">
+          <span class="dropdown-guest-title">Bem-vindo!</span>
+          <a href="/login"><i class='bx bx-log-in'></i> Login</a>
+          <a href="/cadastro"><i class='bx bx-user-plus'></i> Cadastre-se</a>
+        </section>
+      </section>
     <% } %>
   </section>
 </header>
