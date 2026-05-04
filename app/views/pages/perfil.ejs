@@ -31,19 +31,7 @@
           <label class="perfil-hero__camera-btn" for="inputFoto" title="Trocar foto">
             <i class='bx bx-camera'></i>
             <input type="file" id="inputFoto" accept="image/*" style="display:none">
-            <button id="btnConfirmarFoto" class="btn-confirmar-foto" style="display:none">
-              Confirmar foto
-            </button>
-          </div>
-
-          <div class="perfil-greeting">
-            <p><%= usuario.nome %></p>
-            <% if (usuario) { %>
-              <span class="perfil-badge <%= usuario.Tipo === 'PJ' ? 'badge-vendedor' : 'badge-comprador' %>">
-                <%= usuario.Tipo === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
-              </span>
-            <% } %>
-          </div>
+          </label>
         </div>
 
         <div class="perfil-hero__info">

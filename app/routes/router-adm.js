@@ -182,10 +182,72 @@ router.get("/detalhes_user", async (req, res) => {
       [idToQuery]
     );
     const usuario = rows[0] || null;
-    res.render('pages/detalhes_user', { usuario });
+
+    // Busca avaliações DADAS pelo usuário no banco (dados reais)
+    let avaliacoesDadas = [];
+    try {
+      // Garante coluna suspensa existe
+      const [colSusp] = await pool.query(
+        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Avaliacao' AND COLUMN_NAME = 'suspensa'"
+      );
+      if (colSusp.length === 0) {
+        await pool.query("ALTER TABLE Avaliacao ADD COLUMN suspensa TINYINT(1) NOT NULL DEFAULT 0");
+      }
+
+      const [avals] = await pool.query(
+        `SELECT a.Avaliacao_ID, a.Nota, a.Comentario, a.criado_em,
+                IFNULL(a.suspensa, 0) AS suspensa,
+                p.nome AS produto_nome
+         FROM Avaliacao a
+         LEFT JOIN produtos p ON p.id = a.Produto_ID
+         WHERE a.Usuario_ID = ?
+         ORDER BY a.criado_em DESC`,
+        [idToQuery]
+      );
+      avaliacoesDadas = avals;
+    } catch(e) {
+      console.error('Erro ao buscar avaliações:', e.message);
+    }
+
+    res.render('pages/detalhes_user', { usuario, avaliacoesDadas });
   } catch (err) {
     console.error('Erro ao obter detalhes do usuário', err);
     res.render('pages/detalhes_user', { usuario: null });
+  }
+});
+
+// Reverter suspensão de avaliação
+router.post("/avaliacoes/reativar", async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'ID obrigatório' });
+    await pool.query("UPDATE Avaliacao SET suspensa = 0 WHERE Avaliacao_ID = ?", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Erro ao reativar avaliação:', err);
+    res.status(500).json({ error: err.message || 'Erro interno' });
+  }
+});
+
+// Suspender comentário/avaliação
+router.post("/avaliacoes/suspender", async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'ID obrigatório' });
+
+    // Garante coluna suspensa
+    const [col] = await pool.query(
+      "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Avaliacao' AND COLUMN_NAME = 'suspensa'"
+    );
+    if (col.length === 0) {
+      await pool.query("ALTER TABLE Avaliacao ADD COLUMN suspensa TINYINT(1) NOT NULL DEFAULT 0");
+    }
+
+    await pool.query("UPDATE Avaliacao SET suspensa = 1 WHERE Avaliacao_ID = ?", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Erro ao suspender avaliação:', err);
+    res.status(500).json({ error: err.message || 'Erro interno' });
   }
 });
 

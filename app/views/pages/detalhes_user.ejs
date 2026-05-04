@@ -51,9 +51,8 @@
           <h3>Avaliações Dadas</h3>
           <section id="modalGivenReviews"></section>
         </article>
-        <article class="avaliacoes-col">
-          <h3>Avaliações Recebidas</h3>
-          <section id="modalReceivedReviews"></section>
+
+    
         </article>
       </section>
     </article>
@@ -73,9 +72,22 @@
 </div>
 
   <script id="server-user-data" type="application/json"><%- JSON.stringify(typeof usuario !== 'undefined' ? usuario : null) %></script>
+  <script id="server-avaliacoes" type="application/json"><%- JSON.stringify(typeof avaliacoesDadas !== 'undefined' ? avaliacoesDadas : []) %></script>
   <script>
 
     window.__SERVER_USER__ = JSON.parse(document.getElementById('server-user-data').textContent);
+    // Avaliações reais do banco
+    const _rawAvals = JSON.parse(document.getElementById('server-avaliacoes').textContent || '[]');
+    if (_rawAvals.length > 0 && window.__SERVER_USER__) {
+      window.__SERVER_USER__.given = _rawAvals.map(a => ({
+        id:       a.Avaliacao_ID,
+        product:  a.produto_nome || 'Produto',
+        score:    a.Nota || 0,
+        comment:  a.Comentario || '',
+        date:     a.criado_em ? new Date(a.criado_em).toLocaleDateString('pt-BR') : '-',
+        suspensa: a.suspensa || 0
+      }));
+    }
 
 
     let currentUserId = '';
@@ -347,69 +359,643 @@
         `;
       }
 
-      // Avações Dadas
+      // ── Avaliações Dadas (dados reais do banco) ──────────────────────────────
+      html += `<section class="user-profile-card">
+        <section class="info-section">
+          <header class="section-header">
+            <h3><i class='bx bxs-star'></i> Avaliações Dadas</h3>
+          </header>`;
+
       if (user.given && user.given.length > 0) {
-        html += `
-          <section class="user-profile-card">
-            <section class="info-section">
-              <header class="section-header">
-                <h3><i class='bx bxs-star'></i> Avaliações Dadas</h3>
-              </header>
-              <section class="reviews-container">
-        `;
+        html += `<section class="reviews-container">`;
         user.given.forEach(review => {
+          const isSuspensa = review.suspensa == 1;
           html += `
-            <article class="review-card">
+            <article class="review-card ${isSuspensa ? 'review-suspensa' : ''}" id="rc-${review.id}">
               <header class="review-header">
-                <span class="review-person">Para: ${review.to}</span>
+                <div class="review-header-left">
+                  <span class="review-person"><i class='bx bx-store-alt'></i> ${review.product}</span>
+                  ${isSuspensa ? `<span class="badge-suspensa"><i class='bx bx-block'></i> Suspenso</span>` : ''}
+                </div>
                 <time class="review-date">${review.date}</time>
               </header>
-              <span class="review-product">${review.product}</span>
+              <div class="review-rating">${renderStars(review.score)}</div>
+              ${review.comment ? `<blockquote class="review-comment">"${review.comment}"</blockquote>` : '<p class="review-no-comment">Sem comentário.</p>'}
+              <footer class="review-footer">
+                ${isSuspensa
+                  ? `<button class="btn-reativar-comment" onclick="openConfirmModal(${review.id}, 'reativar', this)">
+                       <i class='bx bx-refresh'></i> Reverter suspensão
+                     </button>`
+                  : `<button class="btn-suspender-comment" onclick="openConfirmModal(${review.id}, 'suspender', this)">
+                       <i class='bx bx-block'></i> Suspender comentário
+                     </button>`
+                }
+              </footer>
+            </article>`;
+        });
+        html += `</section>`;
+      } else {
+        html += `<article class="empty-state"><p>Este usuário ainda não fez nenhuma avaliação.</p></article>`;
+      }
+
+      html += `</section></section>`;
+
+      contentDiv.innerHTML = html;
+    }
+
+    function openModal(userId) {
+      const user = usersData[userId];
+      if (!user) return;
+
+      document.getElementById('modalUserName').textContent = user.name;
+
+      const modalGivenReviewsDiv = document.getElementById('modalGivenReviews');
+      const modalReceivedReviewsDiv = document.getElementById('modalReceivedReviews');
+
+      modalGivenReviewsDiv.innerHTML = '';
+      modalReceivedReviewsDiv.innerHTML = '';
+
+      if (user.given && user.given.length > 0) {
+        user.given.forEach(review => {
+          modalGivenReviewsDiv.innerHTML += `
+            <article class="avaliacao-item-modal">
+              <p>Para: <em>${review.to}</em><span>${review.date}</span></p>
+              <p>Produto: ${review.product}</p>
               <article class="review-rating">${renderStars(review.score)}</article>
-              <blockquote class="review-comment">"${review.comment}"</blockquote>
+              <p>${review.comment}</p>
+            </article>
+          `;
+        });
+      } else {
+        modalGivenReviewsDiv.innerHTML = '<article class="empty-state"><p>Nenhuma avaliação dada.</p></article>';
+      }
+
+      if (user.received && user.received.length > 0) {
+        user.received.forEach(review => {
+          modalReceivedReviewsDiv.innerHTML += `
+            <article class="avaliacao-item-modal">
+              <p>De: <em>${review.from}</em><span>${review.date}</span></p>
+              <p>Produto: ${review.product}</p>
+              <article class="review-rating">${renderStars(review.score)}</article>
+              <p>${review.comment}</p>
+            </article>
+          `;
+        });
+      } else {
+        modalReceivedReviewsDiv.innerHTML = '<article class="empty-state"><p>Nenhuma avaliação recebida.</p></article>';
+      }
+
+      document.getElementById('avaliacoesModal').classList.add('show');
+      document.body.classList.add('modal-open');
+    }
+
+    function closeModal() {
+      document.getElementById('avaliacoesModal').classList.remove('show');
+      document.body.classList.remove('modal-open');
+    }
+
+    async function suspendAccount(userId) {
+  const s = window.__SERVER_USER__;
+  if (!s || !s.id) {
+    alert('Usuário não identificado.');
+    return;
+  }
+
+  const nome = s.Nome || s.name || 'este usuário';
+  const isSuspended = s.status === 'suspended';
+  const endpoint = isSuspended
+    ? '/adm/usuarios/reativar'
+    : '/adm/usuarios/suspender';
+
+  const confirmMsg = isSuspended
+    ? `Deseja reativar a conta de ${nome}?`
+    : `Tem certeza que deseja suspender a conta de ${nome}?`;
+
+  // 🔥 TUDO acontece aqui dentro
+  openCustomModal("Confirmação", confirmMsg, async () => {
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: s.id })
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        showToastDU(
+          isSuspended ? nome + ' foi reativado.' : nome + ' foi suspenso.',
+          'success'
+        );
+        setTimeout(() => location.reload(), 1200);
+      } else {
+        showToastDU('Erro: ' + (data.error || 'tente novamente.'), 'error');
+      }
+    } catch (e) {
+      showToastDU('Erro de conexão.', 'error');
+    }
+  });
+}
+
+    async function deleteAccount(userId) {
+  const s = window.__SERVER_USER__;
+  if (!s || !s.id) {
+    alert('Usuário não identificado.');
+    return;
+  }
+
+  const nome = s.Nome || s.name || 'este usuário';
+
+  openCustomModal(
+    "Excluir Conta",
+    `⚠️ Deseja excluir permanentemente a conta de ${nome}?`,
+    async () => {
+      try {
+        const res = await fetch('/adm/usuarios/excluir', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: s.id })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          showToastDU('Conta de ' + nome + ' excluída.', 'success');
+          setTimeout(() => {
+            window.location.href = '/adm/usuarios_cadastrados';
+          }, 1500);
+        } else {
+          showToastDU('Erro: ' + (data.error || 'tente novamente.'), 'error');
+        }
+      } catch (e) {
+        showToastDU('Erro de conexão.', 'error');
+      }
+    }
+  );
+}
+
+    function showToastDU(msg, type) {
+      let t = document.getElementById('duToast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'duToast';
+        t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:12px 20px;border-radius:10px;font-size:.9rem;font-weight:500;z-index:9999;display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(10px);transition:all .3s;';
+        document.body.appendChild(t);
+      }
+      const icon = type==='error'
+        ? '<i class="bx bx-x-circle" style="color:#ef4444;font-size:1.2rem;"></i>'
+        : '<i class="bx bx-check-circle" style="color:#10b981;font-size:1.2rem;"></i>';
+      t.innerHTML = icon + '<span>' + msg + '</span>';
+      t.style.opacity='1'; t.style.transform='translateY(0)';
+      setTimeout(() => { t.style.opacity='0'; t.style.transform='translateY(10px)'; }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const userId = getUserIdFromUrl();
+      if (userId) {
+        displayUserContent(userId);
+      } else {
+        document.getElementById('userContent').innerHTML = '<article class="empty-state"><p>Nenhum ID de usuário fornecido na URL.</p><p>Por favor, use uma URL como: <code>detalhes_usuario.html?userId=USR-001</code></p></article>';
+      }
+    });
+    function openCustomModal(title, message, onConfirm) {
+  const modal = document.getElementById("customModal");
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("modalMessage").textContent = message;
+
+  const confirmBtn = document.getElementById("confirmBtn");
+  confirmBtn.onclick = null;
+
+  confirmBtn.onclick = () => {
+    onConfirm();
+    closeCustomModal();
+  };
+
+  modal.classList.add("show");
+}
+
+function closeCustomModal() {
+  document.getElementById("customModal").classList.remove("show");
+}
+  </script>
+  <script src="/js/darkmode.js"></script>
+
+  <!-- Modal de confirmação -->
+  <div class="confirm-modal-overlay" id="confirmAvalModal" onclick="if(event.target===this)closeConfirmModal()">
+    <div class="confirm-modal">
+      <div class="confirm-modal-icon" id="confirmAvalIcon">⚠️</div>
+      <h3 id="confirmAvalTitle">Suspender comentário?</h3>
+      <p id="confirmAvalMsg">Este comentário ficará oculto para todos os usuários.</p>
+      <div class="confirm-modal-actions">
+        <button class="confirm-btn-cancel" onclick="closeConfirmModal()">Cancelar</button>
+        <button class="confirm-btn-confirm" id="confirmAvalBtn">Sim, suspender</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html// ── Modal de confirmação ──────────────────────────────────────────────────
+  let _confirmCb = null;
+
+  function openConfirmModal(id, action, btn) {
+    _confirmCb = { id, action, btn };
+    const isReativar = action === 'reativar';
+    document.getElementById('confirmAvalIcon').textContent  = isReativar ? '✅' : '⚠️';
+    document.getElementById('confirmAvalTitle').textContent = isReativar ? 'Reverter suspensão?' : 'Suspender comentário?';
+    document.getElementById('confirmAvalMsg').textContent   = isReativar
+      ? 'O comentário voltará a ser exibido publicamente para todos os usuários.'
+      : 'Este comentário ficará oculto para todos os usuários. Você pode reverter a qualquer momento.';
+    const btn2 = document.getElementById('confirmAvalBtn');
+    btn2.textContent = isReativar ? 'Sim, reverter' : 'Sim, suspender';
+    btn2.className = 'confirm-btn-confirm' + (isReativar ? ' green' : '');
+    document.getElementById('confirmAvalModal').classList.add('show');
+  }
+
+  function closeConfirmModal() {
+    document.getElementById('confirmAvalModal').classList.remove('show');
+    _confirmCb = null;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('confirmAvalBtn').addEventListener('click', async () => {
+      if (!_confirmCb) return;
+      const { id, action, btn } = _confirmCb;
+      closeConfirmModal();
+      const suspendendo = action === 'suspender';
+      const endpoint = suspendendo ? '/adm/avaliacoes/suspender' : '/adm/avaliacoes/reativar';
+      try {
+        const res  = await fetch(endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ id }) });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          const card = document.getElementById('rc-' + id);
+          const footer = btn ? btn.closest('.review-footer') : null;
+          if (suspendendo) {
+            card && card.classList.add('review-suspensa');
+            if (footer) footer.innerHTML = `<button class="btn-reativar-comment" onclick="openConfirmModal(${id},'reativar',this)"><i class='bx bx-refresh'></i> Reverter suspensão</button>`;
+            const hl = card && card.querySelector('.review-header-left');
+            if (hl && !hl.querySelector('.badge-suspensa')) hl.insertAdjacentHTML('beforeend', `<span class="badge-suspensa"><i class='bx bx-block'></i> Suspenso</span>`);
+            showToastDU('Comentário suspenso com sucesso.', 'success');
+          } else {
+            card && card.classList.remove('review-suspensa');
+            if (footer) footer.innerHTML = `<button class="btn-suspender-comment" onclick="openConfirmModal(${id},'suspender',this)"><i class='bx bx-block'></i> Suspender comentário</button>`;
+            const badge = card && card.querySelector('.badge-suspensa');
+            badge && badge.remove();
+            showToastDU('Suspensão revertida com sucesso.', 'success');
+          }
+        } else { showToastDU('Erro: ' + (data.error || 'tente novamente.'), 'error'); }
+      } catch(e) { showToastDU('Erro de conexão.', 'error'); }
+    });
+  });
+  </script>>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Usuário - Admin</title>
+  <link rel="stylesheet" href="/css/adm.css">
+  <link rel="stylesheet" href="/css/detalhes_user.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+</head>
+<body>
+  <%- include('../partial/header.ejs') %>
+  <section class="admin-container">
+    <!-- Sidebar via EJS -->
+    <%- include('../partial/sidebar_adm.ejs') %>
+
+    <main class="admin-main">
+      <!-- Header -->
+      <header class="details-header">
+         <nav class="back-navigation" aria-label="Navegação de retorno">
+        <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+          <i class='bx bx-arrow-back'></i>
+          <span>Voltar</span>
+        </button>
+      </nav>
+        <article class="header-content">
+          <h1>Detalhes do Usuário</h1>
+          <p class="page-subtitle">Informações completas e histórico de transações</p>
+        </article>
+      </header>
+
+      <!-- User Content -->
+      <article id="userContent">
+        <!-- Conteúdo do usuário será carregado aqui pelo JavaScript -->
+      </article>
+    </main>
+  </section>
+
+  <!-- MODAL DE AVALIAÇÕES -->
+  <dialog id="avaliacoesModal" class="avaliacoes-modal">
+    <article class="avaliacoes-content">
+      <button class="close-modal" onclick="closeModal()">&times;</button>
+      <h2><i class='bx bxs-star'></i> Avaliações Detalhadas</h2>
+      <p class="subtitle">Avaliações de <span id="modalUserName">-</span></p>
+
+      <section class="avaliacoes-grid">
+        <article class="avaliacoes-col">
+          <h3>Avaliações Dadas</h3>
+          <section id="modalGivenReviews"></section>
+        </article>
+
+    
+        </article>
+      </section>
+    </article>
+  </dialog>
+
+  <!-- MODAL PERSONALIZADO -->
+<div id="customModal" class="custom-modal">
+  <div class="modal-content">
+    <h3 id="modalTitle">Confirmação</h3>
+    <p id="modalMessage"></p>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeCustomModal()">Cancelar</button>
+      <button class="btn-confirm" id="confirmBtn">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+  <script id="server-user-data" type="application/json"><%- JSON.stringify(typeof usuario !== 'undefined' ? usuario : null) %></script>
+  <script id="server-avaliacoes" type="application/json"><%- JSON.stringify(typeof avaliacoesDadas !== 'undefined' ? avaliacoesDadas : []) %></script>
+  <script>
+
+    window.__SERVER_USER__ = JSON.parse(document.getElementById('server-user-data').textContent);
+    // Avaliações reais do banco
+    const _rawAvals = JSON.parse(document.getElementById('server-avaliacoes').textContent || '[]');
+    if (_rawAvals.length > 0 && window.__SERVER_USER__) {
+      window.__SERVER_USER__.given = _rawAvals.map(a => ({
+        id:       a.Avaliacao_ID,
+        product:  a.produto_nome || 'Produto',
+        score:    a.Nota || 0,
+        comment:  a.Comentario || '',
+        date:     a.criado_em ? new Date(a.criado_em).toLocaleDateString('pt-BR') : '-',
+        suspensa: a.suspensa || 0
+      }));
+    }
+
+
+    let currentUserId = '';
+
+    function getUserIdFromUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('userId');
+    }
+
+    function renderStars(score) {
+      const fullStars = Math.floor(score);
+      const hasHalfStar = score % 1 !== 0;
+      let starsHtml = '';
+
+      for (let i = 0; i < fullStars; i++) {
+        starsHtml += '<i class="fas fa-star"></i>';
+      }
+
+      if (hasHalfStar) {
+        starsHtml += '<i class="fas fa-star-half-alt"></i>';
+      }
+
+      const emptyStars = 5 - Math.ceil(score);
+      for (let i = 0; i < emptyStars; i++) {
+        starsHtml += '<i class="far fa-star"></i>';
+      }
+
+      return starsHtml;
+    }
+
+    function displayUserContent(userId) {
+      const contentDiv = document.getElementById('userContent');
+      let user = null;
+      if (window.__SERVER_USER__) {
+        const s = window.__SERVER_USER__;
+
+        function fmtCPF(v) {
+          if (!v) return null;
+          const d = String(v).replace(/\D/g,'');
+          if (d.length !== 11) return v;
+          return d.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        }
+        function fmtCNPJ(v) {
+          if (!v) return null;
+          const d = String(v).replace(/\D/g,'');
+          if (d.length !== 14) return v;
+          return d.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+        }
+
+        const isPJ     = s.Tipo === 'PJ';
+        const docLabel = isPJ ? 'CNPJ' : 'CPF';
+        const docValue = isPJ ? fmtCNPJ(s.CNPJ) : fmtCPF(s.CPF);
+
+        user = {
+          name: s.Nome || s.name || '',
+          email: s.Email || s.email || '',
+          cpf: docValue,
+          docLabel: docLabel,
+          tipo: isPJ ? 'Vendedor (PJ)' : 'Comprador (PF)',
+          biografia: s.Biografia || null,
+          ultimoLogin: s.Ultimo_Login ? new Date(s.Ultimo_Login).toLocaleString('pt-BR') : null,
+          dataCriacao: s.Data_Criacao ? new Date(s.Data_Criacao).toLocaleDateString('pt-BR') : null,
+          address: s.Endereco || s.address || '',
+          salesCount: s.salesCount || 0,
+          salesTotal: s.salesTotal || 'R$ 0,00',
+          purchasesCount: s.purchasesCount || 0,
+          purchasesTotal: s.purchasesTotal || 'R$ 0,00',
+          rating: s.rating || null,
+          status: s.status || 'active',
+          given: s.given || [],
+          received: s.received || [],
+          products: s.products || [],
+          purchasedProducts: s.purchasedProducts || []
+        };
+      } else if (typeof usersData !== 'undefined') {
+        user = usersData[userId];
+      }
+
+      if (!user) {
+        contentDiv.innerHTML = '<article class="empty-state"><p>Usuário não encontrado.</p></article>';
+        return;
+      }
+
+      currentUserId = userId;
+
+      let html = `
+        <section class="user-profile-card">
+          <header class="profile-header">
+            <article class="profile-info">
+              <figure class="profile-avatar"><i class='bx bx-user'></i></figure>
+              <article>
+                <h2>${user.name}</h2>
+                <p>${user.email || 'Não informado'}</p>
+                <span class="status-badge" style="\${window.__SERVER_USER__ && window.__SERVER_USER__.status === 'suspended' ? 'background:#fee2e2;color:#991b1b;' : 'background:#d1fae5;color:#065f46;'}">\${window.__SERVER_USER__ && window.__SERVER_USER__.status === 'suspended' ? 'SUSPENSO' : 'ATIVO'}</span>
+                <nav class="profile-actions">
+                  ${(window.__SERVER_USER__ && window.__SERVER_USER__.status === 'suspended')
+                    ? `<button class="action-btn-small" onclick="suspendAccount('${userId}')" style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;padding:8px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600;">
+                         <i class='bx bx-check-circle'></i>Reativar Conta
+                       </button>`
+                    : `<button class="action-btn-small btn-suspend" onclick="suspendAccount('${userId}')">
+                         <i class='bx bx-block'></i>Suspender Conta
+                       </button>`
+                  }
+                  <button class="action-btn-small btn-delete" onclick="deleteAccount('${userId}')" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;padding:8px 14px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-weight:600;margin-left:8px;">
+                    <i class='bx bx-trash'></i>Excluir Conta
+                  </button>
+                </nav>
+              </article>
+            </article>
+            <article class="profile-rating">
+              <span class="rating-label">Avaliação Média</span>
+              <article class="rating-display">
+                <span class="rating-value">${user.rating ? user.rating.toFixed(1) : 'N/A'}</span>
+                <i class='bx bxs-star'></i>
+              </article>
+            </article>
+          </header>
+
+          <section class="info-section">
+            <header class="section-header">
+              <h3>Informações do Usuário</h3>
+            </header>
+            <header class="section-header" style="margin-top: 20px; margin-bottom: 15px;">
+              <h4 style="font-size: 1.1rem; color: #6b7280; font-weight: 600; margin: 0;">Informações Pessoais</h4>
+            </header>
+            <section class="info-grid">
+              <article class="info-item">
+                <i class="info-icon bx bx-envelope"></i>
+                <article>
+                  <label>Email</label>
+                  <p>${user.email || 'Não informado'}</p>
+                </article>
+              </article>
+              <article class="info-item">
+                <i class="info-icon bx bx-id-card"></i>
+                <article>
+                  <label>${user.docLabel || 'CPF'}</label>
+                  <p>${user.cpf || 'Não informado'}</p>
+                </article>
+              </article>
+              <article class="info-item">
+                <i class="info-icon bx bx-user-badge"></i>
+                <article>
+                  <label>Tipo de conta</label>
+                  <p>${user.tipo || 'Não informado'}</p>
+                </article>
+              </article>
+              ${user.biografia ? `
+              <article class="info-item">
+                <i class="info-icon bx bx-text"></i>
+                <article>
+                  <label>Biografia</label>
+                  <p>${user.biografia}</p>
+                </article>
+              </article>` : ''}
+              ${user.dataCriacao ? `
+              <article class="info-item">
+                <i class="info-icon bx bx-calendar"></i>
+                <article>
+                  <label>Membro desde</label>
+                  <p>${user.dataCriacao}</p>
+                </article>
+              </article>` : ''}
+              ${user.ultimoLogin ? `
+              <article class="info-item">
+                <i class="info-icon bx bx-log-in-circle"></i>
+                <article>
+                  <label>Último login</label>
+                  <p>${user.ultimoLogin}</p>
+                </article>
+              </article>` : ''}
+            </section>
+          </section>
+
+          <section class="statistics-section">
+            <article class="stat-card">
+              <i class="stat-icon bx bx-shopping-bag"></i>
+              <article>
+                <h4>Vendas Realizadas</h4>
+                <p class="stat-value">${user.salesCount || 0}</p>
+              </article>
+            </article>
+            <article class="stat-card">
+              <i class="stat-icon bx bx-trending-up"></i>
+              <article>
+                <h4>Total em Vendas</h4>
+                <p class="stat-value">${user.salesTotal || 'R$ 0,00'}</p>
+              </article>
+            </article>
+            <article class="stat-card">
+              <i class="stat-icon bx bx-cart"></i>
+              <article>
+                <h4>Compras Realizadas</h4>
+                <p class="stat-value">${user.purchasesCount || 0}</p>
+              </article>
+            </article>
+            <article class="stat-card">
+              <i class="stat-icon bx bx-package"></i>
+              <article>
+                <h4>Total em Compras</h4>
+                <p class="stat-value">${user.purchasesTotal || 'R$ 0,00'}</p>
+              </article>
+            </article>
+          </section>
+        </section>
+      `;
+
+      // Produtos Vendidos
+      if (user.products && user.products.length > 0) {
+        html += `
+          <section class="user-profile-card">
+            <section class="products-section">
+              <header class="section-header">
+                <h3><i class='bx bx-package'></i> Produtos Vendidos</h3>
+              </header>
+              <section class="products-container">
+        `;
+        user.products.forEach(product => {
+          html += `
+            <article class="product-card">
+              <figure class="product-image">
+                <img src="${product.image}" alt="${product.name}">
+              </figure>
+              <article class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-price">${product.price}</p>
+                <p class="product-quantity">Quantidade: ${product.quantity} unidades</p>
+                <time class="product-date">Vendido em: ${product.date}</time>
+              </article>
             </article>
           `;
         });
         html += `
               </section>
-            </section>
-          </section>
-        `;
-      } else {
-        html += `
-          <section class="user-profile-card">
-            <section class="info-section">
-              <header class="section-header">
-                <h3><i class='bx bxs-star'></i> Avaliações Dadas</h3>
-              </header>
-              <article class="empty-state">
-                <p>Nenhuma avaliação dada ainda.</p>
-              </article>
             </section>
           </section>
         `;
       }
 
-      // Avaliações Recebidas
-      if (user.received && user.received.length > 0) {
+      // Produtos Comprados
+      if (user.purchasedProducts && user.purchasedProducts.length > 0) {
         html += `
           <section class="user-profile-card">
-            <section class="info-section">
+            <section class="products-section">
               <header class="section-header">
-                <h3><i class='bx bx-inbox'></i> Avaliações Recebidas</h3>
+                <h3><i class='bx bx-cart'></i> Produtos Comprados</h3>
               </header>
-              <section class="reviews-container">
+              <section class="products-container">
         `;
-        user.received.forEach(review => {
+        user.purchasedProducts.forEach(product => {
           html += `
-            <article class="review-card">
-              <header class="review-header">
-                <span class="review-person">De: ${review.from}</span>
-                <time class="review-date">${review.date}</time>
-              </header>
-              <span class="review-product">${review.product}</span>
-              <article class="review-rating">${renderStars(review.score)}</article>
-              <blockquote class="review-comment">"${review.comment}"</blockquote>
+            <article class="product-card">
+              <figure class="product-image">
+                <img src="${product.image}" alt="${product.name}">
+              </figure>
+              <article class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-price">${product.price}</p>
+                <p class="product-quantity">Quantidade: ${product.quantity} unidades</p>
+                <time class="product-date">Comprado em: ${product.date}</time>
+              </article>
             </article>
           `;
         });
@@ -418,20 +1004,48 @@
             </section>
           </section>
         `;
-      } else {
-        html += `
-          <section class="user-profile-card">
-            <section class="info-section">
-              <header class="section-header">
-                <h3><i class='bx bx-inbox'></i> Avaliações Recebidas</h3>
-              </header>
-              <article class="empty-state">
-                <p>Nenhuma avaliação recebida ainda.</p>
-              </article>
-            </section>
-          </section>
-        `;
       }
+
+      // ── Avaliações Dadas (dados reais do banco) ──────────────────────────────
+      html += `<section class="user-profile-card">
+        <section class="info-section">
+          <header class="section-header">
+            <h3><i class='bx bxs-star'></i> Avaliações Dadas</h3>
+          </header>`;
+
+      if (user.given && user.given.length > 0) {
+        html += `<section class="reviews-container">`;
+        user.given.forEach(review => {
+          const isSuspensa = review.suspensa == 1;
+          html += `
+            <article class="review-card ${isSuspensa ? 'review-suspensa' : ''}" id="rc-${review.id}">
+              <header class="review-header">
+                <div class="review-header-left">
+                  <span class="review-person"><i class='bx bx-store-alt'></i> ${review.product}</span>
+                  ${isSuspensa ? `<span class="badge-suspensa"><i class='bx bx-block'></i> Suspenso</span>` : ''}
+                </div>
+                <time class="review-date">${review.date}</time>
+              </header>
+              <div class="review-rating">${renderStars(review.score)}</div>
+              ${review.comment ? `<blockquote class="review-comment">"${review.comment}"</blockquote>` : '<p class="review-no-comment">Sem comentário.</p>'}
+              <footer class="review-footer">
+                ${isSuspensa
+                  ? `<button class="btn-reativar-comment" onclick="openConfirmModal(${review.id}, 'reativar', this)">
+                       <i class='bx bx-refresh'></i> Reverter suspensão
+                     </button>`
+                  : `<button class="btn-suspender-comment" onclick="openConfirmModal(${review.id}, 'suspender', this)">
+                       <i class='bx bx-block'></i> Suspender comentário
+                     </button>`
+                }
+              </footer>
+            </article>`;
+        });
+        html += `</section>`;
+      } else {
+        html += `<article class="empty-state"><p>Este usuário ainda não fez nenhuma avaliação.</p></article>`;
+      }
+
+      html += `</section></section>`;
 
       contentDiv.innerHTML = html;
     }
