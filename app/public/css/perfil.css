@@ -27,7 +27,14 @@ body { background: var(--bg); color: var(--text); }
 
 body.dark-mode .perfil-hero { background: #1e1e1e; border-color: #2a2a2a; }
 
-.perfil-hero__avatar-wrap { position: relative; flex-shrink: 0; }
+.perfil-hero__avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
 
 .perfil-hero__avatar {
   width: 100px; height: 100px; border-radius: 50%;
@@ -250,11 +257,14 @@ body.dark-mode .edit-divider { border-top-color: #2a2a2a; }
   margin-bottom: .5rem;
 }
 
-.edit-sub-header {
+/* ── Avatar com botão de câmera ── */
+.perfil-foto-wrap {
+  position: relative;
+  flex-shrink: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: .9rem;
-  padding: .5rem 0;
+  gap: 8px;
 }
 
 .edit-sub-icon {
@@ -298,11 +308,49 @@ body.dark-mode .edit-sub-header strong { color: #e5e7eb; }
 body.dark-mode .btn-toggle-sub { background: #2a2a2a; border-color: #374151; color: #d1d5db; }
 body.dark-mode .btn-toggle-sub:hover { background: #374151; }
 
-.sub-form {
-  margin-top: .8rem;
-  padding: 1rem;
-  background: #f9fafb;
-  border-radius: 10px;
-  border: 1px solid var(--border);
+body.dark-mode .foto-edit-btn { border-color: #1e1e1e; }
+
+/* ── Barra de ações da foto ─────────────────────────────── */
+.foto-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.foto-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: none;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, transform .1s;
+  white-space: nowrap;
+}
+.foto-btn:active { transform: scale(0.96); }
+.foto-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.foto-btn--confirmar {
+  background: #16a34a;
+  color: #fff;
+}
+.foto-btn--confirmar:hover:not(:disabled) { background: #15803d; }
+
+.foto-btn--cancelar {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1.5px solid #e5e7eb;
+}
+.foto-btn--cancelar:hover { background: #e5e7eb; }
+
+.foto-upload-msg {
+  font-size: .78rem;
+  margin-top: .4rem;
+  color: #16a34a;
+  display: none;
 }
 body.dark-mode .sub-form { background: #111; border-color: #2a2a2a; }

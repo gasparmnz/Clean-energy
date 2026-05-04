@@ -28,10 +28,21 @@
             alt="Foto de perfil"
             class="perfil-hero__avatar"
           >
-          <label class="perfil-hero__camera-btn" for="inputFoto" title="Trocar foto">
+          <!-- Botão câmera — só aparece quando NÃO há foto pendente -->
+          <label class="perfil-hero__camera-btn" id="labelFoto" for="inputFoto" title="Trocar foto">
             <i class='bx bx-camera'></i>
-            <input type="file" id="inputFoto" accept="image/*" style="display:none">
           </label>
+          <input type="file" id="inputFoto" accept="image/*" style="display:none">
+
+          <!-- Barra de confirmação — aparece após escolher foto -->
+          <div class="foto-actions" id="fotoActions" style="display:none">
+            <button class="foto-btn foto-btn--confirmar" id="btnConfirmarFoto">
+              <i class='bx bx-check'></i> Confirmar
+            </button>
+            <button class="foto-btn foto-btn--cancelar" id="btnCancelarFoto">
+              <i class='bx bx-x'></i> Cancelar
+            </button>
+          </div>
         </div>
 
         <div class="perfil-hero__info">

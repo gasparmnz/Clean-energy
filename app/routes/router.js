@@ -296,17 +296,23 @@ router.get("/item/:id", async function (req, res) {
     if (!produto) return res.status(404).send("Produto não encontrado");
 
 
+    // Verifica se coluna suspensa existe antes de filtrar
+    const [colSusp] = await pool.query(
+      "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Avaliacao' AND COLUMN_NAME = 'suspensa'"
+    );
+    const filtroSuspensa = colSusp.length > 0 ? 'AND IFNULL(a.suspensa, 0) = 0' : '';
+
     const [avaliacoes] = await pool.query(
       `SELECT a.Avaliacao_ID, a.Nota, a.Comentario, a.criado_em,
               COALESCE(u.Nome, a.nome_usuario, 'Usuário') AS nome_usuario
        FROM Avaliacao a
        LEFT JOIN Usuario u ON u.Usuario_ID = a.Usuario_ID
-       WHERE a.Produto_ID = ?
+       WHERE a.Produto_ID = ? ${filtroSuspensa}
        ORDER BY a.criado_em DESC`,
       [req.params.id]
     );
 
-    // Média das notas
+    // Média das notas (só das ativas)
     const mediaNotas = avaliacoes.length
       ? (avaliacoes.reduce((s, a) => s + (a.Nota || 0), 0) / avaliacoes.length).toFixed(1)
       : null;
