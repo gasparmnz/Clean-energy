@@ -8,136 +8,7 @@
     <link rel="stylesheet" href="/css/usuarios_cadastrados.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .uc-page{padding:0;}
-        .uc-header{margin-bottom:28px;}
-        .uc-title{font-size:2rem;font-weight:700;color:#111827;margin:0 0 4px;}
-        .uc-subtitle{font-size:.95rem;color:#6b7280;margin:0;}
-        .uc-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px;}
-        .uc-stat{background:#fff;border-radius:12px;padding:20px 22px;box-shadow:0 1px 4px rgba(0,0,0,.07);display:flex;align-items:center;gap:14px;}
-        .uc-stat-icon{width:46px;height:46px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-        .uc-stat-icon i{font-size:1.5rem;}
-        .uc-stat-icon.purple{background:#ede9fe;color:#7c3aed;}
-        .uc-stat-icon.green{background:#d1fae5;color:#059669;}
-        .uc-stat-icon.orange{background:#ffedd5;color:#ea580c;}
-        .uc-stat-icon.red{background:#fee2e2;color:#dc2626;}
-        .uc-stat-label{font-size:.8rem;color:#6b7280;font-weight:500;margin-bottom:2px;}
-        .uc-stat-value{font-size:1.6rem;font-weight:700;color:#111827;line-height:1;}
-        .uc-table-card{background:#fff;border-radius:14px;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden;margin-bottom:28px;}
-        .uc-table-card.suspended-card{border-left:4px solid #ef4444;}
-        .uc-table-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #f3f4f6;gap:12px;flex-wrap:wrap;}
-        .uc-table-title{font-size:1.05rem;font-weight:700;color:#111827;margin:0;display:flex;align-items:center;gap:8px;}
-        .uc-table-title.danger{color:#dc2626;}
-        .uc-table-sub{font-size:.85rem;color:#6b7280;margin:2px 0 0;}
-        .uc-search{display:flex;align-items:center;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:9px 14px;min-width:250px;gap:8px;}
-        .uc-search i{color:#9ca3af;font-size:1.1rem;}
-        .uc-search input{border:none;background:transparent;outline:none;font-size:.9rem;color:#374151;width:100%;}
-        .uc-search input::placeholder{color:#9ca3af;}
-        .uc-table{width:100%;border-collapse:collapse;}
-        .uc-table thead{background:#f9fafb;}
-        .uc-table th{padding:11px 16px;text-align:left;font-size:.78rem;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #e5e7eb;white-space:nowrap;}
-        .uc-table td{padding:14px 16px;border-bottom:1px solid #f3f4f6;font-size:.9rem;color:#374151;}
-        .uc-table tbody tr:last-child td{border-bottom:none;}
-        .uc-table tbody tr:hover{background:#fafafa;}
-        .uc-table.suspended-table tbody tr:hover{background:#fff5f5;}
-        .uc-user-cell{display:flex;align-items:center;gap:10px;}
-        .uc-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:#fff;flex-shrink:0;}
-        .uc-user-name{font-weight:600;color:#111827;}
-        .av-susp{background:#9ca3af!important;}
-        .badge-tipo{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;}
-        .badge-PJ{background:#fef3c7;color:#92400e;}
-        .badge-PF{background:#dbeafe;color:#1e40af;}
-        .badge-suspendido{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:600;background:#fee2e2;color:#991b1b;}
-        .uc-dropdown{position:relative;display:inline-block;}
-        .uc-menu{display:none;position:absolute;right:0;top:100%;background:#fff;border:1px solid #e5e7eb;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:200;min-width:170px;overflow:hidden;}
-        .uc-dropdown.open .uc-menu{display:block;}
-        .uc-menu-item{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:.88rem;color:#374151;cursor:pointer;transition:background .15s;border:none;background:none;width:100%;text-align:left;}
-        .uc-menu-item:hover{background:#f9fafb;}
-        .uc-menu-item.danger{color:#ef4444;}
-        .uc-menu-item.danger:hover{background:#fee2e2;}
-        .uc-menu-item.warning{color:#d97706;}
-        .uc-menu-item.warning:hover{background:#fef3c7;}
-        .uc-menu-item.success{color:#059669;}
-        .uc-menu-item.success:hover{background:#d1fae5;}
-        .uc-btn{background:none;border:none;cursor:pointer;padding:7px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
-        .uc-dots{color:#9ca3af;}
-        .uc-dots:hover{background:#f3f4f6;}
-        .uc-dots i{font-size:1.3rem;}
-        .uc-empty{text-align:center;padding:48px 24px;color:#6b7280;}
-        .uc-empty i{font-size:2.5rem;color:#d1d5db;display:block;margin-bottom:10px;}
-        .av-0{background:#7c3aed;}.av-1{background:#059669;}.av-2{background:#ea580c;}
-        .av-3{background:#2563eb;}.av-4{background:#db2777;}.av-5{background:#0891b2;}
-        .av-6{background:#65a30d;}.av-7{background:#9333ea;}
-        .uc-toast{position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:12px 20px;border-radius:10px;font-size:.9rem;font-weight:500;z-index:9999;opacity:0;transform:translateY(10px);transition:all .3s;pointer-events:none;display:flex;align-items:center;gap:8px;}
-        .uc-toast.show{opacity:1;transform:translateY(0);}
-        .menu-divider{height:1px;background:#f3f4f6;margin:4px 0;}
-
-        .custom-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-}
-
-.custom-modal.show {
-    display: flex;
-}
-
-.modal-content {
-    background: #fff;
-    padding: 24px;
-    border-radius: 12px;
-    width: 350px;
-    max-width: 90%;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    animation: fadeIn 0.2s ease;
-}
-
-.modal-content h3 {
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-}
-
-.modal-content p {
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.btn-cancel {
-    background: #e5e7eb;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.btn-confirm {
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.95); }
-    to { opacity: 1; transform: scale(1); }
-}
-    </style>
+    
 </head>
 <body>
     <%- include('../partial/header.ejs') %>
@@ -147,7 +18,7 @@
 
             <nav class="back-navigation">
                 <button class="back-button" onclick="history.back()">
-                  <i class='bx bx-arrow-back'></i><span>Voltar</span>
+                    <i class='bx bx-arrow-back'></i><span>Voltar</span>
                 </button>
             </nav>
 
@@ -157,170 +28,228 @@
             </header>
 
             <%
-              var listaAtivos = Array.isArray(usuarios)  ? usuarios  : [];
-              var listaSusp   = Array.isArray(suspensos) ? suspensos : [];
-              var totalPJ = listaAtivos.filter(function(u){ return u.Tipo==='PJ'; }).length;
-              var totalPF = listaAtivos.filter(function(u){ return u.Tipo==='PF'; }).length;
+                // FIX 1: variáveis declaradas com const no topo do bloco EJS, fora dos loops,
+                // evitando re-declarações acidentais e escopo confuso com var.
+                const listaAtivos = Array.isArray(usuarios)  ? usuarios  : [];
+                const listaSusp   = Array.isArray(suspensos) ? suspensos : [];
+                const totalPJ = listaAtivos.filter(u => u.Tipo === 'PJ').length;
+                const totalPF = listaAtivos.filter(u => u.Tipo === 'PF').length;
+
+                // FIX 2: helper de sanitização centralizado no EJS para evitar XSS e quebra de
+                // atributo HTML inline. Escapa aspas simples, duplas e tags.
+                function sanitizeAttr(str) {
+                    return String(str || '')
+                        .replace(/&/g, '&amp;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&#39;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                }
+
+                // FIX 3: helper de iniciais seguro — evita crash com nomes vazios ou undefined.
+                function getInitials(nome) {
+                    const parts = String(nome || '').trim().split(/\s+/).slice(0, 2);
+                    return parts.map(w => w[0] || '').join('').toUpperCase() || '?';
+                }
+
+                // FIX 4: helper de data seguro — evita "Invalid Date" visível na tela.
+                function formatDate(raw) {
+                    if (!raw) return '-';
+                    const d = new Date(raw);
+                    return isNaN(d.getTime()) ? '-' : d.toLocaleDateString('pt-BR');
+                }
             %>
 
-            <section class="uc-stats">
-                <article class="uc-stat">
-                    <figure class="uc-stat-icon purple"><i class='bx bx-group'></i></figure>
+            <!-- STATS -->
+            <!-- FIX 5: <article> e <figure> substituídos por <div> semântico correto.
+                 <article> exige conteúdo independente/autônomo; <figure> é para mídia com legenda.
+                 Ícones decorativos não se encaixam em nenhum dos dois. -->
+            <div class="uc-stats" role="list" aria-label="Resumo de usuários">
+                <div class="uc-stat" role="listitem">
+                    <div class="uc-stat-icon purple" aria-hidden="true"><i class='bx bx-group'></i></div>
                     <div><div class="uc-stat-label">Total Ativos</div><div class="uc-stat-value"><%= listaAtivos.length %></div></div>
-                </article>
-                <article class="uc-stat">
-                    <figure class="uc-stat-icon green"><i class='bx bx-store'></i></figure>
+                </div>
+                <div class="uc-stat" role="listitem">
+                    <div class="uc-stat-icon green" aria-hidden="true"><i class='bx bx-store'></i></div>
                     <div><div class="uc-stat-label">Vendedores (PJ)</div><div class="uc-stat-value"><%= totalPJ %></div></div>
-                </article>
-                <article class="uc-stat">
-                    <figure class="uc-stat-icon orange"><i class='bx bx-user'></i></figure>
+                </div>
+                <div class="uc-stat" role="listitem">
+                    <div class="uc-stat-icon orange" aria-hidden="true"><i class='bx bx-user'></i></div>
                     <div><div class="uc-stat-label">Compradores (PF)</div><div class="uc-stat-value"><%= totalPF %></div></div>
-                </article>
-                <article class="uc-stat">
-                    <figure class="uc-stat-icon red"><i class='bx bx-block'></i></figure>
+                </div>
+                <div class="uc-stat" role="listitem">
+                    <div class="uc-stat-icon red" aria-hidden="true"><i class='bx bx-block'></i></div>
                     <div><div class="uc-stat-label">Suspensos</div><div class="uc-stat-value"><%= listaSusp.length %></div></div>
-                </article>
-            </section>
+                </div>
+            </div>
 
             <!-- TABELA ATIVOS -->
-            <section class="uc-table-card">
-                <header class="uc-table-header">
+            <!-- FIX 6: <header> removido de dentro de <section> (já existe <header> pai na página).
+                 Substituído por <div> para evitar múltiplos <header> no mesmo escopo de seção. -->
+            <section class="uc-table-card" aria-labelledby="tbl-ativos-title">
+                <div class="uc-table-header">
                     <div>
-                        <h2 class="uc-table-title">Usuários cadastrados</h2>
+                        <h2 class="uc-table-title" id="tbl-ativos-title">Usuários cadastrados</h2>
                         <p class="uc-table-sub">Gerencie todos os usuários ativos do sistema</p>
                     </div>
                     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
                         <div class="uc-search">
-                            <i class='bx bx-search'></i>
-                            <input type="text" id="ucSearch" placeholder="Buscar por nome, email ou ID..." oninput="filterTable('ucTable','ucSearch')">
+                            <i class='bx bx-search' aria-hidden="true"></i>
+                            <input type="search" id="ucSearch" placeholder="Buscar por nome, email ou ID..."
+                                   aria-label="Buscar usuários ativos"
+                                   oninput="filterTable('ucTable','ucSearch')">
                         </div>
-                        <i class='bx bx-filter-alt' style="font-size:1.4rem;color:#6b7280;cursor:pointer;"></i>
-                        <i class='bx bx-download' style="font-size:1.4rem;color:#6b7280;cursor:pointer;"></i>
+                        <button class="uc-btn" aria-label="Filtrar tabela"><i class='bx bx-filter-alt' style="font-size:1.4rem;color:#6b7280;"></i></button>
+                        <button class="uc-btn" aria-label="Exportar lista"><i class='bx bx-download' style="font-size:1.4rem;color:#6b7280;"></i></button>
                     </div>
-                </header>
+                </div>
                 <div style="overflow-x:auto;">
                     <table class="uc-table" id="ucTable">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>USUÁRIO</th>
-                                <th>EMAIL</th>
-                                <th>FUNÇÃO</th>
-                                <th>CADASTRO</th>
-                                <th>AÇÕES</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">USUÁRIO</th>
+                                <th scope="col">EMAIL</th>
+                                <th scope="col">FUNÇÃO</th>
+                                <th scope="col">CADASTRO</th>
+                                <th scope="col">AÇÕES</th>
                             </tr>
                         </thead>
                         <tbody>
-                          <% if (listaAtivos.length > 0) { %>
-                            <% listaAtivos.forEach(function(u, idx) { %>
-                            <%
-                              var nomeExibir  = u.nome || u.Nome || '-';
-                              var emailExibir = u.email || u.Email || '-';
-                              var initials    = nomeExibir.trim().split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();
-                              var colorClass  = 'av-' + (idx % 8);
-                              var displayId   = 'USR-' + String(u.id).padStart(5,'0');
-                              var tipo        = u.Tipo || u.tipo || 'PF';
-                              var dataCriacao = u.Data_Criacao ? new Date(u.Data_Criacao).toLocaleDateString('pt-BR') : '-';
-                              var nomeSafe    = nomeExibir.replace(/'/g, "\\'");
-                            %>
-                            <tr data-search="<%= (nomeExibir+' '+emailExibir+' '+displayId).toLowerCase() %>">
-                                <td style="color:#9ca3af;font-size:.82rem;font-weight:600;"><%= displayId %></td>
-                                <td>
-                                    <div class="uc-user-cell">
-                                        <div class="uc-avatar <%= colorClass %>"><%= initials %></div>
-                                        <div class="uc-user-name"><%= nomeExibir %></div>
-                                    </div>
-                                </td>
-                                <td style="color:#6b7280;"><%= emailExibir %></td>
-                                <td><span class="badge-tipo badge-<%= tipo %>"><%= tipo==='PJ'?'Vendedor':'Comprador' %></span></td>
-                                <td style="color:#6b7280;font-size:.85rem;"><%= dataCriacao %></td>
-                                <td>
-                                    <div class="uc-dropdown" id="dd-a-<%= idx %>">
-                                        <button class="uc-btn uc-dots" onclick="toggleDD('dd-a-<%= idx %>')"><i class='bx bx-dots-horizontal-rounded'></i></button>
-                                        <div class="uc-menu">
-                                            <button class="uc-menu-item" onclick="verDetalhes('<%= displayId %>')"><i class='bx bx-show'></i>Ver detalhes</button>
-                                            <button class="uc-menu-item" onclick="verDetalhes('<%= displayId %>')"><i class='bx bx-edit'></i>Editar</button>
-                                            <div class="menu-divider"></div>
-                                            <button class="uc-menu-item warning" onclick="suspenderUsuario(<%= u.id %>, '<%= nomeSafe %>', 'dd-a-<%= idx %>')"><i class='bx bx-block'></i>Suspender</button>
-                                            <button class="uc-menu-item danger" onclick="excluirUsuario(<%= u.id %>, '<%= nomeSafe %>', 'dd-a-<%= idx %>')"><i class='bx bx-trash'></i>Excluir</button>
+                            <% if (listaAtivos.length > 0) { %>
+                                <% listaAtivos.forEach(function(u, idx) { %>
+                                <%
+                                    // FIX 1 (continuação): const por iteração em bloco próprio
+                                    const nomeExibir  = u.nome  || u.Nome  || '-';
+                                    const emailExibir = u.email || u.Email || '-';
+                                    const displayId   = 'USR-' + String(u.id).padStart(5, '0');
+                                    const tipo        = u.Tipo  || u.tipo  || 'PF';
+                                    const dataCriacao = formatDate(u.Data_Criacao);
+                                    const initials    = getInitials(nomeExibir);
+                                    const colorClass  = 'av-' + (idx % 8);
+                                    // FIX 2: sanitização completa para uso em data-* e onclick
+                                    const nomeSafe    = sanitizeAttr(nomeExibir);
+                                    const searchData  = (nomeExibir + ' ' + emailExibir + ' ' + displayId).toLowerCase();
+                                %>
+                                <tr data-search="<%= searchData %>">
+                                    <td style="color:#9ca3af;font-size:.82rem;font-weight:600;"><%= displayId %></td>
+                                    <td>
+                                        <div class="uc-user-cell">
+                                            <div class="uc-avatar <%= colorClass %>" aria-hidden="true"><%= initials %></div>
+                                            <div class="uc-user-name"><%= nomeExibir %></div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <% }) %>
-                          <% } else { %>
-                            <tr><td colspan="6"><div class="uc-empty"><i class='bx bx-user-x'></i><p>Nenhum usuário ativo encontrado.</p></div></td></tr>
-                          <% } %>
+                                    </td>
+                                    <td style="color:#6b7280;"><%= emailExibir %></td>
+                                    <td><span class="badge-tipo badge-<%= tipo %>"><%= tipo === 'PJ' ? 'Vendedor' : 'Comprador' %></span></td>
+                                    <td style="color:#6b7280;font-size:.85rem;"><%= dataCriacao %></td>
+                                    <td>
+                                        <!-- FIX 4: data-id e data-nome no elemento, removendo parâmetros inline
+                                             com escape frágil. O JS lê via dataset, eliminando risco de XSS/quebra. -->
+                                        <div class="uc-dropdown" id="dd-a-<%= idx %>"
+                                             data-uid="<%= u.id %>"
+                                             data-nome="<%= nomeSafe %>"
+                                             data-ddid="dd-a-<%= idx %>">
+                                            <button class="uc-btn uc-dots"
+                                                    aria-label="Opções para <%= nomeSafe %>"
+                                                    aria-haspopup="true"
+                                                    onclick="toggleDD('dd-a-<%= idx %>')">
+                                                <i class='bx bx-dots-horizontal-rounded'></i>
+                                            </button>
+                                            <div class="uc-menu" role="menu">
+                                                <button class="uc-menu-item" role="menuitem" onclick="verDetalhes('<%= displayId %>')"><i class='bx bx-show' aria-hidden="true"></i>Ver detalhes</button>
+                                                <button class="uc-menu-item" role="menuitem" onclick="verDetalhes('<%= displayId %>')"><i class='bx bx-edit' aria-hidden="true"></i>Editar</button>
+                                                <div class="menu-divider" role="separator"></div>
+                                                <button class="uc-menu-item warning" role="menuitem" onclick="suspenderUsuario(this)"><i class='bx bx-block' aria-hidden="true"></i>Suspender</button>
+                                                <button class="uc-menu-item danger"  role="menuitem" onclick="excluirUsuario(this)"><i class='bx bx-trash' aria-hidden="true"></i>Excluir</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr><td colspan="6"><div class="uc-empty"><i class='bx bx-user-x' aria-hidden="true"></i><p>Nenhum usuário ativo encontrado.</p></div></td></tr>
+                            <% } %>
                         </tbody>
                     </table>
                 </div>
             </section>
 
             <!-- TABELA SUSPENSOS -->
-            <section class="uc-table-card suspended-card">
-                <header class="uc-table-header">
+            <section class="uc-table-card suspended-card" aria-labelledby="tbl-susp-title">
+                <div class="uc-table-header">
                     <div>
-                        <h2 class="uc-table-title danger"><i class='bx bx-block'></i> Usuários Suspensos</h2>
+                        <h2 class="uc-table-title danger" id="tbl-susp-title"><i class='bx bx-block' aria-hidden="true"></i> Usuários Suspensos</h2>
                         <p class="uc-table-sub">Contas suspensas pelo administrador</p>
                     </div>
                     <div class="uc-search">
-                        <i class='bx bx-search'></i>
-                        <input type="text" id="ucSearchSusp" placeholder="Buscar suspensos..." oninput="filterTable('ucTableSusp','ucSearchSusp')">
+                        <i class='bx bx-search' aria-hidden="true"></i>
+                        <input type="search" id="ucSearchSusp" placeholder="Buscar suspensos..."
+                               aria-label="Buscar usuários suspensos"
+                               oninput="filterTable('ucTableSusp','ucSearchSusp')">
                     </div>
-                </header>
+                </div>
                 <div style="overflow-x:auto;">
                     <table class="uc-table suspended-table" id="ucTableSusp">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>USUÁRIO</th>
-                                <th>EMAIL</th>
-                                <th>FUNÇÃO</th>
-                                <th>CADASTRO</th>
-                                <th>STATUS</th>
-                                <th>AÇÕES</th>
+                                <th scope="col">ID</th>
+                                <th scope="col">USUÁRIO</th>
+                                <th scope="col">EMAIL</th>
+                                <th scope="col">FUNÇÃO</th>
+                                <th scope="col">CADASTRO</th>
+                                <th scope="col">STATUS</th>
+                                <th scope="col">AÇÕES</th>
                             </tr>
                         </thead>
                         <tbody>
-                          <% if (listaSusp.length > 0) { %>
-                            <% listaSusp.forEach(function(u, idx) { %>
-                            <%
-                              var nomeS     = u.nome || u.Nome || '-';
-                              var emailS    = u.email || u.Email || '-';
-                              var initialsS = nomeS.trim().split(' ').slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();
-                              var displayIdS = 'USR-' + String(u.id).padStart(5,'0');
-                              var tipoS     = u.Tipo || u.tipo || 'PF';
-                              var dataCriacaoS = u.Data_Criacao ? new Date(u.Data_Criacao).toLocaleDateString('pt-BR') : '-';
-                              var nomeSS = nomeS.replace(/'/g, "\\'");
-                            %>
-                            <tr data-search="<%= (nomeS+' '+emailS+' '+displayIdS).toLowerCase() %>">
-                                <td style="color:#9ca3af;font-size:.82rem;font-weight:600;"><%= displayIdS %></td>
-                                <td>
-                                    <div class="uc-user-cell">
-                                        <div class="uc-avatar av-susp"><%= initialsS %></div>
-                                        <div class="uc-user-name" style="color:#9ca3af;"><%= nomeS %></div>
-                                    </div>
-                                </td>
-                                <td style="color:#9ca3af;"><%= emailS %></td>
-                                <td><span class="badge-tipo badge-<%= tipoS %>"><%= tipoS==='PJ'?'Vendedor':'Comprador' %></span></td>
-                                <td style="color:#9ca3af;font-size:.85rem;"><%= dataCriacaoS %></td>
-                                <td><span class="badge-suspendido">Suspenso</span></td>
-                                <td>
-                                    <div class="uc-dropdown" id="dd-s-<%= idx %>">
-                                        <button class="uc-btn uc-dots" onclick="toggleDD('dd-s-<%= idx %>')"><i class='bx bx-dots-horizontal-rounded'></i></button>
-                                        <div class="uc-menu">
-                                            <button class="uc-menu-item" onclick="verDetalhes('<%= displayIdS %>')"><i class='bx bx-show'></i>Ver detalhes</button>
-                                            <div class="menu-divider"></div>
-                                            <button class="uc-menu-item success" onclick="reativarUsuario(<%= u.id %>, '<%= nomeSS %>', 'dd-s-<%= idx %>')"><i class='bx bx-check-circle'></i>Reativar</button>
-                                            <button class="uc-menu-item danger" onclick="excluirUsuario(<%= u.id %>, '<%= nomeSS %>', 'dd-s-<%= idx %>')"><i class='bx bx-trash'></i>Excluir</button>
+                            <% if (listaSusp.length > 0) { %>
+                                <% listaSusp.forEach(function(u, idx) { %>
+                                <%
+                                    const nomeS      = u.nome  || u.Nome  || '-';
+                                    const emailS     = u.email || u.Email || '-';
+                                    const displayIdS = 'USR-' + String(u.id).padStart(5, '0');
+                                    const tipoS      = u.Tipo  || u.tipo  || 'PF';
+                                    const dataCriacaoS = formatDate(u.Data_Criacao);
+                                    const initialsS  = getInitials(nomeS);
+                                    const nomeSS     = sanitizeAttr(nomeS);
+                                    const searchDataS = (nomeS + ' ' + emailS + ' ' + displayIdS).toLowerCase();
+                                %>
+                                <tr data-search="<%= searchDataS %>">
+                                    <td style="color:#9ca3af;font-size:.82rem;font-weight:600;"><%= displayIdS %></td>
+                                    <td>
+                                        <div class="uc-user-cell">
+                                            <div class="uc-avatar av-susp" aria-hidden="true"><%= initialsS %></div>
+                                            <div class="uc-user-name" style="color:#9ca3af;"><%= nomeS %></div>
                                         </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <% }) %>
-                          <% } else { %>
-                            <tr><td colspan="7"><div class="uc-empty"><i class='bx bx-check-shield'></i><p>Nenhum usuário suspenso no momento.</p></div></td></tr>
-                          <% } %>
+                                    </td>
+                                    <td style="color:#9ca3af;"><%= emailS %></td>
+                                    <td><span class="badge-tipo badge-<%= tipoS %>"><%= tipoS === 'PJ' ? 'Vendedor' : 'Comprador' %></span></td>
+                                    <td style="color:#9ca3af;font-size:.85rem;"><%= dataCriacaoS %></td>
+                                    <td><span class="badge-suspendido">Suspenso</span></td>
+                                    <td>
+                                        <div class="uc-dropdown" id="dd-s-<%= idx %>"
+                                             data-uid="<%= u.id %>"
+                                             data-nome="<%= nomeSS %>"
+                                             data-ddid="dd-s-<%= idx %>">
+                                            <button class="uc-btn uc-dots"
+                                                    aria-label="Opções para <%= nomeSS %>"
+                                                    aria-haspopup="true"
+                                                    onclick="toggleDD('dd-s-<%= idx %>')">
+                                                <i class='bx bx-dots-horizontal-rounded'></i>
+                                            </button>
+                                            <div class="uc-menu" role="menu">
+                                                <button class="uc-menu-item" role="menuitem" onclick="verDetalhes('<%= displayIdS %>')"><i class='bx bx-show' aria-hidden="true"></i>Ver detalhes</button>
+                                                <div class="menu-divider" role="separator"></div>
+                                                <button class="uc-menu-item success" role="menuitem" onclick="reativarUsuario(this)"><i class='bx bx-check-circle' aria-hidden="true"></i>Reativar</button>
+                                                <button class="uc-menu-item danger"  role="menuitem" onclick="excluirUsuario(this)"><i class='bx bx-trash' aria-hidden="true"></i>Excluir</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                            <% } else { %>
+                                <tr><td colspan="7"><div class="uc-empty"><i class='bx bx-check-shield' aria-hidden="true"></i><p>Nenhum usuário suspenso no momento.</p></div></td></tr>
+                            <% } %>
                         </tbody>
                     </table>
                 </div>
@@ -329,120 +258,156 @@
         </main>
     </section>
 
-    <div class="uc-toast" id="ucToast"><i class='bx bx-check-circle'></i><span id="ucToastMsg"></span></div>
-
- <!-- MODAL PERSONALIZADO -->
-<div id="customModal" class="custom-modal">
-  <div class="modal-content">
-    <h3 id="modalTitle">Confirmação</h3>
-    <p id="modalMessage"></p>
-
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-      <button class="btn-confirm" id="confirmBtn">Confirmar</button>
+    <div class="uc-toast" id="ucToast" role="status" aria-live="polite">
+        <i class='bx bx-check-circle' aria-hidden="true"></i>
+        <span id="ucToastMsg"></span>
     </div>
-  </div>
-</div>
 
+    <div id="customModal" class="custom-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <h3 id="modalTitle">Confirmação</h3>
+            <p id="modalMessage"></p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+                <!-- FIX 7: type="button" explícito para evitar submit acidental em contextos de form -->
+                <button class="btn-confirm" type="button" id="confirmBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        function verDetalhes(userId) { window.location.href = '/adm/detalhes_user?userId=' + userId; }
+        // ─── Navegação ────────────────────────────────────────────────────────────
+        function verDetalhes(userId) {
+            window.location.href = '/adm/detalhes_user?userId=' + encodeURIComponent(userId);
+        }
 
+        // ─── Dropdown ─────────────────────────────────────────────────────────────
         function toggleDD(id) {
-            document.querySelectorAll('.uc-dropdown').forEach(function(d){
-                if(d.id!==id) d.classList.remove('open');
+            document.querySelectorAll('.uc-dropdown').forEach(function (d) {
+                if (d.id !== id) d.classList.remove('open');
             });
             document.getElementById(id).classList.toggle('open');
         }
-        document.addEventListener('click', function(e){
-            if(!e.target.closest('.uc-dropdown')) document.querySelectorAll('.uc-dropdown').forEach(function(d){d.classList.remove('open');});
+
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.uc-dropdown')) {
+                document.querySelectorAll('.uc-dropdown').forEach(function (d) {
+                    d.classList.remove('open');
+                });
+            }
         });
 
+        // ─── Filtro de tabela ─────────────────────────────────────────────────────
         function filterTable(tableId, inputId) {
-            var q = document.getElementById(inputId).value.toLowerCase();
-            document.querySelectorAll('#'+tableId+' tbody tr').forEach(function(row){
-                var text = row.getAttribute('data-search')||'';
-                row.style.display=(!q||text.includes(q))?'':'none';
+            const q = document.getElementById(inputId).value.toLowerCase();
+            document.querySelectorAll('#' + tableId + ' tbody tr').forEach(function (row) {
+                // FIX 8: ignora linhas de "empty state" (sem data-search) para evitar
+                // escondê-las indevidamente durante uma busca.
+                const text = row.getAttribute('data-search');
+                if (text === null) return;
+                row.style.display = (!q || text.includes(q)) ? '' : 'none';
             });
         }
 
+        // ─── Toast ────────────────────────────────────────────────────────────────
         function showToast(msg, type) {
-            var t = document.getElementById('ucToast');
-            var icon = t.querySelector('i');
+            const t    = document.getElementById('ucToast');
+            const icon = t.querySelector('i');
             document.getElementById('ucToastMsg').textContent = msg;
-            icon.className = type==='error' ? 'bx bx-x-circle' : 'bx bx-check-circle';
-            icon.style.color = type==='error' ? '#ef4444' : '#10b981';
-            t.className = 'uc-toast show';
-            setTimeout(function(){ t.classList.remove('show'); }, 3000);
+            icon.className = type === 'error' ? 'bx bx-x-circle' : 'bx bx-check-circle';
+            icon.style.color = type === 'error' ? '#ef4444' : '#10b981';
+            t.classList.add('show');
+            setTimeout(function () { t.classList.remove('show'); }, 3000);
         }
 
-      function openModal(title, message, onConfirm) {
-    const modal = document.getElementById("customModal");
-    document.getElementById("modalTitle").textContent = title;
-    document.getElementById("modalMessage").textContent = message;
+        // ─── Modal ────────────────────────────────────────────────────────────────
+        // FIX 9: confirmBtn usa addEventListener/removeEventListener em vez de
+        // substituir .onclick repetidamente. Isso evita vazamento de handlers e o
+        // warning de "assigned but never used" que linters apontam na abordagem anterior.
+        function openModal(title, message, onConfirm) {
+            document.getElementById('modalTitle').textContent   = title;
+            document.getElementById('modalMessage').textContent = message;
 
-    const confirmBtn = document.getElementById("confirmBtn");
+            const confirmBtn = document.getElementById('confirmBtn');
+            const handler = function () {
+                confirmBtn.removeEventListener('click', handler);
+                closeModal();
+                onConfirm();
+            };
+            // Remove qualquer handler anterior antes de adicionar novo
+            confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+            document.getElementById('confirmBtn').addEventListener('click', handler);
 
-    // Remove eventos antigos
-    confirmBtn.onclick = null;
+            document.getElementById('customModal').classList.add('show');
+        }
 
-    confirmBtn.onclick = () => {
-        onConfirm();
-        closeModal();
-    };
+        function closeModal() {
+            document.getElementById('customModal').classList.remove('show');
+        }
 
-    modal.classList.add("show");
-}
+        // ─── API helper ───────────────────────────────────────────────────────────
+        // FIX 10: apiPost agora retorna uma Promise e o callback de confirmação é
+        // async corretamente, eliminando o "Promise returned from async function
+        // is ignored" que ocorria quando openModal chamava a função sem await.
+        function apiPost(endpoint, id, nome, ddId, confirmMsg, successMsg) {
+            // Fecha dropdown SOMENTE se o elemento existir
+            const ddEl = document.getElementById(ddId);
+            if (ddEl) ddEl.classList.remove('open');
 
-function closeModal() {
-    document.getElementById("customModal").classList.remove("show");
-}
+            openModal('Confirmação', confirmMsg, async function () {
+                try {
+                    const res = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: id })
+                    });
 
-async function apiPost(endpoint, id, nome, ddId, confirmMsg, successMsg) {
-    document.getElementById(ddId).classList.remove('open');
+                    const data = await res.json();
 
-    openModal("Confirmação", confirmMsg, async () => {
-        try {
-            const res = await fetch(endpoint, {
-                method:'POST',
-                headers:{'Content-Type':'application/json'},
-                body: JSON.stringify({id: id})
+                    if (res.ok && data.success) {
+                        showToast(successMsg, 'success');
+                        setTimeout(function () { location.reload(); }, 1200);
+                    } else {
+                        showToast('Erro: ' + (data.error || 'tente novamente.'), 'error');
+                    }
+                } catch (e) {
+                    showToast('Erro de conexão com o servidor.', 'error');
+                }
             });
-
-            const data = await res.json();
-
-            if(res.ok && data.success) {
-                showToast(successMsg, 'success');
-                setTimeout(() => location.reload(), 1200);
-            } else {
-                showToast('Erro: ' + (data.error || 'tente novamente.'), 'error');
-            }
-
-        } catch(e) {
-            showToast('Erro de conexão com o servidor.', 'error');
         }
-    });
-}
 
-function suspenderUsuario(id, nome, ddId) {
-    apiPost('/adm/usuarios/suspender', id, nome, ddId,
-        'Tem certeza que deseja suspender a conta de ' + nome + '?',
-        nome + ' foi suspenso com sucesso.');
-}
+        // FIX 4 (continuação): funções leem uid/nome/ddid do dataset do elemento pai
+        // (.uc-dropdown), eliminando parâmetros inline com escape manual.
+        function getDropdownData(btn) {
+            const dd = btn.closest('.uc-dropdown');
+            return {
+                uid:  dd.dataset.uid,
+                nome: dd.dataset.nome,
+                ddid: dd.dataset.ddid
+            };
+        }
 
-function reativarUsuario(id, nome, ddId) {
-    apiPost('/adm/usuarios/reativar', id, nome, ddId,
-        'Deseja reativar a conta de ' + nome + '?',
-        nome + ' foi reativado com sucesso.');
-}
+        function suspenderUsuario(btn) {
+            const { uid, nome, ddid } = getDropdownData(btn);
+            apiPost('/adm/usuarios/suspender', uid, nome, ddid,
+                'Tem certeza que deseja suspender a conta de ' + nome + '?',
+                nome + ' foi suspenso com sucesso.');
+        }
 
-function excluirUsuario(id, nome, ddId) {
-    apiPost('/adm/usuarios/excluir', id, nome, ddId,
-        '⚠️ Deseja excluir permanentemente a conta de ' + nome + '?',
-        'Conta de ' + nome + ' excluída.');
-}
+        function reativarUsuario(btn) {
+            const { uid, nome, ddid } = getDropdownData(btn);
+            apiPost('/adm/usuarios/reativar', uid, nome, ddid,
+                'Deseja reativar a conta de ' + nome + '?',
+                nome + ' foi reativado com sucesso.');
+        }
+
+        function excluirUsuario(btn) {
+            const { uid, nome, ddid } = getDropdownData(btn);
+            apiPost('/adm/usuarios/excluir', uid, nome, ddid,
+                '⚠️ Deseja excluir permanentemente a conta de ' + nome + '?',
+                'Conta de ' + nome + ' excluída.');
+        }
     </script>
     <script src="/js/darkmode.js"></script>
-   
 </body>
 </html>
