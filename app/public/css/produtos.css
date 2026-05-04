@@ -303,6 +303,14 @@ h2{
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+ .badge-perfil { font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+    .badge-comprador { background:#e8f5e9; color:#2e7d32; }
+    .badge-vendedor  { background:#fff3e0; color:#e65100; }
+    .dropdown-nome { display:block; padding:8px 16px; font-weight:700; color:#333; }
+    .dropdown-perfil { display:block; padding:0 16px 8px; font-size:0.8rem; color:#666; }
+    .dropdown-content hr { margin:4px 0; border-color:#eee; }
+    .acesso-restrito { background:#fff3e0; color:#e65100; padding:10px 18px; border-radius:8px; margin:12px 0; font-size:0.9rem; }
+
 @media (min-width: 1024px) {
   .produtos-scroll {
     display: flex;

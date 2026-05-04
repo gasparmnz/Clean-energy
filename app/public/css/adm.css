@@ -231,7 +231,15 @@ body {
 .view-all-link:hover {
     color: var(--secondary-color);
 }
-
+ .empty-transactions{text-align:center;padding:48px 24px;color:#6b7280;}
+        .empty-transactions i{font-size:3rem;color:#d1d5db;display:block;margin-bottom:12px;}
+        .empty-transactions p{font-size:1rem;margin:0;}
+        .status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:.8rem;font-weight:600;}
+        .status-concluido{background:#d1fae5;color:#065f46;}
+        .status-pendente{background:#fef3c7;color:#92400e;}
+        .status-andamento{background:#dbeafe;color:#1e40af;}
+        .status-cancelado{background:#fee2e2;color:#991b1b;}
+        .real-data-tag{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:#10b981;background:#d1fae5;padding:2px 8px;border-radius:10px;margin-left:8px;font-weight:600;}
 /* Responsividade */
 @media (max-width: 767px) {
 
