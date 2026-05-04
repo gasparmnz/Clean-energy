@@ -26,8 +26,8 @@ const produtosModel = {
   create: async (dados) => {
     try {
       const sql = `INSERT INTO produtos
-        (nome, descricao, preco, quantidade, categoria, local, imagem, estado, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active')`;
+        (nome, descricao, preco, quantidade, categoria, local, imagem, estado, status, usuario_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)`;
       const params = [
         dados.nome,
         dados.descricao || null,
@@ -36,7 +36,8 @@ const produtosModel = {
         dados.categoria || null,
         dados.local || null,
         dados.imagem || null,
-        dados.estado || null
+        dados.estado || null,
+        dados.usuario_id || null
       ];
       const [result] = await pool.query(sql, params);
       return result;
@@ -71,6 +72,18 @@ const produtosModel = {
     try {
       const [result] = await pool.query("DELETE FROM produtos WHERE id = ?", [id]);
       return result;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  findByUsuario: async (usuarioId) => {
+    try {
+      const [rows] = await pool.query(
+        "SELECT * FROM produtos WHERE usuario_id = ? ORDER BY created_at DESC",
+        [usuarioId]
+      );
+      return rows;
     } catch (err) {
       throw err;
     }

@@ -1,7 +1,6 @@
-/**
- * Sistema de Validação em Tempo Real para Login
- * Valida e-mail e senha sem desabilitar o botão de submit
- */
+
+ /* Sistema de Validação em Tempo Real para Login*/
+
 
 class LoginValidator {
   constructor() {
@@ -14,7 +13,6 @@ class LoginValidator {
   }
 
   init() {
-    // Aguardar o DOM estar completamente carregado
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
         this.setupElements();
@@ -31,7 +29,6 @@ class LoginValidator {
   }
 
   setupElements() {
-    // Buscar elementos do formulário
     this.form = document.querySelector('.login-form') || document.querySelector('form');
     this.emailInput = document.getElementById('usuarioDigitado') || 
                      document.querySelector('input[name="usuarioDigitado"]') ||
@@ -52,13 +49,13 @@ class LoginValidator {
   }
 
   clearBackendErrors() {
-    // Limpar mensagens de erro do backend ao iniciar validação frontend
+
     const backendError = document.querySelector('.backend-error');
     if (backendError) {
       backendError.style.display = 'none';
     }
 
-    // Remover classes de erro dos inputs
+
     if (this.emailInput) {
       this.emailInput.classList.remove('erro');
     }
@@ -96,7 +93,7 @@ class LoginValidator {
       this.form.addEventListener('submit', (e) => {
         this.validateAllFields();
         this.showLoadingState();
-        // Não prevenir o envio - deixar o backend validar
+        //
       });
     }
 
@@ -150,12 +147,10 @@ class LoginValidator {
     const inputGroup = input.closest('.input-group') || input.closest('article');
     if (!inputGroup) return;
 
-    // Buscar ou criar elementos de feedback
     let errorElement = inputGroup.querySelector('.error-message') || 
                       inputGroup.querySelector('.msgErro');
     let successElement = inputGroup.querySelector('.success-message');
 
-    // Criar elemento de erro se não existir
     if (!errorElement) {
       errorElement = document.createElement('span');
       errorElement.className = 'error-message';
@@ -163,12 +158,11 @@ class LoginValidator {
       inputGroup.appendChild(errorElement);
     }
 
-    // Remover classes anteriores
     inputGroup.classList.remove('valid', 'invalid');
     input.classList.remove('valid', 'invalid', 'erro');
 
     if (result.isValid) {
-      // Estado válido
+
       inputGroup.classList.add('valid');
       input.classList.add('valid');
       input.style.borderColor = '#22c55e';
@@ -185,7 +179,7 @@ class LoginValidator {
       
       console.log(`✅ Campo válido: ${input.name || input.id}`);
     } else {
-      // Estado inválido
+
       inputGroup.classList.add('invalid');
       input.classList.add('invalid', 'erro');
       input.style.borderColor = '#ef4444';
@@ -216,7 +210,6 @@ class LoginValidator {
   showLoadingState() {
     if (this.submitButton) {
       this.submitButton.classList.add('loading');
-      // NÃO desabilitar o botão - apenas mostrar estado visual de loading
       console.log('🔄 Estado de loading ativado');
     }
   }
@@ -278,10 +271,9 @@ class LoginValidator {
   }
 }
 
-// Inicializar validação
 let loginValidator;
 
-// Aguardar o DOM estar carregado
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', function() {
     loginValidator = new LoginValidator();
@@ -295,7 +287,7 @@ if (document.readyState === 'loading') {
 }
 
 function setupAccessibility() {
-  // Melhorar navegação por teclado
+
   const inputs = document.querySelectorAll('.form-input');
   inputs.forEach((input, index) => {
     input.addEventListener('keydown', (e) => {
@@ -314,7 +306,7 @@ function setupAccessibility() {
     });
   });
 
-  // Anunciar mudanças para leitores de tela
+
   const errorMessages = document.querySelectorAll('.error-message, .msgErro');
   errorMessages.forEach(message => {
     const observer = new MutationObserver((mutations) => {
@@ -336,13 +328,13 @@ function setupAccessibility() {
 }
 
 function setupAnimations() {
-  // Adicionar animações de entrada escalonadas
+
   const inputGroups = document.querySelectorAll('.input-group');
   inputGroups.forEach((group, index) => {
     group.style.animationDelay = `${index * 0.1}s`;
   });
 
-  // Animação de foco nos inputs
+
   const inputs = document.querySelectorAll('.form-input');
   inputs.forEach(input => {
     input.addEventListener('focus', () => {
@@ -361,7 +353,6 @@ function setupAnimations() {
   });
 }
 
-// Exportar para uso em outros scripts se necessário
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = LoginValidator;
 }

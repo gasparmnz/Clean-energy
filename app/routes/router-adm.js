@@ -44,17 +44,14 @@ router.get("/", async (req, res) => {
 // Lista usuários cadastrados
 router.get("/usuarios_cadastrados", async (req, res) => {
   try {
-    // Verifica se coluna status já existe
     const [cols] = await pool.query(
       "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Usuario' AND COLUMN_NAME = 'status'"
     );
 
     if (cols.length === 0) {
-      // Coluna não existe — cria agora
+
       await pool.query("ALTER TABLE Usuario ADD COLUMN status ENUM('active','suspended') NOT NULL DEFAULT 'active'");
     }
-
-    // Agora busca todos com status garantido
     const [todos] = await pool.query(
       "SELECT Usuario_ID AS id, Nome AS nome, Email AS email, Tipo, Data_Criacao, status FROM Usuario ORDER BY Data_Criacao DESC"
     );
@@ -120,7 +117,7 @@ router.get("/produtos_adm", async (req, res) => {
   }
 });
 
-// Alterna status do produto (active <-> suspended)
+// Alterna status do produto (ativo <-> suspendido)
 router.post("/produtos_adm/toggle_status", async (req, res) => {
   try {
     const { id, status } = req.body;
@@ -164,7 +161,6 @@ router.get("/detalhes_user", async (req, res) => {
     const idToQuery = numeric ? Number(numeric[1]) : Number(userId);
     if (Number.isNaN(idToQuery)) return res.render('pages/detalhes_user', { usuario: null });
 
-    // Garante coluna status
     const [colCheck] = await pool.query(
       "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Usuario' AND COLUMN_NAME = 'status'"
     );
@@ -186,14 +182,76 @@ router.get("/detalhes_user", async (req, res) => {
       [idToQuery]
     );
     const usuario = rows[0] || null;
-    res.render('pages/detalhes_user', { usuario });
+
+    // Busca avaliações DADAS pelo usuário no banco (dados reais)
+    let avaliacoesDadas = [];
+    try {
+      // Garante coluna suspensa existe
+      const [colSusp] = await pool.query(
+        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Avaliacao' AND COLUMN_NAME = 'suspensa'"
+      );
+      if (colSusp.length === 0) {
+        await pool.query("ALTER TABLE Avaliacao ADD COLUMN suspensa TINYINT(1) NOT NULL DEFAULT 0");
+      }
+
+      const [avals] = await pool.query(
+        `SELECT a.Avaliacao_ID, a.Nota, a.Comentario, a.criado_em,
+                IFNULL(a.suspensa, 0) AS suspensa,
+                p.nome AS produto_nome
+         FROM Avaliacao a
+         LEFT JOIN produtos p ON p.id = a.Produto_ID
+         WHERE a.Usuario_ID = ?
+         ORDER BY a.criado_em DESC`,
+        [idToQuery]
+      );
+      avaliacoesDadas = avals;
+    } catch(e) {
+      console.error('Erro ao buscar avaliações:', e.message);
+    }
+
+    res.render('pages/detalhes_user', { usuario, avaliacoesDadas });
   } catch (err) {
     console.error('Erro ao obter detalhes do usuário', err);
     res.render('pages/detalhes_user', { usuario: null });
   }
 });
 
-// Excluir usuário — apaga tudo manualmente contornando FKs sem CASCADE
+// Reverter suspensão de avaliação
+router.post("/avaliacoes/reativar", async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'ID obrigatório' });
+    await pool.query("UPDATE Avaliacao SET suspensa = 0 WHERE Avaliacao_ID = ?", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Erro ao reativar avaliação:', err);
+    res.status(500).json({ error: err.message || 'Erro interno' });
+  }
+});
+
+// Suspender comentário/avaliação
+router.post("/avaliacoes/suspender", async (req, res) => {
+  try {
+    const { id } = req.body;
+    if (!id) return res.status(400).json({ error: 'ID obrigatório' });
+
+    // Garante coluna suspensa
+    const [col] = await pool.query(
+      "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Avaliacao' AND COLUMN_NAME = 'suspensa'"
+    );
+    if (col.length === 0) {
+      await pool.query("ALTER TABLE Avaliacao ADD COLUMN suspensa TINYINT(1) NOT NULL DEFAULT 0");
+    }
+
+    await pool.query("UPDATE Avaliacao SET suspensa = 1 WHERE Avaliacao_ID = ?", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Erro ao suspender avaliação:', err);
+    res.status(500).json({ error: err.message || 'Erro interno' });
+  }
+});
+
+// Excluir usuário
 router.post("/usuarios/excluir", async (req, res) => {
   let conn;
   try {
@@ -203,18 +261,18 @@ router.post("/usuarios/excluir", async (req, res) => {
     conn = await pool.getConnection();
     await conn.query("SET FOREIGN_KEY_CHECKS = 0");
 
-    // Dependências de compras
+
     await conn.query("DELETE ic FROM Item_Compra ic INNER JOIN Compra c ON ic.Compra_ID = c.Compra_ID WHERE c.Usuario_ID = ?", [id]);
     await conn.query("DELETE FROM Compra WHERE Usuario_ID = ?", [id]);
 
-    // Avaliações feitas pelo usuário
+
     await conn.query("DELETE FROM Avaliacao WHERE Usuario_ID = ?", [id]);
 
-    // Dados pessoais (PF ou PJ)
+
     await conn.query("DELETE FROM Pessoa_Fisica   WHERE Usuario_ID = ?", [id]);
     await conn.query("DELETE FROM Pessoa_Juridica WHERE Usuario_ID = ?", [id]);
 
-    // Por último o próprio usuário
+
     await conn.query("DELETE FROM Usuario WHERE Usuario_ID = ?", [id]);
 
     await conn.query("SET FOREIGN_KEY_CHECKS = 1");

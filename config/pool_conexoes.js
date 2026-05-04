@@ -8,7 +8,12 @@ const pool = mysql.createPool({
     port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
     connectionLimit: 10,
     queueLimit: 0,
-    ssl: { rejectUnauthorized: false }
+    ssl: { rejectUnauthorized: false },
+    // Evita ECONNRESET por timeout do servidor MySQL
+    enableKeepAlive: true,
+    keepAliveInitialDelay: 0,
+    waitForConnections: true,
+    connectTimeout: 10000,
 });
 
 pool.getConnection((err, conn) => {

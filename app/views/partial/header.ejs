@@ -23,7 +23,7 @@
         <a href="/cadastrar_produto" class="btn-vendedor">CADASTRAR PRODUTO</a>
       <% } else { %>
         <a href="/adicione_produto" class="btn-vendedor">TORNE-SE VENDEDOR</a>
-        <span class="badge-perfil badge-comprador"><i class='bx bx-user'></i> Comprador</span>
+
       <% } %>
 
       <a href="/carrinho">
@@ -31,7 +31,10 @@
       </a>
 
       <section class="dropdown">
-        <img id="dropdownBtn" src="/imagem/avatar.png" alt="Usuário" class="avatar">
+        <button id="dropdownBtn" class="dropdown-trigger">
+          <img src="/imagem/user.png" alt="Usuário" class="avatar">
+          <span class="header-greeting">Olá, <%= (usuario.nome || usuario.nomeUsuario || '').split(' ')[0] %></span>
+        </button>
         <section id="dropdownMenu" class="dropdown-content">
           <span class="dropdown-nome"><%= usuario.nome %></span>
           <span class="dropdown-perfil"><%= usuario.perfil === 'vendedor' ? '🏪 Vendedor' : '🛒 Comprador' %></span>
@@ -48,15 +51,20 @@
         <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
       </a>
 
+      <!-- Desktop: links normais -->
       <span class="login-links">
         <a href="/login">LOGIN</a> | <a href="/cadastro">CADASTRE-SE</a>
       </span>
 
-      <section class="dropdown">
-        <img id="dropdownBtn" src="/imagem/avatar.png" alt="Usuário" class="avatar">
-        <section id="dropdownMenu" class="dropdown-content">
-          <a href="/login">Login</a>
-          <a href="/cadastro">Cadastre-se</a>
+      <!-- Mobile/Tablet: ícone avatar com dropdown -->
+      <section class="dropdown dropdown-guest" id="dropdownGuest">
+        <button class="dropdown-trigger" id="dropdownGuestBtn">
+          <img src="/imagem/user.png" alt="Entrar" class="avatar">
+        </button>
+        <section class="dropdown-content dropdown-content--guest" id="dropdownGuestMenu">
+          <span class="dropdown-guest-title">Bem-vindo!</span>
+          <a href="/login"><i class='bx bx-log-in'></i> Login</a>
+          <a href="/cadastro"><i class='bx bx-user-plus'></i> Cadastre-se</a>
         </section>
       </section>
     <% } %>
