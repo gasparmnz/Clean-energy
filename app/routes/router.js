@@ -390,14 +390,7 @@ router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), asyn
   const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
   const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
 
-  let imagemData = null;
-  let imagemFilename = 'sem-foto.png';
-  if (req.file) {
-    const mime = req.file.mimetype;
-    const base64 = req.file.buffer.toString('base64');
-    imagemData = `data:${mime};base64,${base64}`;
-    imagemFilename = imagemData;
-  }
+  const imagemFilename = req.file ? req.file.filename : 'sem-foto.png';
 
   let precoLimpo = (preco || '0').toString().trim()
     .replace(/R\$\s*/g, '')
