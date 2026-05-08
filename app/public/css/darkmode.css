@@ -336,7 +336,8 @@ body.dark-mode .cart-summary { background: #1e1e1e !important; border-color: #2a
 body.dark-mode .cart-summary h3,
 body.dark-mode .cart-summary p,
 body.dark-mode .cart-summary span { color: #e5e7eb !important; }
-
+body.dark-mode .anuncio-transportadoras { background: #1e1e1e !important; border-color: #2a2a2a !important; }
+body.dark-mode .resumo { background: #1e1e1e !important; border-color: #2a2a2a !important; }
 /* ════════════════════════════════════════════════
    DETALHE DO PRODUTO (item)
    ════════════════════════════════════════════════ */
@@ -352,7 +353,9 @@ body.dark-mode .review-item,
 body.dark-mode .comment-box    { background: #1e1e1e !important; border-color: #2a2a2a !important; }
 body.dark-mode .review-author  { color: #e5e7eb !important; }
 body.dark-mode .review-date    { color: #6b7280 !important; }
-
+body.dark-mode .product-pricing { background: #151515 !important; border-color: #2a2a2a !important; }
+body.dark-mode .user-rating { background: #151515 !important; border-color: #2a2a2a !important; }
+body.dark-mode .product-community { background: #1e1e1e !important; border-color: #2a2a2a !important; }
 /* ─── SCROLLBAR ─── */
 body.dark-mode ::-webkit-scrollbar       { width: 8px; height: 8px; }
 body.dark-mode ::-webkit-scrollbar-track { background: #1a1a1a; }
