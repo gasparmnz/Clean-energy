@@ -109,3 +109,5 @@ body.dark-mode .review-form-section textarea { background: #1e1e1e !important; c
 body.dark-mode ::-webkit-scrollbar { width: 8px; }
 body.dark-mode ::-webkit-scrollbar-track { background: #1a1a1a; }
 body.dark-mode ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+
+

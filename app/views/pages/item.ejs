@@ -8,7 +8,56 @@
   <link rel="stylesheet" href="/css/darkmode.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
+  <style>
+    /* ── Avaliações ── */
+    .community-main-title { font-size:1.2rem; font-weight:700; margin-bottom:1rem; color:var(--text,#222); }
+    .avg-rating { display:flex; align-items:center; gap:.6rem; margin-bottom:1.2rem; padding:.8rem 1rem; background:#f9f9f9; border-radius:8px; }
+    body.dark-mode .avg-rating { background:#2a2a2a; }
+    .avg-number { font-size:2rem; font-weight:800; color:#f59e0b; }
+    .avg-stars i { color:#f59e0b; font-size:1.1rem; }
+    .avg-count { font-size:.85rem; color:#888; }
+    .comment-item { display:flex; gap:.9rem; margin-bottom:1.1rem; padding:.9rem; background:#fff; border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,.07); }
+    body.dark-mode .comment-item { background:#2a2a2a; box-shadow:0 1px 4px rgba(0,0,0,.3); }
+    .comment-author-avatar img { width:42px; height:42px; border-radius:50%; object-fit:cover; }
+    .comment-body { flex:1; }
+    .comment-header { display:flex; align-items:center; flex-wrap:wrap; gap:.4rem; margin-bottom:.3rem; }
+    .comment-rating i { color:#f59e0b; font-size:.9rem; }
+    .comment-author-name { font-weight:700; font-size:.9rem; color:#222; }
+    body.dark-mode .comment-author-name { color:#eee; }
+    .comment-author-handle { font-size:.78rem; color:#999; }
+    .comment-date { font-size:.72rem; color:#bbb; margin-left:auto; }
+    .comment-body p { font-size:.9rem; color:#444; line-height:1.5; }
+    body.dark-mode .comment-body p { color:#ccc; }
+    .no-comments { text-align:center; padding:1.5rem; color:#aaa; font-size:.9rem; }
+    /* ── Formulário de avaliação ── */
+    .review-form-section { margin-top:1.5rem; padding:1rem; background:#f0fdf4; border-radius:10px; border:1px solid #bbf7d0; }
+    body.dark-mode .review-form-section { background:#1a2e1a; border-color:#2d5a2d; }
+    .review-form-section h3 { font-size:1rem; font-weight:700; margin-bottom:.8rem; color:#166534; }
+    body.dark-mode .review-form-section h3 { color:#86efac; }
+    .star-selector { display:flex; gap:.3rem; margin-bottom:.8rem; }
+    .star-selector input[type=radio] { display:none; }
+    .star-selector label { font-size:1.6rem; color:#d1d5db; cursor:pointer; transition:color .15s; }
+    .star-selector label:hover,
+    .star-selector label:hover ~ label,
+    .star-selector input:checked ~ label { color:#d1d5db; }
+    .star-selector label:hover,
+    .star-selector input:checked + label,
+    .star-selector input:checked ~ label { color:#d1d5db; }
+    /* RTL trick for star rating */
+    .star-selector { flex-direction:row-reverse; justify-content:flex-end; }
+    .star-selector label:hover,
+    .star-selector label:hover ~ label { color:#f59e0b; }
+    .star-selector input:checked ~ label,
+    .star-selector input:checked + label { color:#f59e0b; }
+    .review-form-section textarea { width:100%; padding:.65rem; border:1px solid #d1fae5; border-radius:6px; font-size:.9rem; resize:vertical; min-height:80px; font-family:inherit; background:#fff; color:#222; }
+    body.dark-mode .review-form-section textarea { background:#1e1e1e; border-color:#2d5a2d; color:#eee; }
+    .review-form-section button { margin-top:.6rem; background:#16a34a; color:#fff; border:none; padding:.6rem 1.4rem; border-radius:6px; font-size:.9rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:.4rem; }
+    .review-form-section button:hover { background:#15803d; }
+    .login-to-review { text-align:center; padding:1rem; background:#fef3c7; border-radius:8px; border:1px solid #fde68a; font-size:.88rem; color:#92400e; margin-top:1rem; }
+    body.dark-mode .login-to-review { background:#2a1f00; border-color:#713f12; color:#fbbf24; }
+    .login-to-review a { color:#16a34a; font-weight:700; }
+    .erro-avaliacao { background:#fee2e2; border:1px solid #fca5a5; border-radius:6px; padding:.7rem 1rem; color:#dc2626; font-size:.88rem; margin-bottom:.8rem; }
+  </style>
 </head>
 <body>
   <%- include('../partial/header.ejs') %>
@@ -151,26 +200,49 @@
           </section>
 
           <section class="user-rating" aria-labelledby="rating-title">
-            <h2 id="rating-title" class="rating-main-title">Avaliação do Produto</h2>
-            <nav class="rating-content">
+            <h2 id="rating-title" class="rating-main-title">Avaliação do Usuário</h2>
+            <% if (vendedor) { %>
+            <a href="/vendedor/<%= vendedor.Usuario_ID %>" class="rating-content rating-link" aria-label="Ver perfil do vendedor <%= vendedor.Nome %>">
               <figure class="user-avatar">
-                <img src="/imagem/avatar.png" alt="Avaliação" class="avatar-image">
+                <img src="/imagem/<%= vendedor.foto || 'avatar.png' %>" alt="<%= vendedor.Nome %>" class="avatar-image">
               </figure>
               <nav class="rating-details">
-                <% if (mediaNotas) { %>
-                  <cite class="username">Média das avaliações</cite>
-                  <p class="rating-score">
-                    <span class="score-number"><%= mediaNotas %></span>
-                    <span class="stars" role="img">
-                      <% for(let i=1; i<=5; i++) { %><i class='bx <%= i <= Math.round(mediaNotas) ? "bxs-star" : "bx-star" %>'></i><% } %>
-                    </span>
-                  </p>
+                <cite class="username"><%= vendedor.Nome %></cite>
+                <% if (vendedor.mediaAvaliacao) { %>
+                <p class="rating-score">
+                  <span class="score-number"><%= vendedor.mediaAvaliacao %></span>
+                  <span class="stars" role="img" aria-label="<%= vendedor.mediaAvaliacao %> de 5 estrelas">
+                    <% for(let i=1; i<=5; i++) { %>
+                      <i class='bx <%= i <= Math.round(vendedor.mediaAvaliacao) ? "bxs-star" : "bx-star" %>'></i>
+                    <% } %>
+                  </span>
+                  <span style="font-size:.8rem;color:#888;">(<%= vendedor.totalAvaliacoes %> avaliações)</span>
+                </p>
                 <% } else { %>
-                  <cite class="username">Sem avaliações ainda</cite>
-                  <p class="rating-score"><span class="stars"><i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i><i class='bx bx-star'></i></span></p>
+                <p class="rating-score">
+                  <span class="stars"><% for(let i=1;i<=5;i++){%><i class='bx bx-star'></i><%}%></span>
+                  <span style="font-size:.8rem;color:#aaa;">Sem avaliações ainda</span>
+                </p>
                 <% } %>
+                <span style="font-size:.8rem;color:#888;margin-top:.2rem;">
+                  <i class='bx bx-package'></i> <%= vendedor.totalProdutos %> produto<%= vendedor.totalProdutos !== 1 ? 's' : '' %> cadastrado<%= vendedor.totalProdutos !== 1 ? 's' : '' %>
+                </span>
+                <span style="font-size:.8rem;color:#16a34a;font-weight:600;margin-top:.2rem;">
+                  Ver perfil completo →
+                </span>
+              </nav>
+            </a>
+            <% } else { %>
+            <nav class="rating-content">
+              <figure class="user-avatar">
+                <img src="/imagem/avatar.png" alt="Vendedor" class="avatar-image">
+              </figure>
+              <nav class="rating-details">
+                <cite class="username">Vendedor não identificado</cite>
+                <p class="rating-score"><span class="stars"><% for(let i=1;i<=5;i++){%><i class='bx bx-star'></i><%}%></span></p>
               </nav>
             </nav>
+            <% } %>
           </section>
 
           <!-- COMENTÁRIOS MOBILE -->

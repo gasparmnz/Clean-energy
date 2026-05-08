@@ -295,33 +295,53 @@ router.get("/item/:id", async function (req, res) {
     const produto = await produtosModel.findById(req.params.id);
     if (!produto) return res.status(404).send("Produto não encontrado");
 
-
-    // Verifica se coluna suspensa existe antes de filtrar
-    const [colSusp] = await pool.query(
-      "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Avaliacao' AND COLUMN_NAME = 'suspensa'"
-    );
-    const filtroSuspensa = colSusp.length > 0 ? 'AND IFNULL(a.suspensa, 0) = 0' : '';
-
+    // Busca avaliações do produto
     const [avaliacoes] = await pool.query(
       `SELECT a.Avaliacao_ID, a.Nota, a.Comentario, a.criado_em,
               COALESCE(u.Nome, a.nome_usuario, 'Usuário') AS nome_usuario
        FROM Avaliacao a
        LEFT JOIN Usuario u ON u.Usuario_ID = a.Usuario_ID
-       WHERE a.Produto_ID = ? ${filtroSuspensa}
+       WHERE a.Produto_ID = ?
        ORDER BY a.criado_em DESC`,
       [req.params.id]
     );
 
-    // Média das notas (só das ativas)
     const mediaNotas = avaliacoes.length
       ? (avaliacoes.reduce((s, a) => s + (a.Nota || 0), 0) / avaliacoes.length).toFixed(1)
       : null;
 
+    // Busca o vendedor real que cadastrou o produto
+    let vendedor = null;
+    let mediaVendedor = null;
+    if (produto.usuario_id) {
+      const [vRows] = await pool.query(
+        `SELECT Usuario_ID, Nome, Email, foto, Tipo, Biografia, Data_Criacao FROM Usuario WHERE Usuario_ID = ?`,
+        [produto.usuario_id]
+      );
+      if (vRows.length > 0) {
+        vendedor = vRows[0];
+        // Média de avaliações do vendedor
+        const [avgRows] = await pool.query(
+          `SELECT ROUND(AVG(nota), 1) AS media, COUNT(*) AS total
+           FROM Avaliacao_Vendedor WHERE vendedor_id = ?`,
+          [produto.usuario_id]
+        );
+        vendedor.mediaAvaliacao = avgRows[0].media || null;
+        vendedor.totalAvaliacoes = avgRows[0].total || 0;
+        // Total de produtos do vendedor
+        const [prodRows] = await pool.query(
+          `SELECT COUNT(*) AS total FROM produtos WHERE usuario_id = ? AND status = 'active'`,
+          [produto.usuario_id]
+        );
+        vendedor.totalProdutos = prodRows[0].total || 0;
+      }
+    }
+
     const usuarioSessao = req.session.userId
-      ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil, foto: req.session.fotoUsuario || null }
+      ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil }
       : null;
 
-    res.render("pages/item", { produto, avaliacoes, mediaNotas });
+    res.render("pages/item", { produto, avaliacoes, mediaNotas, vendedor, usuario: usuarioSessao });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro interno do servidor');
@@ -370,14 +390,7 @@ router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), asyn
   const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
   const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
 
-  let imagemData = null;
-  let imagemFilename = 'sem-foto.png';
-  if (req.file) {
-    const mime = req.file.mimetype;
-    const base64 = req.file.buffer.toString('base64');
-    imagemData = `data:${mime};base64,${base64}`;
-    imagemFilename = imagemData;
-  }
+  const imagemFilename = req.file ? req.file.filename : 'sem-foto.png';
 
   let precoLimpo = (preco || '0').toString().trim()
     .replace(/R\$\s*/g, '')
@@ -565,5 +578,123 @@ function requireAdmin(req, res, next) {
 }
 
 
+
+// ── PERFIL PÚBLICO DO VENDEDOR ────────────────────────────────
+router.get("/vendedor/:id", async (req, res) => {
+  try {
+    const vendedorId = req.params.id;
+
+    // Dados do vendedor
+    const [vRows] = await pool.query(
+      `SELECT Usuario_ID, Nome, Email, foto, Tipo, Biografia, Data_Criacao FROM Usuario WHERE Usuario_ID = ? AND Tipo = 'PJ'`,
+      [vendedorId]
+    );
+    if (!vRows.length) return res.status(404).send("Vendedor não encontrado");
+    const vendedor = vRows[0];
+
+    // Média e total de avaliações do vendedor
+    const [avgRows] = await pool.query(
+      `SELECT ROUND(AVG(nota), 1) AS media, COUNT(*) AS total FROM Avaliacao_Vendedor WHERE vendedor_id = ?`,
+      [vendedorId]
+    );
+    vendedor.mediaAvaliacao = avgRows[0].media;
+    vendedor.totalAvaliacoes = avgRows[0].total;
+
+    // Produtos cadastrados (ativos)
+    const [prodRows] = await pool.query(
+      `SELECT * FROM produtos WHERE usuario_id = ? AND status = 'active' ORDER BY created_at DESC`,
+      [vendedorId]
+    );
+
+    // Total de vendas (compras que incluem produtos deste vendedor)
+    const [vendasRows] = await pool.query(
+      `SELECT COUNT(DISTINCT ic.Compra_ID) AS total
+       FROM Item_Compra ic
+       JOIN produtos p ON p.id = ic.Produto_ID
+       WHERE p.usuario_id = ?`,
+      [vendedorId]
+    );
+    vendedor.totalVendas = vendasRows[0].total || 0;
+    vendedor.totalProdutos = prodRows.length;
+
+    // Avaliações/comentários feitos SOBRE o vendedor
+    const [comentarios] = await pool.query(
+      `SELECT av.id, av.nota, av.comentario, av.criado_em,
+              u.Nome AS nome_avaliador, u.foto AS foto_avaliador
+       FROM Avaliacao_Vendedor av
+       JOIN Usuario u ON u.Usuario_ID = av.avaliador_id
+       WHERE av.vendedor_id = ?
+       ORDER BY av.criado_em DESC`,
+      [vendedorId]
+    );
+
+    // Verificar se o usuário logado já avaliou este vendedor
+    let jaAvaliou = false;
+    let minhaAvaliacao = null;
+    if (req.session.userId) {
+      const [jaAv] = await pool.query(
+        `SELECT nota, comentario FROM Avaliacao_Vendedor WHERE vendedor_id = ? AND avaliador_id = ?`,
+        [vendedorId, req.session.userId]
+      );
+      if (jaAv.length) { jaAvaliou = true; minhaAvaliacao = jaAv[0]; }
+    }
+
+    const usuarioSessao = req.session.userId
+      ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil }
+      : null;
+
+    res.render("pages/perfil_vendedor", {
+      vendedor,
+      produtos: prodRows,
+      comentarios,
+      jaAvaliou,
+      minhaAvaliacao,
+      usuario: usuarioSessao
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erro ao carregar perfil do vendedor");
+  }
+});
+
+// ── AVALIAR VENDEDOR ──────────────────────────────────────────
+router.post("/vendedor/:id/avaliar", requireLogin, async (req, res) => {
+  const vendedorId = req.params.id;
+  const { nota, comentario } = req.body;
+  const notaNum = parseInt(nota, 10);
+
+  if (!notaNum || notaNum < 1 || notaNum > 5) {
+    return res.redirect(`/vendedor/${vendedorId}?erro=nota`);
+  }
+
+  // Vendedor não pode avaliar a si mesmo
+  if (parseInt(vendedorId) === req.session.userId) {
+    return res.redirect(`/vendedor/${vendedorId}?erro=proprio`);
+  }
+
+  try {
+    const [jaAv] = await pool.query(
+      `SELECT id FROM Avaliacao_Vendedor WHERE vendedor_id = ? AND avaliador_id = ?`,
+      [vendedorId, req.session.userId]
+    );
+
+    if (jaAv.length) {
+      await pool.query(
+        `UPDATE Avaliacao_Vendedor SET nota = ?, comentario = ?, criado_em = NOW()
+         WHERE vendedor_id = ? AND avaliador_id = ?`,
+        [notaNum, comentario || '', vendedorId, req.session.userId]
+      );
+    } else {
+      await pool.query(
+        `INSERT INTO Avaliacao_Vendedor (vendedor_id, avaliador_id, nota, comentario) VALUES (?, ?, ?, ?)`,
+        [vendedorId, req.session.userId, notaNum, comentario || '']
+      );
+    }
+    res.redirect(`/vendedor/${vendedorId}?sucesso=1#avaliacoes`);
+  } catch (err) {
+    console.error(err);
+    res.redirect(`/vendedor/${vendedorId}?erro=salvar`);
+  }
+});
 
 module.exports = router;
