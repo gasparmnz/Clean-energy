@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/css/sidebar.css">
 
 <aside class="sidebar" role="complementary" aria-label="Barra lateral do usuário">
-  <div class="user-info">
+  <nav class="user-info">
     <img src="/imagem/avatar.png" alt="Foto do usuário" class="avatar">
     <p class="username"><%= typeof usuario !== 'undefined' && usuario ? usuario.Nome || usuario.nome || 'Usuário' : 'Usuário' %></p>
     <% if (typeof usuario !== 'undefined' && usuario) { %>
@@ -9,7 +9,7 @@
         <%= (usuario.Tipo||usuario.tipo) === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
       </span>
     <% } %>
-  </div>
+  </nav>
 
   <nav class="sidebar-nav" aria-label="Navegação do usuário">
     <ul>

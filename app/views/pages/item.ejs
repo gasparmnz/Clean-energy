@@ -87,15 +87,15 @@
 
           <!-- Média -->
           <% if (avaliacoes && avaliacoes.length > 0) { %>
-          <div class="avg-rating">
+          <nav class="avg-rating">
             <span class="avg-number"><%= mediaNotas %></span>
-            <div class="avg-stars">
+            <nav class="avg-stars">
               <% for(let i=1; i<=5; i++) { %>
                 <i class='bx <%= i <= Math.round(mediaNotas) ? "bxs-star" : "bx-star" %>'></i>
               <% } %>
-            </div>
+            </nav>
             <span class="avg-count">(<%= avaliacoes.length %> avaliação<%= avaliacoes.length !== 1 ? 'ões' : '' %>)</span>
-          </div>
+          </nav>
 
           <% avaliacoes.forEach(av => { %>
           <article class="comment-item">
@@ -117,10 +117,10 @@
           </article>
           <% }) %>
           <% } else { %>
-          <div class="no-comments">
+          <nav class="no-comments">
             <i class='bx bx-message-dots' style="font-size:2rem;display:block;margin-bottom:.5rem;"></i>
             Nenhuma avaliação ainda. Seja o primeiro!
-          </div>
+          </nav>
           <% } %>
 
           <!-- FORMULÁRIO DE AVALIAÇÃO -->
@@ -128,33 +128,33 @@
           <%# Fallback: verificar via usuario passado na view %>
           <% } %>
           <% if (typeof usuario !== 'undefined' && usuario) { %>
-          <div class="review-form-section">
+          <nav class="review-form-section">
             <h3><i class='bx bx-edit'></i> Deixar minha avaliação</h3>
             <% if (typeof req !== 'undefined' && req.query && req.query.erro) { %>
-              <div class="erro-avaliacao">
+              <nav class="erro-avaliacao">
                 <% if (req.query.erro === 'nota') { %>Selecione uma nota de 1 a 5 estrelas.<% } %>
                 <% if (req.query.erro === 'salvar') { %>Erro ao salvar avaliação. Tente novamente.<% } %>
-              </div>
+              </nav>
             <% } %>
             <form action="/item/<%= produto.id %>/avaliar" method="POST">
               <!-- Seletor de estrelas (RTL trick) -->
-              <div class="star-selector">
+              <nav class="star-selector">
                 <% for(let i=5; i>=1; i--) { %>
                   <input type="radio" name="nota" id="star<%= i %>" value="<%= i %>">
                   <label for="star<%= i %>"><i class='bx bxs-star'></i></label>
                 <% } %>
-              </div>
+              </nav>
               <textarea name="comentario" placeholder="Conte sua experiência com este produto (opcional)..." maxlength="255"></textarea>
               <button type="submit">
                 <i class='bx bx-send'></i> Enviar avaliação
               </button>
             </form>
-          </div>
+          </nav>
           <% } else { %>
-          <div class="login-to-review">
+          <nav class="login-to-review">
             <i class='bx bx-lock-alt'></i>
             <a href="/login">Faça login</a> para deixar sua avaliação
-          </div>
+          </nav>
           <% } %>
         </section>
       </nav>
@@ -250,15 +250,15 @@
             <h2 id="community-title-mobile" class="community-main-title">Comentários da Comunidade</h2>
 
             <% if (avaliacoes && avaliacoes.length > 0) { %>
-            <div class="avg-rating">
+            <nav class="avg-rating">
               <span class="avg-number"><%= mediaNotas %></span>
-              <div class="avg-stars">
+              <nav class="avg-stars">
                 <% for(let i=1; i<=5; i++) { %>
                   <i class='bx <%= i <= Math.round(mediaNotas) ? "bxs-star" : "bx-star" %>'></i>
                 <% } %>
-              </div>
+              </nav>
               <span class="avg-count">(<%= avaliacoes.length %>)</span>
-            </div>
+            </nav>
             <% avaliacoes.forEach(av => { %>
             <article class="comment-item">
               <figure class="comment-author-avatar">
@@ -276,27 +276,27 @@
             </article>
             <% }) %>
             <% } else { %>
-            <div class="no-comments">Nenhuma avaliação ainda. Seja o primeiro!</div>
+            <nav class="no-comments">Nenhuma avaliação ainda. Seja o primeiro!</nav>
             <% } %>
 
             <% if (typeof usuario !== 'undefined' && usuario) { %>
-            <div class="review-form-section">
+            <nav class="review-form-section">
               <h3><i class='bx bx-edit'></i> Deixar minha avaliação</h3>
               <form action="/item/<%= produto.id %>/avaliar" method="POST">
-                <div class="star-selector">
+                <nav class="star-selector">
                   <% for(let i=5; i>=1; i--) { %>
                     <input type="radio" name="nota" id="mstar<%= i %>" value="<%= i %>">
                     <label for="mstar<%= i %>"><i class='bx bxs-star'></i></label>
                   <% } %>
-                </div>
+                </nav>
                 <textarea name="comentario" placeholder="Conte sua experiência..." maxlength="255"></textarea>
                 <button type="submit"><i class='bx bx-send'></i> Enviar</button>
               </form>
-            </div>
+            </nav>
             <% } else { %>
-            <div class="login-to-review">
+            <nav class="login-to-review">
               <a href="/login">Faça login</a> para avaliar
-            </div>
+            </nav>
             <% } %>
           </section>
 

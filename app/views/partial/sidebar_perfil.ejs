@@ -10,7 +10,7 @@
         class="perfil-aside__avatar"
       >
     </figure>
-    <div class="perfil-aside__user-info">
+    <nav class="perfil-aside__user-info">
       <strong class="perfil-aside__name">
         <%= usuario ? (usuario.Nome || usuario.nome || 'Usuário') : 'Usuário' %>
       </strong>
@@ -19,7 +19,7 @@
           <%= (usuario.Tipo || usuario.tipo) === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
         </span>
       <% } %>
-    </div>
+    </nav>
   </header>
 
   <!-- Divisor -->
