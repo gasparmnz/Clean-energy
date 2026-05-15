@@ -12,7 +12,7 @@
 <body>
   <%- include('../partial/header.ejs') %>
 
-  <div class="perfil-layout">
+  <nav class="perfil-layout">
     <% const activePage = 'perfil'; %>
     <%- include('../partial/sidebar_perfil.ejs') %>
 
@@ -21,7 +21,7 @@
 
       <!-- ══ HERO ══ -->
       <section class="perfil-hero" aria-label="Dados do usuário">
-        <div class="perfil-hero__avatar-wrap">
+        <nav class="perfil-hero__avatar-wrap">
           <img
             id="fotoPerfil"
             src="<%= usuario.foto ? (usuario.foto.startsWith('data:') ? usuario.foto : '/imagem/' + usuario.foto) : '/imagem/avatar.png' %>"
@@ -35,17 +35,17 @@
           <input type="file" id="inputFoto" accept="image/*" style="display:none">
 
           <!-- Barra de confirmação — aparece após escolher foto -->
-          <div class="foto-actions" id="fotoActions" style="display:none">
+          <nav class="foto-actions" id="fotoActions" style="display:none">
             <button class="foto-btn foto-btn--confirmar" id="btnConfirmarFoto">
               <i class='bx bx-check'></i> Confirmar
             </button>
             <button class="foto-btn foto-btn--cancelar" id="btnCancelarFoto">
               <i class='bx bx-x'></i> Cancelar
             </button>
-          </div>
-        </div>
+          </nav>
+        </nav>
 
-        <div class="perfil-hero__info">
+        <nav class="perfil-hero__info">
           <h1 class="perfil-hero__name">
             <strong id="nomeDisplay"><%= usuario.Nome %></strong>
           </h1>
@@ -62,7 +62,7 @@
             Membro desde <%= new Date(usuario.Data_Criacao).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) %>
           </p>
           <% } %>
-        </div>
+        </nav>
 
         <button class="perfil-hero__edit-btn" id="btnEditarPerfil" aria-label="Editar perfil">
           <i class='bx bx-edit'></i>
@@ -79,105 +79,105 @@
         <!-- Dados gerais -->
         <form id="formEdicao" class="perfil-edit-card__form" novalidate>
           <p class="edit-section-label">DADOS PESSOAIS</p>
-          <div class="edit-row">
-            <div class="edit-field">
+          <nav class="edit-row">
+            <nav class="edit-field">
               <label for="nomeInput"><i class='bx bx-user'></i> Nome completo</label>
               <input type="text" id="nomeInput" value="<%= usuario.Nome %>" placeholder="Seu nome completo" autocomplete="name">
-            </div>
-            <div class="edit-field">
+            </nav>
+            <nav class="edit-field">
               <label for="telefoneInput"><i class='bx bx-phone'></i> Telefone</label>
               <input type="tel" id="telefoneInput" value="<%= usuario.Biografia || '' %>" placeholder="(00) 00000-0000" autocomplete="tel">
-            </div>
-          </div>
-          <div class="perfil-edit-card__actions">
+            </nav>
+          </nav>
+          <nav class="perfil-edit-card__actions">
             <button type="submit" class="btn-salvar">
               <i class='bx bx-check'></i> Salvar dados
             </button>
             <button type="button" id="btnCancelar" class="btn-cancelar">
               <i class='bx bx-x'></i> Cancelar
             </button>
-          </div>
+          </nav>
         </form>
 
         <hr class="edit-divider">
 
         <!-- Redefinir E-mail -->
-        <div class="edit-sub-section">
-          <div class="edit-sub-header">
-            <div class="edit-sub-icon" style="background:#0891b2;">
+        <nav class="edit-sub-section">
+          <nav class="edit-sub-header">
+            <nav class="edit-sub-icon" style="background:#0891b2;">
               <i class='bx bx-envelope'></i>
-            </div>
-            <div>
+            </nav>
+            <nav>
               <strong>Redefinir E-mail</strong>
               <span>E-mail atual: <%= usuario.Email %></span>
-            </div>
+            </nav>
             <button class="btn-toggle-sub" data-toggle-form="formEmailWrap">
               <i class='bx bx-chevron-down'></i> Alterar
             </button>
-          </div>
-          <div class="hidden" id="formEmailWrap">
+          </nav>
+          <nav class="hidden" id="formEmailWrap">
           <form id="formRedefinirEmail" class="perfil-edit-card__form sub-form" novalidate>
-            <div class="edit-row">
-              <div class="edit-field">
+            <nav class="edit-row">
+              <nav class="edit-field">
                 <label for="novoEmailInput"><i class='bx bx-at'></i> Novo e-mail</label>
                 <input type="email" id="novoEmailInput" placeholder="novo@email.com" autocomplete="email">
-              </div>
-              <div class="edit-field">
+              </nav>
+              <nav class="edit-field">
                 <label for="senhaEmailInput"><i class='bx bx-lock'></i> Confirme sua senha</label>
                 <input type="password" id="senhaEmailInput" placeholder="Sua senha atual">
-              </div>
-            </div>
-            <div class="perfil-edit-card__actions">
+              </nav>
+            </nav>
+            <nav class="perfil-edit-card__actions">
               <button type="submit" class="btn-salvar">
                 <i class='bx bx-check'></i> Salvar e-mail
               </button>
-            </div>
+            </nav>
           </form>
-          </div>
-        </div>
+          </nav>
+        </nav>
 
         <hr class="edit-divider">
 
         <!-- Redefinir Senha -->
-        <div class="edit-sub-section">
-          <div class="edit-sub-header">
-            <div class="edit-sub-icon" style="background:#7c3aed;">
+        <nav class="edit-sub-section">
+          <nav class="edit-sub-header">
+            <nav class="edit-sub-icon" style="background:#7c3aed;">
               <i class='bx bx-lock-alt'></i>
-            </div>
-            <div>
+            </nav>
+            <nav>
               <strong>Redefinir Senha</strong>
               <span>Altere sua senha de acesso</span>
-            </div>
+            </nav>
             <button class="btn-toggle-sub" data-toggle-form="formSenhaWrap">
               <i class='bx bx-chevron-down'></i> Alterar
             </button>
-          </div>
-          <div class="hidden" id="formSenhaWrap">
+          </nav>
+          <nav class="hidden" id="formSenhaWrap">
           <form id="formRedefinirSenha" class="perfil-edit-card__form sub-form" novalidate>
-            <div class="edit-row">
-              <div class="edit-field">
+            <nav class="edit-row">
+              <nav class="edit-field">
                 <label for="senhaAtualInput"><i class='bx bx-lock'></i> Senha atual</label>
                 <input type="password" id="senhaAtualInput" placeholder="Sua senha atual">
-              </div>
-            </div>
-            <div class="edit-row">
-              <div class="edit-field">
+              </nav>
+            </nav>
+            <nav class="edit-row">
+              <nav class="edit-field">
                 <label for="novaSenhaInput"><i class='bx bx-lock-open'></i> Nova senha</label>
                 <input type="password" id="novaSenhaInput" placeholder="Mínimo 8 caracteres">
-              </div>
-              <div class="edit-field">
+              </nav>
+              <nav class="edit-field">
                 <label for="confirmarNovaSenhaInput"><i class='bx bx-lock-open'></i> Confirmar nova senha</label>
                 <input type="password" id="confirmarNovaSenhaInput" placeholder="Repita a nova senha">
-              </div>
-            </div>
-            <div class="perfil-edit-card__actions">
+              </nav>
+            </nav>
+            <nav class="perfil-edit-card__actions">
               <button type="submit" class="btn-salvar">
                 <i class='bx bx-check'></i> Salvar senha
               </button>
-            </div>
+            </nav>
           </form>
-          </div>
-        </div>
+          </nav>
+        </nav>
 
       </section>
 
@@ -188,10 +188,10 @@
           <span class="perfil-card__icon" style="background: linear-gradient(135deg,#0891b2,#0e7490);">
             <i class='bx bx-shopping-bag'></i>
           </span>
-          <div class="perfil-card__body">
+          <nav class="perfil-card__body">
             <strong>Minhas Compras</strong>
             <span>Histórico de pedidos</span>
-          </div>
+          </nav>
           <i class='bx bx-chevron-right perfil-card__arrow'></i>
         </a>
 
@@ -200,10 +200,10 @@
           <span class="perfil-card__icon" style="background: linear-gradient(135deg,#1565c0,#1976d2);">
             <i class='bx bx-list-ul'></i>
           </span>
-          <div class="perfil-card__body">
+          <nav class="perfil-card__body">
             <strong>Meus Produtos</strong>
             <span>Gerenciar anúncios</span>
-          </div>
+          </nav>
           <i class='bx bx-chevron-right perfil-card__arrow'></i>
         </a>
 
@@ -211,10 +211,10 @@
           <span class="perfil-card__icon" style="background: linear-gradient(135deg,#16a34a,#15803d);">
             <i class='bx bx-plus-circle'></i>
           </span>
-          <div class="perfil-card__body">
+          <nav class="perfil-card__body">
             <strong>Cadastrar Produto</strong>
             <span>Anunciar no marketplace</span>
-          </div>
+          </nav>
           <i class='bx bx-chevron-right perfil-card__arrow'></i>
         </a>
         <% } %>
@@ -224,10 +224,10 @@
           <span class="perfil-card__icon" style="background: linear-gradient(135deg,#ea580c,#c2410c);">
             <i class='bx bx-store'></i>
           </span>
-          <div class="perfil-card__body">
+          <nav class="perfil-card__body">
             <strong>Tornar-se Vendedor</strong>
             <span>Comece a vender agora</span>
-          </div>
+          </nav>
           <i class='bx bx-chevron-right perfil-card__arrow'></i>
         </a>
         <% } %>
@@ -238,47 +238,47 @@
       <section class="perfil-section" id="configuracoes" aria-label="Configurações">
         <h2 class="perfil-section__title">Configurações</h2>
 
-        <div class="config-section">
+        <nav class="config-section">
           <p class="config-section-title">APARÊNCIA</p>
-          <div class="config-row non-link">
-            <div class="config-icon-wrap" style="background:#374151;">
+          <nav class="config-row non-link">
+            <nav class="config-icon-wrap" style="background:#374151;">
               <i class='bx bx-moon'></i>
-            </div>
-            <div class="config-text">
+            </nav>
+            <nav class="config-text">
               <span class="config-title">Modo de aparência</span>
               <span class="config-sub">Escolha entre claro ou escuro</span>
-            </div>
+            </nav>
             <label class="toggle-switch" aria-label="Ativar modo escuro">
               <input type="checkbox" id="darkModeToggleSwitch">
               <span class="toggle-track"><span class="toggle-thumb"></span></span>
             </label>
-          </div>
-        </div>
+          </nav>
+        </nav>
 
-        <div class="config-section">
+        <nav class="config-section">
           <p class="config-section-title">CONTA</p>
-          <div class="config-row non-link">
-            <div class="config-icon-wrap" style="background:#7c3aed;">
+          <nav class="config-row non-link">
+            <nav class="config-icon-wrap" style="background:#7c3aed;">
               <i class='bx bx-id-card'></i>
-            </div>
-            <div class="config-text">
+            </nav>
+            <nav class="config-text">
               <span class="config-title">Tipo de conta</span>
               <span class="config-sub">
                 <%= usuario.Tipo === 'PJ' ? 'Pessoa Jurídica (Vendedor)' : 'Pessoa Física (Comprador)' %>
               </span>
-            </div>
-          </div>
+            </nav>
+          </nav>
           <a href="/logout" class="config-row config-row-danger">
-            <div class="config-icon-wrap" style="background:#dc2626;">
+            <nav class="config-icon-wrap" style="background:#dc2626;">
               <i class='bx bx-log-out'></i>
-            </div>
-            <div class="config-text">
+            </nav>
+            <nav class="config-text">
               <span class="config-title">Sair da Conta</span>
               <span class="config-sub">Encerrar sessão atual</span>
-            </div>
+            </nav>
             <i class='bx bx-chevron-right config-arrow'></i>
           </a>
-        </div>
+        </nav>
       </section>
 
       <% } else { %>
@@ -286,7 +286,7 @@
       <% } %>
 
     </main>
-  </div>
+  </nav>
 
   <%- include('../partial/footer.ejs') %>
   <script src="/js/darkmode.js"></script>

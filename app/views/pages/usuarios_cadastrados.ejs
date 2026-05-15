@@ -61,49 +61,49 @@
             %>
 
             <!-- STATS -->
-            <!-- FIX 5: <article> e <figure> substituídos por <div> semântico correto.
+            <!-- FIX 5: <article> e <figure> substituídos por <nav> semântico correto.
                  <article> exige conteúdo independente/autônomo; <figure> é para mídia com legenda.
                  Ícones decorativos não se encaixam em nenhum dos dois. -->
-            <div class="uc-stats" role="list" aria-label="Resumo de usuários">
-                <div class="uc-stat" role="listitem">
-                    <div class="uc-stat-icon purple" aria-hidden="true"><i class='bx bx-group'></i></div>
-                    <div><div class="uc-stat-label">Total Ativos</div><div class="uc-stat-value"><%= listaAtivos.length %></div></div>
-                </div>
-                <div class="uc-stat" role="listitem">
-                    <div class="uc-stat-icon green" aria-hidden="true"><i class='bx bx-store'></i></div>
-                    <div><div class="uc-stat-label">Vendedores (PJ)</div><div class="uc-stat-value"><%= totalPJ %></div></div>
-                </div>
-                <div class="uc-stat" role="listitem">
-                    <div class="uc-stat-icon orange" aria-hidden="true"><i class='bx bx-user'></i></div>
-                    <div><div class="uc-stat-label">Compradores (PF)</div><div class="uc-stat-value"><%= totalPF %></div></div>
-                </div>
-                <div class="uc-stat" role="listitem">
-                    <div class="uc-stat-icon red" aria-hidden="true"><i class='bx bx-block'></i></div>
-                    <div><div class="uc-stat-label">Suspensos</div><div class="uc-stat-value"><%= listaSusp.length %></div></div>
-                </div>
-            </div>
+            <nav class="uc-stats" role="list" aria-label="Resumo de usuários">
+                <nav class="uc-stat" role="listitem">
+                    <nav class="uc-stat-icon purple" aria-hidden="true"><i class='bx bx-group'></i></nav>
+                    <nav><nav class="uc-stat-label">Total Ativos</nav><nav class="uc-stat-value"><%= listaAtivos.length %></nav></nav>
+                </nav>
+                <nav class="uc-stat" role="listitem">
+                    <nav class="uc-stat-icon green" aria-hidden="true"><i class='bx bx-store'></i></nav>
+                    <nav><nav class="uc-stat-label">Vendedores (PJ)</nav><nav class="uc-stat-value"><%= totalPJ %></nav></nav>
+                </nav>
+                <nav class="uc-stat" role="listitem">
+                    <nav class="uc-stat-icon orange" aria-hidden="true"><i class='bx bx-user'></i></nav>
+                    <nav><nav class="uc-stat-label">Compradores (PF)</nav><nav class="uc-stat-value"><%= totalPF %></nav></nav>
+                </nav>
+                <nav class="uc-stat" role="listitem">
+                    <nav class="uc-stat-icon red" aria-hidden="true"><i class='bx bx-block'></i></nav>
+                    <nav><nav class="uc-stat-label">Suspensos</nav><nav class="uc-stat-value"><%= listaSusp.length %></nav></nav>
+                </nav>
+            </nav>
 
             <!-- TABELA ATIVOS -->
             <!-- FIX 6: <header> removido de dentro de <section> (já existe <header> pai na página).
-                 Substituído por <div> para evitar múltiplos <header> no mesmo escopo de seção. -->
+                 Substituído por <nav> para evitar múltiplos <header> no mesmo escopo de seção. -->
             <section class="uc-table-card" aria-labelledby="tbl-ativos-title">
-                <div class="uc-table-header">
-                    <div>
+                <nav class="uc-table-header">
+                    <nav>
                         <h2 class="uc-table-title" id="tbl-ativos-title">Usuários cadastrados</h2>
                         <p class="uc-table-sub">Gerencie todos os usuários ativos do sistema</p>
-                    </div>
-                    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-                        <div class="uc-search">
+                    </nav>
+                    <nav style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+                        <nav class="uc-search">
                             <i class='bx bx-search' aria-hidden="true"></i>
                             <input type="search" id="ucSearch" placeholder="Buscar por nome, email ou ID..."
                                    aria-label="Buscar usuários ativos"
                                    oninput="filterTable('ucTable','ucSearch')">
-                        </div>
+                        </nav>
                         <button class="uc-btn" aria-label="Filtrar tabela"><i class='bx bx-filter-alt' style="font-size:1.4rem;color:#6b7280;"></i></button>
                         <button class="uc-btn" aria-label="Exportar lista"><i class='bx bx-download' style="font-size:1.4rem;color:#6b7280;"></i></button>
-                    </div>
-                </div>
-                <div style="overflow-x:auto;">
+                    </nav>
+                </nav>
+                <nav style="overflow-x:auto;">
                     <table class="uc-table" id="ucTable">
                         <thead>
                             <tr>
@@ -134,10 +134,10 @@
                                 <tr data-search="<%= searchData %>">
                                     <td style="color:#9ca3af;font-size:.82rem;font-weight:600;"><%= displayId %></td>
                                     <td>
-                                        <div class="uc-user-cell">
-                                            <div class="uc-avatar <%= colorClass %>" aria-hidden="true"><%= initials %></div>
-                                            <div class="uc-user-name"><%= nomeExibir %></div>
-                                        </div>
+                                        <nav class="uc-user-cell">
+                                            <nav class="uc-avatar <%= colorClass %>" aria-hidden="true"><%= initials %></nav>
+                                            <nav class="uc-user-name"><%= nomeExibir %></nav>
+                                        </nav>
                                     </td>
                                     <td style="color:#6b7280;"><%= emailExibir %></td>
                                     <td><span class="badge-tipo badge-<%= tipo %>"><%= tipo === 'PJ' ? 'Vendedor' : 'Comprador' %></span></td>
@@ -145,7 +145,7 @@
                                     <td>
                                         <!-- FIX 4: data-id e data-nome no elemento, removendo parâmetros inline
                                              com escape frágil. O JS lê via dataset, eliminando risco de XSS/quebra. -->
-                                        <div class="uc-dropdown" id="dd-a-<%= idx %>"
+                                        <nav class="uc-dropdown" id="dd-a-<%= idx %>"
                                              data-uid="<%= u.id %>"
                                              data-nome="<%= nomeSafe %>"
                                              data-ddid="dd-a-<%= idx %>">
@@ -155,40 +155,40 @@
                                                     onclick="toggleDD('dd-a-<%= idx %>')">
                                                 <i class='bx bx-dots-horizontal-rounded'></i>
                                             </button>
-                                            <div class="uc-menu" role="menu">
+                                            <nav class="uc-menu" role="menu">
                                                 <button class="uc-menu-item" role="menuitem" onclick="verDetalhes('<%= displayId %>')"><i class='bx bx-show' aria-hidden="true"></i>Ver detalhes</button>
                                                 <button class="uc-menu-item" role="menuitem" onclick="verDetalhes('<%= displayId %>')"><i class='bx bx-edit' aria-hidden="true"></i>Editar</button>
-                                                <div class="menu-divider" role="separator"></div>
+                                                <nav class="menu-divider" role="separator"></nav>
                                                 <button class="uc-menu-item warning" role="menuitem" onclick="suspenderUsuario(this)"><i class='bx bx-block' aria-hidden="true"></i>Suspender</button>
                                                 <button class="uc-menu-item danger"  role="menuitem" onclick="excluirUsuario(this)"><i class='bx bx-trash' aria-hidden="true"></i>Excluir</button>
-                                            </div>
-                                        </div>
+                                            </nav>
+                                        </nav>
                                     </td>
                                 </tr>
                                 <% }) %>
                             <% } else { %>
-                                <tr><td colspan="6"><div class="uc-empty"><i class='bx bx-user-x' aria-hidden="true"></i><p>Nenhum usuário ativo encontrado.</p></div></td></tr>
+                                <tr><td colspan="6"><nav class="uc-empty"><i class='bx bx-user-x' aria-hidden="true"></i><p>Nenhum usuário ativo encontrado.</p></nav></td></tr>
                             <% } %>
                         </tbody>
                     </table>
-                </div>
+                </nav>
             </section>
 
             <!-- TABELA SUSPENSOS -->
             <section class="uc-table-card suspended-card" aria-labelledby="tbl-susp-title">
-                <div class="uc-table-header">
-                    <div>
+                <nav class="uc-table-header">
+                    <nav>
                         <h2 class="uc-table-title danger" id="tbl-susp-title"><i class='bx bx-block' aria-hidden="true"></i> Usuários Suspensos</h2>
                         <p class="uc-table-sub">Contas suspensas pelo administrador</p>
-                    </div>
-                    <div class="uc-search">
+                    </nav>
+                    <nav class="uc-search">
                         <i class='bx bx-search' aria-hidden="true"></i>
                         <input type="search" id="ucSearchSusp" placeholder="Buscar suspensos..."
                                aria-label="Buscar usuários suspensos"
                                oninput="filterTable('ucTableSusp','ucSearchSusp')">
-                    </div>
-                </div>
-                <div style="overflow-x:auto;">
+                    </nav>
+                </nav>
+                <nav style="overflow-x:auto;">
                     <table class="uc-table suspended-table" id="ucTableSusp">
                         <thead>
                             <tr>
@@ -217,17 +217,17 @@
                                 <tr data-search="<%= searchDataS %>">
                                     <td style="color:#9ca3af;font-size:.82rem;font-weight:600;"><%= displayIdS %></td>
                                     <td>
-                                        <div class="uc-user-cell">
-                                            <div class="uc-avatar av-susp" aria-hidden="true"><%= initialsS %></div>
-                                            <div class="uc-user-name" style="color:#9ca3af;"><%= nomeS %></div>
-                                        </div>
+                                        <nav class="uc-user-cell">
+                                            <nav class="uc-avatar av-susp" aria-hidden="true"><%= initialsS %></nav>
+                                            <nav class="uc-user-name" style="color:#9ca3af;"><%= nomeS %></nav>
+                                        </nav>
                                     </td>
                                     <td style="color:#9ca3af;"><%= emailS %></td>
                                     <td><span class="badge-tipo badge-<%= tipoS %>"><%= tipoS === 'PJ' ? 'Vendedor' : 'Comprador' %></span></td>
                                     <td style="color:#9ca3af;font-size:.85rem;"><%= dataCriacaoS %></td>
                                     <td><span class="badge-suspendido">Suspenso</span></td>
                                     <td>
-                                        <div class="uc-dropdown" id="dd-s-<%= idx %>"
+                                        <nav class="uc-dropdown" id="dd-s-<%= idx %>"
                                              data-uid="<%= u.id %>"
                                              data-nome="<%= nomeSS %>"
                                              data-ddid="dd-s-<%= idx %>">
@@ -237,43 +237,43 @@
                                                     onclick="toggleDD('dd-s-<%= idx %>')">
                                                 <i class='bx bx-dots-horizontal-rounded'></i>
                                             </button>
-                                            <div class="uc-menu" role="menu">
+                                            <nav class="uc-menu" role="menu">
                                                 <button class="uc-menu-item" role="menuitem" onclick="verDetalhes('<%= displayIdS %>')"><i class='bx bx-show' aria-hidden="true"></i>Ver detalhes</button>
-                                                <div class="menu-divider" role="separator"></div>
+                                                <nav class="menu-divider" role="separator"></nav>
                                                 <button class="uc-menu-item success" role="menuitem" onclick="reativarUsuario(this)"><i class='bx bx-check-circle' aria-hidden="true"></i>Reativar</button>
                                                 <button class="uc-menu-item danger"  role="menuitem" onclick="excluirUsuario(this)"><i class='bx bx-trash' aria-hidden="true"></i>Excluir</button>
-                                            </div>
-                                        </div>
+                                            </nav>
+                                        </nav>
                                     </td>
                                 </tr>
                                 <% }) %>
                             <% } else { %>
-                                <tr><td colspan="7"><div class="uc-empty"><i class='bx bx-check-shield' aria-hidden="true"></i><p>Nenhum usuário suspenso no momento.</p></div></td></tr>
+                                <tr><td colspan="7"><nav class="uc-empty"><i class='bx bx-check-shield' aria-hidden="true"></i><p>Nenhum usuário suspenso no momento.</p></nav></td></tr>
                             <% } %>
                         </tbody>
                     </table>
-                </div>
+                </nav>
             </section>
 
         </main>
     </section>
 
-    <div class="uc-toast" id="ucToast" role="status" aria-live="polite">
+    <nav class="uc-toast" id="ucToast" role="status" aria-live="polite">
         <i class='bx bx-check-circle' aria-hidden="true"></i>
         <span id="ucToastMsg"></span>
-    </div>
+    </nav>
 
-    <div id="customModal" class="custom-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-        <div class="modal-content">
+    <nav id="customModal" class="custom-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <nav class="modal-content">
             <h3 id="modalTitle">Confirmação</h3>
             <p id="modalMessage"></p>
-            <div class="modal-actions">
+            <nav class="modal-actions">
                 <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
                 <!-- FIX 7: type="button" explícito para evitar submit acidental em contextos de form -->
                 <button class="btn-confirm" type="button" id="confirmBtn">Confirmar</button>
-            </div>
-        </div>
-    </div>
+            </nav>
+        </nav>
+    </nav>
 
     <script>
         // ─── Navegação ────────────────────────────────────────────────────────────
