@@ -17,7 +17,12 @@ const _diskStorage_unused = multer.diskStorage({
 });
 
 const upload = multer({
-  storage: multer.memoryStorage(),
+  storage: multer.diskStorage({
+    destination: path.join(__dirname, '../public/imagem'),
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname));
+    }
+  }),
   limits: { fileSize: 5 * 1024 * 1024 }
 });
 var { validarCPF } = require("../helpers/validacao");
