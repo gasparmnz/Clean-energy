@@ -56,31 +56,31 @@
   <!-- ═══════════════════════════════════════════════
        MODAL PERSONALIZADO (suspender / excluir conta)
   ═══════════════════════════════════════════════ -->
-  <div id="customModal" class="custom-modal">
-    <div class="modal-content">
+  <nav id="customModal" class="custom-modal">
+    <nav class="modal-content">
       <h3 id="modalTitle">Confirmação</h3>
       <p id="modalMessage"></p>
-      <div class="modal-actions">
+      <nav class="modal-actions">
         <button class="btn-cancel" onclick="closeCustomModal()">Cancelar</button>
         <button class="btn-confirm" id="confirmBtn">Confirmar</button>
-      </div>
-    </div>
-  </div>
+      </nav>
+    </nav>
+  </nav>
 
   <!-- ═══════════════════════════════════════════════
        MODAL DE CONFIRMAÇÃO DE AVALIAÇÃO
   ═══════════════════════════════════════════════ -->
-  <div class="confirm-modal-overlay" id="confirmAvalModal" onclick="if(event.target===this) closeConfirmModal()">
-    <div class="confirm-modal">
-      <div class="confirm-modal-icon" id="confirmAvalIcon">⚠️</div>
+  <nav class="confirm-modal-overlay" id="confirmAvalModal" onclick="if(event.target===this) closeConfirmModal()">
+    <nav class="confirm-modal">
+      <nav class="confirm-modal-icon" id="confirmAvalIcon">⚠️</nav>
       <h3 id="confirmAvalTitle">Suspender comentário?</h3>
       <p id="confirmAvalMsg">Este comentário ficará oculto para todos os usuários.</p>
-      <div class="confirm-modal-actions">
+      <nav class="confirm-modal-actions">
         <button class="confirm-btn-cancel" onclick="closeConfirmModal()">Cancelar</button>
         <button class="confirm-btn-confirm" id="confirmAvalBtn">Sim, suspender</button>
-      </div>
-    </div>
-  </div>
+      </nav>
+    </nav>
+  </nav>
 
   <!-- ═══════════════════════════════════════════════
        DADOS DO SERVIDOR (EJS → JS)
@@ -291,13 +291,13 @@
           var isSuspensa = review.suspensa == 1;
           html += '<article class="review-card' + (isSuspensa ? ' review-suspensa' : '') + '" id="rc-' + review.id + '">' +
             '<header class="review-header">' +
-              '<div class="review-header-left">' +
+              '<nav class="review-header-left">' +
                 '<span class="review-person"><i class=\'bx bx-store-alt\'></i> ' + review.product + '</span>' +
                 (isSuspensa ? '<span class="badge-suspensa"><i class=\'bx bx-block\'></i> Suspenso</span>' : '') +
-              '</div>' +
+              '</nav>' +
               '<time class="review-date">' + review.date + '</time>' +
             '</header>' +
-            '<div class="review-rating">' + renderStars(review.score) + '</div>' +
+            '<nav class="review-rating">' + renderStars(review.score) + '</nav>' +
             (review.comment
               ? '<blockquote class="review-comment">"' + review.comment + '"</blockquote>'
               : '<p class="review-no-comment">Sem comentário.</p>'
@@ -411,7 +411,7 @@
     function showToastDU(msg, type) {
       var t = document.getElementById('duToast');
       if (!t) {
-        t = document.createElement('div');
+        t = document.createElement('nav');
         t.id = 'duToast';
         t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#111827;color:#fff;padding:12px 20px;border-radius:10px;font-size:.9rem;font-weight:500;z-index:9999;display:flex;align-items:center;gap:8px;opacity:0;transform:translateY(10px);transition:all .3s;';
         document.body.appendChild(t);
@@ -508,5 +508,6 @@
       });
     });
   </script>
+<script src="/js/darkmode.js"></script>
 </body>
 </html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= vendedor.Nome %> – Vendedor | Clean Energy</title>
+  <link rel="stylesheet" href="/css/perfil_vendedor.css">
+  <link rel="stylesheet" href="/css/darkmode.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partial/header.ejs') %>
+
+  <main class="vend-main">
+
+    <!-- HERO DO VENDEDOR -->
+    <header class="vend-hero">
+      <div class="vend-hero-inner">
+        <figure class="vend-avatar-wrap">
+          <img
+            src="/imagem/<%= vendedor.foto || 'avatar.png' %>"
+            alt="Foto de <%= vendedor.Nome %>"
+            class="vend-avatar">
+        </figure>
+
+        <div class="vend-hero-info">
+          <h1 class="vend-nome"><%= vendedor.Nome %></h1>
+          <% if (vendedor.Biografia) { %>
+            <p class="vend-bio"><%= vendedor.Biografia %></p>
+          <% } %>
+          <% if (vendedor.Data_Criacao) { %>
+            <p class="vend-desde">
+              <i class='bx bx-calendar-check'></i>
+              Vendedor desde <%= new Date(vendedor.Data_Criacao).toLocaleDateString('pt-BR', { month:'long', year:'numeric' }) %>
+            </p>
+          <% } %>
+        </div>
+
+        <!-- Estrelas ao lado do nome -->
+        <div class="vend-hero-rating">
+          <% if (vendedor.mediaAvaliacao) { %>
+            <span class="vend-nota-num"><%= vendedor.mediaAvaliacao %></span>
+            <div class="vend-estrelas">
+              <% for(let i=1;i<=5;i++){ %>
+                <i class='bx <%= i <= Math.round(vendedor.mediaAvaliacao) ? "bxs-star" : "bx-star" %>'></i>
+              <% } %>
+            </div>
+            <span class="vend-nota-count"><%= vendedor.totalAvaliacoes %> avaliações</span>
+          <% } else { %>
+            <span class="vend-nota-vazio">Sem avaliações ainda</span>
+          <% } %>
+        </div>
+      </div>
+    </header>
+
+    <!-- ESTATÍSTICAS -->
+    <section class="vend-stats" aria-label="Estatísticas do vendedor">
+      <article class="vend-stat-card">
+        <i class='bx bx-package'></i>
+        <strong><%= vendedor.totalProdutos %></strong>
+        <span>Produtos ativos</span>
+      </article>
+      <article class="vend-stat-card">
+        <i class='bx bx-cart-check'></i>
+        <strong><%= vendedor.totalVendas %></strong>
+        <span>Vendas realizadas</span>
+      </article>
+      <article class="vend-stat-card">
+        <i class='bx bx-star'></i>
+        <strong><%= vendedor.mediaAvaliacao || '—' %></strong>
+        <span>Nota média</span>
+      </article>
+      <article class="vend-stat-card">
+        <i class='bx bx-message-detail'></i>
+        <strong><%= vendedor.totalAvaliacoes %></strong>
+        <span>Avaliações recebidas</span>
+      </article>
+    </section>
+
+    <div class="vend-body">
+
+      <!-- COLUNA ESQUERDA: Produtos -->
+      <section class="vend-section" aria-labelledby="produtos-title">
+        <header class="vend-section-header">
+          <h2 id="produtos-title"><i class='bx bx-package'></i> Produtos Cadastrados</h2>
+        </header>
+
+        <% if (produtos && produtos.length > 0) { %>
+        <ul class="vend-produtos-grid">
+          <% produtos.forEach(p => { %>
+          <li class="vend-produto-card">
+            <a href="/item/<%= p.id %>" class="vend-produto-link">
+              <figure class="vend-produto-img">
+                <img
+                  src="<%= p.imagem && p.imagem.startsWith('data:') ? p.imagem : '/imagem/' + (p.imagem || 'sem-foto.png') %>"
+                  alt="<%= p.nome %>"
+                  loading="lazy">
+              </figure>
+              <div class="vend-produto-info">
+                <h3><%= p.nome %></h3>
+                <% if (p.categoria) { %>
+                  <span class="vend-produto-cat"><%= p.categoria %></span>
+                <% } %>
+                <p class="vend-produto-preco">
+                  R$ <%= Number(p.preco).toLocaleString('pt-BR', {minimumFractionDigits:2}) %>
+                </p>
+                <% if (p.local) { %>
+                  <p class="vend-produto-local"><i class='bx bx-map-pin'></i> <%= p.local %></p>
+                <% } %>
+              </div>
+            </a>
+          </li>
+          <% }) %>
+        </ul>
+        <% } else { %>
+          <p class="vend-empty">Este vendedor ainda não possui produtos cadastrados.</p>
+        <% } %>
+      </section>
+
+      <!-- COLUNA DIREITA: Avaliações + Formulário -->
+      <aside class="vend-section vend-avaliacoes-col" aria-labelledby="avaliacoes-title" id="avaliacoes">
+
+        <!-- Formulário de avaliação -->
+        <section class="vend-form-section" aria-label="Avaliar vendedor">
+          <% if (typeof usuario !== 'undefined' && usuario && parseInt(usuario.id) !== parseInt(vendedor.Usuario_ID)) { %>
+
+            <% if (typeof req !== 'undefined' && req.query) { %>
+              <% if (req.query.sucesso) { %>
+                <div class="vend-alert vend-alert-ok">
+                  <i class='bx bx-check-circle'></i> Avaliação enviada com sucesso!
+                </div>
+              <% } else if (req.query.erro === 'nota') { %>
+                <div class="vend-alert vend-alert-err">
+                  <i class='bx bx-error-circle'></i> Selecione uma nota de 1 a 5 estrelas.
+                </div>
+              <% } else if (req.query.erro === 'salvar') { %>
+                <div class="vend-alert vend-alert-err">
+                  <i class='bx bx-error-circle'></i> Erro ao salvar. Tente novamente.
+                </div>
+              <% } %>
+            <% } %>
+
+            <header class="vend-section-header">
+              <h2 id="avaliacoes-title">
+                <i class='bx bx-<%= jaAvaliou ? "edit" : "star" %>'></i>
+                <%= jaAvaliou ? 'Editar minha avaliação' : 'Avaliar este vendedor' %>
+              </h2>
+            </header>
+
+            <form action="/vendedor/<%= vendedor.Usuario_ID %>/avaliar" method="POST" class="vend-form">
+              <!-- Seletor de estrelas RTL -->
+              <div class="vend-stars-selector" role="group" aria-label="Selecione uma nota">
+                <% for(let i=5; i>=1; i--) { %>
+                  <input type="radio" name="nota" id="vstar<%= i %>" value="<%= i %>"
+                    <%= jaAvaliou && minhaAvaliacao && minhaAvaliacao.nota === i ? 'checked' : '' %>>
+                  <label for="vstar<%= i %>" aria-label="<%= i %> estrelas"><i class='bx bxs-star'></i></label>
+                <% } %>
+              </div>
+
+              <textarea name="comentario" class="vend-textarea"
+                placeholder="Descreva sua experiência com este vendedor..."
+                maxlength="500"><%= jaAvaliou && minhaAvaliacao ? minhaAvaliacao.comentario : '' %></textarea>
+
+              <button type="submit" class="vend-btn-submit">
+                <i class='bx bx-send'></i>
+                <%= jaAvaliou ? 'Atualizar avaliação' : 'Enviar avaliação' %>
+              </button>
+            </form>
+
+          <% } else if (typeof usuario === 'undefined' || !usuario) { %>
+            <header class="vend-section-header">
+              <h2 id="avaliacoes-title"><i class='bx bx-star'></i> Avaliar vendedor</h2>
+            </header>
+            <p class="vend-login-msg">
+              <i class='bx bx-lock-alt'></i>
+              <a href="/login">Faça login</a> para avaliar este vendedor.
+            </p>
+          <% } else { %>
+            <header class="vend-section-header">
+              <h2 id="avaliacoes-title"><i class='bx bx-info-circle'></i> Avaliações</h2>
+            </header>
+            <p class="vend-login-msg">Você não pode avaliar a si mesmo.</p>
+          <% } %>
+        </section>
+
+        <!-- Lista de avaliações recebidas -->
+        <section aria-labelledby="lista-aval-title">
+          <header class="vend-section-header" style="margin-top:1.5rem;">
+            <h2 id="lista-aval-title"><i class='bx bx-message-detail'></i> Avaliações recebidas</h2>
+          </header>
+
+          <% if (comentarios && comentarios.length > 0) { %>
+          <ul class="vend-comentarios">
+            <% comentarios.forEach(c => { %>
+            <li class="vend-comentario">
+              <figure class="vend-com-avatar">
+                <img src="/imagem/<%= c.foto_avaliador || 'avatar.png' %>" alt="<%= c.nome_avaliador %>">
+              </figure>
+              <div class="vend-com-corpo">
+                <header class="vend-com-header">
+                  <strong class="vend-com-nome"><%= c.nome_avaliador %></strong>
+                  <div class="vend-com-estrelas">
+                    <% for(let i=1;i<=5;i++){ %>
+                      <i class='bx <%= i <= c.nota ? "bxs-star" : "bx-star" %>'></i>
+                    <% } %>
+                  </div>
+                  <time class="vend-com-data" datetime="<%= c.criado_em %>">
+                    <%= new Date(c.criado_em).toLocaleDateString('pt-BR') %>
+                  </time>
+                </header>
+                <% if (c.comentario) { %>
+                  <p class="vend-com-texto"><%= c.comentario %></p>
+                <% } %>
+              </div>
+            </li>
+            <% }) %>
+          </ul>
+          <% } else { %>
+            <p class="vend-empty">
+              <i class='bx bx-message-dots' style="font-size:1.5rem;display:block;margin-bottom:.4rem;"></i>
+              Nenhuma avaliação recebida ainda.
+            </p>
+          <% } %>
+        </section>
+
+      </aside>
+    </div>
+  </main>
+
+  <%- include('../partial/footer.ejs') %>
+  <script src="/js/darkmode.js"></script>
+</body>
+</html>

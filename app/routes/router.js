@@ -4,8 +4,9 @@ const { body, validationResult } = require("express-validator");
 const path = require('path');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
-const pool = require("../../config/pool_conexoes");
-const produtosModel = require("../models/models");
+const models = require("../models/models");
+const produtosModel = models;
+const { usuarioModel, vendedorModel } = models;
 const cartModel = require("../models/cartModel");
 const storage = multer.memoryStorage();
 const _diskStorage_unused = multer.diskStorage({
@@ -16,7 +17,12 @@ const _diskStorage_unused = multer.diskStorage({
 });
 
 const upload = multer({
-  storage: multer.memoryStorage(),
+  storage: multer.diskStorage({
+    destination: path.join(__dirname, '../public/imagem'),
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname));
+    }
+  }),
   limits: { fileSize: 5 * 1024 * 1024 }
 });
 var { validarCPF } = require("../helpers/validacao");
@@ -72,9 +78,9 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/home", (req, res) => res.render("pages/home"));
+
 // Rota para comprador se tornar vendedor
 router.get("/upgrade_vendedor", requireLogin, async (req, res) => {
-  // Só permite se for comprador
   if (req.session.perfil !== 'comprador') {
     return res.redirect('/?erro=acesso_restrito');
   }
@@ -112,8 +118,9 @@ router.post("/upgrade_vendedor",
     try {
       const companyName = req.body.company_name.trim();
       const cnpjNumeros = req.body.cnpj.replace(/\D/g, '');
-      const [existing] = await pool.query("SELECT Usuario_ID FROM Pessoa_Juridica WHERE CNPJ = ?", [cnpjNumeros]);
-      if (existing.length > 0) {
+
+      const existing = await usuarioModel.findByCNPJ(cnpjNumeros);
+      if (existing) {
         return res.render("pages/upgrade_vendedor", {
           valoresEmpresa,
           erroValidacaoEmpresa: { cnpj: 'erro' },
@@ -121,15 +128,7 @@ router.post("/upgrade_vendedor",
         });
       }
 
-      // Converte usuário para vendedor (PJ) — preserva o Email original de login,
-      // apenas muda o Tipo e salva o nome da empresa em Biografia
-      await pool.query(
-        "UPDATE Usuario SET Tipo = 'PJ', Biografia = ? WHERE Usuario_ID = ?",
-        [`Empresa: ${companyName}`, req.session.userId]
-      );
-      
-      await pool.query("INSERT INTO Pessoa_Juridica (Usuario_ID, CNPJ) VALUES (?, ?)", [req.session.userId, cnpjNumeros]);
-      
+      await usuarioModel.upgradeParaVendedor(req.session.userId, { companyName, cnpj: cnpjNumeros });
 
       req.session.perfil = 'vendedor';
       req.session.tipo = 'PJ';
@@ -141,6 +140,7 @@ router.post("/upgrade_vendedor",
     }
   }
 );
+
 router.get("/minhascompras", requireLogin, (req, res) => res.render("pages/minhascompras"));
 
 // ── Atualizar perfil
@@ -150,10 +150,7 @@ router.post("/perfil/atualizar", requireLogin, async (req, res) => {
     return res.json({ sucesso: false, erro: 'Nome muito curto.' });
   }
   try {
-    await pool.query(
-      "UPDATE Usuario SET Nome = ?, Biografia = ? WHERE Usuario_ID = ?",
-      [nome.trim(), biografia || null, req.session.userId]
-    );
+    await usuarioModel.updatePerfil(req.session.userId, { nome: nome.trim(), biografia });
     req.session.nomeUsuario = nome.trim();
     res.json({ sucesso: true });
   } catch (err) {
@@ -175,7 +172,7 @@ const uploadFoto = multer({
     const allowed = /jpeg|jpg|png|webp|gif/;
     cb(null, allowed.test(path.extname(file.originalname).toLowerCase()));
   },
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }
 });
 
 router.post("/perfil/foto", requireLogin, uploadFoto.single('foto'), async (req, res) => {
@@ -185,19 +182,13 @@ router.post("/perfil/foto", requireLogin, uploadFoto.single('foto'), async (req,
     }
 
     const filename = req.file.filename;
-
-    await pool.query(
-      "UPDATE Usuario SET foto = ? WHERE Usuario_ID = ?",
-      [filename, req.session.userId]
-    );
-
+    await usuarioModel.updateFoto(req.session.userId, filename);
     req.session.fotoUsuario = filename;
 
     return res.json({
       sucesso: true,
       foto: `/imagem/${filename}`
     });
-
   } catch (err) {
     console.error('Erro upload foto:', err);
     return res.status(500).json({
@@ -209,19 +200,12 @@ router.post("/perfil/foto", requireLogin, uploadFoto.single('foto'), async (req,
 
 router.get("/perfil", requireLogin, async (req, res) => {
   try {
-    const [rows] = await pool.query(
-      "SELECT * FROM Usuario WHERE Usuario_ID = ?",
-      [req.session.userId]
-    );
-
-    const usuarioDados = rows[0] || null;
+    const usuarioDados = await usuarioModel.findById(req.session.userId);
 
     if (usuarioDados) {
       usuarioDados.perfil = req.session.perfil;
       usuarioDados.nome = usuarioDados.Nome;
-      // Sincroniza foto na sessão caso tenha sido atualizada
       if (usuarioDados.foto) req.session.fotoUsuario = usuarioDados.foto;
-      // Atualiza res.locals para o header pegar a foto correta
       res.locals.usuario = { ...res.locals.usuario, ...usuarioDados, foto: usuarioDados.foto || null };
     }
 
@@ -295,40 +279,35 @@ router.get("/item/:id", async function (req, res) {
     const produto = await produtosModel.findById(req.params.id);
     if (!produto) return res.status(404).send("Produto não encontrado");
 
+    const avaliacoes = await produtosModel.findAvaliacoes(req.params.id);
 
-    // Verifica se coluna suspensa existe antes de filtrar
-    const [colSusp] = await pool.query(
-      "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'Avaliacao' AND COLUMN_NAME = 'suspensa'"
-    );
-    const filtroSuspensa = colSusp.length > 0 ? 'AND IFNULL(a.suspensa, 0) = 0' : '';
-
-    const [avaliacoes] = await pool.query(
-      `SELECT a.Avaliacao_ID, a.Nota, a.Comentario, a.criado_em,
-              COALESCE(u.Nome, a.nome_usuario, 'Usuário') AS nome_usuario
-       FROM Avaliacao a
-       LEFT JOIN Usuario u ON u.Usuario_ID = a.Usuario_ID
-       WHERE a.Produto_ID = ? ${filtroSuspensa}
-       ORDER BY a.criado_em DESC`,
-      [req.params.id]
-    );
-
-    // Média das notas (só das ativas)
     const mediaNotas = avaliacoes.length
       ? (avaliacoes.reduce((s, a) => s + (a.Nota || 0), 0) / avaliacoes.length).toFixed(1)
       : null;
 
+    let vendedor = null;
+    if (produto.usuario_id) {
+      vendedor = await vendedorModel.findUsuarioById(produto.usuario_id);
+      if (vendedor) {
+        const avgData = await vendedorModel.findMediaAvaliacao(produto.usuario_id);
+        vendedor.mediaAvaliacao = avgData.media || null;
+        vendedor.totalAvaliacoes = avgData.total || 0;
+        vendedor.totalProdutos = await vendedorModel.findTotalProdutos(produto.usuario_id);
+      }
+    }
+
     const usuarioSessao = req.session.userId
-      ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil, foto: req.session.fotoUsuario || null }
+      ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil }
       : null;
 
-    res.render("pages/item", { produto, avaliacoes, mediaNotas });
+    res.render("pages/item", { produto, avaliacoes, mediaNotas, vendedor, usuario: usuarioSessao });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro interno do servidor');
   }
 });
 
-// ── POST avaliação
+// ── POST avaliação de produto
 router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
   const produtoId = req.params.id;
   const { nota, comentario } = req.body;
@@ -339,24 +318,12 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
   }
 
   try {
+    const jaAvaliou = await produtosModel.findAvaliacaoByUsuario(req.session.userId, produtoId);
 
-    const [jaAvaliou] = await pool.query(
-      "SELECT Avaliacao_ID FROM Avaliacao WHERE Usuario_ID = ? AND Produto_ID = ?",
-      [req.session.userId, produtoId]
-    );
-
-    if (jaAvaliou.length > 0) {
-
-      await pool.query(
-        "UPDATE Avaliacao SET Nota = ?, Comentario = ?, criado_em = NOW() WHERE Usuario_ID = ? AND Produto_ID = ?",
-        [notaNum, comentario || '', req.session.userId, produtoId]
-      );
+    if (jaAvaliou) {
+      await produtosModel.updateAvaliacao({ nota: notaNum, comentario, usuarioId: req.session.userId, produtoId });
     } else {
-
-      await pool.query(
-        "INSERT INTO Avaliacao (Nota, Comentario, Usuario_ID, Produto_ID, nome_usuario, criado_em) VALUES (?, ?, ?, ?, ?, NOW())",
-        [notaNum, comentario || '', req.session.userId, produtoId, req.session.nomeUsuario]
-      );
+      await produtosModel.createAvaliacao({ nota: notaNum, comentario, usuarioId: req.session.userId, produtoId, nomeUsuario: req.session.nomeUsuario });
     }
 
     res.redirect(`/item/${produtoId}#comentarios`);
@@ -370,14 +337,7 @@ router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), asyn
   const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
   const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
 
-  let imagemData = null;
-  let imagemFilename = 'sem-foto.png';
-  if (req.file) {
-    const mime = req.file.mimetype;
-    const base64 = req.file.buffer.toString('base64');
-    imagemData = `data:${mime};base64,${base64}`;
-    imagemFilename = imagemData;
-  }
+  const imagemFilename = req.file ? req.file.filename : 'sem-foto.png';
 
   let precoLimpo = (preco || '0').toString().trim()
     .replace(/R\$\s*/g, '')
@@ -385,7 +345,6 @@ router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), asyn
     .replace(/\./g, '')
     .replace(',', '.');
   const precoNumerico = parseFloat(precoLimpo) || 0;
-
 
   let quantidadeLimpa = (quantidade || '0').toString().trim()
     .replace(/ t$/i, '')
@@ -442,8 +401,8 @@ router.post("/cadastroUsuario",
       });
     }
     try {
-      const [existing] = await pool.query("SELECT Usuario_ID FROM Usuario WHERE Email = ?", [req.body.email]);
-      if (existing.length > 0) {
+      const existing = await usuarioModel.findByEmail(req.body.email);
+      if (existing) {
         return res.render("pages/cadastro", {
           valoresPessoaFisica: req.body,
           erroValidacaoPessoaFisica: { email:'erro' }, msgErroPessoaFisica: { email:'*Este e-mail já está cadastrado!' },
@@ -452,9 +411,9 @@ router.post("/cadastroUsuario",
         });
       }
       const senhaHash = await bcrypt.hash(req.body.senha, 10);
-      const [result] = await pool.query("INSERT INTO Usuario (Nome, Email, Senha, Tipo) VALUES (?, ?, ?, 'PF')", [req.body.nome, req.body.email, senhaHash]);
+      const result = await usuarioModel.createPF({ nome: req.body.nome, email: req.body.email, senhaHash });
       const cpfNumeros = req.body.cpf.replace(/\D/g, '');
-      await pool.query("INSERT INTO Pessoa_Fisica (Usuario_ID, CPF) VALUES (?, ?)", [result.insertId, cpfNumeros]);
+      await usuarioModel.createPessoaFisica(result.insertId, cpfNumeros);
       res.redirect("/login");
     } catch (err) {
       console.error('Erro ao cadastrar usuário:', err);
@@ -479,17 +438,17 @@ router.post("/cadastroEmpresa",
       return res.render("pages/cadastro_vendedor", { valoresEmpresa: req.body, erroValidacaoEmpresa, msgErroEmpresa, retorno:null });
     }
     try {
-      const [existing] = await pool.query("SELECT Usuario_ID FROM Usuario WHERE Email = ?", [req.body.email]);
-      if (existing.length > 0) {
+      const existing = await usuarioModel.findByEmail(req.body.email);
+      if (existing) {
         return res.render("pages/cadastro_vendedor", {
           valoresEmpresa: req.body,
           erroValidacaoEmpresa: { email:'erro' }, msgErroEmpresa: { email:'*Este e-mail já está cadastrado!' }, retorno:null
         });
       }
       const senhaHash = await bcrypt.hash(req.body.senha, 10);
-      const [result] = await pool.query("INSERT INTO Usuario (Nome, Email, Senha, Tipo) VALUES (?, ?, ?, 'PJ')", [req.body.nome, req.body.email, senhaHash]);
+      const result = await usuarioModel.createPJ({ nome: req.body.nome, email: req.body.email, senhaHash });
       const cnpjNumeros = req.body.cnpj.replace(/\D/g, '');
-      await pool.query("INSERT INTO Pessoa_Juridica (Usuario_ID, CNPJ) VALUES (?, ?)", [result.insertId, cnpjNumeros]);
+      await usuarioModel.createPessoaJuridica(result.insertId, cnpjNumeros);
       res.redirect("/login");
     } catch (err) {
       console.error('Erro ao cadastrar empresa:', err);
@@ -502,16 +461,14 @@ router.post("/cadastroEmpresa",
 router.post("/login", async (req, res) => {
   const { usuarioDigitado, senhaDigitada } = req.body;
   try {
-    const [rows] = await pool.query("SELECT * FROM Usuario WHERE Email = ?", [usuarioDigitado]);
-    if (rows.length === 0 || !(await bcrypt.compare(senhaDigitada, rows[0].Senha))) {
+    const usuario = await usuarioModel.findByEmail(usuarioDigitado);
+    if (!usuario || !(await bcrypt.compare(senhaDigitada, usuario.Senha))) {
       return res.render("pages/login", {
         erro: "*Não reconhecemos estas credenciais. Tente novamente.",
         sucesso: false, valores: { usuarioDigitado, senhaDigitada: '' }
       });
     }
-    const usuario = rows[0];
 
-    // Bloqueia login de conta suspensa
     if (usuario.status === 'suspended') {
       return res.render("pages/login", {
         erro: "⚠️ Sua conta foi suspensa pelo administrador. Entre em contato com o suporte para mais informações.",
@@ -525,7 +482,7 @@ router.post("/login", async (req, res) => {
     req.session.perfil = usuario.Tipo === 'PJ' ? 'vendedor' : 'comprador';
     req.session.tipo = usuario.Tipo;
     req.session.fotoUsuario = usuario.foto || null;
-    await pool.query("UPDATE Usuario SET Ultimo_Login = NOW() WHERE Usuario_ID = ?", [usuario.Usuario_ID]);
+    await usuarioModel.updateUltimoLogin(usuario.Usuario_ID);
     return res.redirect("/perfil");
   } catch (err) {
     console.error('Erro no login:', err);
@@ -564,6 +521,76 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+// ── PERFIL PÚBLICO DO VENDEDOR ────────────────────────────────
+router.get("/vendedor/:id", async (req, res) => {
+  try {
+    const vendedorId = req.params.id;
 
+    const vendedor = await vendedorModel.findById(vendedorId);
+    if (!vendedor) return res.status(404).send("Vendedor não encontrado");
+
+    const avgData = await vendedorModel.findMediaAvaliacao(vendedorId);
+    vendedor.mediaAvaliacao = avgData.media;
+    vendedor.totalAvaliacoes = avgData.total;
+
+    const prodRows = await vendedorModel.findProdutos(vendedorId);
+    vendedor.totalVendas = await vendedorModel.findTotalVendas(vendedorId);
+    vendedor.totalProdutos = prodRows.length;
+
+    const comentarios = await vendedorModel.findAvaliacoes(vendedorId);
+
+    let jaAvaliou = false;
+    let minhaAvaliacao = null;
+    if (req.session.userId) {
+      minhaAvaliacao = await vendedorModel.findAvaliacaoByAvaliador(vendedorId, req.session.userId);
+      if (minhaAvaliacao) jaAvaliou = true;
+    }
+
+    const usuarioSessao = req.session.userId
+      ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil }
+      : null;
+
+    res.render("pages/perfil_vendedor", {
+      vendedor,
+      produtos: prodRows,
+      comentarios,
+      jaAvaliou,
+      minhaAvaliacao,
+      usuario: usuarioSessao
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erro ao carregar perfil do vendedor");
+  }
+});
+
+// ── AVALIAR VENDEDOR ──────────────────────────────────────────
+router.post("/vendedor/:id/avaliar", requireLogin, async (req, res) => {
+  const vendedorId = req.params.id;
+  const { nota, comentario } = req.body;
+  const notaNum = parseInt(nota, 10);
+
+  if (!notaNum || notaNum < 1 || notaNum > 5) {
+    return res.redirect(`/vendedor/${vendedorId}?erro=nota`);
+  }
+
+  if (parseInt(vendedorId) === req.session.userId) {
+    return res.redirect(`/vendedor/${vendedorId}?erro=proprio`);
+  }
+
+  try {
+    const jaAv = await vendedorModel.findAvaliacaoId(vendedorId, req.session.userId);
+
+    if (jaAv) {
+      await vendedorModel.updateAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
+    } else {
+      await vendedorModel.createAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
+    }
+    res.redirect(`/vendedor/${vendedorId}?sucesso=1#avaliacoes`);
+  } catch (err) {
+    console.error(err);
+    res.redirect(`/vendedor/${vendedorId}?erro=salvar`);
+  }
+});
 
 module.exports = router;
