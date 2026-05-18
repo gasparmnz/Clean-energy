@@ -4,8 +4,9 @@ const { body, validationResult } = require("express-validator");
 const path = require('path');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
-const pool = require("../../config/pool_conexoes");
-const produtosModel = require("../models/models");
+const models = require("../models/models");
+const produtosModel = models;
+const { usuarioModel, vendedorModel } = models;
 const cartModel = require("../models/cartModel");
 const storage = multer.memoryStorage();
 const _diskStorage_unused = multer.diskStorage({
@@ -77,9 +78,9 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/home", (req, res) => res.render("pages/home"));
+
 // Rota para comprador se tornar vendedor
 router.get("/upgrade_vendedor", requireLogin, async (req, res) => {
-  // Só permite se for comprador
   if (req.session.perfil !== 'comprador') {
     return res.redirect('/?erro=acesso_restrito');
   }
@@ -117,8 +118,9 @@ router.post("/upgrade_vendedor",
     try {
       const companyName = req.body.company_name.trim();
       const cnpjNumeros = req.body.cnpj.replace(/\D/g, '');
-      const [existing] = await pool.query("SELECT Usuario_ID FROM Pessoa_Juridica WHERE CNPJ = ?", [cnpjNumeros]);
-      if (existing.length > 0) {
+
+      const existing = await usuarioModel.findByCNPJ(cnpjNumeros);
+      if (existing) {
         return res.render("pages/upgrade_vendedor", {
           valoresEmpresa,
           erroValidacaoEmpresa: { cnpj: 'erro' },
@@ -126,15 +128,7 @@ router.post("/upgrade_vendedor",
         });
       }
 
-      // Converte usuário para vendedor (PJ) — preserva o Email original de login,
-      // apenas muda o Tipo e salva o nome da empresa em Biografia
-      await pool.query(
-        "UPDATE Usuario SET Tipo = 'PJ', Biografia = ? WHERE Usuario_ID = ?",
-        [`Empresa: ${companyName}`, req.session.userId]
-      );
-      
-      await pool.query("INSERT INTO Pessoa_Juridica (Usuario_ID, CNPJ) VALUES (?, ?)", [req.session.userId, cnpjNumeros]);
-      
+      await usuarioModel.upgradeParaVendedor(req.session.userId, { companyName, cnpj: cnpjNumeros });
 
       req.session.perfil = 'vendedor';
       req.session.tipo = 'PJ';
@@ -146,6 +140,7 @@ router.post("/upgrade_vendedor",
     }
   }
 );
+
 router.get("/minhascompras", requireLogin, (req, res) => res.render("pages/minhascompras"));
 
 // ── Atualizar perfil
@@ -155,10 +150,7 @@ router.post("/perfil/atualizar", requireLogin, async (req, res) => {
     return res.json({ sucesso: false, erro: 'Nome muito curto.' });
   }
   try {
-    await pool.query(
-      "UPDATE Usuario SET Nome = ?, Biografia = ? WHERE Usuario_ID = ?",
-      [nome.trim(), biografia || null, req.session.userId]
-    );
+    await usuarioModel.updatePerfil(req.session.userId, { nome: nome.trim(), biografia });
     req.session.nomeUsuario = nome.trim();
     res.json({ sucesso: true });
   } catch (err) {
@@ -180,7 +172,7 @@ const uploadFoto = multer({
     const allowed = /jpeg|jpg|png|webp|gif/;
     cb(null, allowed.test(path.extname(file.originalname).toLowerCase()));
   },
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }
 });
 
 router.post("/perfil/foto", requireLogin, uploadFoto.single('foto'), async (req, res) => {
@@ -190,19 +182,13 @@ router.post("/perfil/foto", requireLogin, uploadFoto.single('foto'), async (req,
     }
 
     const filename = req.file.filename;
-
-    await pool.query(
-      "UPDATE Usuario SET foto = ? WHERE Usuario_ID = ?",
-      [filename, req.session.userId]
-    );
-
+    await usuarioModel.updateFoto(req.session.userId, filename);
     req.session.fotoUsuario = filename;
 
     return res.json({
       sucesso: true,
       foto: `/imagem/${filename}`
     });
-
   } catch (err) {
     console.error('Erro upload foto:', err);
     return res.status(500).json({
@@ -214,19 +200,12 @@ router.post("/perfil/foto", requireLogin, uploadFoto.single('foto'), async (req,
 
 router.get("/perfil", requireLogin, async (req, res) => {
   try {
-    const [rows] = await pool.query(
-      "SELECT * FROM Usuario WHERE Usuario_ID = ?",
-      [req.session.userId]
-    );
-
-    const usuarioDados = rows[0] || null;
+    const usuarioDados = await usuarioModel.findById(req.session.userId);
 
     if (usuarioDados) {
       usuarioDados.perfil = req.session.perfil;
       usuarioDados.nome = usuarioDados.Nome;
-      // Sincroniza foto na sessão caso tenha sido atualizada
       if (usuarioDados.foto) req.session.fotoUsuario = usuarioDados.foto;
-      // Atualiza res.locals para o header pegar a foto correta
       res.locals.usuario = { ...res.locals.usuario, ...usuarioDados, foto: usuarioDados.foto || null };
     }
 
@@ -300,45 +279,20 @@ router.get("/item/:id", async function (req, res) {
     const produto = await produtosModel.findById(req.params.id);
     if (!produto) return res.status(404).send("Produto não encontrado");
 
-    // Busca avaliações do produto
-    const [avaliacoes] = await pool.query(
-      `SELECT a.Avaliacao_ID, a.Nota, a.Comentario, a.criado_em,
-              COALESCE(u.Nome, a.nome_usuario, 'Usuário') AS nome_usuario
-       FROM Avaliacao a
-       LEFT JOIN Usuario u ON u.Usuario_ID = a.Usuario_ID
-       WHERE a.Produto_ID = ?
-       ORDER BY a.criado_em DESC`,
-      [req.params.id]
-    );
+    const avaliacoes = await produtosModel.findAvaliacoes(req.params.id);
 
     const mediaNotas = avaliacoes.length
       ? (avaliacoes.reduce((s, a) => s + (a.Nota || 0), 0) / avaliacoes.length).toFixed(1)
       : null;
 
-    // Busca o vendedor real que cadastrou o produto
     let vendedor = null;
-    let mediaVendedor = null;
     if (produto.usuario_id) {
-      const [vRows] = await pool.query(
-        `SELECT Usuario_ID, Nome, Email, foto, Tipo, Biografia, Data_Criacao FROM Usuario WHERE Usuario_ID = ?`,
-        [produto.usuario_id]
-      );
-      if (vRows.length > 0) {
-        vendedor = vRows[0];
-        // Média de avaliações do vendedor
-        const [avgRows] = await pool.query(
-          `SELECT ROUND(AVG(nota), 1) AS media, COUNT(*) AS total
-           FROM Avaliacao_Vendedor WHERE vendedor_id = ?`,
-          [produto.usuario_id]
-        );
-        vendedor.mediaAvaliacao = avgRows[0].media || null;
-        vendedor.totalAvaliacoes = avgRows[0].total || 0;
-        // Total de produtos do vendedor
-        const [prodRows] = await pool.query(
-          `SELECT COUNT(*) AS total FROM produtos WHERE usuario_id = ? AND status = 'active'`,
-          [produto.usuario_id]
-        );
-        vendedor.totalProdutos = prodRows[0].total || 0;
+      vendedor = await vendedorModel.findUsuarioById(produto.usuario_id);
+      if (vendedor) {
+        const avgData = await vendedorModel.findMediaAvaliacao(produto.usuario_id);
+        vendedor.mediaAvaliacao = avgData.media || null;
+        vendedor.totalAvaliacoes = avgData.total || 0;
+        vendedor.totalProdutos = await vendedorModel.findTotalProdutos(produto.usuario_id);
       }
     }
 
@@ -353,7 +307,7 @@ router.get("/item/:id", async function (req, res) {
   }
 });
 
-// ── POST avaliação
+// ── POST avaliação de produto
 router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
   const produtoId = req.params.id;
   const { nota, comentario } = req.body;
@@ -364,24 +318,12 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
   }
 
   try {
+    const jaAvaliou = await produtosModel.findAvaliacaoByUsuario(req.session.userId, produtoId);
 
-    const [jaAvaliou] = await pool.query(
-      "SELECT Avaliacao_ID FROM Avaliacao WHERE Usuario_ID = ? AND Produto_ID = ?",
-      [req.session.userId, produtoId]
-    );
-
-    if (jaAvaliou.length > 0) {
-
-      await pool.query(
-        "UPDATE Avaliacao SET Nota = ?, Comentario = ?, criado_em = NOW() WHERE Usuario_ID = ? AND Produto_ID = ?",
-        [notaNum, comentario || '', req.session.userId, produtoId]
-      );
+    if (jaAvaliou) {
+      await produtosModel.updateAvaliacao({ nota: notaNum, comentario, usuarioId: req.session.userId, produtoId });
     } else {
-
-      await pool.query(
-        "INSERT INTO Avaliacao (Nota, Comentario, Usuario_ID, Produto_ID, nome_usuario, criado_em) VALUES (?, ?, ?, ?, ?, NOW())",
-        [notaNum, comentario || '', req.session.userId, produtoId, req.session.nomeUsuario]
-      );
+      await produtosModel.createAvaliacao({ nota: notaNum, comentario, usuarioId: req.session.userId, produtoId, nomeUsuario: req.session.nomeUsuario });
     }
 
     res.redirect(`/item/${produtoId}#comentarios`);
@@ -403,7 +345,6 @@ router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), asyn
     .replace(/\./g, '')
     .replace(',', '.');
   const precoNumerico = parseFloat(precoLimpo) || 0;
-
 
   let quantidadeLimpa = (quantidade || '0').toString().trim()
     .replace(/ t$/i, '')
@@ -460,8 +401,8 @@ router.post("/cadastroUsuario",
       });
     }
     try {
-      const [existing] = await pool.query("SELECT Usuario_ID FROM Usuario WHERE Email = ?", [req.body.email]);
-      if (existing.length > 0) {
+      const existing = await usuarioModel.findByEmail(req.body.email);
+      if (existing) {
         return res.render("pages/cadastro", {
           valoresPessoaFisica: req.body,
           erroValidacaoPessoaFisica: { email:'erro' }, msgErroPessoaFisica: { email:'*Este e-mail já está cadastrado!' },
@@ -470,9 +411,9 @@ router.post("/cadastroUsuario",
         });
       }
       const senhaHash = await bcrypt.hash(req.body.senha, 10);
-      const [result] = await pool.query("INSERT INTO Usuario (Nome, Email, Senha, Tipo) VALUES (?, ?, ?, 'PF')", [req.body.nome, req.body.email, senhaHash]);
+      const result = await usuarioModel.createPF({ nome: req.body.nome, email: req.body.email, senhaHash });
       const cpfNumeros = req.body.cpf.replace(/\D/g, '');
-      await pool.query("INSERT INTO Pessoa_Fisica (Usuario_ID, CPF) VALUES (?, ?)", [result.insertId, cpfNumeros]);
+      await usuarioModel.createPessoaFisica(result.insertId, cpfNumeros);
       res.redirect("/login");
     } catch (err) {
       console.error('Erro ao cadastrar usuário:', err);
@@ -497,17 +438,17 @@ router.post("/cadastroEmpresa",
       return res.render("pages/cadastro_vendedor", { valoresEmpresa: req.body, erroValidacaoEmpresa, msgErroEmpresa, retorno:null });
     }
     try {
-      const [existing] = await pool.query("SELECT Usuario_ID FROM Usuario WHERE Email = ?", [req.body.email]);
-      if (existing.length > 0) {
+      const existing = await usuarioModel.findByEmail(req.body.email);
+      if (existing) {
         return res.render("pages/cadastro_vendedor", {
           valoresEmpresa: req.body,
           erroValidacaoEmpresa: { email:'erro' }, msgErroEmpresa: { email:'*Este e-mail já está cadastrado!' }, retorno:null
         });
       }
       const senhaHash = await bcrypt.hash(req.body.senha, 10);
-      const [result] = await pool.query("INSERT INTO Usuario (Nome, Email, Senha, Tipo) VALUES (?, ?, ?, 'PJ')", [req.body.nome, req.body.email, senhaHash]);
+      const result = await usuarioModel.createPJ({ nome: req.body.nome, email: req.body.email, senhaHash });
       const cnpjNumeros = req.body.cnpj.replace(/\D/g, '');
-      await pool.query("INSERT INTO Pessoa_Juridica (Usuario_ID, CNPJ) VALUES (?, ?)", [result.insertId, cnpjNumeros]);
+      await usuarioModel.createPessoaJuridica(result.insertId, cnpjNumeros);
       res.redirect("/login");
     } catch (err) {
       console.error('Erro ao cadastrar empresa:', err);
@@ -520,16 +461,14 @@ router.post("/cadastroEmpresa",
 router.post("/login", async (req, res) => {
   const { usuarioDigitado, senhaDigitada } = req.body;
   try {
-    const [rows] = await pool.query("SELECT * FROM Usuario WHERE Email = ?", [usuarioDigitado]);
-    if (rows.length === 0 || !(await bcrypt.compare(senhaDigitada, rows[0].Senha))) {
+    const usuario = await usuarioModel.findByEmail(usuarioDigitado);
+    if (!usuario || !(await bcrypt.compare(senhaDigitada, usuario.Senha))) {
       return res.render("pages/login", {
         erro: "*Não reconhecemos estas credenciais. Tente novamente.",
         sucesso: false, valores: { usuarioDigitado, senhaDigitada: '' }
       });
     }
-    const usuario = rows[0];
 
-    // Bloqueia login de conta suspensa
     if (usuario.status === 'suspended') {
       return res.render("pages/login", {
         erro: "⚠️ Sua conta foi suspensa pelo administrador. Entre em contato com o suporte para mais informações.",
@@ -543,7 +482,7 @@ router.post("/login", async (req, res) => {
     req.session.perfil = usuario.Tipo === 'PJ' ? 'vendedor' : 'comprador';
     req.session.tipo = usuario.Tipo;
     req.session.fotoUsuario = usuario.foto || null;
-    await pool.query("UPDATE Usuario SET Ultimo_Login = NOW() WHERE Usuario_ID = ?", [usuario.Usuario_ID]);
+    await usuarioModel.updateUltimoLogin(usuario.Usuario_ID);
     return res.redirect("/perfil");
   } catch (err) {
     console.error('Erro no login:', err);
@@ -582,66 +521,29 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-
-
 // ── PERFIL PÚBLICO DO VENDEDOR ────────────────────────────────
 router.get("/vendedor/:id", async (req, res) => {
   try {
     const vendedorId = req.params.id;
 
-    // Dados do vendedor
-    const [vRows] = await pool.query(
-      `SELECT Usuario_ID, Nome, Email, foto, Tipo, Biografia, Data_Criacao FROM Usuario WHERE Usuario_ID = ? AND Tipo = 'PJ'`,
-      [vendedorId]
-    );
-    if (!vRows.length) return res.status(404).send("Vendedor não encontrado");
-    const vendedor = vRows[0];
+    const vendedor = await vendedorModel.findById(vendedorId);
+    if (!vendedor) return res.status(404).send("Vendedor não encontrado");
 
-    // Média e total de avaliações do vendedor
-    const [avgRows] = await pool.query(
-      `SELECT ROUND(AVG(nota), 1) AS media, COUNT(*) AS total FROM Avaliacao_Vendedor WHERE vendedor_id = ?`,
-      [vendedorId]
-    );
-    vendedor.mediaAvaliacao = avgRows[0].media;
-    vendedor.totalAvaliacoes = avgRows[0].total;
+    const avgData = await vendedorModel.findMediaAvaliacao(vendedorId);
+    vendedor.mediaAvaliacao = avgData.media;
+    vendedor.totalAvaliacoes = avgData.total;
 
-    // Produtos cadastrados (ativos)
-    const [prodRows] = await pool.query(
-      `SELECT * FROM produtos WHERE usuario_id = ? AND status = 'active' ORDER BY created_at DESC`,
-      [vendedorId]
-    );
-
-    // Total de vendas (compras que incluem produtos deste vendedor)
-    const [vendasRows] = await pool.query(
-      `SELECT COUNT(DISTINCT ic.Compra_ID) AS total
-       FROM Item_Compra ic
-       JOIN produtos p ON p.id = ic.Produto_ID
-       WHERE p.usuario_id = ?`,
-      [vendedorId]
-    );
-    vendedor.totalVendas = vendasRows[0].total || 0;
+    const prodRows = await vendedorModel.findProdutos(vendedorId);
+    vendedor.totalVendas = await vendedorModel.findTotalVendas(vendedorId);
     vendedor.totalProdutos = prodRows.length;
 
-    // Avaliações/comentários feitos SOBRE o vendedor
-    const [comentarios] = await pool.query(
-      `SELECT av.id, av.nota, av.comentario, av.criado_em,
-              u.Nome AS nome_avaliador, u.foto AS foto_avaliador
-       FROM Avaliacao_Vendedor av
-       JOIN Usuario u ON u.Usuario_ID = av.avaliador_id
-       WHERE av.vendedor_id = ?
-       ORDER BY av.criado_em DESC`,
-      [vendedorId]
-    );
+    const comentarios = await vendedorModel.findAvaliacoes(vendedorId);
 
-    // Verificar se o usuário logado já avaliou este vendedor
     let jaAvaliou = false;
     let minhaAvaliacao = null;
     if (req.session.userId) {
-      const [jaAv] = await pool.query(
-        `SELECT nota, comentario FROM Avaliacao_Vendedor WHERE vendedor_id = ? AND avaliador_id = ?`,
-        [vendedorId, req.session.userId]
-      );
-      if (jaAv.length) { jaAvaliou = true; minhaAvaliacao = jaAv[0]; }
+      minhaAvaliacao = await vendedorModel.findAvaliacaoByAvaliador(vendedorId, req.session.userId);
+      if (minhaAvaliacao) jaAvaliou = true;
     }
 
     const usuarioSessao = req.session.userId
@@ -672,28 +574,17 @@ router.post("/vendedor/:id/avaliar", requireLogin, async (req, res) => {
     return res.redirect(`/vendedor/${vendedorId}?erro=nota`);
   }
 
-  // Vendedor não pode avaliar a si mesmo
   if (parseInt(vendedorId) === req.session.userId) {
     return res.redirect(`/vendedor/${vendedorId}?erro=proprio`);
   }
 
   try {
-    const [jaAv] = await pool.query(
-      `SELECT id FROM Avaliacao_Vendedor WHERE vendedor_id = ? AND avaliador_id = ?`,
-      [vendedorId, req.session.userId]
-    );
+    const jaAv = await vendedorModel.findAvaliacaoId(vendedorId, req.session.userId);
 
-    if (jaAv.length) {
-      await pool.query(
-        `UPDATE Avaliacao_Vendedor SET nota = ?, comentario = ?, criado_em = NOW()
-         WHERE vendedor_id = ? AND avaliador_id = ?`,
-        [notaNum, comentario || '', vendedorId, req.session.userId]
-      );
+    if (jaAv) {
+      await vendedorModel.updateAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
     } else {
-      await pool.query(
-        `INSERT INTO Avaliacao_Vendedor (vendedor_id, avaliador_id, nota, comentario) VALUES (?, ?, ?, ?)`,
-        [vendedorId, req.session.userId, notaNum, comentario || '']
-      );
+      await vendedorModel.createAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
     }
     res.redirect(`/vendedor/${vendedorId}?sucesso=1#avaliacoes`);
   } catch (err) {
