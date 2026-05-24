@@ -1,3 +1,6 @@
+/* ============================================
+   RESET & VARIÁVEIS GLOBAIS
+   ============================================ */
 * {
   margin: 0;
   padding: 0;
@@ -20,14 +23,40 @@
   --border-color: #e1e5e9;
   --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.2);
   --font-family: 'Inter', sans-serif;
+
+  /* Espaçamentos responsivos (usados em todo o site) */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+
+  /* Tipografia responsiva */
+  --font-xs: 0.75rem;
+  --font-sm: 0.875rem;
+  --font-base: 1rem;
+  --font-lg: 1.1rem;
+  --font-xl: 1.25rem;
+  --font-2xl: 1.5rem;
+  --font-3xl: 2rem;
+  --font-4xl: 2.5rem;
 }
 
+/* ============================================
+   BASE
+   ============================================ */
 body {
   font-family: var(--font-family);
   background: linear-gradient(135deg, #f1faee 0%, #f9f9f9 100%);
   min-height: 100vh;
+  -webkit-text-size-adjust: 100%; /* Evita zoom automático de fonte no iOS */
 }
 
+/* ============================================
+   LAYOUT PRINCIPAL — DESKTOP FIRST
+   ============================================ */
 .cadastro-main {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -37,13 +66,16 @@ body {
   box-shadow: var(--shadow-heavy);
 }
 
+/* ============================================
+   HERO SECTION
+   ============================================ */
 .hero-section {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4rem;
+  padding: var(--spacing-3xl);
   position: relative;
   overflow: hidden;
 }
@@ -53,43 +85,50 @@ body {
   z-index: 1;
   text-align: center;
   max-width: 500px;
+  width: 100%;
 }
 
 .hero-title {
-  font-size: 2.5rem;
+  font-size: var(--font-4xl);
   font-weight: 700;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg);
   line-height: 1.2;
 }
 
 .hero-subtitle {
-  font-size: 1.1rem;
+  font-size: var(--font-lg);
   opacity: 0.9;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
+  line-height: 1.6;
 }
 
 .hero-features {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--spacing-lg);
   text-align: left;
 }
 
 .feature-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-md);
   font-weight: 500;
+  font-size: var(--font-base);
 }
 
 .feature-item i {
   font-size: 1.5rem;
   color: var(--accent-color);
+  flex-shrink: 0;
 }
 
+/* ============================================
+   FORM SECTION
+   ============================================ */
 .form-section {
   background: var(--background);
-  padding: 4rem;
+  padding: var(--spacing-3xl);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -98,34 +137,48 @@ body {
 
 .form-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 .form-title {
-  font-size: 2rem;
+  font-size: var(--font-3xl);
   font-weight: 700;
   color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
 }
 
 .form-subtitle {
   color: var(--text-secondary);
+  font-size: var(--font-sm);
+}
+
+/* ============================================
+   FORMULÁRIO — CAMPOS
+   ============================================ */
+.form-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
 .input-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-lg);
 }
 
 .input-label {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
+  gap: var(--spacing-sm);
+  font-size: var(--font-sm);
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
 }
 
 .input-label i {
   color: var(--primary-color);
+  font-size: 1rem;
+  flex-shrink: 0;
 }
 
 .form-input {
@@ -133,8 +186,14 @@ body {
   padding: 0.8rem 1rem;
   border: 2px solid var(--border-color);
   border-radius: 0.5rem;
-  font-size: 1rem;
-  transition: all 0.3s ease;
+  font-size: var(--font-base);
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background: var(--background);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+  /* Evita zoom ao focar em inputs no iOS (fonte mínima 16px) */
+  font-size: max(1rem, 16px);
 }
 
 .form-input:focus {
@@ -143,8 +202,29 @@ body {
   box-shadow: 0 0 0 3px rgba(29, 53, 87, 0.1);
 }
 
+.form-input::placeholder {
+  color: var(--text-light);
+}
+
+/* Estado de erro */
+.input-group.has-error .form-input {
+  border-color: var(--error-color);
+}
+
+/* Estado de sucesso */
+.input-group.has-success .form-input {
+  border-color: var(--success-color);
+}
+
+/* ============================================
+   SENHA
+   ============================================ */
 .password-input {
   position: relative;
+}
+
+.password-input .form-input {
+  padding-right: 3rem; /* Espaço para o botão de olho */
 }
 
 .password-toggle {
@@ -156,14 +236,87 @@ body {
   border: none;
   color: var(--text-light);
   cursor: pointer;
+  padding: var(--spacing-xs);
+  font-size: 1.2rem;
+  line-height: 1;
+  /* Área de toque mínima de 44px para mobile */
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: color 0.2s;
 }
 
-.input-help {
-  font-size: 0.75rem;
+.password-toggle:hover {
+  color: var(--primary-color);
+}
+
+/* Barra de força da senha */
+.password-strength {
+  margin-top: var(--spacing-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.strength-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--border-color);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: var(--error-color);
+  border-radius: 2px;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.strength-text {
+  font-size: var(--font-xs);
   color: var(--text-light);
-  margin-top: 0.25rem;
+  white-space: nowrap;
 }
 
+/* ============================================
+   MENSAGENS DE ERRO / SUCESSO
+   ============================================ */
+.input-help {
+  display: block;
+  font-size: var(--font-xs);
+  color: var(--text-light);
+  margin-top: var(--spacing-xs);
+}
+
+.error-message {
+  display: block;
+  font-size: var(--font-xs);
+  color: var(--error-color);
+  margin-top: var(--spacing-xs);
+  min-height: 1em; /* Reserva espaço para não deslocar layout */
+}
+
+.success-message {
+  display: none; /* Controlado via JS */
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-xs);
+  color: var(--success-color);
+  margin-top: var(--spacing-xs);
+}
+
+.success-message i {
+  font-size: 0.875rem;
+}
+
+/* ============================================
+   BOTÃO SUBMIT
+   ============================================ */
 .submit-btn {
   width: 100%;
   padding: 1rem;
@@ -171,28 +324,42 @@ body {
   color: #fff;
   border: none;
   border-radius: 0.5rem;
-  font-size: 1.1rem;
+  font-size: var(--font-lg);
   font-weight: 600;
+  font-family: var(--font-family);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  transition: background 0.3s;
-  margin-top: 1rem;
+  gap: var(--spacing-sm);
+  transition: background 0.3s ease, transform 0.1s ease;
+  margin-top: var(--spacing-md);
+  /* Área de toque adequada */
+  min-height: 52px;
 }
 
 .submit-btn:hover {
   background: var(--primary-hover);
 }
 
+.submit-btn:active {
+  transform: scale(0.99);
+}
+
+.loading-icon {
+  display: none; /* Exibido via JS durante o envio */
+}
+
+/* ============================================
+   RODAPÉ DO FORMULÁRIO
+   ============================================ */
 .form-footer {
   text-align: center;
-  margin-top: 2rem;
+  margin-top: var(--spacing-xl);
 }
 
 .login-link {
-  font-size: 0.9rem;
+  font-size: var(--font-sm);
   color: var(--text-secondary);
 }
 
@@ -202,6 +369,13 @@ body {
   font-weight: 600;
 }
 
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================
+   ACESSIBILIDADE
+   ============================================ */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -213,14 +387,150 @@ body {
   border: 0;
 }
 
-@media (max-width: 932px) {
+/* Foco visível para navegação por teclado */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   RESPONSIVIDADE
+   Breakpoints:
+     - Desktop grande:  > 1200px
+     - Desktop:         769px – 1200px  (base)
+     - Tablet:          481px – 768px
+     - Mobile grande:   376px – 480px
+     - Mobile pequeno:  < 375px
+   ============================================ */
+
+/* --- Tablet (até 768px) --- */
+@media (max-width: 768px) {
   .cadastro-main {
     grid-template-columns: 1fr;
+    min-height: 100vh;
   }
+
+  /* Hero vira um banner compacto horizontal no topo */
   .hero-section {
+    padding: var(--spacing-xl) var(--spacing-xl);
+    min-height: auto;
+  }
+
+  .hero-content {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-title {
+    font-size: var(--font-3xl);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .hero-subtitle {
+    font-size: var(--font-base);
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .hero-features {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-md);
+  }
+
+  .feature-item {
+    font-size: var(--font-sm);
+  }
+
+  /* Formulário */
+  .form-section {
+    padding: var(--spacing-xl);
+    justify-content: flex-start;
+  }
+
+  .form-title {
+    font-size: var(--font-2xl);
+  }
+}
+
+/* --- Mobile grande (até 480px) --- */
+@media (max-width: 480px) {
+  .hero-section {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .hero-title {
+    font-size: var(--font-2xl);
+  }
+
+  .hero-subtitle {
+    font-size: var(--font-sm);
+    margin-bottom: var(--spacing-md);
+  }
+
+  /* Esconde o hero em telas pequenas para dar espaço ao formulário */
+  .hero-features {
     display: none;
   }
+
   .form-section {
-    padding: 2rem;
+    padding: var(--spacing-xl) var(--spacing-md);
+  }
+
+  .form-header {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .form-title {
+    font-size: var(--font-xl);
+  }
+
+  .input-group {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .submit-btn {
+    font-size: var(--font-base);
+    padding: 0.875rem;
+  }
+}
+
+/* --- Mobile pequeno (até 375px) --- */
+@media (max-width: 375px) {
+  .hero-section {
+    padding: var(--spacing-md);
+  }
+
+  .hero-title {
+    font-size: var(--font-xl);
+  }
+
+  .hero-subtitle {
+    display: none; /* Remove subtítulo para economizar espaço */
+  }
+
+  .form-section {
+    padding: var(--spacing-lg) var(--spacing-sm);
+  }
+
+  .form-input {
+    padding: 0.7rem 0.875rem;
+  }
+}
+
+/* --- Desktop grande (acima de 1200px) --- */
+@media (min-width: 1200px) {
+  .hero-title {
+    font-size: 2.8rem;
+  }
+
+  .hero-section {
+    padding: var(--spacing-3xl) 5rem;
+  }
+
+  .form-section {
+    padding: var(--spacing-3xl) 5rem;
   }
 }
