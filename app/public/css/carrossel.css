@@ -1,0 +1,293 @@
+/* ══════════════════════════════════════════════════
+   CARROSSEL HERO — estilo Mercado Livre / Clean Energy
+   ══════════════════════════════════════════════════ */
+
+/* ── Seção hero completa ── */
+.hero-section {
+  width: 100%;
+  background: #f5f7f5;
+  padding: 0 0 2rem;
+}
+
+body.dark-mode .hero-section { background: #121212; }
+
+/* ── Wrapper do carrossel ── */
+.carrossel-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0 0 16px 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.1);
+}
+
+/* ── Track (faixa que desliza) ── */
+.carrossel-track {
+  display: flex;
+  transition: transform .55s cubic-bezier(.4,0,.2,1);
+  will-change: transform;
+}
+
+/* ── Cada slide ── */
+.carrossel-slide {
+  flex: 0 0 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.carrossel-slide figure {
+  margin: 0;
+  width: 100%;
+  height: 480px;
+}
+
+.carrossel-slide figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .6s ease;
+}
+
+.carrossel-slide:hover figure img { transform: scale(1.03); }
+
+/* ── Overlay degradê ── */
+.carrossel-slide figure figcaption {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,.65) 0%,
+    rgba(0,0,0,.3) 50%,
+    transparent 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 4rem;
+  gap: .75rem;
+}
+
+.slide-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: #386b52;
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: .3rem .85rem;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+.slide-titulo {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+  max-width: 560px;
+  text-shadow: 0 2px 8px rgba(0,0,0,.4);
+}
+
+.slide-subtitulo {
+  font-size: 1rem;
+  color: rgba(255,255,255,.88);
+  max-width: 460px;
+  line-height: 1.6;
+  text-shadow: 0 1px 4px rgba(0,0,0,.3);
+}
+
+.slide-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .5rem;
+  background: #386b52;
+  color: #fff;
+  text-decoration: none;
+  padding: .75rem 1.75rem;
+  border-radius: 10px;
+  font-size: .95rem;
+  font-weight: 700;
+  width: fit-content;
+  transition: background .2s, transform .2s;
+  box-shadow: 0 4px 12px rgba(56,107,82,.4);
+}
+
+.slide-cta:hover {
+  background: #2fa553;
+  transform: translateY(-2px);
+}
+
+/* ── Setas de navegação ── */
+.carrossel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,.92);
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 12px rgba(0,0,0,.18);
+  transition: background .2s, transform .2s, box-shadow .2s;
+  color: #1a1a1a;
+}
+
+.carrossel-btn:hover {
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.carrossel-btn i { font-size: 1.3rem; }
+
+.carrossel-btn-prev { left: 1.25rem; }
+.carrossel-btn-next { right: 1.25rem; }
+
+body.dark-mode .carrossel-btn { background: rgba(30,30,30,.9); color: #e5e7eb; }
+
+/* ── Dots de paginação ── */
+.carrossel-dots {
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+  padding: .9rem 0 .2rem;
+  list-style: none;
+  margin: 0;
+}
+
+.carrossel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #c8d8c8;
+  border: none;
+  cursor: pointer;
+  transition: background .25s, width .25s;
+  padding: 0;
+}
+
+.carrossel-dot.ativo {
+  background: #386b52;
+  width: 24px;
+}
+
+body.dark-mode .carrossel-dot { background: #374151; }
+body.dark-mode .carrossel-dot.ativo { background: #4ade80; }
+
+/* ── Barra de categorias (logo abaixo do carrossel, estilo ML) ── */
+.categorias-rapidas {
+  max-width: 1400px;
+  margin: 1.5rem auto 0;
+  padding: 0 2rem;
+}
+
+.categorias-rapidas h2 {
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: #9ca3af;
+  margin-bottom: 1rem;
+}
+
+body.dark-mode .categorias-rapidas h2 { color: #6b7280; }
+
+.categorias-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+
+.categoria-pill {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 999px;
+  padding: .5rem 1.1rem;
+  text-decoration: none;
+  font-size: .85rem;
+  font-weight: 600;
+  color: #374151;
+  transition: all .2s;
+  white-space: nowrap;
+}
+
+.categoria-pill i { font-size: 1.05rem; color: #386b52; }
+
+.categoria-pill:hover {
+  background: #f0fdf4;
+  border-color: #386b52;
+  color: #386b52;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(56,107,82,.15);
+}
+
+body.dark-mode .categoria-pill {
+  background: #1e1e1e;
+  border-color: #2a2a2a;
+  color: #d1d5db;
+}
+
+body.dark-mode .categoria-pill:hover {
+  background: #1a2e1a;
+  border-color: #2d5a2d;
+  color: #86efac;
+}
+
+/* ── Responsivo ── */
+@media (max-width: 1024px) {
+  .carrossel-slide figure { height: 380px; }
+  .carrossel-slide figure figcaption { padding: 2.5rem 3rem; }
+  .slide-titulo { font-size: 1.75rem; }
+}
+
+@media (max-width: 768px) {
+  .carrossel-slide figure { height: 300px; }
+
+  .carrossel-slide figure figcaption {
+    padding: 1.75rem 1.5rem;
+    background: linear-gradient(
+      to top,
+      rgba(0,0,0,.75) 0%,
+      rgba(0,0,0,.3) 60%,
+      transparent 100%
+    );
+    justify-content: flex-end;
+  }
+
+  .slide-titulo { font-size: 1.3rem; max-width: 100%; }
+  .slide-subtitulo { font-size: .85rem; max-width: 100%; }
+  .slide-cta { padding: .6rem 1.25rem; font-size: .85rem; }
+
+  .carrossel-btn { width: 38px; height: 38px; }
+  .carrossel-btn-prev { left: .6rem; }
+  .carrossel-btn-next { right: .6rem; }
+}
+
+@media (max-width: 480px) {
+  .carrossel-slide figure { height: 240px; }
+  .slide-titulo { font-size: 1.1rem; }
+  .slide-subtitulo { display: none; }
+  .categorias-lista { gap: .5rem; }
+  .categoria-pill { font-size: .78rem; padding: .4rem .85rem; }
+}
+
+/* ── Ajuste: main abaixo do hero não precisa de margin-top grande ── */
+.hero-section + main {
+  margin-top: 0 !important;
+  padding-top: 1.5rem;
+}
