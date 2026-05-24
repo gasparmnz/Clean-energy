@@ -77,6 +77,41 @@ const produtosModel = {
     }
   },
 
+  // Busca produtos ativos com filtros opcionais (busca, estado, categoria, precoMin, precoMax)
+  findAllComFiltros: async ({ busca, estado, categoria, precoMin, precoMax } = {}) => {
+    try {
+      let sql = "SELECT * FROM produtos WHERE status = 'active'";
+      const params = [];
+
+      if (busca && busca.trim()) {
+        sql += " AND LOWER(nome) LIKE ?";
+        params.push(`%${busca.trim().toLowerCase()}%`);
+      }
+      if (estado && estado.trim()) {
+        sql += " AND LOWER(estado) LIKE ?";
+        params.push(`%${estado.trim().toLowerCase()}%`);
+      }
+      if (categoria && categoria.trim()) {
+        sql += " AND LOWER(categoria) LIKE ?";
+        params.push(`%${categoria.trim().toLowerCase()}%`);
+      }
+      if (precoMin && !isNaN(precoMin)) {
+        sql += " AND preco >= ?";
+        params.push(parseFloat(precoMin));
+      }
+      if (precoMax && !isNaN(precoMax)) {
+        sql += " AND preco <= ?";
+        params.push(parseFloat(precoMax));
+      }
+
+      sql += " ORDER BY created_at DESC";
+      const [rows] = await pool.query(sql, params);
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
   findByUsuario: async (usuarioId) => {
     try {
       const [rows] = await pool.query(
