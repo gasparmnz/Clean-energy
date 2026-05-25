@@ -129,6 +129,22 @@ main {
   margin-bottom: 10px;
 }
 
+#productTabs {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-bottom: 1px solid #dee2e6;
+  gap: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+}
+
+#productTabs .nav-link {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* Ações */
 .acoes {
   display: flex;
@@ -335,13 +351,37 @@ main {
     flex-direction: column;
   }
 
-  .produtos-grid {
-    display: flex;
-    overflow-x: auto;
-    gap: 15px;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 10px;
-  }
+.perfil-layout {
+  display: flex;        
+  flex-direction: row;
+  flex: 1;              
+  overflow: hidden;
+  max-width: 100vw;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.perfil-layout__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;              
+  overflow: hidden;
+  min-width: 0;
+  width: 100%;
+}
+
+/* O content interno também precisa do limite */
+.content {
+  overflow: hidden;
+  width: 100%;
+}
+
+/* O grid precisa de overflow-x apenas nele, não no pai */
+.produtos-grid {
+  overflow-x: auto;
+  overflow-y: visible;
+}
 
   .produto-card {
     flex: 0 0 80vw;
@@ -361,6 +401,14 @@ main {
     width: 100%;
     min-width: 0;
   }
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;   
+  min-height: calc(100vh - 87px);
+  width: 100%;
+  overflow-x: hidden;
 }
 
 @media (max-width: 300px) {
