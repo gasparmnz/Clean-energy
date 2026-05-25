@@ -42,14 +42,13 @@ footer {
 ============================================ */
 #footer_content {
     background: linear-gradient(180deg, #1b814e 0%, #14663d 100%);
-
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-
-    gap: var(--footer-gap);
-    padding: var(--footer-padding);
+    gap: 1rem;
+    padding: 2rem;
     width: 100%;
 }
+
 
 /* ============================================
    CONTATOS
@@ -61,7 +60,7 @@ footer {
 }
 
 .footer-logo {
-    width: 140px;
+    width: 130px;
     height: auto;
     object-fit: contain;
 }
@@ -78,7 +77,7 @@ footer {
 #footer_social_media {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.4rem;
     margin-top: 0.5rem;
 }
 
@@ -177,10 +176,12 @@ footer {
 /* ---------- DESKTOP GRANDE  > 1200px ---------- */
 @media (min-width: 1201px) {
     #footer_content {
-        padding: 5rem 6rem;
-        gap: 3rem;
-        grid-template-columns: 1.4fr 1fr 1fr; /* coluna de contatos um pouco maior */
+        padding: 1.5rem 1.2rem;
+        
+        gap: 5.75rem;
+        
     }
+
 
     .footer-logo {
         width: 160px;

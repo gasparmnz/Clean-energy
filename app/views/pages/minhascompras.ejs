@@ -17,6 +17,15 @@
     <%- include('../partial/sidebar_perfil.ejs') %>
 
     <main class="perfil-layout__content">
+    <section class="content" style="padding: 0 16px;">
+      <nav class="back-navigation" aria-label="Navegação de retorno">
+        <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+          <i class='bx bx-arrow-back'></i>
+          <span>Voltar</span>
+        </button>
+      </nav>
+
+      <ul class="nav nav-tabs" id="productTabs" role="tablist">
       <section class="content" style="padding:0;">
         <nav class="back-navigation" aria-label="Navegação de retorno">
           <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
