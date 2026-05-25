@@ -1,40 +1,13 @@
 var express = require("express");
 var router = express.Router();
 const { body, validationResult } = require("express-validator");
-const path = require('path');
-const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const models = require("../models/models");
 const produtosModel = models;
 const { usuarioModel, vendedorModel } = models;
 const cartModel = require("../models/cartModel");
-const storage = multer.memoryStorage();
-const _diskStorage_unused = multer.diskStorage({
-  destination: path.join(__dirname, '../public/imagem'),
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: path.join(__dirname, '../public/imagem'),
-    filename: (req, file, cb) => {
-      cb(null, Date.now() + path.extname(file.originalname));
-    }
-  }),
-  limits: { fileSize: 5 * 1024 * 1024 }
-});
+const { uploadProduto, uploadFoto } = require("../helpers/upload");
 var { validarCPF } = require("../helpers/validacao");
-
-async function getProdutos() {
-  try {
-    return await produtosModel.findAll({ apenasAtivos: true });
-  } catch (err) {
-    console.error('Erro ao buscar produtos:', err.message);
-    return [];
-  }
-}
 
 function requireLogin(req, res, next) {
   if (!req.session.userId) return res.redirect('/login');
@@ -50,31 +23,16 @@ function requireVendedor(req, res, next) {
 /* ROTAS */
 router.get("/", async (req, res) => {
   const { busca, estado, categoria, precoMin, precoMax } = req.query;
-  let produtos = await getProdutos();
-
-  if (busca && busca.trim()) {
-    const termo = busca.trim().toLowerCase();
-    produtos = produtos.filter(p => p.nome && p.nome.toLowerCase().includes(termo));
+  try {
+    const produtos = await produtosModel.findAllComFiltros({ busca, estado, categoria, precoMin, precoMax });
+    res.render("pages/produtos", {
+      produtos,
+      filtros: { busca: busca||'', estado: estado||'', categoria: categoria||'', precoMin: precoMin||'', precoMax: precoMax||'' }
+    });
+  } catch (err) {
+    console.error('Erro ao buscar produtos:', err.message);
+    res.render("pages/produtos", { produtos: [], filtros: {} });
   }
-  if (estado && estado.trim()) {
-    const t = estado.trim().toLowerCase();
-    produtos = produtos.filter(p => p.estado && p.estado.toLowerCase().includes(t));
-  }
-  if (categoria && categoria.trim()) {
-    const t = categoria.trim().toLowerCase();
-    produtos = produtos.filter(p => p.categoria && p.categoria.toLowerCase().includes(t));
-  }
-  if (precoMin && !isNaN(precoMin)) {
-    produtos = produtos.filter(p => parseFloat(p.preco) >= parseFloat(precoMin));
-  }
-  if (precoMax && !isNaN(precoMax)) {
-    produtos = produtos.filter(p => parseFloat(p.preco) <= parseFloat(precoMax));
-  }
-
-  res.render("pages/produtos", {
-    produtos,
-    filtros: { busca: busca||'', estado: estado||'', categoria: categoria||'', precoMin: precoMin||'', precoMax: precoMax||'' }
-  });
 });
 
 router.get("/home", (req, res) => res.render("pages/home"));
@@ -141,7 +99,27 @@ router.post("/upgrade_vendedor",
   }
 );
 
-router.get("/minhascompras", requireLogin, (req, res) => res.render("pages/minhascompras"));
+router.get("/minhascompras", requireLogin, (req, res) => {
+  const pendentes = req.session.pedidosPendentes || [];
+  res.render("pages/minhascompras", { pendentes });
+});
+
+// Move itens do carrinho para pedidos pendentes na sessão
+router.post("/minhascompras/finalizar", requireLogin, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const cart = await cartModel.getCartByUser(userId);
+    if (cart && cart.length > 0) {
+      req.session.pedidosPendentes = cart;
+      const pool = require('../../config/pool_conexoes');
+      await pool.query('DELETE FROM carrinho WHERE userId = ?', [userId]);
+    }
+    res.redirect('/minhascompras');
+  } catch (err) {
+    console.error('Erro ao finalizar compra:', err);
+    res.redirect('/carrinho');
+  }
+});
 
 // ── Atualizar perfil
 router.post("/perfil/atualizar", requireLogin, async (req, res) => {
@@ -157,22 +135,6 @@ router.post("/perfil/atualizar", requireLogin, async (req, res) => {
     console.error(err);
     res.json({ sucesso: false, erro: 'Erro ao atualizar.' });
   }
-});
-
-// ── Upload de foto de perfil
-const uploadFoto = multer({
-  storage: multer.diskStorage({
-    destination: path.join(__dirname, '../public/imagem'),
-    filename: (req, file, cb) => {
-      const ext = path.extname(file.originalname);
-      cb(null, `perfil_${req.session.userId}_${Date.now()}${ext}`);
-    }
-  }),
-  fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|webp|gif/;
-    cb(null, allowed.test(path.extname(file.originalname).toLowerCase()));
-  },
-  limits: { fileSize: 5 * 1024 * 1024 }
 });
 
 router.post("/perfil/foto", requireLogin, uploadFoto.single('foto'), async (req, res) => {
@@ -333,7 +295,7 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
   }
 });
 
-router.post("/cadastrar_produto", requireVendedor, upload.single('imagem'), async (req, res) => {
+router.post("/cadastrar_produto", requireVendedor, uploadProduto.single('imagem'), async (req, res) => {
   const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
   const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
 
