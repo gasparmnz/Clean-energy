@@ -26,114 +26,81 @@
       </nav>
 
       <ul class="nav nav-tabs" id="productTabs" role="tablist">
+      <section class="content" style="padding:0;">
+        <nav class="back-navigation" aria-label="Navegação de retorno">
+          <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+            <i class='bx bx-arrow-back'></i>
+            <span>Voltar</span>
+          </button>
+        </nav>
+
+        <ul class="nav nav-tabs" id="productTabs" role="tablist">
           <li class="nav-item" role="presentation">
-          <a class="nav-link active" id="pendentesTab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-controls="pendentes" aria-selected="true">Pendentes</a>
-        </li>
-        <li class="nav-item" role="presentation">
-          <a class="nav-link" id="emAndamentoTab" data-bs-toggle="tab" href="#emAndamento" role="tab" aria-controls="emAndamento" aria-selected="false">Em trânsito</a>
-        </li>   
-        <li class="nav-item" role="presentation">
-          <a class="nav-link" id="concluidosTab" data-bs-toggle="tab" href="#concluidos" role="tab" aria-controls="concluidos" aria-selected="false">Concluídos</a>
-        </li>
-      </ul>
+            <a class="nav-link active" id="pendentesTab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-controls="pendentes" aria-selected="true">Pendentes</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="emAndamentoTab" data-bs-toggle="tab" href="#emAndamento" role="tab" aria-controls="emAndamento" aria-selected="false">Em trânsito</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="concluidosTab" data-bs-toggle="tab" href="#concluidos" role="tab" aria-controls="concluidos" aria-selected="false">Concluídos</a>
+          </li>
+        </ul>
 
-      <section class="tab-content" id="productTabsContent">
-        <!-- EM ANDAMENTO -->
-        <section class="tab-pane fade" id="emAndamento" role="tabpanel" aria-labelledby="emAndamentoTab">
-          <section class="produtos-grid">
-            <article class="produto-card">
-              <figure><img src="/imagem/cana.png" alt="Produto"></figure>
-              <section class="produto-info">
-                <h3>Bagaço de Cana</h3>
-                <p class="endereco d-none">Rua das Flores, 123 - São Paulo</p>
-                <p class="preco">R$ 1500,00</p>
-                <p class="quantidade d-none">1 Tonelada(s)</p>
-              </section>
-              <section class="acoes">
-                <button class="btn btn-warning btn-sm">Rastrear</button>
-                <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
-                <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
-              </section>
-             <button class="confirmar-coleta">Confirmar Coleta</button>
-            </article>
+        <section class="tab-content" id="productTabsContent">
 
-            <article class="produto-card">
-              <figure><img src="/imagem/Lenha.png" alt="Produto"></figure>
-              <section class="produto-info">
-                <h3>Lenha Tratada</h3>
-                <p class="endereco d-none">Rua Antônio Raposo Tavares, 312 - São Paulo</p>
-                <p class="preco">R$ 500,00</p>
-                <p class="quantidade d-none">2 Tonelada(s)</p>
+          <!-- PENDENTES -->
+          <section class="tab-pane fade show active" id="pendentes" role="tabpanel" aria-labelledby="pendentesTab">
+            <% if (!pendentes || pendentes.length === 0) { %>
+              <div class="sem-itens">
+                <i class='bx bx-package'></i>
+                <p>Você não tem pedidos pendentes.</p>
+              </div>
+            <% } else { %>
+              <section class="produtos-grid">
+                <% pendentes.forEach(produto => { %>
+                  <article class="produto-card"
+                    data-nome="<%= produto.nome %>"
+                    data-preco="<%= produto.preco %>"
+                    data-quantidade="<%= produto.quantidade || 1 %>"
+                    data-local="<%= produto.local || '' %>">
+                    <figure>
+                      <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>" onerror="this.src='https://placehold.co/300x200?text=Sem+Foto'">
+                    </figure>
+                    <section class="produto-info">
+                      <h3><%= produto.nome %></h3>
+                      <p class="preco">R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) %></p>
+                      <p class="quantidade d-none"><%= produto.quantidade || 1 %> Tonelada(s)</p>
+                      <p class="endereco d-none"><%= produto.local || '' %></p>
+                    </section>
+                    <section class="acoes">
+                      <button class="btn btn-success btn-sm btn-pagar">Efetuar Pagamento</button>
+                      <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
+                    </section>
+                    <p class="pendente">À pagar</p>
+                  </article>
+                <% }) %>
               </section>
-              <section class="acoes">
-                <button class="btn btn-warning btn-sm">Rastrear</button>
-                <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
-                <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
-              </section>
-             <button class="confirmar-coleta">Confirmar Coleta</button>
-            </article>
+            <% } %>
           </section>
-        </section>
 
-        <!-- PENDENTES -->
-        <section class="tab-pane fade show active" id="pendentes" role="tabpanel" aria-labelledby="pendentesTab">
-          <section class="produtos-grid">
-            <article class="produto-card">
-              <figure><img src="/imagem/restodecolheita.png" alt="Produto"></figure>
-              <section class="produto-info">
-                <h3>Resto de Colheita</h3>
-                <p class="endereco d-none">Rua Joaquim dos Santos Andrade, 49 - São Paulo</p>
-                <p class="preco">R$ 380,00</p>
-                <p class="quantidade d-none">1 Tonelada(s)</p>
-              </section>
-              <section class="acoes">
-                <button class="btn btn-success btn-sm">Efetuar Pagamento</button>
-                <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
-              </section>
-              <p class="pendente">À pagar</p>
-            </article>
+          <!-- EM TRÂNSITO -->
+          <section class="tab-pane fade" id="emAndamento" role="tabpanel" aria-labelledby="emAndamentoTab">
+            <div class="sem-itens">
+              <i class='bx bx-package'></i>
+              <p>Você não tem pedidos em trânsito.</p>
+            </div>
           </section>
-        </section>
 
-        <!-- CONCLUÍDOS -->
-        <section class="tab-pane fade" id="concluidos" role="tabpanel" aria-labelledby="concluidosTab">
-          <section class="produtos-grid">
-            <article class="produto-card">
-              <figure><img src="/imagem/folhassecas.png" alt="Produto"></figure>
-              <section class="produto-info">
-                <h3>Folhas Secas</h3>
-                <p class="endereco d-none">Rua do Carmo, 81 - São Paulo</p>
-                <p class="preco">R$ 180,00</p>
-                <p class="quantidade d-none">1 Tonelada(s)</p>
-              </section>
-              <section class="acoes">
-                <button class="btn btn-success btn-sm btn-avaliar">Avaliar</button>
-                <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
-              </section>
-              <p class="concluido">Concluído</p>
-            </article>
-
-            <article class="produto-card">
-              <figure><img src="/imagem/lixo organico.png" alt="Produto"></figure>
-              <section class="produto-info">
-                <h3>Lixo Orgânico</h3>
-                <p class="endereco d-none">Rua Silveira Martins, 53 - São Paulo</p>
-                <p class="preco">R$ 450,00</p>
-                <p class="quantidade d-none">1 Tonelada(s)</p>
-              </section>
-              <section class="acoes">
-                <button class="btn btn-success btn-sm btn-avaliar">Avaliar</button>
-                <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
-              </section>
-              <p class="concluido">Concluído</p>
-            </article>
+          <!-- CONCLUÍDOS -->
+          <section class="tab-pane fade" id="concluidos" role="tabpanel" aria-labelledby="concluidosTab">
+            <div class="sem-itens">
+              <i class='bx bx-package'></i>
+              <p>Você não tem pedidos concluídos.</p>
+            </div>
           </section>
+
         </section>
       </section>
-    </section>
-  </main>
-
-    </section>
     </main>
   </nav>
 
@@ -148,15 +115,12 @@
         <section class="modal-body">
           <section class="container-fluid">
             <section class="row">
-              <!-- COLUNA ESQUERDA: INFO DO PRODUTO -->
               <section class="col-12 col-lg-5 border-end pe-lg-4 mb-3 mb-lg-0">
                 <h6>Produto</h6>
                 <p><strong>Nome:</strong> <span id="pagamento-produto"></span></p>
                 <p><strong>Quantidade:</strong> <span id="pagamento-quantidade"></span></p>
                 <p><strong>Valor:</strong> <span id="pagamento-valor"></span></p>
               </section>
-
-              <!-- COLUNA DIREITA: FORMAS DE PAGAMENTO -->
               <section class="col-12 col-lg-7 ps-lg-4">
                 <h6>Escolha a forma de pagamento</h6>
                 <section class="d-flex flex-column flex-md-row gap-3 mb-3">
@@ -165,7 +129,6 @@
                   <button class="btn btn-outline-primary flex-fill payment-button" id="cardBoleto"><i class='bx bx-file'></i> Boleto</button>
                 </section>
 
-                <!-- CONTEÚDO PIX -->
                 <section id="pixArea" class="p-3 border rounded mb-3" style="display:none;">
                   <section class="row align-items-center">
                     <section class="col-12 col-md-6 text-center">
@@ -179,7 +142,6 @@
                   </section>
                 </section>
 
-                <!-- CONTEÚDO CARTÃO -->
                 <section id="creditoArea" class="p-3 border rounded mb-3" style="display:none;">
                   <section class="row g-3">
                     <section class="col-12 position-relative">
@@ -206,7 +168,6 @@
                   <p class="mt-2">Bandeiras aceitas: <i class='bx bxl-visa'></i> <i class='bx bxl-mastercard'></i> <i class='bx bxl-amex'></i></p>
                 </section>
 
-                <!-- CONTEÚDO BOLETO -->
                 <section id="boletoArea" class="p-3 border rounded mb-3" style="display:none;">
                   <section class="row g-2 align-items-center">
                     <section class="col-12 col-md-8">
@@ -236,27 +197,6 @@
     </section>
   </section>
 
-  <!-- MODAL DETALHES -->
-  <section class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
-    <section class="modal-dialog modal-dialog-centered">
-      <section class="modal-content">
-        <header class="modal-header">
-          <h5 class="modal-title" id="detalhesModalLabel">Detalhes do Produto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </header>
-        <section class="modal-body">
-          <p><strong>Produto:</strong> <span id="modal-produto"></span></p>
-          <p><strong>Endereço:</strong> <span id="modal-endereco"></span></p>
-          <p><strong>Preço:</strong> <span id="modal-preco"></span></p>
-          <p><strong>Quantidade:</strong> <span id="modal-quantidade"></span></p>
-        </section>
-        <section class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-        </section>
-      </section>
-    </section>
-  </section>
-
   <!-- MODAL CANCELAR -->
   <section class="modal fade" id="cancelarModal" tabindex="-1" aria-labelledby="cancelarModalLabel" aria-hidden="true">
     <section class="modal-dialog modal-dialog-centered">
@@ -276,417 +216,118 @@
     </section>
   </section>
 
-  <!-- MODAL AVALIAÇÃO -->
-  <section class="modal fade" id="avaliarModal" tabindex="-1" aria-labelledby="avaliarModalLabel" aria-hidden="true">
-    <section class="modal-dialog modal-dialog-centered">
-      <section class="modal-content">
-        <header class="modal-header">
-          <h5 class="modal-title" id="avaliarModalLabel">Avaliar Produto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </header>
-        <section class="modal-body text-center">
-          <form id="formAvaliacao">
-            <fieldset class="avaliacao-estrelas">
-              <input type="radio" id="estrela5" name="estrela" value="5"><label for="estrela5">&#9733;</label>
-              <input type="radio" id="estrela4" name="estrela" value="4"><label for="estrela4">&#9733;</label>
-              <input type="radio" id="estrela3" name="estrela" value="3"><label for="estrela3">&#9733;</label>
-              <input type="radio" id="estrela2" name="estrela" value="2"><label for="estrela2">&#9733;</label>
-              <input type="radio" id="estrela1" name="estrela" value="1"><label for="estrela1">&#9733;</label>
-            </fieldset>
-
-            <section class="avaliacao-legendas">
-              <span>Péssimo</span>
-              <span>Ruim</span>
-              <span>Regular</span>
-              <span>Bom</span>
-              <span>Excelente</span>
-            </section>
-
-            <textarea class="avaliacao-comentario" rows="3" placeholder="Escreva seu comentário..."></textarea>
-            <section id="mensagemErroAvaliacao" class="text-danger mt-2" style="display: none;"></section>
-
-          </form>
-        </section>
-        <section class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-success" id="enviarAvaliacao">Enviar Avaliação</button>
-        </section>
-      </section>
-    </section>
-  </section>
-
-  <!-- TOAST DE CONFIRMAÇÃO -->
-  <section class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
-    <section id="toastAvaliacao" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
-      <section class="d-flex">
-        <section class="toast-body">
-           Obrigado por sua avaliação!
-        </section>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
-      </section>
-    </section>
-  </section>
-
-  <!-- MODAL CONFIRMAR COLETA -->
-<section class="modal fade" id="coletaModal" tabindex="-1" aria-labelledby="coletaModalLabel" aria-hidden="true">
-  <section class="modal-dialog modal-dialog-centered">
-    <section class="modal-content">
-      <header class="modal-header">
-        <h5 class="modal-title" id="coletaModalLabel">Confirmar Coleta</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </header>
-      <section class="modal-body">
-        <p>Você confirma que realizou a coleta deste produto?</p>
-      </section>
-      <section class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-        <button type="button" class="btn btn-success" id="confirmarColetaBtn">Sim, confirmar</button>
-      </section>
-    </section>
-  </section>
-</section>
-
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-  let cardParaCancelar = null;
-  const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
-  const avaliarModal = new bootstrap.Modal(document.getElementById('avaliarModal'));
-  const pagamentoModal = new bootstrap.Modal(document.getElementById('pagamentoModal'));
+    const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
+    const pagamentoModal = new bootstrap.Modal(document.getElementById('pagamentoModal'));
+    let cardParaCancelar = null;
+    let produtoSelecionadoParaPagamento = null;
+    let selectedPaymentMethod = 'pix';
 
-  let produtoSelecionadoParaPagamento = null;
-  let cardSelecionadoParaAvaliacao = null;
-
-  const toast = new bootstrap.Toast(document.getElementById('toastAvaliacao'));
-
-  function cancelarHandler() {
-    cardParaCancelar = this.closest('.produto-card');
-    cancelarModal.show();
-  }
-
-  function detalhesHandler() {
-    const card = this.closest('.produto-card');
-    document.getElementById('modal-produto').textContent = card.querySelector('h3').textContent;
-    document.getElementById('modal-endereco').textContent = card.querySelector('.endereco').textContent;
-    document.getElementById('modal-preco').textContent = card.querySelector('.preco').textContent;
-    document.getElementById('modal-quantidade').textContent = card.querySelector('.quantidade').textContent;
-    new bootstrap.Modal(document.getElementById('detalhesModal')).show();
-  }
-
-  function avaliarHandler() {
-    cardSelecionadoParaAvaliacao = this.closest('.produto-card');
-    avaliarModal.show();
-  }
-
-  document.querySelectorAll('.btn-cancelar').forEach(btn => btn.addEventListener('click', cancelarHandler));
-  document.querySelectorAll('.btn-detalhes').forEach(btn => btn.addEventListener('click', detalhesHandler));
-  document.querySelectorAll('.btn-avaliar').forEach(btn => btn.addEventListener('click', avaliarHandler));
-
-  document.getElementById('confirmarCancelamento').addEventListener('click', function() {
-    if (cardParaCancelar) cardParaCancelar.remove();
-    cancelarModal.hide();
-  });
-
-  // ---------- Pagamento ----------
-  const cardPixBtn = document.getElementById('cardPix');
-  const cardCreditoBtn = document.getElementById('cardCredito');
-  const cardBoletoBtn = document.getElementById('cardBoleto');
-
-  const pixArea = document.getElementById('pixArea');
-  const creditoArea = document.getElementById('creditoArea');
-  const boletoArea = document.getElementById('boletoArea');
-
-  const pixQrcodeImg = document.getElementById('pixQrcode');
-  const pixKeyElem = document.getElementById('pixKey');
-
-  const gerarBoletoBtn = document.getElementById('gerarBoletoBtn');
-  const boletoContainer = document.getElementById('boletoContainer');
-  const boletoCodigoInput = document.getElementById('boletoCodigo');
-
-  const confirmarPagamentoBtn = document.getElementById('confirmarPagamento');
-
-  let selectedPaymentMethod = 'pix'; // padrão
-
-  function resetPaymentAreas() {
-    pixArea.style.display = 'none';
-    creditoArea.style.display = 'none';
-    boletoArea.style.display = 'none';
-    [cardPixBtn, cardCreditoBtn, cardBoletoBtn].forEach(btn => {
-      btn.classList.remove('btn-primary', 'selected-payment');
-      btn.classList.add('btn-outline-primary');
-    });
-    boletoContainer.style.display = 'none';
-  }
-
-  function selectPayment(method) {
-    resetPaymentAreas();
-    selectedPaymentMethod = method;
-    if (method === 'pix') {
-      pixArea.style.display = 'block';
-      cardPixBtn.classList.remove('btn-outline-primary');
-      cardPixBtn.classList.add('btn-primary', 'selected-payment');
-      const fakePixData = '000201010212...SIMULADOPIX...' + Date.now();
-      pixQrcodeImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(fakePixData);
-      pixKeyElem.textContent = 'meuemail@dominio.com';
-      confirmarPagamentoBtn.textContent = 'Verificar Pagamento';
-    } else if (method === 'cartao') {
-      creditoArea.style.display = 'block';
-      cardCreditoBtn.classList.remove('btn-outline-primary');
-      cardCreditoBtn.classList.add('btn-primary', 'selected-payment');
-      confirmarPagamentoBtn.textContent = 'Confirmar Pagamento';
-    } else if (method === 'boleto') {
-      boletoArea.style.display = 'block';
-      cardBoletoBtn.classList.remove('btn-outline-primary');
-      cardBoletoBtn.classList.add('btn-primary', 'selected-payment');
-      confirmarPagamentoBtn.textContent = 'Verificar Pagamento';
-    }
-  }
-
-  cardPixBtn.addEventListener('click', () => selectPayment('pix'));
-  cardCreditoBtn.addEventListener('click', () => selectPayment('cartao'));
-  cardBoletoBtn.addEventListener('click', () => selectPayment('boleto'));
-
-  function abrirPagamentoHandler() {
-    const card = this.closest('.produto-card');
-    produtoSelecionadoParaPagamento = card;
-
-    document.getElementById('pagamento-produto').textContent = card.querySelector('h3').textContent;
-    document.getElementById('pagamento-quantidade').textContent = card.querySelector('.quantidade').textContent;
-    document.getElementById('pagamento-valor').textContent = card.querySelector('.preco').textContent;
-
-    document.getElementById('numeroCartao').value = '';
-    document.getElementById('validadeCartao').value = '';
-    document.getElementById('cvvCartao').value = '';
-    document.getElementById('nomeTitular').value = '';
-    boletoCodigoInput.value = '';
-    boletoContainer.style.display = 'none';
-    selectPayment('pix');
-
-    pagamentoModal.show();
-  }
-
-  function attachPaymentButtons() {
-    document.querySelectorAll('.btn-success').forEach(btn => {
-      if (btn.textContent.includes('Efetuar Pagamento')) {
-        btn.removeEventListener('click', abrirPagamentoHandler);
-        btn.addEventListener('click', abrirPagamentoHandler);
-      }
-    });
-  }
-  attachPaymentButtons();
-
-  gerarBoletoBtn.addEventListener('click', () => {
-    const fakeBoleto = '2379' + Math.floor(Math.random() * 1e11).toString().padStart(11,'0') + '0000000000000000';
-    boletoCodigoInput.value = fakeBoleto;
-    boletoContainer.style.display = 'block';
-  });
-
-  confirmarPagamentoBtn.addEventListener('click', function() {
-    if (!produtoSelecionadoParaPagamento) {
-      document.getElementById('mensagemPagamentoErro').style.display = 'block';
-      document.getElementById('mensagemPagamentoErro').textContent = 'Nenhum produto selecionado.';
-      return;
-    }
-
-    if (selectedPaymentMethod === 'cartao') {
-      const num = document.getElementById('numeroCartao').value.trim();
-      const val = document.getElementById('validadeCartao').value.trim();
-      const cvv = document.getElementById('cvvCartao').value.trim();
-      const nome = document.getElementById('nomeTitular').value.trim();
-      if (!num || !val || !cvv || !nome) {
-        document.getElementById('mensagemPagamentoErro').style.display = 'block';
-        document.getElementById('mensagemPagamentoErro').textContent = 'Preencha os dados do cartão (simulado).';
-        return;
-      }
-
-
-      document.getElementById('mensagemPagamentoErro').style.display = 'none';
-      document.getElementById('mensagemPagamentoErro').textContent = '';
-
-
-      const card = produtoSelecionadoParaPagamento;
-      const emAndamentoGrid = document.querySelector('#emAndamento .produtos-grid');
-
-      const statusP = card.querySelector('.pendente');
-      if (statusP) {
-        statusP.classList.remove('pendente');
-        statusP.classList.add('andamento');
-        statusP.textContent = 'Em andamento';
-      } else {
-        const p = document.createElement('p');
-        p.classList.add('andamento');
-        p.textContent = 'Em andamento';
-        card.appendChild(p);
-      }
-
-      const acoes = card.querySelector('.acoes');
-      acoes.innerHTML = `
-        <button class="btn btn-warning btn-sm">Rastrear</button>
-        <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
-        <button class="btn btn-danger btn-sm btn-cancelar">Cancelar</button>
-      `;
-
-      emAndamentoGrid.appendChild(card);
-
-      card.querySelectorAll('.btn-cancelar').forEach(b => b.addEventListener('click', cancelarHandler));
-      card.querySelectorAll('.btn-detalhes').forEach(b => b.addEventListener('click', detalhesHandler));
-      card.querySelectorAll('.btn-avaliar').forEach(b => b.addEventListener('click', avaliarHandler));
-      attachPaymentButtons();
-
-      pagamentoModal.hide();
-      produtoSelecionadoParaPagamento = null;
-
-      alert('Pagamento simulado criado com sucesso! O pedido agora está "Em andamento".');
-
-    } else {
-      document.getElementById('mensagemPagamentoErro').style.display = 'block';
-      document.getElementById('mensagemPagamentoErro').textContent = 'Pagamento ainda não confirmado.';
-      return;
-    }
-  });
-
-  // ---------- Avaliação ----------
-  const formAvaliacao = document.getElementById('formAvaliacao');
-  const mensagemErro = document.getElementById('mensagemErroAvaliacao');
-
-  function resetarAvaliacao() {
-    formAvaliacao.reset();
-    mensagemErro.style.display = 'none';
-    mensagemErro.textContent = '';
-  }
-
-  document.querySelectorAll('#avaliarModal .btn-close, #avaliarModal .btn-secondary').forEach(btn => {
-    btn.addEventListener('click', resetarAvaliacao);
-  });
-
-  document.getElementById('enviarAvaliacao').addEventListener('click', function () {
-    const estrelaSelecionada = document.querySelector('input[name="estrela"]:checked');
-    const comentario = document.querySelector('.avaliacao-comentario').value.trim();
-
-    mensagemErro.style.display = 'none';
-    mensagemErro.textContent = '';
-
-    if (!estrelaSelecionada && comentario === '') {
-      mensagemErro.textContent = ' Por favor, selecione uma nota e escreva um comentário.';
-      mensagemErro.style.display = 'block';
-      return;
-    }
-
-    if (!estrelaSelecionada) {
-      mensagemErro.textContent = ' Por favor, selecione uma nota.';
-      mensagemErro.style.display = 'block';
-      return;
-    }
-
-    if (comentario === '') {
-      mensagemErro.textContent = ' Por favor, escreva um comentário.';
-      mensagemErro.style.display = 'block';
-      return;
-    }
-
-    const nota = parseInt(estrelaSelecionada.value);
-
-    if (cardSelecionadoParaAvaliacao) {
-      const avaliacaoAntiga = cardSelecionadoParaAvaliacao.querySelector('.avaliacao-resultado');
-      if (avaliacaoAntiga) avaliacaoAntiga.remove();
-
-      const secaoInfo = cardSelecionadoParaAvaliacao.querySelector('.produto-info');
-      const estrelas = '&#9733;'.repeat(nota);
-      const pEstrelas = document.createElement('p');
-      pEstrelas.classList.add('avaliacao-resultado');
-      pEstrelas.innerHTML = estrelas;
-      secaoInfo.appendChild(pEstrelas);
-
-      const botao = cardSelecionadoParaAvaliacao.querySelector('.btn-avaliar');
-      if (botao) botao.textContent = 'Editar Avaliação';
-    }
-
-    avaliarModal.hide();
-    resetarAvaliacao();
-    toast.show();
-  });
-
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(m => {
-      m.addedNodes.forEach(node => {
-        if (node.nodeType === 1 && node.classList.contains('produto-card')) {
-          node.querySelectorAll('.btn-cancelar').forEach(b => b.addEventListener('click', cancelarHandler));
-          node.querySelectorAll('.btn-detalhes').forEach(b => b.addEventListener('click', detalhesHandler));
-          node.querySelectorAll('.btn-avaliar').forEach(b => b.addEventListener('click', avaliarHandler));
-          node.querySelectorAll('.btn-success').forEach(btn => {
-            if (btn.textContent.includes('Efetuar Pagamento')) btn.addEventListener('click', abrirPagamentoHandler);
-          });
-        }
+    // Cancelar
+    document.querySelectorAll('.btn-cancelar').forEach(btn => {
+      btn.addEventListener('click', function () {
+        cardParaCancelar = this.closest('.produto-card');
+        cancelarModal.show();
       });
     });
-  });
 
- // ---------- Confirmação de Coleta ----------
-let cardParaConfirmarColeta = null;
-const coletaModal = new bootstrap.Modal(document.getElementById('coletaModal'));
+    document.getElementById('confirmarCancelamento').addEventListener('click', function () {
+      if (cardParaCancelar) {
+        cardParaCancelar.remove();
+        // Se não há mais cards, mostra mensagem vazia
+        const grid = document.querySelector('#pendentes .produtos-grid');
+        if (grid && grid.querySelectorAll('.produto-card').length === 0) {
+          grid.parentElement.innerHTML = `
+            <div class="sem-itens">
+              <i class='bx bx-package'></i>
+              <p>Você não tem pedidos pendentes.</p>
+            </div>`;
+        }
+      }
+      cancelarModal.hide();
+    });
 
-function confirmarColetaHandler() {
-  cardParaConfirmarColeta = this.closest('.produto-card');
-  coletaModal.show();
-}
+    // Pagamento
+    document.querySelectorAll('.btn-pagar').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const card = this.closest('.produto-card');
+        produtoSelecionadoParaPagamento = card;
+        document.getElementById('pagamento-produto').textContent = card.querySelector('h3').textContent;
+        document.getElementById('pagamento-quantidade').textContent = card.querySelector('.quantidade').textContent;
+        document.getElementById('pagamento-valor').textContent = card.querySelector('.preco').textContent;
+        document.getElementById('numeroCartao').value = '';
+        document.getElementById('validadeCartao').value = '';
+        document.getElementById('cvvCartao').value = '';
+        document.getElementById('nomeTitular').value = '';
+        document.getElementById('boletoCodigo').value = '';
+        document.getElementById('boletoContainer').style.display = 'none';
+        selectPayment('pix');
+        pagamentoModal.show();
+      });
+    });
 
-document.querySelectorAll('.confirmar-coleta').forEach(btn => {
-  btn.addEventListener('click', confirmarColetaHandler);
-});
-
-document.getElementById('confirmarColetaBtn').addEventListener('click', function() {
-  if (cardParaConfirmarColeta) {
-
-    const cardClone = cardParaConfirmarColeta.cloneNode(true);
-
-    const confirmarBtn = cardClone.querySelector('.confirmar-coleta');
-    if (confirmarBtn) {
-      confirmarBtn.remove();
+    function resetPaymentAreas() {
+      ['pixArea','creditoArea','boletoArea'].forEach(id => document.getElementById(id).style.display = 'none');
+      ['cardPix','cardCredito','cardBoleto'].forEach(id => {
+        document.getElementById(id).classList.remove('btn-primary','selected-payment');
+        document.getElementById(id).classList.add('btn-outline-primary');
+      });
     }
-    
 
-    const statusAndamento = cardClone.querySelector('.andamento');
-    if (statusAndamento) {
-      statusAndamento.remove();
+    function selectPayment(method) {
+      resetPaymentAreas();
+      selectedPaymentMethod = method;
+      if (method === 'pix') {
+        document.getElementById('pixArea').style.display = 'block';
+        document.getElementById('cardPix').classList.replace('btn-outline-primary','btn-primary');
+        const fakeData = '000201010212...SIMULADOPIX...' + Date.now();
+        document.getElementById('pixQrcode').src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(fakeData);
+        document.getElementById('confirmarPagamento').textContent = 'Verificar Pagamento';
+      } else if (method === 'cartao') {
+        document.getElementById('creditoArea').style.display = 'block';
+        document.getElementById('cardCredito').classList.replace('btn-outline-primary','btn-primary');
+        document.getElementById('confirmarPagamento').textContent = 'Confirmar Pagamento';
+      } else if (method === 'boleto') {
+        document.getElementById('boletoArea').style.display = 'block';
+        document.getElementById('cardBoleto').classList.replace('btn-outline-primary','btn-primary');
+        document.getElementById('confirmarPagamento').textContent = 'Verificar Pagamento';
+      }
     }
-    
 
-    const acoesAntigas = cardClone.querySelector('.acoes');
-    if (acoesAntigas) {
-      acoesAntigas.innerHTML = '';
-    }
-    
-  
-    const acoes = cardClone.querySelector('.acoes');
-    if (acoes) {
-      acoes.innerHTML = `
-        <button class="btn btn-success btn-sm btn-avaliar">Avaliar</button>
-        <button class="btn btn-info btn-sm btn-detalhes">Detalhes</button>
-      `;
-    }
-    
-    const statusConcluido = document.createElement('p');
-    statusConcluido.classList.add('concluido');
-    statusConcluido.textContent = 'Concluído';
-    cardClone.appendChild(statusConcluido);
-    
+    document.getElementById('cardPix').addEventListener('click', () => selectPayment('pix'));
+    document.getElementById('cardCredito').addEventListener('click', () => selectPayment('cartao'));
+    document.getElementById('cardBoleto').addEventListener('click', () => selectPayment('boleto'));
 
-    cardClone.querySelectorAll('.btn-detalhes').forEach(b => b.addEventListener('click', detalhesHandler));
-    cardClone.querySelectorAll('.btn-avaliar').forEach(b => b.addEventListener('click', avaliarHandler));
-    
+    document.getElementById('gerarBoletoBtn').addEventListener('click', () => {
+      const fake = '2379' + Math.floor(Math.random() * 1e11).toString().padStart(11,'0') + '0000000000000000';
+      document.getElementById('boletoCodigo').value = fake;
+      document.getElementById('boletoContainer').style.display = 'block';
+    });
 
-    const concluidosGrid = document.querySelector('#concluidos .produtos-grid');
-    concluidosGrid.appendChild(cardClone);
-    
+    document.getElementById('confirmarPagamento').addEventListener('click', function () {
+      const erroEl = document.getElementById('mensagemPagamentoErro');
+      erroEl.style.display = 'none';
 
-    cardParaConfirmarColeta.remove();
-  }
-  coletaModal.hide();
-});
+      if (selectedPaymentMethod === 'cartao') {
+        const num   = document.getElementById('numeroCartao').value.trim();
+        const val   = document.getElementById('validadeCartao').value.trim();
+        const cvv   = document.getElementById('cvvCartao').value.trim();
+        const nome  = document.getElementById('nomeTitular').value.trim();
+        if (!num || !val || !cvv || !nome) {
+          erroEl.textContent = 'Preencha os dados do cartão.';
+          erroEl.style.display = 'block';
+          return;
+        }
+      }
 
-  document.querySelectorAll('.produtos-grid').forEach(grid => observer.observe(grid, { childList: true }));
-</script>
-<%- include('../partial/footer.ejs') %>
-<script src="/js/darkmode.js"></script>
+      // Pagamento ainda não real — apenas informa o usuário
+      erroEl.textContent = 'Pagamento ainda não disponível. Em breve!';
+      erroEl.style.display = 'block';
+    });
+  </script>
+
+  <%- include('../partial/footer.ejs') %>
+  <script src="/js/darkmode.js"></script>
 </body>
 </html>

@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Biomassa Hub - Produtos</title>
-  <link rel="stylesheet" href="/css/produtos.css" />
+   <link rel="stylesheet" href="/css/produtos.css">
+  <link rel="stylesheet" href="/css/carrossel.css">
+  <link rel="stylesheet" href="/css/darkmode.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link rel="apple-touch-icon" sizes="180x180" href="/imagem/logocleancompr.png.jpg">
   <link rel="icon" type="image/png" sizes="192x192" href="/imagem/logocleancompr.png.jpg">
@@ -12,10 +14,152 @@
   <meta property="og:title" content="Clean Energy" />
   <meta property="og:description" content="Conheça o melhor site em energia limpa" />
   <meta property="og:type" content="website" />
- 
+  <style>
+    .badge-perfil { font-size: 0.75rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+    .badge-comprador { background:#e8f5e9; color:#2e7d32; }
+    .badge-vendedor  { background:#fff3e0; color:#e65100; }
+    .dropdown-nome { display:block; padding:8px 16px; font-weight:700; color:#333; }
+    .dropdown-perfil { display:block; padding:0 16px 8px; font-size:0.8rem; color:#666; }
+    .dropdown-content hr { margin:4px 0; border-color:#eee; }
+    .acesso-restrito { background:#fff3e0; color:#e65100; padding:10px 18px; border-radius:8px; margin:12px 0; font-size:0.9rem; }
+  </style>
 </head>
 <body>
   <%- include('../partial/header.ejs') %>
+
+  <!-- ══ HERO CARROSSEL ══ -->
+  <section class="hero-section" aria-label="Destaques do marketplace">
+
+    <!-- Carrossel principal -->
+    <section class="carrossel-wrapper" aria-label="Banners promocionais">
+
+      <!-- Track -->
+      <div class="carrossel-track" role="list">
+
+        <!-- SLIDE 1: Biomassa Florestal -->
+        <article class="carrossel-slide" role="listitem">
+          <figure>
+            <img
+              src="../../imagem/slide1.png"
+              alt="Biomassa Florestal — Cavaco de Eucalipto"
+              loading="eager"
+              width="1400"
+              height="480">
+            <figcaption>
+              <span class="slide-tag"><i class='bx bx-leaf'></i> Biomassa Florestal</span>
+              <h2 class="slide-titulo">Cavaco de Eucalipto<br>e Madeira Nativa</h2>
+              <p class="slide-subtitulo">Alta densidade energética, umidade controlada e entrega FOB em todo o Brasil.</p>
+              <a href="/?categoria=biomassa-florestal" class="slide-cta">
+                <i class='bx bx-search-alt'></i> Explorar produtos
+              </a>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- SLIDE 2: Bagaço de Cana -->
+        <article class="carrossel-slide" role="listitem">
+          <figure>
+            <img
+              src="../../imagem/slide2.png"  
+              alt="Bagaço de Cana — Resíduos Agroindustriais"
+              loading="lazy"
+              width="1400"
+              height="480">
+            <figcaption>
+              <span class="slide-tag"><i class='bx bx-sun'></i> Resíduos Agroindustriais</span>
+              <h2 class="slide-titulo">Bagaço de Cana<br>para Geração de Energia</h2>
+              <p class="slide-subtitulo">Resíduo de alta disponibilidade com excelente poder calorífico para usinas e indústrias.</p>
+              <a href="/?categoria=residuos-agricolas" class="slide-cta">
+                <i class='bx bx-search-alt'></i> Ver oferta
+              </a>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- SLIDE 3: Pellets -->
+        <article class="carrossel-slide" role="listitem">
+          <figure>
+            <img
+              src="../../imagem/slide3.png"
+              alt="Pellets de Biomassa — Combustível Compacto"
+              loading="lazy"
+              width="1400"
+              height="480">
+            <figcaption>
+              <span class="slide-tag"><i class='bx bx-cylinder'></i> Pellets & Briquetes</span>
+              <h2 class="slide-titulo">Pellets de Biomassa<br>com Certificação</h2>
+              <p class="slide-subtitulo">Combustível compacto, uniforme e de alta eficiência para caldeiras e fornos industriais.</p>
+              <a href="/?categoria=materias-primas" class="slide-cta">
+                <i class='bx bx-search-alt'></i> Comprar agora
+              </a>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- SLIDE 4: Palha e Resíduos -->
+        <article class="carrossel-slide" role="listitem">
+          <figure>
+            <img
+              src="../../imagem/slide4.png"
+              alt="Palha e Resíduos Agrícolas — Energia Renovável"
+              loading="lazy"
+              width="1400"
+              height="480">
+            <figcaption>
+              <span class="slide-tag"><i class='bx bx-seedling'></i> Resíduos Agrícolas</span>
+              <h2 class="slide-titulo">Palha de Arroz e<br>Resíduos da Colheita</h2>
+              <p class="slide-subtitulo">Matéria-prima sustentável disponível em grandes volumes após cada safra em todo o país.</p>
+              <a href="/?categoria=residuos-organicos" class="slide-cta">
+                <i class='bx bx-search-alt'></i> Ver disponibilidade
+              </a>
+            </figcaption>
+          </figure>
+        </article>
+
+        <!-- SLIDE 5: Sustentabilidade -->
+        <article class="carrossel-slide" role="listitem">
+          <figure>
+            <img
+              src="../../imagem/slide5.png"
+              alt="Energia Limpa — Sustentabilidade e Futuro"
+              loading="lazy"
+              width="1400"
+              height="480">
+            <figcaption>
+              <span class="slide-tag"><i class='bx bx-globe'></i> Energia Limpa</span>
+              <h2 class="slide-titulo">O Futuro da Energia<br>começa aqui</h2>
+              <p class="slide-subtitulo">Conectamos produtores e compradores de biomassa em todo o Brasil de forma simples e segura.</p>
+              <a href="/cadastro" class="slide-cta">
+                <i class='bx bx-user-plus'></i> Criar conta grátis
+              </a>
+            </figcaption>
+          </figure>
+        </article>
+
+      </div><!-- /carrossel-track -->
+
+      <!-- Setas -->
+      <button class="carrossel-btn carrossel-btn-prev" aria-label="Slide anterior">
+        <i class='bx bx-chevron-left'></i>
+      </button>
+      <button class="carrossel-btn carrossel-btn-next" aria-label="Próximo slide">
+        <i class='bx bx-chevron-right'></i>
+      </button>
+
+    </section><!-- /carrossel-wrapper -->
+
+    <!-- Dots -->
+    <ul class="carrossel-dots" role="tablist" aria-label="Navegação do carrossel">
+      <li><button class="carrossel-dot ativo" role="tab" aria-label="Slide 1"></button></li>
+      <li><button class="carrossel-dot" role="tab" aria-label="Slide 2"></button></li>
+      <li><button class="carrossel-dot" role="tab" aria-label="Slide 3"></button></li>
+      <li><button class="carrossel-dot" role="tab" aria-label="Slide 4"></button></li>
+      <li><button class="carrossel-dot" role="tab" aria-label="Slide 5"></button></li>
+    </ul>
+
+  </section>
+  <!-- /hero-section -->
+
   <main>
 
     <% if (typeof filtros !== 'undefined' && typeof usuario === 'undefined' || !usuario) { %>
@@ -26,7 +170,7 @@
       <form class="filtro-box" method="GET" action="/">
 
         <!-- Barra de busca com nome "Buscar produtos" -->
-        <nav class="filtro-topo">
+        <div class="filtro-topo">
           <i class='bx bx-search'></i>
           <input
             type="text"
@@ -34,10 +178,10 @@
             placeholder="Buscar produtos..."
             value="<%= typeof filtros !== 'undefined' ? filtros.busca : '' %>"
           />
-        </nav>
+        </div>
 
         <!-- Filtros -->
-        <nav class="filtro-linha">
+        <div class="filtro-linha">
           <select name="estado">
             <option value="">Todos os estados</option>
             <option value="Acre" <%= (typeof filtros !== 'undefined' && filtros.estado === 'Acre') ? 'selected' : '' %>>Acre</option>
@@ -94,7 +238,7 @@
             <i class='bx bx-filter-alt'></i> Filtrar
           </button>
           <a href="/" style="padding:8px 14px;background:#eee;color:#333;border-radius:6px;text-decoration:none;font-size:0.85rem;">Limpar</a>
-        </nav>
+        </div>
 
       </form>
     </section>
@@ -102,11 +246,11 @@
     <ul class="produtos-scroll">
       <% if (produtos.length === 0) { %>
 
-        <nav class="sem-produtos">
+        <div class="sem-produtos">
           <i class='bx bx-package'></i>
           <h2>Nenhum produto encontrado</h2>
           <p>Tente ajustar os filtros ou <a href="/">ver todos os produtos</a>.</p>
-        </nav>
+        </div>
 
       <% } else { %>
 
@@ -135,7 +279,8 @@
 
   </main>
   <%- include('../partial/footer.ejs') %>
-  <script src="/js/darkmode.js"></script>
   <script src="/js/produto-delete.js"></script>
+  <script src="/js/carrossel.js"></script>
+  <script src="/js/darkmode.js"></script>
 </body>
 </html>
