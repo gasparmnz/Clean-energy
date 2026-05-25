@@ -166,7 +166,14 @@
             <h1 class="product-title"><%= produto.nome %></h1>
             <p class="product-location">
               <i class="bx bx-map"></i>
-              <span><%= produto.local %></span>
+              <span>
+                <%
+                  const cidadeProduto = produto.local ? produto.local.split(',')[0].trim() : '';
+                  const estadoProduto = produto.estado || '';
+                  const localizacao = [cidadeProduto, estadoProduto].filter(Boolean).join(' - ');
+                %>
+                <%= localizacao || 'Localização não informada' %>
+              </span>
             </p>
           </header>
 
