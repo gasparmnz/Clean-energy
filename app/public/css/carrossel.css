@@ -7,6 +7,7 @@
   width: 100%;
   background: #f5f7f5;
   padding: 0 0 2rem;
+  margin-top: 85px;
 }
 
 body.dark-mode .hero-section { background: #121212; }
