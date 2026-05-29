@@ -264,7 +264,7 @@
                 <figcaption>
                   <h3><%= produto.nome %></h3>
                   <p>R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %> / tonelada</p>
-                  <p>Disponível em <%= produto.local %></p>
+                  <p>Disponível em <%= [produto.local ? produto.local.split(',')[0].trim() : '', produto.estado || ''].filter(Boolean).join(' - ') || 'Localização não informada' %></p>
                   <a href="/item/<%= produto.id %>">Ver detalhes</a>
                 </figcaption>
               </figure>
