@@ -52,8 +52,26 @@ router.get("/upgrade_vendedor", requireLogin, async (req, res) => {
 // POST para upgrade de vendedor
 router.post("/upgrade_vendedor",
   requireLogin,
-  body("company_name").trim().notEmpty().withMessage("*Campo obrigatório!").isLength({ min:3 }).withMessage("*Nome da empresa muito curto"),
-  body("cnpj").notEmpty().withMessage("*Campo obrigatório!").custom((value) => { if (value.replace(/\D/g,'').length !== 14) throw new Error("*O CNPJ deve conter 14 números!"); return true; }),
+
+ body("company_name")
+  .trim()
+  .notEmpty().withMessage("*Campo obrigatório!")
+  .isLength({ min: 3 }).withMessage("*Nome da empresa muito curto"),
+
+body("company_email")
+  .trim()
+  .notEmpty().withMessage("*Campo obrigatório!")
+  .isEmail().withMessage("*E-mail inválido!"),
+
+body("cnpj")
+  .notEmpty().withMessage("*Campo obrigatório!")
+  .custom((value) => {
+    if (value.replace(/\D/g, '').length !== 14) {
+      throw new Error("*O CNPJ deve conter 14 números!");
+    }
+    return true;
+  }),
+
   async (req, res) => {
     if (req.session.perfil !== 'comprador') {
       return res.redirect('/?erro=acesso_restrito');

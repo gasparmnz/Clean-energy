@@ -7,7 +7,7 @@ body.dark-mode {
   background: #121212 !important;
   color: #e5e7eb !important;
 }
-body.dark-mode * { color: inherit; }
+
 
 /* ─── HEADER ─── */
 body.dark-mode .header { background: #1a1a1a !important; border-bottom: 1px solid #2a2a2a; }
@@ -54,7 +54,7 @@ body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
 body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 { color: #f3f4f6 !important; }
 body.dark-mode p   { color: #d1d5db !important; }
 body.dark-mode strong { color: #f9fafb !important; }
-body.dark-mode span { color: inherit; }
+
 body.dark-mode cite { color: #e5e7eb !important; }
 body.dark-mode label { color: #d1d5db !important; }
 body.dark-mode address { color: #9ca3af !important; }
