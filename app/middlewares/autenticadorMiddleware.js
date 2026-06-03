@@ -20,3 +20,23 @@ const attachUser = ((req, res, next) => {
   }
   next();
 });
+
+function requireLogin(req, res, next) {
+  if (!req.session.userId) return res.redirect('/login');
+  next();
+}
+
+function requireVendedor(req, res, next) {
+  if (!req.session.userId) return res.redirect('/login');
+  if (req.session.perfil !== 'vendedor') return res.redirect('/?erro=acesso_restrito');
+  next();
+}
+
+function requireAdmin(req, res, next) {
+  if (!req.session.isAdmin) {
+    return res.redirect("/adm-login");
+  }
+  next();
+}
+
+module.exports = { attachUser, requireLogin, requireVendedor, requireAdmin };
