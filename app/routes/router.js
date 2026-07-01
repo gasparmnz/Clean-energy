@@ -9,6 +9,16 @@ const cartModel = require("../models/cartModel");
 const { uploadProduto, uploadFoto } = require("../helpers/upload");
 var { validarCPF } = require("../helpers/validacao");
 
+function requireLogin(req, res, next) {
+  if (!req.session.userId) return res.redirect('/login');
+  next();
+}
+
+function requireVendedor(req, res, next) {
+  if (!req.session.userId) return res.redirect('/login');
+  if (req.session.perfil !== 'vendedor') return res.redirect('/?erro=acesso_restrito');
+  next();
+}
 
 /* ROTAS */
 router.get("/", async (req, res) => {
