@@ -120,6 +120,7 @@
   <script>
     function atualizarResumo() {
       const produtos = document.querySelectorAll(".produto-card");
+      const resumo = document.querySelector(".resumo");
       const resumoLista = document.querySelector(".resumo-lista");
       const totalElement = document.querySelector(".total");
       let total = 0;
@@ -138,6 +139,9 @@
       });
 
       totalElement.innerHTML = `<span>Total:</span> <span>R$ ${total.toFixed(2)}</span>`;
+
+      // Sem itens, os separadores da lista/total não têm nada para separar
+      resumo.classList.toggle("resumo-vazio", resumoLista.children.length === 0);
     }
 
     document.addEventListener("DOMContentLoaded", () => {

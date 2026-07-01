@@ -212,7 +212,7 @@ router.get("/listaprodutos", requireLogin, async (req, res) => {
 
 router.get("/carrinho", async (req, res) => {
   try {
-    const userId = req.session?.userId || 'guest';
+    const userId = req.session.userId || req.sessionID;
     const cart = await cartModel.getCartByUser(userId);
     res.render("pages/carrinho", { cart });
   } catch (err) {
@@ -225,7 +225,7 @@ router.post('/cart/add', async (req, res) => {
     const { productId, quantidade } = req.body;
     const produto = await produtosModel.findById(productId);
     if (!produto) return res.status(404).send('Produto não encontrado');
-    const userId = req.session?.userId || 'guest';
+    const userId = req.session.userId || req.sessionID;
     await cartModel.addItem(userId, { productId, nome: produto.nome, preco: produto.preco, imagem: produto.imagem, local: produto.local, quantidade: parseInt(quantidade,10)||1 });
     res.redirect('/carrinho');
   } catch (err) {
@@ -235,7 +235,7 @@ router.post('/cart/add', async (req, res) => {
 
 router.post('/cart/remove', async (req, res) => {
   try {
-    const userId = req.session?.userId || 'guest';
+    const userId = req.session.userId || req.sessionID;
     await cartModel.removeByIndex(userId, parseInt(req.body.index));
     res.redirect('/carrinho');
   } catch (err) {

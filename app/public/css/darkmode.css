@@ -108,8 +108,15 @@ body.dark-mode .filtro-container { background: #1a1a1a !important; border-bottom
 body.dark-mode .filtro-box,
 body.dark-mode .filtro-topo,
 body.dark-mode .filtro-linha { background: transparent !important; }
+body.dark-mode .filtro-box { border: 1px solid #2a2a2a !important; }
 body.dark-mode .filtro-topo { border-color: #374151 !important; }
 body.dark-mode .filtro-topo i { color: #6b7280 !important; }
+body.dark-mode .filtro-linha select,
+body.dark-mode .filtro-linha input {
+  background: #1e1e1e !important;
+  border: 1px solid #374151 !important;
+  color: #e5e7eb !important;
+}
 
 /* Botão filtrar */
 body.dark-mode .filtro-linha button[type="submit"] {
@@ -338,6 +345,10 @@ body.dark-mode .cart-summary p,
 body.dark-mode .cart-summary span { color: #e5e7eb !important; }
 body.dark-mode .anuncio-transportadoras { background: #1e1e1e !important; border-color: #2a2a2a !important; }
 body.dark-mode .resumo { background: #1e1e1e !important; border-color: #2a2a2a !important; }
+body.dark-mode .resumo h2 { color: #f3f4f6 !important; border-bottom-color: #2a2a2a !important; }
+body.dark-mode .resumo-lista { border-bottom-color: #2a2a2a !important; }
+body.dark-mode .resumo-lista li { color: #d1d5db !important; }
+body.dark-mode .total { color: #4ade80 !important; border-top-color: #16a34a !important; }
 /* ════════════════════════════════════════════════
    DETALHE DO PRODUTO (item)
    ════════════════════════════════════════════════ */

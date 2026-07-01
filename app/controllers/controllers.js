@@ -100,7 +100,7 @@ router.post('/cart/add', async (req, res) => {
       quantidade: qty
     };
 
-    const userId = req.session?.userId || 'guest';
+    const userId = req.session.userId || req.sessionID;
     await cartModel.addItem(userId, item);
     res.redirect('/carrinho');
   } catch (err) {
@@ -111,7 +111,7 @@ router.post('/cart/add', async (req, res) => {
 
 router.get('/carrinho', async (req, res) => {
   try {
-    const userId = req.session?.userId || 'guest';
+    const userId = req.session.userId || req.sessionID;
     const cart = await cartModel.getCartByUser(userId);
     res.render('pages/carrinho', { cart });
   } catch (err) {
@@ -122,7 +122,7 @@ router.get('/carrinho', async (req, res) => {
 
 router.post('/cart/remove', async (req, res) => {
   try {
-    const userId = req.session?.userId || 'guest';
+    const userId = req.session.userId || req.sessionID;
     const { index } = req.body;
     await cartModel.removeByIndex(userId, parseInt(index));
     res.redirect('/carrinho');
