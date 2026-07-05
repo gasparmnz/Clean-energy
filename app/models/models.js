@@ -216,6 +216,19 @@ const usuarioModel = {
     }
   },
 
+  // Atualiza dados do usuário via admin (nome, email, biografia)
+  updateAdmin: async (id, { nome, email, biografia }) => {
+    try {
+      const [result] = await pool.query(
+        "UPDATE Usuario SET Nome = ?, Email = ?, Biografia = ? WHERE Usuario_ID = ?",
+        [nome, email, biografia || null, id]
+      );
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  },
+
   // Atualiza foto do usuário
   updateFoto: async (id, filename) => {
     try {

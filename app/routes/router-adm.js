@@ -216,6 +216,114 @@ router.get("/detalhes_user", async (req, res) => {
   }
 });
 
+// Tela de edição de usuário
+router.get("/editar_usuario", async (req, res) => {
+  try {
+    const userId = req.query.userId || req.query.id || req.params.id;
+
+    if (!userId) {
+      return res.render("pages/editar_usuario", {
+        usuario: null,
+        erro: "Selecione um usuário para editar."
+      });
+    }
+
+    const numeric = String(userId).match(/(\d+)$/);
+    const idToQuery = numeric ? Number(numeric[1]) : Number(userId);
+    if (Number.isNaN(idToQuery)) {
+      return res.render("pages/editar_usuario", {
+        usuario: null,
+        erro: "Usuário inválido."
+      });
+    }
+
+    const [rows] = await pool.query(
+      `SELECT u.Usuario_ID AS id, u.Nome, u.Email, u.Tipo, u.Biografia,
+              pf.CPF, pj.CNPJ
+       FROM Usuario u
+       LEFT JOIN Pessoa_Fisica   pf ON pf.Usuario_ID = u.Usuario_ID
+       LEFT JOIN Pessoa_Juridica pj ON pj.Usuario_ID = u.Usuario_ID
+       WHERE u.Usuario_ID = ?`,
+      [idToQuery]
+    );
+    const usuario = rows[0] || null;
+    res.render("pages/editar_usuario", { usuario, erro: null });
+  } catch (err) {
+    console.error("Erro ao carregar edição de usuário", err);
+    res.render("pages/editar_usuario", { usuario: null, erro: "Erro ao carregar a página." });
+  }
+});
+
+// Salva a edição do usuário
+router.post("/editar_usuario/atualizar", async (req, res) => {
+  const { userId, nome, email, biografia } = req.body;
+  try {
+    if (!userId || !nome || !nome.trim() || !email || !email.trim()) {
+      const [rows] = await pool.query(
+        `SELECT u.Usuario_ID AS id, u.Nome, u.Email, u.Tipo, u.Biografia,
+                pf.CPF, pj.CNPJ
+         FROM Usuario u
+         LEFT JOIN Pessoa_Fisica   pf ON pf.Usuario_ID = u.Usuario_ID
+         LEFT JOIN Pessoa_Juridica pj ON pj.Usuario_ID = u.Usuario_ID
+         WHERE u.Usuario_ID = ?`,
+        [userId]
+      );
+      return res.render("pages/editar_usuario", {
+        usuario: rows[0] || null,
+        erro: "Nome e e-mail são obrigatórios."
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      const [rows] = await pool.query(
+        `SELECT u.Usuario_ID AS id, u.Nome, u.Email, u.Tipo, u.Biografia,
+                pf.CPF, pj.CNPJ
+         FROM Usuario u
+         LEFT JOIN Pessoa_Fisica   pf ON pf.Usuario_ID = u.Usuario_ID
+         LEFT JOIN Pessoa_Juridica pj ON pj.Usuario_ID = u.Usuario_ID
+         WHERE u.Usuario_ID = ?`,
+        [userId]
+      );
+      return res.render("pages/editar_usuario", {
+        usuario: rows[0] || null,
+        erro: "E-mail inválido."
+      });
+    }
+
+    // Impede e-mail duplicado em outro usuário
+    const [existente] = await pool.query(
+      "SELECT Usuario_ID FROM Usuario WHERE Email = ? AND Usuario_ID != ?",
+      [email.trim(), userId]
+    );
+    if (existente.length > 0) {
+      const [rows] = await pool.query(
+        `SELECT u.Usuario_ID AS id, u.Nome, u.Email, u.Tipo, u.Biografia,
+                pf.CPF, pj.CNPJ
+         FROM Usuario u
+         LEFT JOIN Pessoa_Fisica   pf ON pf.Usuario_ID = u.Usuario_ID
+         LEFT JOIN Pessoa_Juridica pj ON pj.Usuario_ID = u.Usuario_ID
+         WHERE u.Usuario_ID = ?`,
+        [userId]
+      );
+      return res.render("pages/editar_usuario", {
+        usuario: rows[0] || null,
+        erro: "Este e-mail já está em uso por outro usuário."
+      });
+    }
+
+    await pool.query(
+      "UPDATE Usuario SET Nome = ?, Email = ?, Biografia = ? WHERE Usuario_ID = ?",
+      [nome.trim(), email.trim(), (biografia || "").trim() || null, userId]
+    );
+
+    res.redirect("/adm/detalhes_user?userId=" + encodeURIComponent(userId));
+  } catch (err) {
+    console.error("Erro ao atualizar usuário", err);
+    res.redirect("/adm/editar_usuario?userId=" + encodeURIComponent(userId || ""));
+  }
+});
+
 // Reverter suspensão de avaliação
 router.post("/avaliacoes/reativar", async (req, res) => {
   try {

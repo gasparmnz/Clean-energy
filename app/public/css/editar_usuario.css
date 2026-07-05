@@ -1,0 +1,99 @@
+.edit-user-card {
+  background: #fff;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 560px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.edit-user-form .form-group {
+  margin-bottom: 20px;
+}
+
+.edit-user-form label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.edit-user-form input,
+.edit-user-form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #1f2937;
+}
+
+.edit-user-form input:focus,
+.edit-user-form textarea:focus {
+  outline: none;
+  border-color: #1e8e3e;
+  box-shadow: 0 0 0 3px rgba(30,142,62,0.12);
+}
+
+.edit-user-form input:disabled {
+  background: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.edit-user-form textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.submit-btn {
+  background: #1e8e3e;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.submit-btn:hover {
+  background: #166f31;
+}
+
+.btn-cancelar {
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #374151;
+  background: #e5e7eb;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: background 0.2s ease;
+}
+
+.btn-cancelar:hover {
+  background: #d1d5db;
+}
+
+.edit-erro {
+  max-width: 560px;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
