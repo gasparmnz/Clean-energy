@@ -1,10 +1,106 @@
+.edit-user-shell {
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+}
+
+.edit-user-hero {
+  background: #fff;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 18px;
+  padding: 24px 28px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+}
+
+.edit-user-hero .profile-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.edit-user-hero .profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #dff7e8 0%, #cfe9ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1e8e3e;
+  font-size: 2rem;
+}
+
+.edit-user-hero h2 {
+  font-size: 1.35rem;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.edit-user-hero p {
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.status-vendedor {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.status-comprador {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.edit-user-meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 0.85rem;
+}
+
 .edit-user-card {
   background: #fff;
   border: 1px solid var(--border-color, #e5e7eb);
-  border-radius: 12px;
-  padding: 30px;
-  max-width: 560px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+  width: 100%;
+  max-width: 100%;
+}
+
+.edit-user-form .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .edit-user-form .form-group {
@@ -20,7 +116,8 @@
 }
 
 .edit-user-form input,
-.edit-user-form textarea {
+.edit-user-form textarea,
+.edit-user-form select {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid #d1d5db;
@@ -28,29 +125,34 @@
   font-size: 0.95rem;
   font-family: inherit;
   color: #1f2937;
+  background: #fff;
 }
 
 .edit-user-form input:focus,
-.edit-user-form textarea:focus {
+.edit-user-form textarea:focus,
+.edit-user-form select:focus {
   outline: none;
   border-color: #1e8e3e;
   box-shadow: 0 0 0 3px rgba(30,142,62,0.12);
-}
-
-.edit-user-form input:disabled {
-  background: #f3f4f6;
-  color: #6b7280;
-  cursor: not-allowed;
 }
 
 .edit-user-form textarea {
   resize: vertical;
 }
 
+.form-hint {
+  display: block;
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
 .form-actions {
   display: flex;
   gap: 12px;
   margin-top: 28px;
+  flex-wrap: wrap;
 }
 
 .submit-btn {
@@ -85,7 +187,7 @@
 }
 
 .edit-erro {
-  max-width: 560px;
+  max-width: 860px;
   background: #fef2f2;
   color: #b91c1c;
   border: 1px solid #fecaca;
@@ -96,4 +198,14 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+@media (max-width: 700px) {
+  .edit-user-form .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-user-card {
+    padding: 20px;
+  }
 }
