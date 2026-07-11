@@ -14,24 +14,6 @@
     <section class="content-area">
 <%- include("../partial/sidebar.ejs") %>
       <section class="dashboard-overview">
-<<<<<<< HEAD
-      <h1><%= isVendedor ? 'Visão Geral de Vendas' : 'Visão Geral de Compras' %></h1>
-      <section class="metrics-cards">
-
-        <% if (isVendedor) { %>
-        <article class="metric-card">
-          <i class='bx bx-package'></i>
-          <h2>Produtos Ativos</h2>
-          <p><%= totalProdutosAtivos %></p>
-          <small>anunciados agora</small>
-        </article>
-        <% } %>
-
-        <article class="metric-card">
-          <i class='bx bx-check-circle'></i>
-          <h2>Transações Concluídas</h2>
-          <p><%= stats.concluidas %></p>
-=======
       <h1>Visão Geral de Compras e Vendas</h1>
       <section class="metrics-cards">
 
@@ -39,27 +21,10 @@
           <i class=\'bx bx-check-circle\'></i>
           <h2>Transações Concluídas</h2>
           <p>5</p>
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
           <small>últimos 30 dias</small>
         </article>
 
         <article class="metric-card">
-<<<<<<< HEAD
-          <i class='bx bx-x-circle'></i>
-          <h2>Pedidos Cancelados</h2>
-          <p><%= stats.canceladas %></p>
-          <small>últimos 30 dias</small>
-        </article>
-
-        <% if (isVendedor) { %>
-        <article class="metric-card">
-          <i class='bx bx-dollar-circle'></i>
-          <h2>Receita</h2>
-          <p>R$ <%= stats.receita.toFixed(2).replace('.', ',') %></p>
-          <small>últimos 30 dias</small>
-        </article>
-        <% } %>
-=======
           <i class=\'bx bx-x-circle\'></i>
           <h2>Pedidos Cancelados</h2>
           <p>2</p>
@@ -72,63 +37,20 @@
           <p>R$ 1.250,00</p>
           <small>últimos 30 dias</small>
         </article>
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
       </section>
     </section>
 
     <section class="recent-transactions">
       <h2>Transações Recentes</h2>
-<<<<<<< HEAD
-      <% const transacoes = isVendedor ? vendas : compras; %>
-      <% if (transacoes.length === 0) { %>
-        <p style="color:#6b7280; padding: 20px 0;">
-          <% if (isVendedor) { %>
-            Nenhuma venda registrada ainda. Assim que alguém comprar um dos seus produtos, aparecerá aqui.
-          <% } else { %>
-            Nenhuma compra registrada ainda. Suas compras aparecerão aqui.
-          <% } %>
-        </p>
-      <% } else { %>
-      <table class="transactions-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-=======
       <table class="transactions-table">
         <thead>
           <tr>
             <th>ID da Transação</th>
             <th>Tipo</th>
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
             <th>Produto</th>
             <th>Valor</th>
             <th>Status</th>
             <th>Data</th>
-<<<<<<< HEAD
-            <% if (isVendedor) { %><th>Ação</th><% } %>
-          </tr>
-        </thead>
-        <tbody>
-          <% transacoes.forEach(function(t) { %>
-          <tr>
-            <td>#<%= String(t.id).padStart(3, '0') %></td>
-            <td><%= t.produto %></td>
-            <td>R$ <%= parseFloat(t.valor || 0).toFixed(2).replace('.', ',') %></td>
-            <td><%= t.status === 'concluido' ? 'Concluída' : (t.status === 'cancelado' ? 'Cancelada' : 'Pendente') %></td>
-            <td><%= new Date(t.data).toLocaleDateString('pt-BR') %></td>
-            <% if (isVendedor) { %>
-              <td>
-                <% if (t.status === 'pendente') { %>
-                  <button type="button" class="btn-concluir-pedido" data-id="<%= t.id %>" style="background:#16a34a; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:.8rem;">Marcar concluído</button>
-                <% } else { %>—<% } %>
-              </td>
-            <% } %>
-          </tr>
-          <% }); %>
-        </tbody>
-      </table>
-      <% } %>
-=======
           </tr>
         </thead>
         <tbody>
@@ -174,37 +96,11 @@
           </tr>
         </tbody>
       </table>
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     </section>
   </section>
   </main>
    <%- include("../partial/footer.ejs") %>
    <script src="/js/darkmode.js"></script>
-<<<<<<< HEAD
-   <script>
-     document.querySelectorAll('.btn-concluir-pedido').forEach(function (btn) {
-       btn.addEventListener('click', function () {
-         const id = btn.dataset.id;
-         btn.disabled = true;
-         fetch('/pedidos/' + id + '/concluir', { method: 'POST' })
-           .then(function (r) { return r.json(); })
-           .then(function (data) {
-             if (data.success) {
-               location.reload();
-             } else {
-               btn.disabled = false;
-               alert('Não foi possível concluir este pedido.');
-             }
-           })
-           .catch(function () {
-             btn.disabled = false;
-             alert('Erro de conexão ao concluir o pedido.');
-           });
-       });
-     });
-   </script>
-=======
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 </body>
 </html>
 

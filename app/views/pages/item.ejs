@@ -77,24 +77,8 @@
         <section class="product-gallery" aria-labelledby="gallery-title">
           <h2 id="gallery-title" class="visually-hidden">Galeria do Produto</h2>
           <figure class="product-image-wrapper">
-<<<<<<< HEAD
-            <img id="mainProductImage" src="<%= produto.imagem && produto.imagem.startsWith('data:') ? produto.imagem : '/imagem/' + (produto.imagem || 'sem-foto.png') %>" alt="<%= produto.nome %>" class="product-image" loading="lazy">
-          </figure>
-          <% if (produto.imagens && produto.imagens.length > 1) { %>
-          <nav class="product-thumbnails" aria-label="Outras imagens do produto" style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
-            <% produto.imagens.forEach(function(img, i) { %>
-              <button type="button" class="thumb-btn" aria-label="Ver imagem <%= i + 1 %> de <%= produto.nome %>"
-                onclick="document.getElementById('mainProductImage').src = '<%= img.startsWith('data:') ? img : '/imagem/' + img %>'"
-                style="border:2px solid <%= i === 0 ? '#16a34a' : '#ddd' %>; border-radius:8px; padding:0; cursor:pointer; background:none;">
-                <img src="<%= img.startsWith('data:') ? img : '/imagem/' + img %>" alt="" style="width:64px; height:64px; object-fit:cover; border-radius:6px; display:block;">
-              </button>
-            <% }); %>
-          </nav>
-          <% } %>
-=======
             <img src="<%= produto.imagem && produto.imagem.startsWith('data:') ? produto.imagem : '/imagem/' + (produto.imagem || 'sem-foto.png') %>" alt="<%= produto.nome %>" class="product-image" loading="lazy">
           </figure>
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
         </section>
 
         <!-- COMENTÁRIOS DESKTOP -->

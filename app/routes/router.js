@@ -4,19 +4,7 @@ const { body, validationResult } = require("express-validator");
 const bcrypt = require('bcryptjs');
 const models = require("../models/models");
 const produtosModel = models;
-<<<<<<< HEAD
-const { usuarioModel, vendedorModel, pedidosModel, notificacoesModel, webauthnModel } = models;
-const {
-  disponivel: webauthnDisponivel,
-  RP_NAME, RP_ID, ORIGIN,
-  generateRegistrationOptions,
-  verifyRegistrationResponse,
-  generateAuthenticationOptions,
-  verifyAuthenticationResponse
-} = require("../helpers/webauthn");
-=======
 const { usuarioModel, vendedorModel } = models;
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 const cartModel = require("../models/cartModel");
 const { uploadProduto, uploadFoto } = require("../helpers/upload");
 var { validarCPF } = require("../helpers/validacao");
@@ -129,59 +117,18 @@ body("cnpj")
   }
 );
 
-<<<<<<< HEAD
-router.get("/minhascompras", requireLogin, async (req, res) => {
-  try {
-    const userId = req.session.userId;
-    const pendentes = await pedidosModel.getPedidosCompradorPorStatus(userId, 'pendente');
-    const concluidos = await pedidosModel.getPedidosCompradorPorStatus(userId, 'concluido');
-    res.render("pages/minhascompras", { pendentes, concluidos });
-  } catch (err) {
-    console.error('Erro ao carregar minhas compras:', err);
-    res.render("pages/minhascompras", { pendentes: [], concluidos: [] });
-  }
-});
-
-// Move itens do carrinho para pedidos reais (status pendente) e notifica os vendedores
-=======
 router.get("/minhascompras", requireLogin, (req, res) => {
   const pendentes = req.session.pedidosPendentes || [];
   res.render("pages/minhascompras", { pendentes });
 });
 
 // Move itens do carrinho para pedidos pendentes na sessão
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 router.post("/minhascompras/finalizar", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
     const cart = await cartModel.getCartByUser(userId);
     if (cart && cart.length > 0) {
-<<<<<<< HEAD
-      for (const item of cart) {
-        const qtd = parseFloat(item.quantidade) || 1;
-        const valorTotal = (parseFloat(item.preco) || 0) * qtd;
-        const result = await pedidosModel.criarPedido({
-          produtoId: item.productId,
-          compradorId: userId,
-          quantidade: qtd,
-          valorTotal
-        });
-        // Notifica o vendedor sobre o novo pedido
-        try {
-          const produto = await produtosModel.findById(item.productId);
-          if (produto && produto.usuario_id) {
-            await notificacoesModel.criar({
-              usuarioId: produto.usuario_id,
-              tipo: 'novo_pedido',
-              mensagem: `Novo pedido recebido: ${item.nome}`,
-              link: '/painel'
-            });
-          }
-        } catch (e) { console.error('Erro ao notificar vendedor:', e); }
-      }
-=======
       req.session.pedidosPendentes = cart;
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
       const pool = require('../../config/pool_conexoes');
       await pool.query('DELETE FROM carrinho WHERE userId = ?', [userId]);
     }
@@ -192,92 +139,6 @@ router.post("/minhascompras/finalizar", requireLogin, async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-// Comprador cancela um pedido pendente próprio
-router.post("/pedidos/:id/cancelar", requireLogin, async (req, res) => {
-  try {
-    const ok = await pedidosModel.cancelarPedido(req.params.id, req.session.userId);
-    if (ok) {
-      const pedido = await pedidosModel.findPedidoById(req.params.id);
-      if (pedido && pedido.vendedor_id) {
-        await notificacoesModel.criar({
-          usuarioId: pedido.vendedor_id,
-          tipo: 'pedido_cancelado',
-          mensagem: `Um pedido de "${pedido.produto_nome}" foi cancelado pelo comprador.`,
-          link: '/painel'
-        });
-      }
-    }
-    res.json({ success: ok });
-  } catch (err) {
-    console.error('Erro ao cancelar pedido:', err);
-    res.status(500).json({ success: false });
-  }
-});
-
-// Vendedor marca um pedido de um produto seu como concluído
-router.post("/pedidos/:id/concluir", requireVendedor, async (req, res) => {
-  try {
-    const ok = await pedidosModel.concluirPedido(req.params.id, req.session.userId);
-    if (ok) {
-      const pedido = await pedidosModel.findPedidoById(req.params.id);
-      if (pedido && pedido.comprador_id) {
-        await notificacoesModel.criar({
-          usuarioId: pedido.comprador_id,
-          tipo: 'pedido_concluido',
-          mensagem: `Seu pedido de "${pedido.produto_nome}" foi concluído pelo vendedor.`,
-          link: '/minhascompras'
-        });
-      }
-    }
-    res.json({ success: ok });
-  } catch (err) {
-    console.error('Erro ao concluir pedido:', err);
-    res.status(500).json({ success: false });
-  }
-});
-
-/* NOTIFICAÇÕES */
-router.get("/notificacoes", requireLogin, async (req, res) => {
-  try {
-    const notificacoes = await notificacoesModel.listarPorUsuario(req.session.userId, 20);
-    res.json({ notificacoes });
-  } catch (err) {
-    console.error('Erro ao buscar notificações:', err);
-    res.status(500).json({ notificacoes: [] });
-  }
-});
-
-router.get("/notificacoes/nao-lidas", requireLogin, async (req, res) => {
-  try {
-    const total = await notificacoesModel.contarNaoLidas(req.session.userId);
-    res.json({ total });
-  } catch (err) {
-    console.error('Erro ao contar notificações não lidas:', err);
-    res.status(500).json({ total: 0 });
-  }
-});
-
-router.post("/notificacoes/:id/ler", requireLogin, async (req, res) => {
-  try {
-    await notificacoesModel.marcarLida(req.params.id, req.session.userId);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false });
-  }
-});
-
-router.post("/notificacoes/marcar-todas-lidas", requireLogin, async (req, res) => {
-  try {
-    await notificacoesModel.marcarTodasLidas(req.session.userId);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false });
-  }
-});
-
-=======
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 // ── Atualizar perfil
 router.post("/perfil/atualizar", requireLogin, async (req, res) => {
   const { nome, biografia } = req.body;
@@ -336,40 +197,7 @@ router.get("/perfil", requireLogin, async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-router.get("/painel", requireLogin, async (req, res) => {
-  try {
-    const userId = req.session.userId;
-    const isVendedor = req.session.perfil === 'vendedor';
-
-    const meusProdutos = isVendedor ? await produtosModel.findByUsuario(userId) : [];
-    const stats = isVendedor
-      ? await pedidosModel.getStatsVendedor(userId)
-      : { total: 0, concluidas: 0, canceladas: 0, pendentes: 0, receita: 0 };
-
-    const vendas = isVendedor ? await pedidosModel.getRecentesVendedor(userId, 10) : [];
-    const compras = await pedidosModel.getRecentesComprador(userId, 10);
-
-    res.render("pages/painel", {
-      isVendedor,
-      totalProdutosAtivos: meusProdutos.filter(p => p.status === 'active').length,
-      stats,
-      vendas,
-      compras
-    });
-  } catch (err) {
-    console.error('Erro ao carregar painel:', err);
-    res.render("pages/painel", {
-      isVendedor: req.session.perfil === 'vendedor',
-      totalProdutosAtivos: 0,
-      stats: { total: 0, concluidas: 0, canceladas: 0, pendentes: 0, receita: 0 },
-      vendas: [], compras: []
-    });
-  }
-});
-=======
 router.get("/painel", requireLogin, (req, res) => res.render("pages/painel"));
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 router.get("/meus_produtos", requireLogin, (req, res) => res.render("pages/meus_produtos"));
 
 router.get("/listaprodutos", requireLogin, async (req, res) => {
@@ -476,20 +304,6 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
       await produtosModel.updateAvaliacao({ nota: notaNum, comentario, usuarioId: req.session.userId, produtoId });
     } else {
       await produtosModel.createAvaliacao({ nota: notaNum, comentario, usuarioId: req.session.userId, produtoId, nomeUsuario: req.session.nomeUsuario });
-<<<<<<< HEAD
-      try {
-        const produto = await produtosModel.findById(produtoId);
-        if (produto && produto.usuario_id && Number(produto.usuario_id) !== Number(req.session.userId)) {
-          await notificacoesModel.criar({
-            usuarioId: produto.usuario_id,
-            tipo: 'nova_avaliacao',
-            mensagem: `Seu produto "${produto.nome}" recebeu uma nova avaliação.`,
-            link: `/item/${produtoId}#comentarios`
-          });
-        }
-      } catch (e) { console.error('Erro ao notificar avaliação de produto:', e); }
-=======
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     }
 
     res.redirect(`/item/${produtoId}#comentarios`);
@@ -499,21 +313,11 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-router.post("/cadastrar_produto", requireVendedor, uploadProduto.array('imagens', 6), async (req, res) => {
-  const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
-  const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
-
-  const arquivos = req.files || [];
-  const imagemFilename = arquivos.length > 0 ? arquivos[0].filename : 'sem-foto.png';
-  const imagensExtras = arquivos.slice(1).map(f => f.filename);
-=======
 router.post("/cadastrar_produto", requireVendedor, uploadProduto.single('imagem'), async (req, res) => {
   const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
   const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
 
   const imagemFilename = req.file ? req.file.filename : 'sem-foto.png';
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 
   let precoLimpo = (preco || '0').toString().trim()
     .replace(/R\$\s*/g, '')
@@ -529,14 +333,7 @@ router.post("/cadastrar_produto", requireVendedor, uploadProduto.single('imagem'
   const quantidadeNumerica = parseFloat(quantidadeLimpa) || 0;
 
   try {
-<<<<<<< HEAD
-    const result = await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem: imagemFilename, estado, usuario_id: req.session.userId });
-    if (imagensExtras.length > 0) {
-      await produtosModel.addImagensExtras(result.insertId, imagensExtras);
-    }
-=======
     await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem: imagemFilename, estado, usuario_id: req.session.userId });
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     res.redirect('/listaprodutos');
   } catch (err) {
     console.error('Erro ao cadastrar produto:', err);
@@ -597,22 +394,7 @@ router.post("/cadastroUsuario",
       const result = await usuarioModel.createPF({ nome: req.body.nome, email: req.body.email, senhaHash });
       const cpfNumeros = req.body.cpf.replace(/\D/g, '');
       await usuarioModel.createPessoaFisica(result.insertId, cpfNumeros);
-<<<<<<< HEAD
-
-      // Cadastro direto: já loga o usuário sem precisar passar pela tela de login
-      const guestId = req.sessionID;
-      req.session.userId = result.insertId;
-      req.session.nomeUsuario = req.body.nome;
-      req.session.emailUsuario = req.body.email;
-      req.session.perfil = 'comprador';
-      req.session.tipo = 'PF';
-      req.session.fotoUsuario = null;
-      try { await cartModel.mergeGuestCart(guestId, result.insertId); } catch (e) { console.error('Erro ao mesclar carrinho:', e); }
-
-      res.redirect("/perfil");
-=======
       res.redirect("/login");
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     } catch (err) {
       console.error('Erro ao cadastrar usuário:', err);
       res.status(500).send('Erro ao cadastrar. Tente novamente.');
@@ -647,22 +429,7 @@ router.post("/cadastroEmpresa",
       const result = await usuarioModel.createPJ({ nome: req.body.nome, email: req.body.email, senhaHash });
       const cnpjNumeros = req.body.cnpj.replace(/\D/g, '');
       await usuarioModel.createPessoaJuridica(result.insertId, cnpjNumeros);
-<<<<<<< HEAD
-
-      // Cadastro direto: já loga o usuário sem precisar passar pela tela de login
-      const guestId = req.sessionID;
-      req.session.userId = result.insertId;
-      req.session.nomeUsuario = req.body.nome;
-      req.session.emailUsuario = req.body.email;
-      req.session.perfil = 'vendedor';
-      req.session.tipo = 'PJ';
-      req.session.fotoUsuario = null;
-      try { await cartModel.mergeGuestCart(guestId, result.insertId); } catch (e) { console.error('Erro ao mesclar carrinho:', e); }
-
-      res.redirect("/perfil");
-=======
       res.redirect("/login");
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     } catch (err) {
       console.error('Erro ao cadastrar empresa:', err);
       res.status(500).send('Erro ao cadastrar. Tente novamente.');
@@ -689,10 +456,6 @@ router.post("/login", async (req, res) => {
       });
     }
 
-<<<<<<< HEAD
-    const guestId = req.sessionID;
-=======
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     req.session.userId = usuario.Usuario_ID;
     req.session.nomeUsuario = usuario.Nome;
     req.session.emailUsuario = usuario.Email;
@@ -700,10 +463,6 @@ router.post("/login", async (req, res) => {
     req.session.tipo = usuario.Tipo;
     req.session.fotoUsuario = usuario.foto || null;
     await usuarioModel.updateUltimoLogin(usuario.Usuario_ID);
-<<<<<<< HEAD
-    try { await cartModel.mergeGuestCart(guestId, usuario.Usuario_ID); } catch (e) { console.error('Erro ao mesclar carrinho:', e); }
-=======
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     return res.redirect("/perfil");
   } catch (err) {
     console.error('Erro no login:', err);
@@ -806,17 +565,6 @@ router.post("/vendedor/:id/avaliar", requireLogin, async (req, res) => {
       await vendedorModel.updateAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
     } else {
       await vendedorModel.createAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
-<<<<<<< HEAD
-      try {
-        await notificacoesModel.criar({
-          usuarioId: vendedorId,
-          tipo: 'nova_avaliacao_vendedor',
-          mensagem: 'Seu perfil de vendedor recebeu uma nova avaliação.',
-          link: `/vendedor/${vendedorId}#avaliacoes`
-        });
-      } catch (e) { console.error('Erro ao notificar avaliação de vendedor:', e); }
-=======
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     }
     res.redirect(`/vendedor/${vendedorId}?sucesso=1#avaliacoes`);
   } catch (err) {
@@ -825,201 +573,4 @@ router.post("/vendedor/:id/avaliar", requireLogin, async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-function requireWebauthn(req, res, next) {
-  if (!webauthnDisponivel) {
-    return res.status(503).json({ error: 'Biometria indisponível: rode "npm install" no servidor para habilitar este recurso.' });
-  }
-  next();
-}
-
-/* BIOMETRIA / FACE ID (WebAuthn) */
-
-// Lista os dispositivos biométricos cadastrados do usuário logado
-router.get("/perfil/biometria/listar", requireLogin, async (req, res) => {
-  try {
-    const credenciais = await webauthnModel.getCredentialsByUsuario(req.session.userId);
-    res.json({ credenciais, disponivel: webauthnDisponivel });
-  } catch (err) {
-    console.error('Erro ao listar credenciais biométricas:', err);
-    res.status(500).json({ credenciais: [], disponivel: webauthnDisponivel });
-  }
-});
-
-// Gera o desafio para cadastrar biometria/Face ID neste dispositivo
-router.get("/perfil/biometria/opcoes-registro", requireLogin, requireWebauthn, async (req, res) => {
-  try {
-    const existentes = await webauthnModel.getCredentialsByUsuario(req.session.userId);
-    const options = await generateRegistrationOptions({
-      rpName: RP_NAME,
-      rpID: RP_ID,
-      userID: Buffer.from(String(req.session.userId)),
-      userName: req.session.emailUsuario || 'usuario',
-      userDisplayName: req.session.nomeUsuario || 'Usuário',
-      attestationType: 'none',
-      excludeCredentials: existentes.map(c => ({ id: c.credential_id, type: 'public-key' })),
-      authenticatorSelection: {
-        residentKey: 'preferred',
-        userVerification: 'preferred',
-        authenticatorAttachment: 'platform' // biometria/Face ID do próprio dispositivo
-      }
-    });
-    req.session.webauthnChallenge = options.challenge;
-    res.json(options);
-  } catch (err) {
-    console.error('Erro ao gerar opções de registro WebAuthn:', err);
-    res.status(500).json({ error: 'Erro ao gerar opções de registro.' });
-  }
-});
-
-// Verifica e salva a credencial biométrica recém-criada no navegador
-router.post("/perfil/biometria/verificar-registro", requireLogin, requireWebauthn, async (req, res) => {
-  try {
-    const expectedChallenge = req.session.webauthnChallenge;
-    if (!expectedChallenge) return res.status(400).json({ error: 'Desafio expirado. Tente novamente.' });
-
-    const verification = await verifyRegistrationResponse({
-      response: req.body,
-      expectedChallenge,
-      expectedOrigin: ORIGIN,
-      expectedRPID: RP_ID
-    });
-
-    if (!verification.verified || !verification.registrationInfo) {
-      return res.status(400).json({ error: 'Não foi possível verificar o registro.' });
-    }
-
-    const info = verification.registrationInfo;
-    // Compatibilidade entre versões da lib (algumas expõem `credential`, outras campos separados)
-    const credential = info.credential || {
-      id: info.credentialID,
-      publicKey: info.credentialPublicKey,
-      counter: info.counter
-    };
-
-    const credentialIdStr = typeof credential.id === 'string'
-      ? credential.id
-      : Buffer.from(credential.id).toString('base64url');
-    const publicKeyStr = Buffer.from(credential.publicKey).toString('base64');
-    const transports = Array.isArray(req.body?.response?.transports)
-      ? req.body.response.transports.join(',')
-      : null;
-
-    await webauthnModel.addCredential({
-      usuarioId: req.session.userId,
-      credentialId: credentialIdStr,
-      publicKey: publicKeyStr,
-      counter: credential.counter || 0,
-      deviceName: (req.body && req.body.deviceName) || 'Dispositivo',
-      transports
-    });
-
-    delete req.session.webauthnChallenge;
-    res.json({ success: true });
-  } catch (err) {
-    console.error('Erro ao verificar registro WebAuthn:', err);
-    res.status(500).json({ error: 'Erro ao verificar registro.' });
-  }
-});
-
-// Remove uma credencial biométrica cadastrada
-router.post("/perfil/biometria/remover/:id", requireLogin, async (req, res) => {
-  try {
-    const ok = await webauthnModel.removerCredencial(req.params.id, req.session.userId);
-    res.json({ success: ok });
-  } catch (err) {
-    console.error('Erro ao remover credencial biométrica:', err);
-    res.status(500).json({ success: false });
-  }
-});
-
-// Gera o desafio de login biométrico a partir do e-mail informado
-router.post("/login/biometria/opcoes", requireWebauthn, async (req, res) => {
-  try {
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ error: 'Informe o e-mail cadastrado.' });
-
-    const credenciais = await webauthnModel.getCredentialsByEmail(email);
-    if (credenciais.length === 0) {
-      return res.status(404).json({ error: 'Nenhuma biometria cadastrada para este e-mail.' });
-    }
-
-    const options = await generateAuthenticationOptions({
-      rpID: RP_ID,
-      userVerification: 'preferred',
-      allowCredentials: credenciais.map(c => ({
-        id: c.credential_id,
-        type: 'public-key',
-        transports: c.transports ? c.transports.split(',') : undefined
-      }))
-    });
-
-    req.session.webauthnChallenge = options.challenge;
-    req.session.webauthnEmail = email;
-    res.json(options);
-  } catch (err) {
-    console.error('Erro ao gerar opções de login WebAuthn:', err);
-    res.status(500).json({ error: 'Erro ao gerar opções de login.' });
-  }
-});
-
-// Verifica a resposta biométrica e efetiva o login
-router.post("/login/biometria/verificar", requireWebauthn, async (req, res) => {
-  try {
-    const expectedChallenge = req.session.webauthnChallenge;
-    const email = req.session.webauthnEmail;
-    if (!expectedChallenge || !email) {
-      return res.status(400).json({ error: 'Sessão de login expirada. Tente novamente.' });
-    }
-
-    const credentialIdRecebido = req.body.id;
-    const credencial = await webauthnModel.getCredentialByCredentialId(credentialIdRecebido);
-    if (!credencial) return res.status(400).json({ error: 'Credencial não reconhecida.' });
-
-    const verification = await verifyAuthenticationResponse({
-      response: req.body,
-      expectedChallenge,
-      expectedOrigin: ORIGIN,
-      expectedRPID: RP_ID,
-      credential: {
-        id: credencial.credential_id,
-        publicKey: Buffer.from(credencial.public_key, 'base64'),
-        counter: Number(credencial.counter)
-      }
-    });
-
-    if (!verification.verified) {
-      return res.status(401).json({ error: 'Verificação biométrica falhou.' });
-    }
-
-    await webauthnModel.atualizarContador(
-      credencial.credential_id,
-      verification.authenticationInfo.newCounter
-    );
-
-    const usuario = await usuarioModel.findByEmail(email);
-    if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado.' });
-    if (usuario.status === 'suspended') {
-      return res.status(403).json({ error: 'Sua conta foi suspensa pelo administrador.' });
-    }
-
-    req.session.userId = usuario.Usuario_ID;
-    req.session.nomeUsuario = usuario.Nome;
-    req.session.emailUsuario = usuario.Email;
-    req.session.perfil = usuario.Tipo === 'PJ' ? 'vendedor' : 'comprador';
-    req.session.tipo = usuario.Tipo;
-    req.session.fotoUsuario = usuario.foto || null;
-    delete req.session.webauthnChallenge;
-    delete req.session.webauthnEmail;
-    await usuarioModel.updateUltimoLogin(usuario.Usuario_ID);
-
-    res.json({ success: true, redirect: '/perfil' });
-  } catch (err) {
-    console.error('Erro ao verificar login WebAuthn:', err);
-    res.status(500).json({ error: 'Erro ao verificar login.' });
-  }
-});
-
-=======
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 module.exports = router;

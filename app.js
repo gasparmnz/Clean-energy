@@ -16,17 +16,7 @@ const session = require('express-session');
 app.use(session({
   secret: process.env.SESSION_SECRET || 'clean-energy-secret-key',
   resave: false,
-<<<<<<< HEAD
-  saveUninitialized: true,
-  rolling: true,
-  cookie: {
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 dias — mantém carrinho/preferências de convidado
-    httpOnly: true,
-    sameSite: 'lax'
-  }
-=======
   saveUninitialized: true
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 }));
 
 // Middleware global: injeta usuário na sessão em res.locals

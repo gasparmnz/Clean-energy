@@ -52,10 +52,6 @@
               <section class="produtos-grid">
                 <% pendentes.forEach(produto => { %>
                   <article class="produto-card"
-<<<<<<< HEAD
-                    data-pedido-id="<%= produto.id %>"
-=======
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
                     data-nome="<%= produto.nome %>"
                     data-preco="<%= produto.preco %>"
                     data-quantidade="<%= produto.quantidade || 1 %>"
@@ -84,45 +80,16 @@
           <section class="tab-pane fade" id="emAndamento" role="tabpanel" aria-labelledby="emAndamentoTab">
             <div class="sem-itens">
               <i class='bx bx-package'></i>
-<<<<<<< HEAD
-              <p>Rastreamento de entrega em transportadora ainda não está disponível.</p>
-=======
               <p>Você não tem pedidos em trânsito.</p>
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
             </div>
           </section>
 
           <!-- CONCLUÍDOS -->
           <section class="tab-pane fade" id="concluidos" role="tabpanel" aria-labelledby="concluidosTab">
-<<<<<<< HEAD
-            <% if (!concluidos || concluidos.length === 0) { %>
-              <div class="sem-itens">
-                <i class='bx bx-package'></i>
-                <p>Você não tem pedidos concluídos.</p>
-              </div>
-            <% } else { %>
-              <section class="produtos-grid">
-                <% concluidos.forEach(produto => { %>
-                  <article class="produto-card">
-                    <figure>
-                      <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>" onerror="this.src='https://placehold.co/300x200?text=Sem+Foto'">
-                    </figure>
-                    <section class="produto-info">
-                      <h3><%= produto.nome %></h3>
-                      <p class="preco">R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) %></p>
-                      <p class="endereco d-none"><%= produto.local || '' %></p>
-                    </section>
-                    <p class="pendente" style="background:#d1fae5; color:#065f46;">Concluído</p>
-                  </article>
-                <% }) %>
-              </section>
-            <% } %>
-=======
             <div class="sem-itens">
               <i class='bx bx-package'></i>
               <p>Você não tem pedidos concluídos.</p>
             </div>
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
           </section>
 
         </section>
@@ -259,37 +226,6 @@
     });
 
     document.getElementById('confirmarCancelamento').addEventListener('click', function () {
-<<<<<<< HEAD
-      if (!cardParaCancelar) { cancelarModal.hide(); return; }
-      const pedidoId = cardParaCancelar.dataset.pedidoId;
-      const confirmBtn = this;
-      confirmBtn.disabled = true;
-
-      fetch('/pedidos/' + pedidoId + '/cancelar', { method: 'POST' })
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-          confirmBtn.disabled = false;
-          if (data.success) {
-            cardParaCancelar.remove();
-            const grid = document.querySelector('#pendentes .produtos-grid');
-            if (grid && grid.querySelectorAll('.produto-card').length === 0) {
-              grid.parentElement.innerHTML = `
-                <div class="sem-itens">
-                  <i class='bx bx-package'></i>
-                  <p>Você não tem pedidos pendentes.</p>
-                </div>`;
-            }
-          } else {
-            alert('Não foi possível cancelar este pedido.');
-          }
-          cancelarModal.hide();
-        })
-        .catch(function () {
-          confirmBtn.disabled = false;
-          alert('Erro de conexão ao cancelar o pedido.');
-          cancelarModal.hide();
-        });
-=======
       if (cardParaCancelar) {
         cardParaCancelar.remove();
         // Se não há mais cards, mostra mensagem vazia
@@ -303,7 +239,6 @@
         }
       }
       cancelarModal.hide();
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     });
 
     // Pagamento

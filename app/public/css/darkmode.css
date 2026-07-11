@@ -1,24 +1,5 @@
 /* ══ DARK MODE CSS GLOBAL - Clean Energy ══ */
 
-<<<<<<< HEAD
-/* ─── VARIÁVEIS CSS GLOBAIS ───
-   Várias páginas (cadastro, cadastro_vendedor, login, item, cadastrar_produto)
-   usam suas próprias variáveis :root (--background, --text-primary, etc.) que
-   nunca eram sobrescritas no modo escuro, deixando essas telas brancas mesmo
-   com o dark mode ativo. Redefinindo aqui em body.dark-mode, o valor se
-   propaga para todo elemento que usa var(--background) etc. */
-body.dark-mode {
-  --background: #121212 !important;
-  --background-light: #1a1a1a !important;
-  --text-primary: #e5e7eb !important;
-  --text-secondary: #9ca3af !important;
-  --text-light: #6b7280 !important;
-  --border-color: #2a2a2a !important;
-  --primary-light: #14301f !important;
-}
-
-=======
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 .darkmode { width:24px; cursor:pointer; margin-right:10px; transition:.3s; }
 
 /* ─── BASE ─── */
@@ -630,45 +611,6 @@ body.dark-mode .comment-item {
 }
 body.dark-mode .review-author  { color: #e5e7eb !important; }
 body.dark-mode .review-date    { color: #6b7280 !important; }
-<<<<<<< HEAD
-/* ════════════════════════════════════════════════
-   TELAS ADMIN ADICIONAIS (usuários, detalhes, produtos)
-   E PERFIL DE VENDEDOR — cards/modais sem regra alguma
-   ════════════════════════════════════════════════ */
-body.dark-mode .modal-content-horizontal,
-body.dark-mode .summary-box,
-body.dark-mode .rating-card,
-body.dark-mode .user-profile-card,
-body.dark-mode .stat-card,
-body.dark-mode .review-card,
-body.dark-mode .confirm-modal,
-body.dark-mode .avaliacoes-content,
-body.dark-mode .modal-content,
-body.dark-mode .vend-produto-cat {
-  background: #1e1e1e !important;
-  border-color: #2a2a2a !important;
-  color: #e5e7eb !important;
-}
-body.dark-mode .modal-content-horizontal *,
-body.dark-mode .summary-box *,
-body.dark-mode .rating-card *,
-body.dark-mode .user-profile-card *,
-body.dark-mode .stat-card *,
-body.dark-mode .review-card *,
-body.dark-mode .confirm-modal *,
-body.dark-mode .avaliacoes-content *,
-body.dark-mode .modal-content *,
-body.dark-mode .vend-produto-cat * {
-  color: inherit;
-}
-body.dark-mode .info-box {
-  background: rgba(59,130,246,.12) !important;
-  border-color: #1d4ed8 !important;
-}
-body.dark-mode .info-box p { color: #93c5fd !important; }
-
-=======
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 /* ─── SCROLLBAR ─── */
 body.dark-mode ::-webkit-scrollbar       { width: 8px; height: 8px; }
 body.dark-mode ::-webkit-scrollbar-track { background: #1a1a1a; }

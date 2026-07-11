@@ -4,23 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const labelDocumento = document.getElementById("labelDocumento");
   const inputDocumento = document.getElementById("documento");
 
-<<<<<<< HEAD
-  if (btnFisica && btnEmpresa && labelDocumento && inputDocumento) {
-    btnFisica.addEventListener("click", () => {
-      btnFisica.classList.add("active");
-      btnEmpresa.classList.remove("active");
-      labelDocumento.textContent = "CPF";
-      inputDocumento.placeholder = "Digite seu CPF";
-    });
-
-    btnEmpresa.addEventListener("click", () => {
-      btnEmpresa.classList.add("active");
-      btnFisica.classList.remove("active");
-      labelDocumento.textContent = "CNPJ";
-      inputDocumento.placeholder = "Digite seu CNPJ";
-    });
-  }
-=======
   btnFisica.addEventListener("click", () => {
     btnFisica.classList.add("active");
     btnEmpresa.classList.remove("active");
@@ -34,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
     labelDocumento.textContent = "CNPJ";
     inputDocumento.placeholder = "Digite seu CNPJ";
   });
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 });
 
 
@@ -70,20 +52,10 @@ const dropdownMenu = document.getElementById("dropdownMenu");
 if (dropdownBtn && dropdownMenu) {
   dropdownBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-<<<<<<< HEAD
-    const abrindo = dropdownMenu.classList.toggle("show");
-    dropdownBtn.setAttribute("aria-expanded", String(abrindo));
-    // Fecha o guest se estiver aberto
-    const gm = document.getElementById("dropdownGuestMenu");
-    const gbtn = document.getElementById("dropdownGuestBtn");
-    if (gm) gm.classList.remove("show");
-    if (gbtn) gbtn.setAttribute("aria-expanded", "false");
-=======
     dropdownMenu.classList.toggle("show");
     // Fecha o guest se estiver aberto
     const gm = document.getElementById("dropdownGuestMenu");
     if (gm) gm.classList.remove("show");
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
   });
 }
 
@@ -94,17 +66,9 @@ const dropdownGuestMenu = document.getElementById("dropdownGuestMenu");
 if (dropdownGuestBtn && dropdownGuestMenu) {
   dropdownGuestBtn.addEventListener("click", (e) => {
     e.stopPropagation();
-<<<<<<< HEAD
-    const abrindo = dropdownGuestMenu.classList.toggle("show");
-    dropdownGuestBtn.setAttribute("aria-expanded", String(abrindo));
-    // Fecha o logado se estiver aberto
-    if (dropdownMenu) dropdownMenu.classList.remove("show");
-    if (dropdownBtn) dropdownBtn.setAttribute("aria-expanded", "false");
-=======
     dropdownGuestMenu.classList.toggle("show");
     // Fecha o logado se estiver aberto
     if (dropdownMenu) dropdownMenu.classList.remove("show");
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
   });
 }
 
@@ -112,33 +76,4 @@ if (dropdownGuestBtn && dropdownGuestMenu) {
 document.addEventListener("click", () => {
   if (dropdownMenu)      dropdownMenu.classList.remove("show");
   if (dropdownGuestMenu) dropdownGuestMenu.classList.remove("show");
-<<<<<<< HEAD
-  if (dropdownBtn)       dropdownBtn.setAttribute("aria-expanded", "false");
-  if (dropdownGuestBtn)  dropdownGuestBtn.setAttribute("aria-expanded", "false");
 });
-
-// ── Menu hambúrguer mobile (aside inferior) — sincroniza aria-expanded/estado ──
-const menuCheck = document.getElementById("check");
-const menuIcons = document.querySelector(".icons");
-if (menuCheck && menuIcons) {
-  menuCheck.addEventListener("change", () => {
-    menuIcons.setAttribute("aria-expanded", String(menuCheck.checked));
-  });
-  // Fecha o menu ao clicar em um link (evita ficar preso na aside inferior)
-  document.querySelectorAll(".navbar a").forEach((link) => {
-    link.addEventListener("click", () => {
-      menuCheck.checked = false;
-      menuIcons.setAttribute("aria-expanded", "false");
-    });
-  });
-  // Tecla Escape fecha o menu mobile
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && menuCheck.checked) {
-      menuCheck.checked = false;
-      menuIcons.setAttribute("aria-expanded", "false");
-    }
-  });
-}
-=======
-});
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040

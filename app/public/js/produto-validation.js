@@ -281,30 +281,6 @@ class ProductFormValidator {
   }
 
   validateFile(field, rules) {
-<<<<<<< HEAD
-    const files = field.files;
-
-    // Campo obrigatório
-    if (rules.required && (!files || files.length === 0)) {
-      return { isValid: false, message: rules.message.required };
-    }
-
-    if (!rules.required && (!files || files.length === 0)) {
-      return { isValid: true, message: '' };
-    }
-
-    if (files.length > 6) {
-      return { isValid: false, message: 'Selecione no máximo 6 imagens' };
-    }
-
-    for (const file of files) {
-      if (rules.fileTypes && !rules.fileTypes.includes(file.type)) {
-        return { isValid: false, message: rules.message.fileType };
-      }
-      if (rules.maxSize && file.size > rules.maxSize) {
-        return { isValid: false, message: rules.message.maxSize };
-      }
-=======
     const file = field.files[0];
 
     // Campo obrigatório
@@ -325,7 +301,6 @@ class ProductFormValidator {
     // Tamanho do arquivo
     if (rules.maxSize && file.size > rules.maxSize) {
       return { isValid: false, message: rules.message.maxSize };
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     }
 
     return { isValid: true, message: '' };
@@ -388,61 +363,6 @@ class ProductFormValidator {
   setupFileUpload() {
     const fileInput = this.fields.imagem;
     const fileLabel = document.querySelector('.file-upload-label');
-<<<<<<< HEAD
-    const filePreview = document.getElementById('file-preview-multi');
-
-    if (!fileInput || !fileLabel || !filePreview) return;
-
-    const renderPreviews = () => {
-      filePreview.innerHTML = '';
-      const files = Array.from(fileInput.files || []);
-
-      files.forEach((file, index) => {
-        const thumb = document.createElement('div');
-        thumb.style.cssText = 'position:relative; width:90px; height:90px;';
-
-        const img = document.createElement('img');
-        img.style.cssText = 'width:100%; height:100%; object-fit:cover; border-radius:8px; border:2px solid ' + (index === 0 ? 'var(--primary-color, #16a34a)' : '#ddd') + ';';
-        img.alt = index === 0 ? 'Imagem de capa' : `Imagem ${index + 1}`;
-
-        const reader = new FileReader();
-        reader.onload = (e) => { img.src = e.target.result; };
-        reader.readAsDataURL(file);
-
-        const removeBtn = document.createElement('button');
-        removeBtn.type = 'button';
-        removeBtn.setAttribute('aria-label', 'Remover esta imagem');
-        removeBtn.textContent = '×';
-        removeBtn.style.cssText = 'position:absolute; top:-6px; right:-6px; width:22px; height:22px; border-radius:50%; border:none; background:#dc2626; color:#fff; cursor:pointer; line-height:1;';
-        removeBtn.addEventListener('click', () => {
-          const dt = new DataTransfer();
-          files.filter((_, i) => i !== index).forEach(f => dt.items.add(f));
-          fileInput.files = dt.files;
-          renderPreviews();
-          this.validateField('imagem');
-        });
-
-        if (index === 0) {
-          const badge = document.createElement('span');
-          badge.textContent = 'Capa';
-          badge.style.cssText = 'position:absolute; bottom:2px; left:2px; background:rgba(22,163,74,.9); color:#fff; font-size:.65rem; padding:1px 5px; border-radius:4px;';
-          thumb.appendChild(badge);
-        }
-
-        thumb.appendChild(img);
-        thumb.appendChild(removeBtn);
-        filePreview.appendChild(thumb);
-      });
-
-      fileLabel.style.display = files.length > 0 ? 'none' : 'flex';
-    };
-
-    fileInput.addEventListener('change', () => {
-      this.validateField('imagem');
-      renderPreviews();
-    });
-
-=======
     const filePreview = document.getElementById('file-preview');
     
     if (!fileInput || !fileLabel || !filePreview) return;
@@ -483,7 +403,6 @@ class ProductFormValidator {
       });
     }
 
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     fileLabel.addEventListener('dragover', (e) => {
       e.preventDefault();
       fileLabel.style.borderColor = 'var(--primary-color)';
@@ -500,11 +419,7 @@ class ProductFormValidator {
       e.preventDefault();
       fileLabel.style.borderColor = 'var(--border-color)';
       fileLabel.style.background = 'var(--background-light)';
-<<<<<<< HEAD
-
-=======
       
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
       const files = e.dataTransfer.files;
       if (files.length > 0) {
         fileInput.files = files;
@@ -512,11 +427,7 @@ class ProductFormValidator {
       }
     });
 
-<<<<<<< HEAD
-    console.log('📁 Upload de múltiplos arquivos configurado');
-=======
     console.log('📁 Upload de arquivo configurado');
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
   }
 
   clearFilePreview() {

@@ -80,52 +80,6 @@ const cartModel = {
     } catch (err) {
       throw err;
     }
-<<<<<<< HEAD
-  },
-  // Mescla o carrinho de um convidado (sessionID) com o carrinho do usuário logado
-  mergeGuestCart: async (guestId, userId) => {
-    try {
-      if (!guestId || !userId || guestId === userId) return;
-
-      const [guestRows] = await pool.query("SELECT idCarrinho, items FROM carrinho WHERE userId = ?", [guestId]);
-      if (guestRows.length === 0) return; // nada para mesclar
-
-      const parseItems = (raw) => {
-        if (Array.isArray(raw)) return raw;
-        if (typeof raw === 'string') return JSON.parse(raw || '[]');
-        return raw ? [raw] : [];
-      };
-
-      const guestItems = parseItems(guestRows[0].items);
-      if (guestItems.length === 0) {
-        await pool.query("DELETE FROM carrinho WHERE idCarrinho = ?", [guestRows[0].idCarrinho]);
-        return;
-      }
-
-      const [userRows] = await pool.query("SELECT idCarrinho, items FROM carrinho WHERE userId = ?", [userId]);
-
-      if (userRows.length === 0) {
-        await pool.query("INSERT INTO carrinho (userId, items) VALUES (?, ?)", [userId, JSON.stringify(guestItems)]);
-      } else {
-        const userItems = parseItems(userRows[0].items);
-        guestItems.forEach(item => {
-          const existingIndex = userItems.findIndex(i => i.productId === item.productId);
-          if (existingIndex >= 0) {
-            userItems[existingIndex].quantidade += item.quantidade;
-          } else {
-            userItems.push(item);
-          }
-        });
-        await pool.query("UPDATE carrinho SET items = ? WHERE idCarrinho = ?", [JSON.stringify(userItems), userRows[0].idCarrinho]);
-      }
-
-      // Remove o carrinho temporário do convidado
-      await pool.query("DELETE FROM carrinho WHERE idCarrinho = ?", [guestRows[0].idCarrinho]);
-    } catch (err) {
-      throw err;
-    }
-=======
->>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
   }
 };
 
