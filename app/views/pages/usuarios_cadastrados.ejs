@@ -157,7 +157,7 @@
                                             </button>
                                             <nav class="uc-menu" role="menu">
                                                 <button class="uc-menu-item" role="menuitem" onclick="verDetalhes('<%= displayId %>')"><i class='bx bx-show' aria-hidden="true"></i>Ver detalhes</button>
-                                                <button class="uc-menu-item" role="menuitem" onclick="verDetalhes('<%= displayId %>')"><i class='bx bx-edit' aria-hidden="true"></i>Editar</button>
+                                                <button class="uc-menu-item" role="menuitem" onclick="editarUsuario('<%= displayId %>')"><i class='bx bx-edit' aria-hidden="true"></i>Editar</button>
                                                 <nav class="menu-divider" role="separator"></nav>
                                                 <button class="uc-menu-item warning" role="menuitem" onclick="suspenderUsuario(this)"><i class='bx bx-block' aria-hidden="true"></i>Suspender</button>
                                                 <button class="uc-menu-item danger"  role="menuitem" onclick="excluirUsuario(this)"><i class='bx bx-trash' aria-hidden="true"></i>Excluir</button>
@@ -279,6 +279,10 @@
         // ─── Navegação ────────────────────────────────────────────────────────────
         function verDetalhes(userId) {
             window.location.href = '/adm/detalhes_user?userId=' + encodeURIComponent(userId);
+        }
+
+        function editarUsuario(userId) {
+            window.location.href = '/adm/editar_usuario?userId=' + encodeURIComponent(userId);
         }
 
         // ─── Dropdown ─────────────────────────────────────────────────────────────

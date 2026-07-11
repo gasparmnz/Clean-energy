@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Usuário - Admin</title>
+  <link rel="stylesheet" href="/css/adm.css">
+  <link rel="stylesheet" href="/css/detalhes_user.css">
+  <link rel="stylesheet" href="/css/editar_usuario.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partial/header.ejs') %>
+
+  <section class="admin-container">
+    <%- include('../partial/sidebar_adm.ejs') %>
+
+    <main class="admin-main">
+      <header class="details-header">
+        <nav class="back-navigation" aria-label="Navegação de retorno">
+          <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+            <i class='bx bx-arrow-back'></i>
+            <span>Voltar</span>
+          </button>
+        </nav>
+        <article class="header-content">
+          <h1>Editar Usuário</h1>
+          <p class="page-subtitle">Atualize as informações cadastrais do usuário</p>
+        </article>
+      </header>
+
+      <% if (!usuario) { %>
+        <section class="edit-user-card">
+          <p>Usuário não encontrado.</p>
+        </section>
+      <% } else { %>
+
+        <% if (erro) { %>
+          <p class="edit-erro"><i class='bx bx-error-circle'></i> <%= erro %></p>
+        <% } %>
+
+        <section class="edit-user-shell">
+          <article class="edit-user-hero">
+            <div class="profile-info">
+              <figure class="profile-avatar"><i class='bx bx-user'></i></figure>
+              <div>
+                <h2><%= usuario.Nome || 'Usuário sem nome' %></h2>
+                <p><%= usuario.Email || 'E-mail não informado' %></p>
+                <span class="status-badge <%= usuario.Tipo === 'PJ' ? 'status-vendedor' : 'status-comprador' %>">
+                  <%= usuario.Tipo === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
+                </span>
+              </div>
+            </div>
+            <div class="edit-user-meta">
+              <% if (usuario.CPF) { %>
+                <div class="meta-pill"><i class='bx bx-id-card'></i> CPF: <%= usuario.CPF %></div>
+              <% } %>
+              <% if (usuario.CNPJ) { %>
+                <div class="meta-pill"><i class='bx bx-buildings'></i> CNPJ: <%= usuario.CNPJ %></div>
+              <% } %>
+            </div>
+          </article>
+
+          <section class="edit-user-card">
+            <form method="POST" action="/adm/editar_usuario/atualizar" class="edit-user-form">
+              <input type="hidden" name="userId" value="<%= usuario.id %>">
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="nome">Nome</label>
+                  <input type="text" id="nome" name="nome" value="<%= usuario.Nome || '' %>" required maxlength="100">
+                </div>
+
+                <div class="form-group">
+                  <label for="email">E-mail</label>
+                  <input type="email" id="email" name="email" value="<%= usuario.Email || '' %>" required maxlength="100">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="tipoConta">Tipo de conta</label>
+                <select id="tipoConta" name="tipoConta">
+                  <option value="PF" <%= usuario.Tipo === 'PF' ? 'selected' : '' %>>Comprador (PF)</option>
+                  <option value="PJ" <%= usuario.Tipo === 'PJ' ? 'selected' : '' %>>Vendedor (PJ)</option>
+                </select>
+                <small class="form-hint">Ao trocar para comprador, a conta passa a funcionar como conta comum de compra. Ao trocar para vendedor, ela ganha acesso ao fluxo de vendas.</small>
+              </div>
+
+              <div class="form-actions">
+                <a href="/adm/detalhes_user?userId=<%= usuario.id %>" class="btn-cancelar">Cancelar</a>
+                <button type="submit" class="submit-btn">Salvar Alterações</button>
+              </div>
+            </form>
+          </section>
+        </section>
+
+      <% } %>
+    </main>
+  </section>
+</body>
+</html>
