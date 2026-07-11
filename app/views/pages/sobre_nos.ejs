@@ -6,8 +6,10 @@
     <title>Sobre Nós | Clean Energy</title>
     <link rel="stylesheet" type="text/css" href="/css/sobre_nos.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="/imagem/ico.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/imagem/ico.png">
+    <link rel="apple-touch-icon" href="/imagem/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/imagem/icon-192.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1b814e">
 </head>
 <body>
     <%- include('../partial/header.ejs') %>
@@ -80,5 +82,6 @@
  
     <%- include('../partial/footer.ejs') %>
     <script src="/js/darkmode.js"></script>
+  <script src="/js/pwa.js" defer></script>
 </body>
 </html>
