@@ -371,6 +371,7 @@ class FormValidator {
       };
     }
 
+<<<<<<< HEAD
     if (!/(?=.*[^a-zA-Z0-9])/.test(value)) {
       return {
         isValid: false,
@@ -378,6 +379,8 @@ class FormValidator {
       };
     }
 
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     return { isValid: true, message: '' };
   }
 
@@ -514,7 +517,11 @@ class FormValidator {
 
   calculatePasswordStrength(password) {
     let score = 0;
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     if (password.length >= 8) score++;
     if (/[a-z]/.test(password)) score++;
     if (/[A-Z]/.test(password)) score++;
@@ -522,6 +529,7 @@ class FormValidator {
     if (/[^a-zA-Z\d]/.test(password)) score++;
     if (password.length >= 12) score++;
 
+<<<<<<< HEAD
     // Se falta algum requisito obrigatório (minúscula, maiúscula, número ou símbolo),
     // a senha nunca é considerada "forte" ou "boa", mesmo que seja longa.
     const cumpreObrigatorios = /[a-z]/.test(password) && /[A-Z]/.test(password) &&
@@ -531,6 +539,12 @@ class FormValidator {
     if (!cumpreObrigatorios) level = Math.min(level, 2);
 
     return { level, score };
+=======
+    return {
+      level: Math.min(Math.floor(score / 1.5), 4),
+      score: score
+    };
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
   }
 
   togglePasswordVisibility(button) {

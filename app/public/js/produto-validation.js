@@ -281,6 +281,7 @@ class ProductFormValidator {
   }
 
   validateFile(field, rules) {
+<<<<<<< HEAD
     const files = field.files;
 
     // Campo obrigatório
@@ -303,6 +304,28 @@ class ProductFormValidator {
       if (rules.maxSize && file.size > rules.maxSize) {
         return { isValid: false, message: rules.message.maxSize };
       }
+=======
+    const file = field.files[0];
+
+    // Campo obrigatório
+    if (rules.required && !file) {
+      return { isValid: false, message: rules.message.required };
+    }
+
+    // Se não é obrigatório e não tem arquivo, é válido
+    if (!rules.required && !file) {
+      return { isValid: true, message: '' };
+    }
+
+    // Tipo de arquivo
+    if (rules.fileTypes && !rules.fileTypes.includes(file.type)) {
+      return { isValid: false, message: rules.message.fileType };
+    }
+
+    // Tamanho do arquivo
+    if (rules.maxSize && file.size > rules.maxSize) {
+      return { isValid: false, message: rules.message.maxSize };
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     }
 
     return { isValid: true, message: '' };
@@ -365,6 +388,7 @@ class ProductFormValidator {
   setupFileUpload() {
     const fileInput = this.fields.imagem;
     const fileLabel = document.querySelector('.file-upload-label');
+<<<<<<< HEAD
     const filePreview = document.getElementById('file-preview-multi');
 
     if (!fileInput || !fileLabel || !filePreview) return;
@@ -418,6 +442,48 @@ class ProductFormValidator {
       renderPreviews();
     });
 
+=======
+    const filePreview = document.getElementById('file-preview');
+    
+    if (!fileInput || !fileLabel || !filePreview) return;
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      
+      if (file) {
+        // Validar arquivo
+        const result = this.validateField('imagem');
+        
+        if (result.isValid) {
+
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const previewImg = filePreview.querySelector('.preview-image');
+            previewImg.src = e.target.result;
+            fileLabel.style.display = 'none';
+            filePreview.style.display = 'flex';
+          };
+          reader.readAsDataURL(file);
+        } else {
+
+          this.clearFilePreview();
+        }
+      } else {
+        this.clearFilePreview();
+      }
+    });
+
+
+    const removeBtn = filePreview.querySelector('.remove-file');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        fileInput.value = '';
+        this.clearFilePreview();
+        this.validateField('imagem');
+      });
+    }
+
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     fileLabel.addEventListener('dragover', (e) => {
       e.preventDefault();
       fileLabel.style.borderColor = 'var(--primary-color)';
@@ -434,7 +500,11 @@ class ProductFormValidator {
       e.preventDefault();
       fileLabel.style.borderColor = 'var(--border-color)';
       fileLabel.style.background = 'var(--background-light)';
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
       const files = e.dataTransfer.files;
       if (files.length > 0) {
         fileInput.files = files;
@@ -442,7 +512,11 @@ class ProductFormValidator {
       }
     });
 
+<<<<<<< HEAD
     console.log('📁 Upload de múltiplos arquivos configurado');
+=======
+    console.log('📁 Upload de arquivo configurado');
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
   }
 
   clearFilePreview() {

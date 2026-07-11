@@ -4,9 +4,13 @@ body {
       display: flex;
       align-items: center;
       justify-content: center;
+<<<<<<< HEAD
       min-height: 100vh;
       padding: 16px;
       box-sizing: border-box;
+=======
+      height: 100vh;
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     }
 
     .container {
@@ -14,10 +18,15 @@ body {
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
+<<<<<<< HEAD
       width: 100%;
       max-width: 300px;
       text-align: center;
       box-sizing: border-box;
+=======
+      width: 300px;
+      text-align: center;
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     }
 
     h2 {

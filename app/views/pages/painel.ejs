@@ -14,6 +14,7 @@
     <section class="content-area">
 <%- include("../partial/sidebar.ejs") %>
       <section class="dashboard-overview">
+<<<<<<< HEAD
       <h1><%= isVendedor ? 'Visão Geral de Vendas' : 'Visão Geral de Compras' %></h1>
       <section class="metrics-cards">
 
@@ -30,10 +31,20 @@
           <i class='bx bx-check-circle'></i>
           <h2>Transações Concluídas</h2>
           <p><%= stats.concluidas %></p>
+=======
+      <h1>Visão Geral de Compras e Vendas</h1>
+      <section class="metrics-cards">
+
+        <article class="metric-card">
+          <i class=\'bx bx-check-circle\'></i>
+          <h2>Transações Concluídas</h2>
+          <p>5</p>
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
           <small>últimos 30 dias</small>
         </article>
 
         <article class="metric-card">
+<<<<<<< HEAD
           <i class='bx bx-x-circle'></i>
           <h2>Pedidos Cancelados</h2>
           <p><%= stats.canceladas %></p>
@@ -48,11 +59,26 @@
           <small>últimos 30 dias</small>
         </article>
         <% } %>
+=======
+          <i class=\'bx bx-x-circle\'></i>
+          <h2>Pedidos Cancelados</h2>
+          <p>2</p>
+          <small>últimos 30 dias</small>
+        </article>
+
+        <article class="metric-card">
+          <i class=\'bx bx-dollar-circle\'></i>
+          <h2>Lucro do Usuário</h2>
+          <p>R$ 1.250,00</p>
+          <small>últimos 30 dias</small>
+        </article>
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
       </section>
     </section>
 
     <section class="recent-transactions">
       <h2>Transações Recentes</h2>
+<<<<<<< HEAD
       <% const transacoes = isVendedor ? vendas : compras; %>
       <% if (transacoes.length === 0) { %>
         <p style="color:#6b7280; padding: 20px 0;">
@@ -67,10 +93,18 @@
         <thead>
           <tr>
             <th>ID</th>
+=======
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th>ID da Transação</th>
+            <th>Tipo</th>
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
             <th>Produto</th>
             <th>Valor</th>
             <th>Status</th>
             <th>Data</th>
+<<<<<<< HEAD
             <% if (isVendedor) { %><th>Ação</th><% } %>
           </tr>
         </thead>
@@ -94,11 +128,59 @@
         </tbody>
       </table>
       <% } %>
+=======
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#001</td>
+            <td>Compra</td>
+            <td>Cavaco de Eucalipto</td>
+            <td>R$ 500,00</td>
+            <td>Concluída</td>
+            <td>20/10/2025</td>
+          </tr>
+          <tr>
+            <td>#002</td>
+            <td>Venda</td>
+            <td>Serragem de Pinus</td>
+            <td>R$ 750,00</td>
+            <td>Pendente</td>
+            <td>19/10/2025</td>
+          </tr>
+          <tr>
+            <td>#003</td>
+            <td>Compra</td>
+            <td>Bagaço de Cana</td>
+            <td>R$ 300,00</td>
+            <td>Concluída</td>
+            <td>18/10/2025</td>
+          </tr>
+          <tr>
+            <td>#004</td>
+            <td>Venda</td>
+            <td>Palha de Arroz</td>
+            <td>R$ 200,00</td>
+            <td>Cancelada</td>
+            <td>17/10/2025</td>
+          </tr>
+          <tr>
+            <td>#005</td>
+            <td>Compra</td>
+            <td>Lenha de Reflorestamento</td>
+            <td>R$ 600,00</td>
+            <td>Concluída</td>
+            <td>16/10/2025</td>
+          </tr>
+        </tbody>
+      </table>
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     </section>
   </section>
   </main>
    <%- include("../partial/footer.ejs") %>
    <script src="/js/darkmode.js"></script>
+<<<<<<< HEAD
    <script>
      document.querySelectorAll('.btn-concluir-pedido').forEach(function (btn) {
        btn.addEventListener('click', function () {
@@ -121,6 +203,8 @@
        });
      });
    </script>
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 </body>
 </html>
 

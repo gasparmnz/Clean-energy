@@ -1,5 +1,6 @@
 const pool = require("../../config/pool_conexoes");
 
+<<<<<<< HEAD
 // Garante a existência da tabela de imagens extras dos produtos (múltiplas imagens)
 pool.query(`
   CREATE TABLE IF NOT EXISTS produto_imagens (
@@ -11,6 +12,8 @@ pool.query(`
   )
 `).catch(err => console.error('Erro ao garantir tabela produto_imagens:', err));
 
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 const produtosModel = {
   // apenasAtivos: clientes só veem produtos com status = 'active'
   findAll: async ({ apenasAtivos = false } = {}) => {
@@ -28,6 +31,7 @@ const produtosModel = {
   findById: async (id) => {
     try {
       const [rows] = await pool.query("SELECT * FROM produtos WHERE id = ?", [id]);
+<<<<<<< HEAD
       const produto = rows[0] || null;
       if (produto) {
         const [imgRows] = await pool.query(
@@ -61,6 +65,9 @@ const produtosModel = {
         [produtoId]
       );
       return rows;
+=======
+      return rows[0] || null;
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     } catch (err) {
       throw err;
     }
@@ -518,6 +525,7 @@ const vendedorModel = {
   }
 };
 
+<<<<<<< HEAD
 // Garante a existência da tabela de pedidos (transações de compra/venda)
 pool.query(`
   CREATE TABLE IF NOT EXISTS pedidos (
@@ -841,3 +849,8 @@ const webauthnModel = {
 };
 
 module.exports.webauthnModel = webauthnModel;
+=======
+module.exports = produtosModel;
+module.exports.usuarioModel = usuarioModel;
+module.exports.vendedorModel = vendedorModel;
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040

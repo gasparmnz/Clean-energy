@@ -1,5 +1,6 @@
 /* ══ DARK MODE CSS GLOBAL - Clean Energy ══ */
 
+<<<<<<< HEAD
 /* ─── VARIÁVEIS CSS GLOBAIS ───
    Várias páginas (cadastro, cadastro_vendedor, login, item, cadastrar_produto)
    usam suas próprias variáveis :root (--background, --text-primary, etc.) que
@@ -16,6 +17,8 @@ body.dark-mode {
   --primary-light: #14301f !important;
 }
 
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 .darkmode { width:24px; cursor:pointer; margin-right:10px; transition:.3s; }
 
 /* ─── BASE ─── */
@@ -627,6 +630,7 @@ body.dark-mode .comment-item {
 }
 body.dark-mode .review-author  { color: #e5e7eb !important; }
 body.dark-mode .review-date    { color: #6b7280 !important; }
+<<<<<<< HEAD
 /* ════════════════════════════════════════════════
    TELAS ADMIN ADICIONAIS (usuários, detalhes, produtos)
    E PERFIL DE VENDEDOR — cards/modais sem regra alguma
@@ -663,6 +667,8 @@ body.dark-mode .info-box {
 }
 body.dark-mode .info-box p { color: #93c5fd !important; }
 
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 /* ─── SCROLLBAR ─── */
 body.dark-mode ::-webkit-scrollbar       { width: 8px; height: 8px; }
 body.dark-mode ::-webkit-scrollbar-track { background: #1a1a1a; }

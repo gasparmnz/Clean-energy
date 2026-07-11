@@ -4,6 +4,7 @@ const { body, validationResult } = require("express-validator");
 const bcrypt = require('bcryptjs');
 const models = require("../models/models");
 const produtosModel = models;
+<<<<<<< HEAD
 const { usuarioModel, vendedorModel, pedidosModel, notificacoesModel, webauthnModel } = models;
 const {
   disponivel: webauthnDisponivel,
@@ -13,6 +14,9 @@ const {
   generateAuthenticationOptions,
   verifyAuthenticationResponse
 } = require("../helpers/webauthn");
+=======
+const { usuarioModel, vendedorModel } = models;
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 const cartModel = require("../models/cartModel");
 const { uploadProduto, uploadFoto } = require("../helpers/upload");
 var { validarCPF } = require("../helpers/validacao");
@@ -125,6 +129,7 @@ body("cnpj")
   }
 );
 
+<<<<<<< HEAD
 router.get("/minhascompras", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -138,11 +143,20 @@ router.get("/minhascompras", requireLogin, async (req, res) => {
 });
 
 // Move itens do carrinho para pedidos reais (status pendente) e notifica os vendedores
+=======
+router.get("/minhascompras", requireLogin, (req, res) => {
+  const pendentes = req.session.pedidosPendentes || [];
+  res.render("pages/minhascompras", { pendentes });
+});
+
+// Move itens do carrinho para pedidos pendentes na sessão
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 router.post("/minhascompras/finalizar", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
     const cart = await cartModel.getCartByUser(userId);
     if (cart && cart.length > 0) {
+<<<<<<< HEAD
       for (const item of cart) {
         const qtd = parseFloat(item.quantidade) || 1;
         const valorTotal = (parseFloat(item.preco) || 0) * qtd;
@@ -165,6 +179,9 @@ router.post("/minhascompras/finalizar", requireLogin, async (req, res) => {
           }
         } catch (e) { console.error('Erro ao notificar vendedor:', e); }
       }
+=======
+      req.session.pedidosPendentes = cart;
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
       const pool = require('../../config/pool_conexoes');
       await pool.query('DELETE FROM carrinho WHERE userId = ?', [userId]);
     }
@@ -175,6 +192,7 @@ router.post("/minhascompras/finalizar", requireLogin, async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 // Comprador cancela um pedido pendente próprio
 router.post("/pedidos/:id/cancelar", requireLogin, async (req, res) => {
   try {
@@ -258,6 +276,8 @@ router.post("/notificacoes/marcar-todas-lidas", requireLogin, async (req, res) =
   }
 });
 
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 // ── Atualizar perfil
 router.post("/perfil/atualizar", requireLogin, async (req, res) => {
   const { nome, biografia } = req.body;
@@ -316,6 +336,7 @@ router.get("/perfil", requireLogin, async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 router.get("/painel", requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -346,6 +367,9 @@ router.get("/painel", requireLogin, async (req, res) => {
     });
   }
 });
+=======
+router.get("/painel", requireLogin, (req, res) => res.render("pages/painel"));
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 router.get("/meus_produtos", requireLogin, (req, res) => res.render("pages/meus_produtos"));
 
 router.get("/listaprodutos", requireLogin, async (req, res) => {
@@ -452,6 +476,7 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
       await produtosModel.updateAvaliacao({ nota: notaNum, comentario, usuarioId: req.session.userId, produtoId });
     } else {
       await produtosModel.createAvaliacao({ nota: notaNum, comentario, usuarioId: req.session.userId, produtoId, nomeUsuario: req.session.nomeUsuario });
+<<<<<<< HEAD
       try {
         const produto = await produtosModel.findById(produtoId);
         if (produto && produto.usuario_id && Number(produto.usuario_id) !== Number(req.session.userId)) {
@@ -463,6 +488,8 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
           });
         }
       } catch (e) { console.error('Erro ao notificar avaliação de produto:', e); }
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     }
 
     res.redirect(`/item/${produtoId}#comentarios`);
@@ -472,6 +499,7 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 router.post("/cadastrar_produto", requireVendedor, uploadProduto.array('imagens', 6), async (req, res) => {
   const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
   const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
@@ -479,6 +507,13 @@ router.post("/cadastrar_produto", requireVendedor, uploadProduto.array('imagens'
   const arquivos = req.files || [];
   const imagemFilename = arquivos.length > 0 ? arquivos[0].filename : 'sem-foto.png';
   const imagensExtras = arquivos.slice(1).map(f => f.filename);
+=======
+router.post("/cadastrar_produto", requireVendedor, uploadProduto.single('imagem'), async (req, res) => {
+  const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
+  const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
+
+  const imagemFilename = req.file ? req.file.filename : 'sem-foto.png';
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 
   let precoLimpo = (preco || '0').toString().trim()
     .replace(/R\$\s*/g, '')
@@ -494,10 +529,14 @@ router.post("/cadastrar_produto", requireVendedor, uploadProduto.array('imagens'
   const quantidadeNumerica = parseFloat(quantidadeLimpa) || 0;
 
   try {
+<<<<<<< HEAD
     const result = await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem: imagemFilename, estado, usuario_id: req.session.userId });
     if (imagensExtras.length > 0) {
       await produtosModel.addImagensExtras(result.insertId, imagensExtras);
     }
+=======
+    await produtosModel.create({ nome, descricao, preco: precoNumerico, quantidade: quantidadeNumerica, categoria, local, imagem: imagemFilename, estado, usuario_id: req.session.userId });
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     res.redirect('/listaprodutos');
   } catch (err) {
     console.error('Erro ao cadastrar produto:', err);
@@ -558,6 +597,7 @@ router.post("/cadastroUsuario",
       const result = await usuarioModel.createPF({ nome: req.body.nome, email: req.body.email, senhaHash });
       const cpfNumeros = req.body.cpf.replace(/\D/g, '');
       await usuarioModel.createPessoaFisica(result.insertId, cpfNumeros);
+<<<<<<< HEAD
 
       // Cadastro direto: já loga o usuário sem precisar passar pela tela de login
       const guestId = req.sessionID;
@@ -570,6 +610,9 @@ router.post("/cadastroUsuario",
       try { await cartModel.mergeGuestCart(guestId, result.insertId); } catch (e) { console.error('Erro ao mesclar carrinho:', e); }
 
       res.redirect("/perfil");
+=======
+      res.redirect("/login");
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     } catch (err) {
       console.error('Erro ao cadastrar usuário:', err);
       res.status(500).send('Erro ao cadastrar. Tente novamente.');
@@ -604,6 +647,7 @@ router.post("/cadastroEmpresa",
       const result = await usuarioModel.createPJ({ nome: req.body.nome, email: req.body.email, senhaHash });
       const cnpjNumeros = req.body.cnpj.replace(/\D/g, '');
       await usuarioModel.createPessoaJuridica(result.insertId, cnpjNumeros);
+<<<<<<< HEAD
 
       // Cadastro direto: já loga o usuário sem precisar passar pela tela de login
       const guestId = req.sessionID;
@@ -616,6 +660,9 @@ router.post("/cadastroEmpresa",
       try { await cartModel.mergeGuestCart(guestId, result.insertId); } catch (e) { console.error('Erro ao mesclar carrinho:', e); }
 
       res.redirect("/perfil");
+=======
+      res.redirect("/login");
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     } catch (err) {
       console.error('Erro ao cadastrar empresa:', err);
       res.status(500).send('Erro ao cadastrar. Tente novamente.');
@@ -642,7 +689,10 @@ router.post("/login", async (req, res) => {
       });
     }
 
+<<<<<<< HEAD
     const guestId = req.sessionID;
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     req.session.userId = usuario.Usuario_ID;
     req.session.nomeUsuario = usuario.Nome;
     req.session.emailUsuario = usuario.Email;
@@ -650,7 +700,10 @@ router.post("/login", async (req, res) => {
     req.session.tipo = usuario.Tipo;
     req.session.fotoUsuario = usuario.foto || null;
     await usuarioModel.updateUltimoLogin(usuario.Usuario_ID);
+<<<<<<< HEAD
     try { await cartModel.mergeGuestCart(guestId, usuario.Usuario_ID); } catch (e) { console.error('Erro ao mesclar carrinho:', e); }
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     return res.redirect("/perfil");
   } catch (err) {
     console.error('Erro no login:', err);
@@ -753,6 +806,7 @@ router.post("/vendedor/:id/avaliar", requireLogin, async (req, res) => {
       await vendedorModel.updateAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
     } else {
       await vendedorModel.createAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
+<<<<<<< HEAD
       try {
         await notificacoesModel.criar({
           usuarioId: vendedorId,
@@ -761,6 +815,8 @@ router.post("/vendedor/:id/avaliar", requireLogin, async (req, res) => {
           link: `/vendedor/${vendedorId}#avaliacoes`
         });
       } catch (e) { console.error('Erro ao notificar avaliação de vendedor:', e); }
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     }
     res.redirect(`/vendedor/${vendedorId}?sucesso=1#avaliacoes`);
   } catch (err) {
@@ -769,6 +825,7 @@ router.post("/vendedor/:id/avaliar", requireLogin, async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 function requireWebauthn(req, res, next) {
   if (!webauthnDisponivel) {
     return res.status(503).json({ error: 'Biometria indisponível: rode "npm install" no servidor para habilitar este recurso.' });
@@ -963,4 +1020,6 @@ router.post("/login/biometria/verificar", requireWebauthn, async (req, res) => {
   }
 });
 
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 module.exports = router;

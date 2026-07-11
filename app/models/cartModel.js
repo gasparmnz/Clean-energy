@@ -80,6 +80,7 @@ const cartModel = {
     } catch (err) {
       throw err;
     }
+<<<<<<< HEAD
   },
   // Mescla o carrinho de um convidado (sessionID) com o carrinho do usuário logado
   mergeGuestCart: async (guestId, userId) => {
@@ -123,6 +124,8 @@ const cartModel = {
     } catch (err) {
       throw err;
     }
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
   }
 };
 

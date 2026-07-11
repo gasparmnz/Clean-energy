@@ -1,28 +1,42 @@
 <link rel="stylesheet" href="/css/header.css">
 <link rel="stylesheet" href="/css/darkmode.css">
+<<<<<<< HEAD
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#1b814e">
 <link rel="apple-touch-icon" href="/imagem/icon-192.png">
 <script src="/js/pwa.js" defer></script>
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
 <header class="header">
   <a href="/" class="logo">
     <img src="/imagem/logo-curva.svg" alt="Logo do site">
   </a>
 
   <input type="checkbox" id="check">
+<<<<<<< HEAD
   <label for="check" class="icons" role="button" tabindex="0" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menu de navegação">
+=======
+  <label for="check" class="icons">
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     <i class="bx bx-menu" id="menu-icon"></i>
     <i class="bx bx-x" id="close-icon"></i>
   </label>
 
+<<<<<<< HEAD
   <nav class="navbar" id="mainNav" aria-label="Navegação principal">
+=======
+  <nav class="navbar">
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
     <a href="/" style="--i:0;">PRODUTOS</a>
     <a href="/sobre_nos" style="--i:1;">SOBRE NÓS</a>
     <a href="/transporte" style="--i:2;">TRANSPORTE</a>
   </nav>
 
+<<<<<<< HEAD
   <label for="check" class="mobile-menu-backdrop" aria-hidden="true"></label>
 
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
   <section class="login-container">
     <% if (typeof usuario !== 'undefined' && usuario) { %>
       <% if (usuario.perfil === 'vendedor') { %>
@@ -32,6 +46,7 @@
 
       <% } %>
 
+<<<<<<< HEAD
       <section class="dropdown" id="notifDropdown">
         <button id="notifBtn" class="dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="notifMenu" aria-label="Ver notificações">
           <i class='bx bx-bell' style="font-size:1.5rem; color:#fff;"></i>
@@ -52,6 +67,14 @@
 
       <section class="dropdown">
         <button id="dropdownBtn" class="dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="dropdownMenu" aria-label="Abrir menu do usuário">
+=======
+      <a href="/carrinho">
+        <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
+      </a>
+
+      <section class="dropdown">
+        <button id="dropdownBtn" class="dropdown-trigger">
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
           <img src="/imagem/user.png" alt="Usuário" class="avatar">
           <span class="header-greeting">Olá, <%= (usuario.nome || usuario.nomeUsuario || '').split(' ')[0] %></span>
         </button>
@@ -67,8 +90,13 @@
     <% } else { %>
       <a href="/adicione_produto" class="btn-vendedor">TORNE-SE VENDEDOR</a>
 
+<<<<<<< HEAD
       <a href="/carrinho" aria-label="Ver carrinho de compras">
         <img class="carrinho" src="/imagem/carrinho.png" alt="">
+=======
+      <a href="/carrinho">
+        <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
       </a>
 
       <!-- Desktop: links normais -->
@@ -78,7 +106,11 @@
 
       <!-- Mobile/Tablet: ícone avatar com dropdown -->
       <section class="dropdown dropdown-guest" id="dropdownGuest">
+<<<<<<< HEAD
         <button class="dropdown-trigger" id="dropdownGuestBtn" aria-haspopup="true" aria-expanded="false" aria-controls="dropdownGuestMenu" aria-label="Abrir menu de login">
+=======
+        <button class="dropdown-trigger" id="dropdownGuestBtn">
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
           <img src="/imagem/user.png" alt="Entrar" class="avatar">
         </button>
         <section class="dropdown-content dropdown-content--guest" id="dropdownGuestMenu">
@@ -92,6 +124,9 @@
 </header>
 
 <script src="/js/script.js"></script>
+<<<<<<< HEAD
 <% if (typeof usuario !== 'undefined' && usuario) { %>
   <script src="/js/notificacoes.js"></script>
 <% } %>
+=======
+>>>>>>> 5c8f46916756c042b1f0a74c5b22953fa0aca040
