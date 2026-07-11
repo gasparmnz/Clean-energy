@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sem conexão - Clean Energy</title>
+  <style>
+    body {
+      font-family: 'Trebuchet MS', Arial, sans-serif;
+      background: #1b814e;
+      color: #fff;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    img { width: 90px; margin-bottom: 20px; opacity: .9; }
+    h1 { font-size: 1.4rem; margin-bottom: 10px; }
+    p { color: #d1fae7; max-width: 320px; }
+    button {
+      margin-top: 24px;
+      background: #fff;
+      color: #1b814e;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <img src="/imagem/logo-curva.svg" alt="Clean Energy">
+  <h1>Você está sem conexão</h1>
+  <p>Não foi possível carregar esta página. Verifique sua internet e tente novamente.</p>
+  <button onclick="location.reload()">Tentar novamente</button>
+</body>
+</html>

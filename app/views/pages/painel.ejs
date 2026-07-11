@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Compras e Vendas</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/painel.css">
+</head>
+<body>
+     <%- include("../partial/header.ejs") %>
+  <main>
+    
+    <section class="content-area">
+<%- include("../partial/sidebar.ejs") %>
+      <section class="dashboard-overview">
+      <h1><%= isVendedor ? 'Visão Geral de Vendas' : 'Visão Geral de Compras' %></h1>
+      <section class="metrics-cards">
+
+        <% if (isVendedor) { %>
+        <article class="metric-card">
+          <i class='bx bx-package'></i>
+          <h2>Produtos Ativos</h2>
+          <p><%= totalProdutosAtivos %></p>
+          <small>anunciados agora</small>
+        </article>
+        <% } %>
+
+        <article class="metric-card">
+          <i class='bx bx-check-circle'></i>
+          <h2>Transações Concluídas</h2>
+          <p><%= stats.concluidas %></p>
+          <small>últimos 30 dias</small>
+        </article>
+
+        <article class="metric-card">
+          <i class='bx bx-x-circle'></i>
+          <h2>Pedidos Cancelados</h2>
+          <p><%= stats.canceladas %></p>
+          <small>últimos 30 dias</small>
+        </article>
+
+        <% if (isVendedor) { %>
+        <article class="metric-card">
+          <i class='bx bx-dollar-circle'></i>
+          <h2>Receita</h2>
+          <p>R$ <%= stats.receita.toFixed(2).replace('.', ',') %></p>
+          <small>últimos 30 dias</small>
+        </article>
+        <% } %>
+      </section>
+    </section>
+
+    <section class="recent-transactions">
+      <h2>Transações Recentes</h2>
+      <% const transacoes = isVendedor ? vendas : compras; %>
+      <% if (transacoes.length === 0) { %>
+        <p style="color:#6b7280; padding: 20px 0;">
+          <% if (isVendedor) { %>
+            Nenhuma venda registrada ainda. Assim que alguém comprar um dos seus produtos, aparecerá aqui.
+          <% } else { %>
+            Nenhuma compra registrada ainda. Suas compras aparecerão aqui.
+          <% } %>
+        </p>
+      <% } else { %>
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Produto</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Data</th>
+            <% if (isVendedor) { %><th>Ação</th><% } %>
+          </tr>
+        </thead>
+        <tbody>
+          <% transacoes.forEach(function(t) { %>
+          <tr>
+            <td>#<%= String(t.id).padStart(3, '0') %></td>
+            <td><%= t.produto %></td>
+            <td>R$ <%= parseFloat(t.valor || 0).toFixed(2).replace('.', ',') %></td>
+            <td><%= t.status === 'concluido' ? 'Concluída' : (t.status === 'cancelado' ? 'Cancelada' : 'Pendente') %></td>
+            <td><%= new Date(t.data).toLocaleDateString('pt-BR') %></td>
+            <% if (isVendedor) { %>
+              <td>
+                <% if (t.status === 'pendente') { %>
+                  <button type="button" class="btn-concluir-pedido" data-id="<%= t.id %>" style="background:#16a34a; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-size:.8rem;">Marcar concluído</button>
+                <% } else { %>—<% } %>
+              </td>
+            <% } %>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% } %>
+    </section>
+  </section>
+  </main>
+   <%- include("../partial/footer.ejs") %>
+   <script src="/js/darkmode.js"></script>
+   <script>
+     document.querySelectorAll('.btn-concluir-pedido').forEach(function (btn) {
+       btn.addEventListener('click', function () {
+         const id = btn.dataset.id;
+         btn.disabled = true;
+         fetch('/pedidos/' + id + '/concluir', { method: 'POST' })
+           .then(function (r) { return r.json(); })
+           .then(function (data) {
+             if (data.success) {
+               location.reload();
+             } else {
+               btn.disabled = false;
+               alert('Não foi possível concluir este pedido.');
+             }
+           })
+           .catch(function () {
+             btn.disabled = false;
+             alert('Erro de conexão ao concluir o pedido.');
+           });
+       });
+     });
+   </script>
+</body>
+</html>
+

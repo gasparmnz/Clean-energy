@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Biomassa Hub</title>
+  <link rel="stylesheet" href="/css/login.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/darkmode.css">
+</head>
+<body>
+  <main class="login-main">
+   
+    <aside class="hero-section">
+      <header class="hero-content">
+        <!-- ═══ Logo dentro do painel de apresentação ═══ -->
+        <a href="/" class="hero-logo-link" aria-label="Página inicial da Clean Energy">
+          <img src="/imagem/logo-curva.svg" alt="Clean Energy" class="hero-logo-img" />
+        </a>
+        <h1 class="hero-title">Bem-vindo de Volta!</h1>
+        <p class="hero-subtitle">
+          Acesse sua conta e continue transformando resíduos em energia sustentável.
+        </p>
+        <section class="hero-features">
+          <article class="feature-item">
+            <i class='bx bx-shield-check'></i>
+            <span>Login Seguro</span>
+          </article>
+          <article class="feature-item">
+            <i class='bx bx-time'></i>
+            <span>Acesso Rápido</span>
+          </article>
+          <article class="feature-item">
+            <i class='bx bx-world'></i>
+            <span>Plataforma Nacional</span>
+          </article>
+        </section>
+      </header>
+    </aside>
+
+    <section class="form-section">
+      <header class="form-header">
+        <h2 class="form-title">Dados de Acesso</h2>
+        <p class="form-subtitle">Entre com suas credenciais para acessar sua conta</p>
+      </header>
+
+      <form 
+        action="/login" 
+        method="POST" 
+        class="login-form"
+        novalidate
+        aria-label="Formulário de login"
+      >
+        <fieldset class="form-fieldset">
+          <legend class="sr-only">Credenciais de acesso</legend>
+
+          <section class="input-group">
+            <label for="usuarioDigitado" class="input-label">
+              <i class='bx bx-envelope'></i>
+              E-mail
+            </label>
+            <section class="input-wrapper">
+              <input
+                type="email"
+                id="usuarioDigitado"
+                name="usuarioDigitado"
+                class="form-input <%= erro ? 'erro' : '' %>"
+                placeholder="Digite seu e-mail"
+                value="<%= valores?.usuarioDigitado || '' %>"
+                aria-describedby="email-error email-help"
+                autocomplete="email"
+                required
+              />
+              <i class='bx bx-envelope input-icon'></i>
+            </section>
+            <small id="email-help" class="input-help">Seu e-mail de cadastro</small>
+            <span id="email-error" class="error-message" role="alert"></span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              E-mail válido
+            </span>
+          </section>
+
+          <section class="input-group">
+            <label for="senhaDigitada" class="input-label">
+              <i class='bx bx-lock-alt'></i>
+              Senha
+            </label>
+            <section class="input-wrapper password-wrapper">
+              <input
+                type="password"
+                id="senhaDigitada"
+                name="senhaDigitada"
+                class="form-input <%= erro ? 'erro' : '' %>"
+                placeholder="Digite sua senha"
+                value="<%= valores?.senhaDigitada || '' %>"
+                aria-describedby="password-error password-help"
+                autocomplete="current-password"
+                required
+              />
+              <i class='bx bx-lock-alt input-icon'></i>
+              <button type="button" class="password-toggle" aria-label="Mostrar/ocultar senha">
+                <i class='bx bx-hide'></i>
+              </button>
+            </section>
+            <small id="password-help" class="input-help">Sua senha de acesso</small>
+            <span id="password-error" class="error-message" role="alert"></span>
+            <span class="success-message" role="status">
+              <i class='bx bx-check-circle'></i>
+              Senha válida
+            </span>
+          </section>
+
+          <% if (erro) { %>
+          <section class="backend-error" role="alert">
+            <i class='bx bx-error-circle'></i>
+            <span><%= erro %></span>
+          </section>
+          <% } %>
+        </fieldset>
+
+        <button type="submit" id="btnClique" class="submit-btn">
+          <i class='bx bx-log-in'></i>
+          <span>Acessar</span>
+          <i class='bx bx-loader-alt bx-spin loading-icon'></i>
+        </button>
+
+        <button type="button" id="btnBiometria" class="submit-btn" style="background:transparent; color:#28530b; border:1.5px solid #28530b; margin-top:10px;">
+          <i class='bx bx-fingerprint'></i>
+          <span>Entrar com biometria / Face ID</span>
+        </button>
+
+        <footer class="form-footer">
+          <p class="register-link">
+            Ainda não possui uma conta? 
+            <a href="/cadastro">Cadastre-se</a> já!
+          </p>
+          <p class="forgot-password">
+            <a href="/recuperar-senha">Esqueceu sua senha?</a>
+          </p>
+        </footer>
+        <section style="margin-top: 15px; text-align: center;">
+  <a href="/adm-login" class="admin-link">Acesso restrito</a>
+</section>
+      </form>
+    </section>
+  </main>
+
+  <script src="/js/login-validation.js"></script>
+  <script src="/js/webauthn-client.js"></script>
+  <script>
+    const btnBiometria = document.getElementById('btnBiometria');
+    if (btnBiometria) {
+      if (!window.PublicKeyCredential) {
+        btnBiometria.style.display = 'none';
+      } else {
+        btnBiometria.addEventListener('click', () => {
+          const email = document.getElementById('usuarioDigitado').value.trim();
+          loginComBiometria(email);
+        });
+      }
+    }
+  </script>
+  <script src="/js/darkmode.js"></script>
+</body>
+</html>

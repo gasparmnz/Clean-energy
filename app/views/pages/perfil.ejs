@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Perfil – Clean Energy</title>
+  <link rel="stylesheet" href="/css/perfil.css">
+  <link rel="stylesheet" href="/css/sidebar_perfil.css">
+  <link rel="stylesheet" href="/css/darkmode.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+  <%- include('../partial/header.ejs') %>
+
+  <nav class="perfil-layout">
+    <% const activePage = 'perfil'; %>
+    <%- include('../partial/sidebar_perfil.ejs') %>
+
+    <main class="perfil-layout__content" id="main-content">
+      <% if (usuario) { %>
+
+      <!-- ══ HERO ══ -->
+      <section class="perfil-hero" aria-label="Dados do usuário">
+        <nav class="perfil-hero__avatar-wrap">
+          <img
+            id="fotoPerfil"
+            src="<%= usuario.foto ? (usuario.foto.startsWith('data:') ? usuario.foto : '/imagem/' + usuario.foto) : '/imagem/avatar.png' %>"
+            alt="Foto de perfil"
+            class="perfil-hero__avatar"
+          >
+          <!-- Botão câmera — só aparece quando NÃO há foto pendente -->
+          <label class="perfil-hero__camera-btn" id="labelFoto" for="inputFoto" title="Trocar foto">
+            <i class='bx bx-camera'></i>
+          </label>
+          <input type="file" id="inputFoto" accept="image/*" style="display:none">
+
+          <!-- Barra de confirmação — aparece após escolher foto -->
+          <nav class="foto-actions" id="fotoActions" style="display:none">
+            <button class="foto-btn foto-btn--confirmar" id="btnConfirmarFoto">
+              <i class='bx bx-check'></i> Confirmar
+            </button>
+            <button class="foto-btn foto-btn--cancelar" id="btnCancelarFoto">
+              <i class='bx bx-x'></i> Cancelar
+            </button>
+          </nav>
+        </nav>
+
+        <nav class="perfil-hero__info">
+          <h1 class="perfil-hero__name">
+            <strong id="nomeDisplay"><%= usuario.Nome %></strong>
+          </h1>
+          <span class="perfil-hero__badge <%= usuario.Tipo === 'PJ' ? 'badge--vendedor' : 'badge--comprador' %>">
+            <%= usuario.Tipo === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
+          </span>
+          <p class="perfil-hero__email">
+            <i class='bx bx-envelope'></i>
+            <%= usuario.Email %>
+          </p>
+          <% if (usuario.Data_Criacao) { %>
+          <p class="perfil-hero__since">
+            <i class='bx bx-calendar'></i>
+            Membro desde <%= new Date(usuario.Data_Criacao).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) %>
+          </p>
+          <% } %>
+        </nav>
+
+        <button class="perfil-hero__edit-btn" id="btnEditarPerfil" aria-label="Editar perfil">
+          <i class='bx bx-edit'></i>
+          <span>Editar perfil</span>
+        </button>
+      </section>
+
+      <!-- ══ FORMULÁRIO DE EDIÇÃO ══ -->
+      <section class="perfil-edit-card hidden" id="formEdicaoWrap" aria-label="Editar perfil">
+        <h2 class="perfil-edit-card__title">
+          <i class='bx bx-edit'></i> Editar Perfil
+        </h2>
+
+        <!-- Dados gerais -->
+        <form id="formEdicao" class="perfil-edit-card__form" novalidate>
+          <p class="edit-section-label">DADOS PESSOAIS</p>
+          <nav class="edit-row">
+            <nav class="edit-field">
+              <label for="nomeInput"><i class='bx bx-user'></i> Nome completo</label>
+              <input type="text" id="nomeInput" value="<%= usuario.Nome %>" placeholder="Seu nome completo" autocomplete="name">
+            </nav>
+            <nav class="edit-field">
+              <label for="telefoneInput"><i class='bx bx-phone'></i> Telefone</label>
+              <input type="tel" id="telefoneInput" value="<%= usuario.Biografia || '' %>" placeholder="(00) 00000-0000" autocomplete="tel">
+            </nav>
+          </nav>
+          <nav class="perfil-edit-card__actions">
+            <button type="submit" class="btn-salvar">
+              <i class='bx bx-check'></i> Salvar dados
+            </button>
+            <button type="button" id="btnCancelar" class="btn-cancelar">
+              <i class='bx bx-x'></i> Cancelar
+            </button>
+          </nav>
+        </form>
+
+        <hr class="edit-divider">
+
+        <!-- Redefinir E-mail -->
+        <nav class="edit-sub-section">
+          <nav class="edit-sub-header">
+            <nav class="edit-sub-icon" style="background:#0891b2;">
+              <i class='bx bx-envelope'></i>
+            </nav>
+            <nav>
+              <strong>Redefinir E-mail</strong>
+              <span>E-mail atual: <%= usuario.Email %></span>
+            </nav>
+            <button class="btn-toggle-sub" data-toggle-form="formEmailWrap">
+              <i class='bx bx-chevron-down'></i> Alterar
+            </button>
+          </nav>
+          <nav class="hidden" id="formEmailWrap">
+          <form id="formRedefinirEmail" class="perfil-edit-card__form sub-form" novalidate>
+            <nav class="edit-row">
+              <nav class="edit-field">
+                <label for="novoEmailInput"><i class='bx bx-at'></i> Novo e-mail</label>
+                <input type="email" id="novoEmailInput" placeholder="novo@email.com" autocomplete="email">
+              </nav>
+              <nav class="edit-field">
+                <label for="senhaEmailInput"><i class='bx bx-lock'></i> Confirme sua senha</label>
+                <input type="password" id="senhaEmailInput" placeholder="Sua senha atual">
+              </nav>
+            </nav>
+            <nav class="perfil-edit-card__actions">
+              <button type="submit" class="btn-salvar">
+                <i class='bx bx-check'></i> Salvar e-mail
+              </button>
+            </nav>
+          </form>
+          </nav>
+        </nav>
+
+        <hr class="edit-divider">
+
+        <!-- Redefinir Senha -->
+        <nav class="edit-sub-section">
+          <nav class="edit-sub-header">
+            <nav class="edit-sub-icon" style="background:#7c3aed;">
+              <i class='bx bx-lock-alt'></i>
+            </nav>
+            <nav>
+              <strong>Redefinir Senha</strong>
+              <span>Altere sua senha de acesso</span>
+            </nav>
+            <button class="btn-toggle-sub" data-toggle-form="formSenhaWrap">
+              <i class='bx bx-chevron-down'></i> Alterar
+            </button>
+          </nav>
+          <nav class="hidden" id="formSenhaWrap">
+          <form id="formRedefinirSenha" class="perfil-edit-card__form sub-form" novalidate>
+            <nav class="edit-row">
+              <nav class="edit-field">
+                <label for="senhaAtualInput"><i class='bx bx-lock'></i> Senha atual</label>
+                <input type="password" id="senhaAtualInput" placeholder="Sua senha atual">
+              </nav>
+            </nav>
+            <nav class="edit-row">
+              <nav class="edit-field">
+                <label for="novaSenhaInput"><i class='bx bx-lock-open'></i> Nova senha</label>
+                <input type="password" id="novaSenhaInput" placeholder="Mínimo 8 caracteres">
+              </nav>
+              <nav class="edit-field">
+                <label for="confirmarNovaSenhaInput"><i class='bx bx-lock-open'></i> Confirmar nova senha</label>
+                <input type="password" id="confirmarNovaSenhaInput" placeholder="Repita a nova senha">
+              </nav>
+            </nav>
+            <nav class="perfil-edit-card__actions">
+              <button type="submit" class="btn-salvar">
+                <i class='bx bx-check'></i> Salvar senha
+              </button>
+            </nav>
+          </form>
+          </nav>
+        </nav>
+
+      </section>
+
+      <!-- ══ CARDS DE ATALHO ══ -->
+      <section class="perfil-cards-grid" aria-label="Atalhos do perfil">
+
+        <a href="/minhascompras" class="perfil-card">
+          <span class="perfil-card__icon" style="background: linear-gradient(135deg,#16a34a,#15803d);">
+            <i class='bx bx-shopping-bag'></i>
+          </span>
+          <nav class="perfil-card__body">
+            <strong>Minhas Compras</strong>
+            <span>Histórico de pedidos</span>
+          </nav>
+          <i class='bx bx-chevron-right perfil-card__arrow'></i>
+        </a>
+
+        <% if (usuario.Tipo === 'PJ') { %>
+        <a href="/listaprodutos" class="perfil-card">
+          <span class="perfil-card__icon" style="background: linear-gradient(135deg,#16a34a,#15803d);">
+            <i class='bx bx-list-ul'></i>
+          </span>
+          <nav class="perfil-card__body">
+            <strong>Meus Produtos</strong>
+            <span>Gerenciar anúncios</span>
+          </nav>
+          <i class='bx bx-chevron-right perfil-card__arrow'></i>
+        </a>
+
+        <a href="/cadastrar_produto" class="perfil-card">
+          <span class="perfil-card__icon" style="background: linear-gradient(135deg,#16a34a,#15803d);">
+            <i class='bx bx-plus-circle'></i>
+          </span>
+          <nav class="perfil-card__body">
+            <strong>Cadastrar Produto</strong>
+            <span>Anunciar no marketplace</span>
+          </nav>
+          <i class='bx bx-chevron-right perfil-card__arrow'></i>
+        </a>
+        <% } %>
+
+        <% if (usuario.Tipo === 'PF') { %>
+        <a href="/upgrade_vendedor" class="perfil-card">
+          <span class="perfil-card__icon" style="background: linear-gradient(135deg,#16a34a,#15803d);">
+            <i class='bx bx-store'></i>
+          </span>
+          <nav class="perfil-card__body">
+            <strong>Tornar-se Vendedor</strong>
+            <span>Comece a vender agora</span>
+          </nav>
+          <i class='bx bx-chevron-right perfil-card__arrow'></i>
+        </a>
+        <% } %>
+
+      </section>
+
+      <!-- ══ CONFIGURAÇÕES ══ -->
+      <section class="perfil-section" id="configuracoes" aria-label="Configurações">
+        <h2 class="perfil-section__title">Configurações</h2>
+
+        <nav class="config-section">
+          <p class="config-section-title">APARÊNCIA</p>
+          <nav class="config-row non-link">
+            <nav class="config-icon-wrap" style="background:#374151;">
+              <i class='bx bx-moon'></i>
+            </nav>
+            <nav class="config-text">
+              <span class="config-title">Modo de aparência</span>
+              <span class="config-sub">Escolha entre claro ou escuro</span>
+            </nav>
+            <label class="toggle-switch" aria-label="Ativar modo escuro">
+              <input type="checkbox" id="darkModeToggleSwitch">
+              <span class="toggle-track"><span class="toggle-thumb"></span></span>
+            </label>
+          </nav>
+        </nav>
+
+        <nav class="config-section">
+          <p class="config-section-title">CONTA</p>
+          <nav class="config-row non-link">
+            <nav class="config-icon-wrap" style="background: linear-gradient(135deg,#16a34a,#15803d);">
+              <i class='bx bx-id-card'></i>
+            </nav>
+            <nav class="config-text">
+              <span class="config-title">Tipo de conta</span>
+              <span class="config-sub">
+                <%= usuario.Tipo === 'PJ' ? 'Pessoa Jurídica (Vendedor)' : 'Pessoa Física (Comprador)' %>
+              </span>
+            </nav>
+          </nav>
+          <a href="/logout" class="config-row config-row-danger">
+            <nav class="config-icon-wrap" style="background:#dc2626;">
+              <i class='bx bx-log-out'></i>
+            </nav>
+            <nav class="config-text">
+              <span class="config-title">Sair da Conta</span>
+              <span class="config-sub">Encerrar sessão atual</span>
+            </nav>
+            <i class='bx bx-chevron-right config-arrow'></i>
+          </a>
+        </nav>
+
+        <nav class="config-section" id="secaoBiometria">
+          <p class="config-section-title">SEGURANÇA</p>
+          <nav class="config-row non-link">
+            <nav class="config-icon-wrap" style="background:#0891b2;">
+              <i class='bx bx-fingerprint'></i>
+            </nav>
+            <nav class="config-text">
+              <span class="config-title">Biometria / Face ID</span>
+              <span class="config-sub">Entre mais rápido usando a biometria deste dispositivo</span>
+            </nav>
+            <button type="button" id="btnCadastrarBiometria" class="btn-toggle" style="border:1px solid #0891b2; color:#0891b2; padding:8px 14px; border-radius:8px; background:none; cursor:pointer;">
+              Cadastrar neste dispositivo
+            </button>
+          </nav>
+          <div id="listaBiometria" style="padding: 8px 16px;">
+            <p style="color:#9ca3af; font-size:.85rem;">Carregando dispositivos cadastrados...</p>
+          </div>
+        </nav>
+      </section>
+
+      <% } else { %>
+        <p class="perfil-error">Não foi possível carregar os dados do perfil.</p>
+      <% } %>
+
+    </main>
+  </nav>
+
+  <%- include('../partial/footer.ejs') %>
+  <script src="/js/darkmode.js"></script>
+  <script src="/js/perfil.js"></script>
+  <script src="/js/webauthn-client.js"></script>
+  <script>
+    (function () {
+      const btn = document.getElementById('btnCadastrarBiometria');
+      const lista = document.getElementById('listaBiometria');
+      if (!btn || !lista) return;
+
+      function renderLista(credenciais) {
+        if (!credenciais || credenciais.length === 0) {
+          lista.innerHTML = '<p style="color:#9ca3af; font-size:.85rem;">Nenhum dispositivo cadastrado ainda.</p>';
+          return;
+        }
+        lista.innerHTML = credenciais.map(function (c) {
+          const data = new Date(c.criado_em).toLocaleDateString('pt-BR');
+          return '<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee;">' +
+            '<span style="font-size:.9rem;"><i class="bx bx-fingerprint"></i> ' + (c.device_name || 'Dispositivo') + ' <small style="color:#9ca3af;">— cadastrado em ' + data + '</small></span>' +
+            '<button type="button" class="btn-remover-biometria" data-id="' + c.id + '" style="background:none; border:none; color:#dc2626; cursor:pointer; font-size:.85rem;">Remover</button>' +
+            '</div>';
+        }).join('');
+
+        lista.querySelectorAll('.btn-remover-biometria').forEach(function (b) {
+          b.addEventListener('click', function () {
+            fetch('/perfil/biometria/remover/' + b.dataset.id, { method: 'POST' })
+              .then(function (r) { return r.json(); })
+              .then(function () { carregarLista(); });
+          });
+        });
+      }
+
+      function carregarLista() {
+        fetch('/perfil/biometria/listar')
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!data.disponivel) {
+              lista.innerHTML = '<p style="color:#9ca3af; font-size:.85rem;">Recurso ainda não habilitado no servidor.</p>';
+              btn.style.display = 'none';
+              return;
+            }
+            renderLista(data.credenciais);
+          })
+          .catch(function () {
+            lista.innerHTML = '<p style="color:#9ca3af; font-size:.85rem;">Não foi possível carregar os dispositivos.</p>';
+          });
+      }
+
+      if (!window.PublicKeyCredential) {
+        btn.style.display = 'none';
+        lista.innerHTML = '<p style="color:#9ca3af; font-size:.85rem;">Este navegador/dispositivo não suporta biometria ou Face ID.</p>';
+      } else {
+        btn.addEventListener('click', function () {
+          btn.disabled = true;
+          cadastrarBiometria().then(function (ok) {
+            btn.disabled = false;
+            if (ok) carregarLista();
+          });
+        });
+        carregarLista();
+      }
+    })();
+  </script>
+</body>
+</html>

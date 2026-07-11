@@ -1,0 +1,385 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 85px;
+    padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    background-color: #1b814e;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.logo img {
+    height: 70px;
+    width: auto;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    flex-grow: 1;
+    justify-content: center;
+    position: relative;
+    left: 95px;
+}
+
+.navbar a {
+    font-size: 1.0rem;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+.navbar a:hover {
+    color: #f0f0f0;
+    opacity: 0.8;
+}
+
+.login-container {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-shrink: 0;
+}
+
+.btn-vendedor {
+    background-color: #fff;
+    color: #488D6A !important;
+    padding: 10px 22px;
+    border-radius: 50px;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: 0.3s;
+    border: 2px solid #fff;
+    text-transform: uppercase;
+    white-space: nowrap;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.btn-vendedor:hover {
+    background-color: transparent;
+    color: #fff !important;
+}
+
+.login-links {
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.login-links a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.carrinho {
+    height: 28px;
+    width: auto;
+    filter: invert(1);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.carrinho:hover {
+    transform: scale(1.1);
+}
+
+.dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.header-greeting {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color, #1a1a1a);
+    white-space: nowrap;
+}
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 0;
+    cursor: pointer;
+    transition: 0.3s;
+    object-fit: contain;
+    
+    display: block;
+    flex-shrink: 0;
+}
+
+.avatar:hover {
+    transform: scale(1.1);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: #fff;
+    min-width: 150px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    margin-top: 10px;
+    z-index: 1005;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #488D6A;
+    border-radius: 8px;
+}
+
+#check {
+    display: none;
+}
+
+.icons {
+    display: none;
+    font-size: 2.2rem;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1001;
+    margin-left: 10px;
+}
+
+/* ── Dropdown guest (deslogado mobile/tablet) ──────────────── */
+.dropdown-guest {
+    display: none; /* escondido no desktop — login-links aparece */
+}
+
+.dropdown-content--guest {
+    min-width: 180px;
+    padding: 8px 0;
+}
+
+.dropdown-guest-title {
+    display: block;
+    padding: 8px 16px 4px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.dropdown-content--guest a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.dropdown-content--guest a i {
+    font-size: 1.1rem;
+    color: #1e8e3e;
+}
+
+@media (max-width: 1150px) {
+    .navbar {
+        gap: 1.2rem;
+    }
+    .navbar a {
+        font-size: 0.85rem;
+    }
+    .btn-vendedor {
+        padding: 8px 18px;
+        font-size: 0.8rem;
+    }
+    /* Esconde login-links texto, mostra ícone guest */
+    .login-links {
+        display: none;
+    }
+    .dropdown-guest {
+        display: block;
+    }
+}
+
+@media (max-width: 950px) {
+    .icons {
+        display: inline-flex;
+        order: 3;
+    }
+
+    #check:checked ~ .icons #menu-icon {
+        display: none;
+    }
+
+    #check:checked ~ .icons #close-icon {
+        display: block;
+    }
+
+    #close-icon {
+        display: none;
+    }
+
+    .logo { order: 1; }
+    .login-container { order: 2; margin-left: auto; }
+
+    .login-links {
+        display: none !important;
+    }
+    
+    .navbar {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-height: 0;
+        background-color: #488D6A;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch;
+        gap: 0;
+        transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+        overflow: hidden;
+        z-index: 1002;
+        padding: 0;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -6px 24px rgba(0,0,0,0.3);
+        padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    /* Alça visual de "puxar", indicando que é uma aside inferior */
+    .navbar::before {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 4px;
+        background: rgba(255,255,255,0.4);
+        border-radius: 2px;
+        margin: 12px auto 4px;
+    }
+
+    #check:checked ~ .navbar {
+        max-height: 70vh;
+        padding: 0.5rem 0 2rem;
+        border-bottom: none;
+        overflow-y: auto;
+    }
+
+    .navbar a {
+        font-size: 1.1rem;
+        opacity: 0;
+        transform: translateY(15px);
+        transition: 0.3s;
+        width: 100%;
+        text-align: center;
+        padding: 1rem 0;
+    }
+
+    #check:checked ~ .navbar a {
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.15s;
+    }
+    .login-container .btn-vendedor {
+        display: none;
+    }
+
+    #check:checked ~ .login-container .btn-vendedor {
+        display: flex;
+        position: fixed;
+        bottom: calc(2rem + env(safe-area-inset-bottom, 0));
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.95rem;
+        padding: 12px 25px;
+        z-index: 1003;
+        opacity: 1;
+        transition-delay: 0.3s;
+    }
+
+    /* Backdrop escurecido atrás da aside — toque fora fecha o menu */
+    .mobile-menu-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.4);
+        z-index: 1001;
+        cursor: pointer;
+    }
+
+    #check:checked ~ .mobile-menu-backdrop {
+        display: block;
+    }
+}
+@media (max-width: 480px) {
+    .logo img {
+        height: 40px;
+    }
+    .header {
+        padding: 0 4%;
+    }
+    .login-container {
+        gap: 0.8rem;
+    }
+    /* Logado: esconde "Olá, Nome" — mantém só o avatar */
+    .header-greeting {
+        display: none;
+    }
+
+    #check:checked ~ .navbar {
+        max-height: 75vh;
+    }
+
+    #check:checked ~ .login-container .btn-vendedor {
+        width: 85%;
+    }
+}

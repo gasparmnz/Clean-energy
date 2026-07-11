@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Painel</title>
+    <link rel="stylesheet" href="/css/adm.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <%- include('../partial/header.ejs') %>
+<section class="admin-container">
+ <%- include('../partial/sidebar_adm.ejs') %>
+    <main class="admin-main">
+        <nav class="back-navigation" aria-label="Navegação de retorno">
+        <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+          <i class='bx bx-arrow-back'></i><span>Voltar</span>
+        </button>
+    </nav>
+        <section class="dashboard-summary" aria-labelledby="dashboard-heading">
+            <h2 id="dashboard-heading">Visão Geral <span class="real-data-tag"><i class='bx bx-check-circle'></i> Dados em tempo real</span></h2>
+            <section class="summary-cards">
+                <article class="summary-card"><i class="bx bx-group"></i><h3>Total de Usuários</h3><p><%= totals.users %></p></article>
+                <article class="summary-card"><i class="bx bx-package"></i><h3>Total de Produtos</h3><p><%= totals.products %></p></article>
+                <article class="summary-card"><i class="bx bx-check-circle"></i><h3>Produtos Ativos</h3><p><%= totals.active %></p></article>
+                <article class="summary-card"><i class='bx bx-block'></i><h3>Produtos Suspensos</h3><p><%= totals.suspended %></p></article>
+                <article class="summary-card"><i class="bx bx-cart-alt"></i><h3>Total de Transações</h3><p><%= stats.total %></p></article>
+                <article class="summary-card"><i class="bx bx-time-five"></i><h3>Pedidos Pendentes</h3><p><%= stats.pendentes %></p></article>
+                <article class="summary-card"><i class='bx bx-x-circle'></i><h3>Transações Canceladas</h3><p><%= stats.canceladas %></p></article>
+                <article class="summary-card"><i class="bx bx-check-circle"></i><h3>Transações Concluídas</h3><p><%= stats.concluidas %></p></article>
+                <article class="summary-card"><i class="bx bx-money"></i><h3>Total Transacionado</h3><p>R$ <%= stats.totalValor.toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}) %></p></article>
+                <article class="summary-card"><i class="bx bx-wallet"></i><h3>Comissão (5%)</h3><p>R$ <%= stats.comissao.toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}) %></p></article>
+            </section>
+        </section>
+
+        <section class="transactions-section" aria-labelledby="compras-heading">
+            <h2 id="compras-heading">Últimas Compras</h2>
+            <% if (compras && compras.length > 0) { %>
+            <section class="table-responsive">
+                <table class="transactions-table">
+                    <thead><tr><th>ID Pedido</th><th>Comprador</th><th>Produto</th><th>Valor</th><th>Data</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <% compras.forEach(function(c) { %>
+                        <tr>
+                            <td data-label="ID Pedido">#<%= String(c.id).padStart(5,'0') %></td>
+                            <td data-label="Comprador"><%= c.comprador %></td>
+                            <td data-label="Produto"><%= c.produto || '-' %></td>
+                            <td data-label="Valor">R$ <%= parseFloat(c.valor||0).toLocaleString('pt-BR',{minimumFractionDigits:2}) %></td>
+                            <td data-label="Data"><%= c.data ? new Date(c.data).toLocaleDateString('pt-BR') : '-' %></td>
+                            <td data-label="Status"><span class="status-badge status-<%= c.status === 'concluido' ? 'concluido' : c.status === 'cancelado' ? 'cancelado' : c.status === 'pendente' ? 'pendente' : 'andamento' %>"><%= c.status === 'concluido' ? 'Concluído' : c.status === 'cancelado' ? 'Cancelado' : c.status === 'pendente' ? 'Pendente' : 'Em Andamento' %></span></td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+            <% } else { %>
+            <article class="empty-transactions">
+                <i class='bx bx-cart'></i>
+                <p>Nenhuma compra registrada ainda. As compras aparecerão aqui assim que forem realizadas.</p>
+            </article>
+            <% } %>
+        </section>
+
+        <section class="transactions-section" aria-labelledby="vendas-heading">
+            <h2 id="vendas-heading">Últimas Vendas</h2>
+            <% if (vendas && vendas.length > 0) { %>
+            <section class="table-responsive">
+                <table class="transactions-table">
+                    <thead><tr><th>ID Pedido</th><th>Vendedor</th><th>Produto</th><th>Valor</th><th>Data</th><th>Status</th></tr></thead>
+                    <tbody>
+                        <% vendas.forEach(function(v) { %>
+                        <tr>
+                            <td data-label="ID Pedido">#<%= String(v.id).padStart(5,'0') %></td>
+                            <td data-label="Vendedor"><%= v.vendedor %></td>
+                            <td data-label="Produto"><%= v.produto || '-' %></td>
+                            <td data-label="Valor">R$ <%= parseFloat(v.valor||0).toLocaleString('pt-BR',{minimumFractionDigits:2}) %></td>
+                            <td data-label="Data"><%= v.data ? new Date(v.data).toLocaleDateString('pt-BR') : '-' %></td>
+                            <td data-label="Status"><span class="status-badge status-<%= v.status === 'concluido' ? 'concluido' : v.status === 'cancelado' ? 'cancelado' : v.status === 'pendente' ? 'pendente' : 'andamento' %>"><%= v.status === 'concluido' ? 'Concluído' : v.status === 'cancelado' ? 'Cancelado' : v.status === 'pendente' ? 'Pendente' : 'Em Andamento' %></span></td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+            <% } else { %>
+            <article class="empty-transactions">
+                <i class='bx bx-store'></i>
+                <p>Nenhuma venda registrada ainda. As vendas aparecerão aqui assim que forem realizadas.</p>
+            </article>
+            <% } %>
+        </section>
+    </main>
+</section>
+<script src="/js/darkmode.js"></script>
+</body>
+</html>

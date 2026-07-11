@@ -1,0 +1,97 @@
+<link rel="stylesheet" href="/css/header.css">
+<link rel="stylesheet" href="/css/darkmode.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#1b814e">
+<link rel="apple-touch-icon" href="/imagem/icon-192.png">
+<script src="/js/pwa.js" defer></script>
+<header class="header">
+  <a href="/" class="logo">
+    <img src="/imagem/logo-curva.svg" alt="Logo do site">
+  </a>
+
+  <input type="checkbox" id="check">
+  <label for="check" class="icons" role="button" tabindex="0" aria-expanded="false" aria-controls="mainNav" aria-label="Abrir menu de navegação">
+    <i class="bx bx-menu" id="menu-icon"></i>
+    <i class="bx bx-x" id="close-icon"></i>
+  </label>
+
+  <nav class="navbar" id="mainNav" aria-label="Navegação principal">
+    <a href="/" style="--i:0;">PRODUTOS</a>
+    <a href="/sobre_nos" style="--i:1;">SOBRE NÓS</a>
+    <a href="/transporte" style="--i:2;">TRANSPORTE</a>
+  </nav>
+
+  <label for="check" class="mobile-menu-backdrop" aria-hidden="true"></label>
+
+  <section class="login-container">
+    <% if (typeof usuario !== 'undefined' && usuario) { %>
+      <% if (usuario.perfil === 'vendedor') { %>
+        <a href="/cadastrar_produto" class="btn-vendedor">CADASTRAR PRODUTO</a>
+      <% } else { %>
+        <a href="/adicione_produto" class="btn-vendedor">TORNE-SE VENDEDOR</a>
+
+      <% } %>
+
+      <section class="dropdown" id="notifDropdown">
+        <button id="notifBtn" class="dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="notifMenu" aria-label="Ver notificações">
+          <i class='bx bx-bell' style="font-size:1.5rem; color:#fff;"></i>
+          <span id="notifBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#dc2626; color:#fff; font-size:.65rem; font-weight:700; padding:1px 5px; border-radius:10px;"></span>
+        </button>
+        <section id="notifMenu" class="dropdown-content" style="min-width:280px; max-height:360px; overflow-y:auto;">
+          <span class="dropdown-nome">Notificações</span>
+          <hr>
+          <div id="notifList" style="padding: 0 8px;">
+            <p style="padding:12px 8px; color:#9ca3af; font-size:.85rem;">Carregando...</p>
+          </div>
+        </section>
+      </section>
+
+      <a href="/carrinho" aria-label="Ver carrinho de compras">
+        <img class="carrinho" src="/imagem/carrinho.png" alt="">
+      </a>
+
+      <section class="dropdown">
+        <button id="dropdownBtn" class="dropdown-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="dropdownMenu" aria-label="Abrir menu do usuário">
+          <img src="/imagem/user.png" alt="Usuário" class="avatar">
+          <span class="header-greeting">Olá, <%= (usuario.nome || usuario.nomeUsuario || '').split(' ')[0] %></span>
+        </button>
+        <section id="dropdownMenu" class="dropdown-content">
+          <span class="dropdown-nome"><%= usuario.nome %></span>
+          <span class="dropdown-perfil"><%= usuario.perfil === 'vendedor' ? '🏪 Vendedor' : '🛒 Comprador' %></span>
+          <hr>
+          <a href="/perfil">Meu Perfil</a>
+          <a href="/logout" style="color:#e74c3c;">Sair</a>
+        </section>
+      </section>
+
+    <% } else { %>
+      <a href="/adicione_produto" class="btn-vendedor">TORNE-SE VENDEDOR</a>
+
+      <a href="/carrinho" aria-label="Ver carrinho de compras">
+        <img class="carrinho" src="/imagem/carrinho.png" alt="">
+      </a>
+
+      <!-- Desktop: links normais -->
+      <span class="login-links">
+        <a href="/login">LOGIN</a> | <a href="/cadastro">CADASTRE-SE</a>
+      </span>
+
+      <!-- Mobile/Tablet: ícone avatar com dropdown -->
+      <section class="dropdown dropdown-guest" id="dropdownGuest">
+        <button class="dropdown-trigger" id="dropdownGuestBtn" aria-haspopup="true" aria-expanded="false" aria-controls="dropdownGuestMenu" aria-label="Abrir menu de login">
+          <img src="/imagem/user.png" alt="Entrar" class="avatar">
+        </button>
+        <section class="dropdown-content dropdown-content--guest" id="dropdownGuestMenu">
+          <span class="dropdown-guest-title">Bem-vindo!</span>
+          <a href="/login"><i class='bx bx-log-in'></i> Login</a>
+          <a href="/cadastro"><i class='bx bx-user-plus'></i> Cadastre-se</a>
+        </section>
+      </section>
+    <% } %>
+  </section>
+</header>
+
+<script src="/js/script.js"></script>
+<% if (typeof usuario !== 'undefined' && usuario) { %>
+  <script src="/js/notificacoes.js"></script>
+<% } %>
