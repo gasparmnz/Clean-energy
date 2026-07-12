@@ -32,72 +32,59 @@
   function atualizarStatusConexao() {
     document.body.classList.toggle('app-offline', !navigator.onLine);
   }
-  window.addEventListener('online', atualizarStatusConexao);
-  window.addEventListener('offline', atualizarStatusConexao);
-  document.addEventListener('DOMContentLoaded', atualizarStatusConexao);
 
-  // ── Prompt de instalação (Adicionar à tela inicial) ─────────────
-  var deferredPrompt = null;
-  var BOTAO_ID = 'pwa-install-btn';
-
-  function criarBotaoInstalar() {
-    if (document.getElementById(BOTAO_ID)) return document.getElementById(BOTAO_ID);
-
-    var btn = document.createElement('button');
-    btn.id = BOTAO_ID;
-    btn.type = 'button';
-    btn.setAttribute('aria-label', 'Instalar aplicativo Clean Energy');
-    btn.innerHTML = '<i class="bx bx-download" aria-hidden="true"></i> Instalar app';
-    btn.style.cssText = [
-      'position:fixed',
-      'right:16px',
-      'bottom:16px',
-      'z-index:9999',
-      'display:none',
-      'align-items:center',
-      'gap:8px',
-      'padding:12px 18px',
-      'background:#1b814e',
-      'color:#fff',
-      'border:none',
-      'border-radius:999px',
-      'font-size:0.9rem',
-      'font-weight:600',
-      'box-shadow:0 4px 14px rgba(0,0,0,0.25)',
-      'cursor:pointer'
-    ].join(';');
-
-    btn.addEventListener('click', function () {
-      btn.style.display = 'none';
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.finally(function () {
-        deferredPrompt = null;
-      });
-    });
-
-    document.body.appendChild(btn);
-    return btn;
+  function removerBotaoInstalacao() {
+    var btn = document.getElementById('pwa-install-btn');
+    if (btn) {
+      btn.remove();
+    }
   }
 
-  window.addEventListener('beforeinstallprompt', function (event) {
-    event.preventDefault();
-    deferredPrompt = event;
-    document.addEventListener('DOMContentLoaded', function () {
-      var btn = criarBotaoInstalar();
-      btn.style.display = 'flex';
+  function aplicarMetaTagsMobile() {
+    var metas = [
+      { name: 'apple-mobile-web-app-capable', content: 'yes' },
+      { name: 'apple-mobile-web-app-status-bar-style', content: 'default' },
+      { name: 'apple-mobile-web-app-title', content: 'Clean Energy' },
+      { name: 'mobile-web-app-capable', content: 'yes' }
+    ];
+
+    metas.forEach(function (meta) {
+      if (!document.querySelector('meta[name="' + meta.name + '"]')) {
+        var tag = document.createElement('meta');
+        tag.name = meta.name;
+        tag.content = meta.content;
+        document.head.appendChild(tag);
+      }
     });
-    // Caso o DOM já esteja pronto quando o evento disparar.
-    if (document.readyState !== 'loading') {
-      var btn = criarBotaoInstalar();
-      btn.style.display = 'flex';
+
+    if (!document.querySelector('link[rel="apple-touch-icon"]')) {
+      var appleIcon = document.createElement('link');
+      appleIcon.rel = 'apple-touch-icon';
+      appleIcon.href = '/imagem/apple-touch-icon.png';
+      document.head.appendChild(appleIcon);
     }
+  }
+
+  window.addEventListener('online', atualizarStatusConexao);
+  window.addEventListener('offline', atualizarStatusConexao);
+  document.addEventListener('DOMContentLoaded', function () {
+    atualizarStatusConexao();
+    aplicarMetaTagsMobile();
+    removerBotaoInstalacao();
   });
 
+  // ── Prompt de instalação (Adicionar à tela inicial) ─────────────
+  var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.matchMedia('(max-width: 768px)').matches;
+
+  if (isMobile) {
+    window.addEventListener('beforeinstallprompt', function (event) {
+      event.preventDefault();
+      removerBotaoInstalacao();
+      console.log('[PWA] Prompt nativo de instalação disponível no mobile.');
+    });
+  }
+
   window.addEventListener('appinstalled', function () {
-    deferredPrompt = null;
-    var btn = document.getElementById(BOTAO_ID);
-    if (btn) btn.style.display = 'none';
     console.log('[PWA] Aplicativo instalado com sucesso.');
   });
 })();

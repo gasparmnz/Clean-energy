@@ -12,7 +12,7 @@
  * para forçar a atualização dos clients.
  */
 
-const SW_VERSION = 'v1';
+const SW_VERSION = 'v2';
 const STATIC_CACHE = `clean-energy-static-${SW_VERSION}`;
 const RUNTIME_CACHE = `clean-energy-runtime-${SW_VERSION}`;
 const CDN_CACHE = `clean-energy-cdn-${SW_VERSION}`;

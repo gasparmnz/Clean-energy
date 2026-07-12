@@ -23,10 +23,13 @@ app.use('/manifest.json', (req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, 'app', 'public'), {
-  // CSS/JS/imagens podem ficar em cache do navegador por mais tempo;
-  // o service worker cuida da estratégia de atualização em background.
-  maxAge: '1d',
+  maxAge: '0',
   setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.js') || filePath.endsWith('.css') || filePath.endsWith('.json')) {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
     if (filePath.endsWith('sw.js')) {
       res.setHeader('Cache-Control', 'no-cache');
     }
