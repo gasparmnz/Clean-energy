@@ -58,6 +58,12 @@
     .login-to-review a { color:#16a34a; font-weight:700; }
     .erro-avaliacao { background:#fee2e2; border:1px solid #fca5a5; border-radius:6px; padding:.7rem 1rem; color:#dc2626; font-size:.88rem; margin-bottom:.8rem; }
   </style>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1b814e">
+  <link rel="apple-touch-icon" href="/imagem/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imagem/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/imagem/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/imagem/icon-512.png">
 </head>
 <body>
   <%- include('../partial/header.ejs') %>
@@ -321,5 +327,6 @@
 
   <%- include('../partial/footer.ejs') %>
   <script src="/js/darkmode.js"></script>
+  <script src="/js/pwa.js" defer></script>
 </body>
 </html>
