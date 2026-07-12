@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="/css/carrossel.css">
   <link rel="stylesheet" href="/css/darkmode.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-  <link rel="apple-touch-icon" sizes="180x180" href="/imagem/logocleancompr.png.jpg">
-  <link rel="icon" type="image/png" sizes="192x192" href="/imagem/logocleancompr.png.jpg">
+  <link rel="apple-touch-icon" href="/imagem/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/imagem/icon-192.png">
   <meta property="og:locale" content="pt_BR">
   <meta property="og:title" content="Clean Energy" />
   <meta property="og:description" content="Conheça o melhor site em energia limpa" />
@@ -23,6 +23,8 @@
     .dropdown-content hr { margin:4px 0; border-color:#eee; }
     .acesso-restrito { background:#fff3e0; color:#e65100; padding:10px 18px; border-radius:8px; margin:12px 0; font-size:0.9rem; }
   </style>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1b814e">
 </head>
 <body>
   <%- include('../partial/header.ejs') %>
@@ -282,5 +284,6 @@
   <script src="/js/produto-delete.js"></script>
   <script src="/js/carrossel.js"></script>
   <script src="/js/darkmode.js"></script>
+  <script src="/js/pwa.js" defer></script>
 </body>
 </html>
