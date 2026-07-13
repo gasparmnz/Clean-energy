@@ -1,0 +1,112 @@
+<link rel="stylesheet" href="/css/accessibility.css">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+<button type="button" class="a11y-fab" id="a11yFab" aria-label="Abrir painel de acessibilidade">
+  <i class='bx bx-accessibility'></i>
+</button>
+
+<div class="a11y-overlay" id="a11yOverlay"></div>
+
+<div class="a11y-reading-guide" id="a11yReadingGuide"></div>
+
+<aside class="a11y-panel" id="a11yPanel" aria-label="Painel de acessibilidade">
+  <header class="a11y-panel__header">
+    <i class='bx bx-accessibility'></i>
+    <h2>Acessibilidade</h2>
+    <button type="button" class="a11y-panel__close" id="a11yClose" aria-label="Fechar painel de acessibilidade">
+      <i class='bx bx-x'></i>
+    </button>
+  </header>
+
+  <section class="a11y-panel__body">
+
+    <!-- Tamanho do texto -->
+    <div class="a11y-fontsize">
+      <span class="a11y-fontsize__icon"><i class='bx bx-font'></i></span>
+      <div class="a11y-fontsize__info">
+        <strong>Tamanho do texto</strong>
+        <span id="a11yFontScaleLabel">100% do tamanho padrão</span>
+      </div>
+      <button type="button" class="a11y-fontsize__btn" id="a11yFontDec" aria-label="Diminuir tamanho do texto">
+        <i class='bx bx-minus'></i>
+      </button>
+      <button type="button" class="a11y-fontsize__btn" id="a11yFontInc" aria-label="Aumentar tamanho do texto">
+        <i class='bx bx-plus'></i>
+      </button>
+    </div>
+
+    <!-- Leitura e navegação -->
+    <div class="a11y-section">
+      <div class="a11y-section__header">
+        <h3>Leitura e navegação</h3>
+        <button type="button" class="a11y-section__toggle" data-a11y-collapse aria-label="Recolher seção">
+          <i class='bx bx-minus'></i>
+        </button>
+      </div>
+      <div class="a11y-section__grid">
+        <div class="a11y-card" data-a11y-card="readableFont">
+          <i class='bx bx-font'></i>
+          <span>Fonte legível</span>
+        </div>
+        <div class="a11y-card" data-a11y-card="spacedText">
+          <i class='bx bx-align-justify'></i>
+          <span>Espaçar texto</span>
+        </div>
+        <div class="a11y-card" data-a11y-card="highlightLinks">
+          <i class='bx bx-link-alt'></i>
+          <span>Destacar links</span>
+        </div>
+        <div class="a11y-card" data-a11y-card="readingGuide">
+          <i class='bx bx-book-open'></i>
+          <span>Guia de leitura</span>
+        </div>
+        <div class="a11y-card" data-a11y-card="largeCursor">
+          <i class='bx bx-pointer'></i>
+          <span>Cursor grande</span>
+        </div>
+        <div class="a11y-card" data-a11y-card="reducedMotion">
+          <i class='bx bx-pause-circle'></i>
+          <span>Menos animações</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ajuste de cor -->
+    <div class="a11y-section">
+      <div class="a11y-section__header">
+        <h3>Ajuste de cor</h3>
+        <button type="button" class="a11y-section__toggle" data-a11y-collapse aria-label="Recolher seção">
+          <i class='bx bx-minus'></i>
+        </button>
+      </div>
+      <div class="a11y-section__grid">
+        <div class="a11y-card" data-a11y-card="highContrast">
+          <i class='bx bx-adjust'></i>
+          <span>Alto contraste</span>
+        </div>
+        <div class="a11y-card" data-a11y-card="grayscale">
+          <i class='bx bx-droplet'></i>
+          <span>Escala de cinza</span>
+        </div>
+        <div class="a11y-card" data-a11y-card="invert">
+          <i class='bx bx-transfer-alt'></i>
+          <span>Inverter cores</span>
+        </div>
+        <div class="a11y-card" id="a11yDarkModeCard">
+          <i class='bx bx-moon'></i>
+          <span>Modo escuro</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="a11y-panel__footer">
+    <button type="button" class="a11y-panel__reset" id="a11yReset">
+      <i class='bx bx-power-off'></i> Desligar
+    </button>
+    <span class="a11y-panel__saved">Preferências salvas no navegador</span>
+  </footer>
+</aside>
+
+<script src="/js/accessibility.js"></script>

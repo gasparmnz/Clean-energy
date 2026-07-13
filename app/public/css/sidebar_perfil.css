@@ -178,76 +178,14 @@ body.dark-mode .perfil-layout { background: #111; }
 }
 
 @media (max-width: 768px) {
+  /* No mobile, a navegação global (Início/Carrinho/Vendedor/Perfil) no
+     rodapé já cobre a navegação principal, e a própria página de Perfil
+     já tem os atalhos (Minhas Compras, Meus Produtos, Configurações,
+     Sair, etc.) no corpo da página — então este menu lateral de conta
+     não é necessário no mobile, só no desktop. */
   .perfil-aside {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    min-width: unset;
-    height: auto;
-    top: unset;
-    border-right: none;
-    border-top: 2px solid #16a34a;
-    border-radius: 12px 12px 0 0;
-    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
-    background: #fff;
-    box-shadow: 0 -4px 18px rgba(0,0,0,0.08);
-    z-index: 1000;
-    overflow: visible;
-    flex-direction: row;
-    gap: 0;
-  }
-
-  body.dark-mode .perfil-aside {
-    background: #161616;
-    border-top-color: #16a34a;
-  }
-
-  .perfil-aside__header,
-  .perfil-aside__divider,
-  .perfil-aside__section-label {
     display: none;
   }
-
-  .perfil-aside__nav {
-    width: 100%;
-  }
-
-  .perfil-aside__list {
-    flex-direction: row;
-    justify-content: space-around;
-  }
-
-  .perfil-aside__nav .perfil-aside__list + p,
-  .perfil-aside__nav .perfil-aside__list ~ .perfil-aside__list {
-    display: none;
-  }
-
-  .perfil-aside__link {
-    flex-direction: column;
-    gap: 3px;
-    padding: 6px 4px;
-    font-size: 0.72rem;
-    text-align: center;
-    border-radius: 8px;
-    background: transparent !important;
-    color: #488d6a;
-    font-weight: 600;
-  }
-
-  .perfil-aside__link.is-active {
-    color: #16a34a;
-    background: rgba(22,163,74,0.08) !important;
-  }
-
-  .perfil-aside__icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 7px;
-  }
-
-  .perfil-aside__icon i { font-size: 0.9rem; }
 
   .perfil-layout {
     flex-direction: column;
@@ -255,6 +193,5 @@ body.dark-mode .perfil-layout { background: #111; }
 
   .perfil-layout__content {
     padding: 1rem;
-    padding-bottom: 90px;
   }
 }
