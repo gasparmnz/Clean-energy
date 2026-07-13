@@ -26,11 +26,11 @@
 
       <% } %>
 
-      <a href="/carrinho">
+      <a href="/carrinho" class="header-desktop-only">
         <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
       </a>
 
-      <section class="dropdown">
+      <section class="dropdown header-desktop-only">
         <button id="dropdownBtn" class="dropdown-trigger">
           <img src="/imagem/user.png" alt="Usuário" class="avatar">
           <span class="header-greeting">Olá, <%= (usuario.nome || usuario.nomeUsuario || '').split(' ')[0] %></span>
@@ -47,7 +47,7 @@
     <% } else { %>
       <a href="/adicione_produto" class="btn-vendedor">TORNE-SE VENDEDOR</a>
 
-      <a href="/carrinho">
+      <a href="/carrinho" class="header-desktop-only">
         <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
       </a>
 
@@ -56,8 +56,8 @@
         <a href="/login">LOGIN</a> | <a href="/cadastro">CADASTRE-SE</a>
       </span>
 
-      <!-- Mobile/Tablet: ícone avatar com dropdown -->
-      <section class="dropdown dropdown-guest" id="dropdownGuest">
+      <!-- Tablet: ícone avatar com dropdown (escondido no mobile, onde a barra inferior assume) -->
+      <section class="dropdown dropdown-guest header-desktop-only" id="dropdownGuest">
         <button class="dropdown-trigger" id="dropdownGuestBtn">
           <img src="/imagem/user.png" alt="Entrar" class="avatar">
         </button>
@@ -70,5 +70,8 @@
     <% } %>
   </section>
 </header>
+
+<%- include('bottom_nav.ejs') %>
+<%- include('accessibility.ejs') %>
 
 <script src="/js/script.js"></script>

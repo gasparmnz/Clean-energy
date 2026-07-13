@@ -1,0 +1,407 @@
+/* ============================================================
+   Widget de Acessibilidade — botão flutuante + painel lateral
+   ============================================================ */
+
+:root {
+  --a11y-accent: #1b814e;
+  --a11y-accent-dark: #145c38;
+}
+
+/* ── Botão flutuante ── */
+.a11y-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--a11y-accent);
+  color: #fff;
+  border: 3px solid rgba(255,255,255,0.85);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2000;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.a11y-fab:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.3);
+}
+
+.a11y-fab i {
+  font-size: 1.6rem;
+}
+
+@media (max-width: 768px) {
+  .a11y-fab {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    right: 14px;
+    width: 50px;
+    height: 50px;
+  }
+  .a11y-fab i {
+    font-size: 1.4rem;
+  }
+}
+
+/* ── Overlay ── */
+.a11y-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 2100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.a11y-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Painel lateral ── */
+.a11y-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(380px, 92vw);
+  background: #f4faf6;
+  z-index: 2200;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  box-shadow: -8px 0 30px rgba(0,0,0,0.2);
+}
+
+.a11y-panel.is-open {
+  transform: translateX(0);
+}
+
+.a11y-panel__header {
+  background: var(--a11y-accent);
+  color: #fff;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.a11y-panel__header i {
+  font-size: 1.3rem;
+}
+
+.a11y-panel__header h2 {
+  flex: 1;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.a11y-panel__close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.a11y-panel__close:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+.a11y-panel__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px 20px 8px;
+}
+
+.a11y-panel__footer {
+  flex-shrink: 0;
+  background: var(--a11y-accent);
+  color: #fff;
+  padding: 12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.78rem;
+}
+
+.a11y-panel__reset {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.a11y-panel__reset:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.a11y-panel__saved {
+  opacity: 0.85;
+  text-align: right;
+}
+
+/* ── Bloco "Tamanho do texto" ── */
+.a11y-fontsize {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.a11y-fontsize__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #e6f4ec;
+  color: var(--a11y-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.a11y-fontsize__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.a11y-fontsize__info strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #1a1a1a;
+}
+
+.a11y-fontsize__info span {
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.a11y-fontsize__btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: var(--a11y-accent);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.a11y-fontsize__btn:hover {
+  background: #e6f4ec;
+}
+
+/* ── Cabeçalho de seção (colapsável) ── */
+.a11y-section {
+  margin-bottom: 20px;
+}
+
+.a11y-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.a11y-section__header h3 {
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.a11y-section__toggle {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: var(--a11y-accent);
+  color: #fff;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.a11y-section__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.a11y-section.is-collapsed .a11y-section__grid {
+  display: none;
+}
+
+/* ── Cards de opção (toggle) ── */
+.a11y-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 14px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  color: #374151;
+}
+
+.a11y-card i {
+  font-size: 1.4rem;
+  color: var(--a11y-accent);
+}
+
+.a11y-card span {
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.a11y-card:hover {
+  border-color: var(--a11y-accent);
+}
+
+.a11y-card.is-active {
+  border-color: var(--a11y-accent);
+  background: #e6f4ec;
+}
+
+.a11y-card.is-active i {
+  color: var(--a11y-accent-dark);
+}
+
+/* ============================================================
+   Efeitos globais aplicados no <html>/<body> pelos toggles
+   ============================================================ */
+
+html.a11y-readable-font,
+html.a11y-readable-font body,
+html.a11y-readable-font input,
+html.a11y-readable-font button,
+html.a11y-readable-font textarea {
+  font-family: Verdana, Tahoma, "Segoe UI", Arial, sans-serif !important;
+}
+
+html.a11y-spaced-text body,
+html.a11y-spaced-text body p,
+html.a11y-spaced-text body span,
+html.a11y-spaced-text body li,
+html.a11y-spaced-text body a {
+  letter-spacing: 0.04em !important;
+  word-spacing: 0.12em !important;
+  line-height: 1.7 !important;
+}
+
+html.a11y-highlight-links a {
+  text-decoration: underline !important;
+  text-decoration-thickness: 2px !important;
+  color: #b45309 !important;
+  background: #fff3cd !important;
+  border-radius: 3px;
+}
+
+html.a11y-large-cursor,
+html.a11y-large-cursor a,
+html.a11y-large-cursor button {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24"><path d="M4 2 L4 20 L9 16 L12 22 L15 21 L12 15 L18 15 Z" fill="black" stroke="white" stroke-width="1"/></svg>') 4 4, auto !important;
+}
+
+html.a11y-reduced-motion *,
+html.a11y-reduced-motion *::before,
+html.a11y-reduced-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+html.a11y-grayscale {
+  filter: grayscale(1);
+}
+
+html.a11y-high-contrast body {
+  background: #000 !important;
+  color: #fff !important;
+}
+html.a11y-high-contrast body * {
+  background-color: #000 !important;
+  color: #fff !important;
+  border-color: #fff !important;
+}
+html.a11y-high-contrast a {
+  color: #ffd700 !important;
+}
+html.a11y-high-contrast img,
+html.a11y-high-contrast svg,
+html.a11y-high-contrast i {
+  filter: brightness(1.4) contrast(1.2);
+}
+
+html.a11y-invert {
+  filter: invert(1) hue-rotate(180deg);
+}
+html.a11y-invert img,
+html.a11y-invert video {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* ── Guia de leitura ── */
+.a11y-reading-guide {
+  position: fixed;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: rgba(255, 235, 59, 0.35);
+  border-top: 2px solid #f5c400;
+  border-bottom: 2px solid #f5c400;
+  z-index: 1900;
+  pointer-events: none;
+  display: none;
+}
+
+.a11y-reading-guide.is-active {
+  display: block;
+}

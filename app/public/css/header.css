@@ -351,3 +351,12 @@ body {
         width: 85%;
     }
 }
+
+/* Avatar de perfil e carrinho do header: só no desktop/tablet.
+   No mobile (mesmo breakpoint da barra de navegação inferior),
+   essas ações já são cobertas pela barra inferior. */
+@media (max-width: 768px) {
+    .header-desktop-only {
+        display: none !important;
+    }
+}
