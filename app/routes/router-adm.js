@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const pool = require("../../config/pool_conexoes");
 const produtosModel = require("../models/models.js");
+const { notificacoesModel } = require("../models/models.js");
 
 // Admin dashboard
 router.get("/", async (req, res) => {
@@ -72,6 +73,14 @@ router.post("/usuarios/suspender", async (req, res) => {
     const { id } = req.body;
     if (!id) return res.status(400).json({ error: 'ID obrigatório' });
     await pool.query("UPDATE Usuario SET status = 'suspended' WHERE Usuario_ID = ?", [id]);
+    try {
+      await notificacoesModel.criar({
+        usuarioId: id,
+        tipo: 'conta_suspensa',
+        mensagem: 'Sua conta foi suspensa pelo administrador.',
+        link: '/perfil'
+      });
+    } catch (e) { console.error('Erro ao notificar suspensão de conta:', e); }
     res.json({ success: true });
   } catch (err) {
     console.error('Erro ao suspender usuário', err);
@@ -85,6 +94,14 @@ router.post("/usuarios/reativar", async (req, res) => {
     const { id } = req.body;
     if (!id) return res.status(400).json({ error: 'ID obrigatório' });
     await pool.query("UPDATE Usuario SET status = 'active' WHERE Usuario_ID = ?", [id]);
+    try {
+      await notificacoesModel.criar({
+        usuarioId: id,
+        tipo: 'conta_reativada',
+        mensagem: 'Sua conta foi reativada pelo administrador.',
+        link: '/perfil'
+      });
+    } catch (e) { console.error('Erro ao notificar reativação de conta:', e); }
     res.json({ success: true });
   } catch (err) {
     console.error('Erro ao reativar usuário', err);
@@ -126,6 +143,21 @@ router.post("/produtos_adm/toggle_status", async (req, res) => {
     }
     const numericId = String(id).replace(/^PROD-/i, '');
     await produtosModel.updateStatus(numericId, status);
+
+    try {
+      const produto = await produtosModel.findById(numericId);
+      if (produto && produto.usuario_id) {
+        await notificacoesModel.criar({
+          usuarioId: produto.usuario_id,
+          tipo: status === 'suspended' ? 'produto_suspenso' : 'produto_reativado',
+          mensagem: status === 'suspended'
+            ? `Seu produto "${produto.nome}" foi suspenso pelo administrador.`
+            : `Seu produto "${produto.nome}" foi reativado.`,
+          link: '/listaprodutos'
+        });
+      }
+    } catch (e) { console.error('Erro ao notificar vendedor sobre produto:', e); }
+
     res.json({ success: true, id, status });
   } catch (err) {
     console.error('Erro ao alterar status do produto', err);

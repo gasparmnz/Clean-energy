@@ -478,3 +478,173 @@ const vendedorModel = {
 module.exports = produtosModel;
 module.exports.usuarioModel = usuarioModel;
 module.exports.vendedorModel = vendedorModel;
+
+/* ════════════════════════════════════════════════
+   NOTIFICAÇÕES (comprador/vendedor)
+   ════════════════════════════════════════════════ */
+pool.query(`
+  CREATE TABLE IF NOT EXISTS notificacoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    mensagem VARCHAR(255) NOT NULL,
+    link VARCHAR(255) DEFAULT NULL,
+    lida TINYINT(1) DEFAULT 0,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(Usuario_ID) ON DELETE CASCADE
+  )
+`).catch(err => console.error('Erro ao garantir tabela notificacoes:', err));
+
+const notificacoesModel = {
+  criar: async ({ usuarioId, tipo, mensagem, link }) => {
+    try {
+      const [result] = await pool.query(
+        `INSERT INTO notificacoes (usuario_id, tipo, mensagem, link) VALUES (?, ?, ?, ?)`,
+        [usuarioId, tipo, mensagem, link || null]
+      );
+      return result;
+    } catch (err) {
+      // Notificação nunca deve derrubar o fluxo principal (compra, avaliação, etc.)
+      console.error('Erro ao criar notificação:', err);
+      return null;
+    }
+  },
+
+  listarPorUsuario: async (usuarioId, limite = 20) => {
+    try {
+      const [rows] = await pool.query(
+        `SELECT id, tipo, mensagem, link, lida, criado_em
+         FROM notificacoes WHERE usuario_id = ?
+         ORDER BY criado_em DESC LIMIT ?`,
+        [usuarioId, limite]
+      );
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  contarNaoLidas: async (usuarioId) => {
+    try {
+      const [[r]] = await pool.query(
+        `SELECT COUNT(*) AS total FROM notificacoes WHERE usuario_id = ? AND lida = 0`,
+        [usuarioId]
+      );
+      return r.total || 0;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  marcarLida: async (id, usuarioId) => {
+    try {
+      await pool.query(`UPDATE notificacoes SET lida = 1 WHERE id = ? AND usuario_id = ?`, [id, usuarioId]);
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  marcarTodasLidas: async (usuarioId) => {
+    try {
+      await pool.query(`UPDATE notificacoes SET lida = 1 WHERE usuario_id = ?`, [usuarioId]);
+    } catch (err) {
+      throw err;
+    }
+  }
+};
+
+module.exports.notificacoesModel = notificacoesModel;
+
+/* ════════════════════════════════════════════════
+   BIOMETRIA / FACE ID (WebAuthn)
+   ════════════════════════════════════════════════ */
+pool.query(`
+  CREATE TABLE IF NOT EXISTS credenciais_webauthn (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    credential_id VARCHAR(255) NOT NULL UNIQUE,
+    public_key TEXT NOT NULL,
+    counter BIGINT DEFAULT 0,
+    device_name VARCHAR(100) DEFAULT 'Dispositivo',
+    transports VARCHAR(100) DEFAULT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(Usuario_ID) ON DELETE CASCADE
+  )
+`).catch(err => console.error('Erro ao garantir tabela credenciais_webauthn:', err));
+
+const webauthnModel = {
+  addCredential: async ({ usuarioId, credentialId, publicKey, counter, deviceName, transports }) => {
+    try {
+      const [result] = await pool.query(
+        `INSERT INTO credenciais_webauthn (usuario_id, credential_id, public_key, counter, device_name, transports)
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [usuarioId, credentialId, publicKey, counter || 0, deviceName || 'Dispositivo', transports || null]
+      );
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  getCredentialsByUsuario: async (usuarioId) => {
+    try {
+      const [rows] = await pool.query(
+        `SELECT id, credential_id, device_name, criado_em FROM credenciais_webauthn WHERE usuario_id = ?`,
+        [usuarioId]
+      );
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  getCredentialByCredentialId: async (credentialId) => {
+    try {
+      const [rows] = await pool.query(
+        `SELECT * FROM credenciais_webauthn WHERE credential_id = ?`,
+        [credentialId]
+      );
+      return rows[0] || null;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  // Credenciais registradas por e-mail (para montar o desafio de login sem exigir digitar senha)
+  getCredentialsByEmail: async (email) => {
+    try {
+      const [rows] = await pool.query(
+        `SELECT c.credential_id, c.transports
+         FROM credenciais_webauthn c
+         JOIN Usuario u ON u.Usuario_ID = c.usuario_id
+         WHERE u.Email = ?`,
+        [email]
+      );
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  atualizarContador: async (credentialId, novoContador) => {
+    try {
+      await pool.query(`UPDATE credenciais_webauthn SET counter = ? WHERE credential_id = ?`, [novoContador, credentialId]);
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  removerCredencial: async (id, usuarioId) => {
+    try {
+      const [result] = await pool.query(
+        `DELETE FROM credenciais_webauthn WHERE id = ? AND usuario_id = ?`,
+        [id, usuarioId]
+      );
+      return result.affectedRows > 0;
+    } catch (err) {
+      throw err;
+    }
+  }
+};
+
+module.exports.webauthnModel = webauthnModel;

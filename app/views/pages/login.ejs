@@ -132,6 +132,11 @@
           <i class='bx bx-loader-alt bx-spin loading-icon'></i>
         </button>
 
+        <button type="button" id="btnBiometria" class="submit-btn" style="background:transparent; color:#28530b; border:1.5px solid #28530b; margin-top:10px;">
+          <i class='bx bx-fingerprint'></i>
+          <span>Entrar com biometria / Face ID</span>
+        </button>
+
         <footer class="form-footer">
           <p class="register-link">
             Ainda não possui uma conta? 
@@ -149,6 +154,20 @@
   </main>
 
   <script src="/js/login-validation.js"></script>
+  <script src="/js/webauthn-client.js"></script>
+  <script>
+    const btnBiometria = document.getElementById('btnBiometria');
+    if (btnBiometria) {
+      if (!window.PublicKeyCredential) {
+        btnBiometria.style.display = 'none';
+      } else {
+        btnBiometria.addEventListener('click', () => {
+          const email = document.getElementById('usuarioDigitado').value.trim();
+          loginComBiometria(email);
+        });
+      }
+    }
+  </script>
   <script src="/js/darkmode.js"></script>
   <script src="/js/pwa.js" defer></script>
 </body>

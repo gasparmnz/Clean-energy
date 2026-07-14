@@ -1,0 +1,30 @@
+<link rel="stylesheet" href="/css/notificacoes.css">
+
+<% if (typeof usuario !== 'undefined' && usuario) { %>
+<button type="button" class="notif-fab" id="notifFab" aria-haspopup="true" aria-expanded="false" aria-controls="notifPanel" aria-label="Ver notificações">
+  <i class='bx bx-bell'></i>
+  <span class="notif-fab__badge" id="notifBadge" style="display:none;"></span>
+</button>
+
+<div class="notif-overlay" id="notifOverlay"></div>
+
+<aside class="notif-panel" id="notifPanel" aria-label="Notificações">
+  <header class="notif-panel__header">
+    <i class='bx bx-bell'></i>
+    <h2>Notificações</h2>
+    <button type="button" class="notif-panel__close" id="notifClose" aria-label="Fechar notificações">
+      <i class='bx bx-x'></i>
+    </button>
+  </header>
+
+  <div class="notif-panel__actions">
+    <button type="button" id="notifMarcarTodas" class="notif-panel__mark-all">Marcar todas como lidas</button>
+  </div>
+
+  <section class="notif-panel__body" id="notifList">
+    <p class="notif-empty">Carregando...</p>
+  </section>
+</aside>
+
+<script src="/js/notificacoes.js"></script>
+<% } %>

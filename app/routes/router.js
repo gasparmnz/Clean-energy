@@ -4,10 +4,18 @@ const { body, validationResult } = require("express-validator");
 const bcrypt = require('bcryptjs');
 const models = require("../models/models");
 const produtosModel = models;
-const { usuarioModel, vendedorModel } = models;
+const { usuarioModel, vendedorModel, notificacoesModel, webauthnModel } = models;
 const cartModel = require("../models/cartModel");
 const { uploadProduto, uploadFoto } = require("../helpers/upload");
 var { validarCPF } = require("../helpers/validacao");
+const {
+  disponivel: webauthnDisponivel,
+  RP_NAME, RP_ID, ORIGIN,
+  generateRegistrationOptions,
+  verifyRegistrationResponse,
+  generateAuthenticationOptions,
+  verifyAuthenticationResponse
+} = require("../helpers/webauthn");
 
 function requireLogin(req, res, next) {
   if (!req.session.userId) return res.redirect('/login');
@@ -131,6 +139,21 @@ router.post("/minhascompras/finalizar", requireLogin, async (req, res) => {
       req.session.pedidosPendentes = cart;
       const pool = require('../../config/pool_conexoes');
       await pool.query('DELETE FROM carrinho WHERE userId = ?', [userId]);
+
+      // Notifica cada vendedor sobre o novo pedido
+      for (const item of cart) {
+        try {
+          const produto = await produtosModel.findById(item.productId);
+          if (produto && produto.usuario_id) {
+            await notificacoesModel.criar({
+              usuarioId: produto.usuario_id,
+              tipo: 'novo_pedido',
+              mensagem: `Novo pedido recebido: ${item.nome}`,
+              link: '/listaprodutos'
+            });
+          }
+        } catch (e) { console.error('Erro ao notificar vendedor sobre novo pedido:', e); }
+      }
     }
     res.redirect('/minhascompras');
   } catch (err) {
@@ -304,6 +327,17 @@ router.post("/item/:id/avaliar", requireLogin, async (req, res) => {
       await produtosModel.updateAvaliacao({ nota: notaNum, comentario, usuarioId: req.session.userId, produtoId });
     } else {
       await produtosModel.createAvaliacao({ nota: notaNum, comentario, usuarioId: req.session.userId, produtoId, nomeUsuario: req.session.nomeUsuario });
+      try {
+        const produto = await produtosModel.findById(produtoId);
+        if (produto && produto.usuario_id && Number(produto.usuario_id) !== Number(req.session.userId)) {
+          await notificacoesModel.criar({
+            usuarioId: produto.usuario_id,
+            tipo: 'nova_avaliacao',
+            mensagem: `Seu produto "${produto.nome}" recebeu uma nova avaliação.`,
+            link: `/item/${produtoId}#comentarios`
+          });
+        }
+      } catch (e) { console.error('Erro ao notificar avaliação de produto:', e); }
     }
 
     res.redirect(`/item/${produtoId}#comentarios`);
@@ -565,11 +599,250 @@ router.post("/vendedor/:id/avaliar", requireLogin, async (req, res) => {
       await vendedorModel.updateAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
     } else {
       await vendedorModel.createAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
+      try {
+        await notificacoesModel.criar({
+          usuarioId: vendedorId,
+          tipo: 'nova_avaliacao_vendedor',
+          mensagem: 'Seu perfil de vendedor recebeu uma nova avaliação.',
+          link: `/vendedor/${vendedorId}#avaliacoes`
+        });
+      } catch (e) { console.error('Erro ao notificar avaliação de vendedor:', e); }
     }
     res.redirect(`/vendedor/${vendedorId}?sucesso=1#avaliacoes`);
   } catch (err) {
     console.error(err);
     res.redirect(`/vendedor/${vendedorId}?erro=salvar`);
+  }
+});
+
+/* NOTIFICAÇÕES */
+router.get("/notificacoes", requireLogin, async (req, res) => {
+  try {
+    const notificacoes = await notificacoesModel.listarPorUsuario(req.session.userId, 20);
+    res.json({ notificacoes });
+  } catch (err) {
+    console.error('Erro ao buscar notificações:', err);
+    res.status(500).json({ notificacoes: [] });
+  }
+});
+
+router.get("/notificacoes/nao-lidas", requireLogin, async (req, res) => {
+  try {
+    const total = await notificacoesModel.contarNaoLidas(req.session.userId);
+    res.json({ total });
+  } catch (err) {
+    console.error('Erro ao contar notificações não lidas:', err);
+    res.status(500).json({ total: 0 });
+  }
+});
+
+router.post("/notificacoes/:id/ler", requireLogin, async (req, res) => {
+  try {
+    await notificacoesModel.marcarLida(req.params.id, req.session.userId);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+router.post("/notificacoes/marcar-todas-lidas", requireLogin, async (req, res) => {
+  try {
+    await notificacoesModel.marcarTodasLidas(req.session.userId);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false });
+  }
+});
+
+/* BIOMETRIA / FACE ID (WebAuthn) */
+
+function requireWebauthn(req, res, next) {
+  if (!webauthnDisponivel) {
+    return res.status(503).json({ error: 'Biometria indisponível: rode "npm install" no servidor para habilitar este recurso.' });
+  }
+  next();
+}
+
+// Lista os dispositivos biométricos cadastrados do usuário logado
+router.get("/perfil/biometria/listar", requireLogin, async (req, res) => {
+  try {
+    const credenciais = await webauthnModel.getCredentialsByUsuario(req.session.userId);
+    res.json({ credenciais, disponivel: webauthnDisponivel });
+  } catch (err) {
+    console.error('Erro ao listar credenciais biométricas:', err);
+    res.status(500).json({ credenciais: [], disponivel: webauthnDisponivel });
+  }
+});
+
+// Gera o desafio para cadastrar biometria/Face ID neste dispositivo
+router.get("/perfil/biometria/opcoes-registro", requireLogin, requireWebauthn, async (req, res) => {
+  try {
+    const existentes = await webauthnModel.getCredentialsByUsuario(req.session.userId);
+    const options = await generateRegistrationOptions({
+      rpName: RP_NAME,
+      rpID: RP_ID,
+      userID: Buffer.from(String(req.session.userId)),
+      userName: req.session.emailUsuario || 'usuario',
+      userDisplayName: req.session.nomeUsuario || 'Usuário',
+      attestationType: 'none',
+      excludeCredentials: existentes.map(c => ({ id: c.credential_id, type: 'public-key' })),
+      authenticatorSelection: {
+        residentKey: 'preferred',
+        userVerification: 'preferred',
+        authenticatorAttachment: 'platform' // biometria/Face ID do próprio dispositivo
+      }
+    });
+    req.session.webauthnChallenge = options.challenge;
+    res.json(options);
+  } catch (err) {
+    console.error('Erro ao gerar opções de registro WebAuthn:', err);
+    res.status(500).json({ error: 'Erro ao gerar opções de registro.' });
+  }
+});
+
+// Verifica e salva a credencial biométrica recém-criada no navegador
+router.post("/perfil/biometria/verificar-registro", requireLogin, requireWebauthn, async (req, res) => {
+  try {
+    const expectedChallenge = req.session.webauthnChallenge;
+    if (!expectedChallenge) return res.status(400).json({ error: 'Desafio expirado. Tente novamente.' });
+
+    const verification = await verifyRegistrationResponse({
+      response: req.body,
+      expectedChallenge,
+      expectedOrigin: ORIGIN,
+      expectedRPID: RP_ID
+    });
+
+    if (!verification.verified || !verification.registrationInfo) {
+      return res.status(400).json({ error: 'Não foi possível verificar o registro.' });
+    }
+
+    const info = verification.registrationInfo;
+    // Compatibilidade entre versões da lib (algumas expõem `credential`, outras campos separados)
+    const credential = info.credential || {
+      id: info.credentialID,
+      publicKey: info.credentialPublicKey,
+      counter: info.counter
+    };
+
+    const credentialIdStr = typeof credential.id === 'string'
+      ? credential.id
+      : Buffer.from(credential.id).toString('base64url');
+    const publicKeyStr = Buffer.from(credential.publicKey).toString('base64');
+    const transports = Array.isArray(req.body?.response?.transports)
+      ? req.body.response.transports.join(',')
+      : null;
+
+    await webauthnModel.addCredential({
+      usuarioId: req.session.userId,
+      credentialId: credentialIdStr,
+      publicKey: publicKeyStr,
+      counter: credential.counter || 0,
+      deviceName: (req.body && req.body.deviceName) || 'Dispositivo',
+      transports
+    });
+
+    delete req.session.webauthnChallenge;
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Erro ao verificar registro WebAuthn:', err);
+    res.status(500).json({ error: 'Erro ao verificar registro.' });
+  }
+});
+
+// Remove uma credencial biométrica cadastrada
+router.post("/perfil/biometria/remover/:id", requireLogin, async (req, res) => {
+  try {
+    const ok = await webauthnModel.removerCredencial(req.params.id, req.session.userId);
+    res.json({ success: ok });
+  } catch (err) {
+    console.error('Erro ao remover credencial biométrica:', err);
+    res.status(500).json({ success: false });
+  }
+});
+
+// Gera o desafio de login biométrico a partir do e-mail informado
+router.post("/login/biometria/opcoes", requireWebauthn, async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Informe o e-mail cadastrado.' });
+
+    const credenciais = await webauthnModel.getCredentialsByEmail(email);
+    if (credenciais.length === 0) {
+      return res.status(404).json({ error: 'Nenhuma biometria cadastrada para este e-mail.' });
+    }
+
+    const options = await generateAuthenticationOptions({
+      rpID: RP_ID,
+      userVerification: 'preferred',
+      allowCredentials: credenciais.map(c => ({
+        id: c.credential_id,
+        type: 'public-key',
+        transports: c.transports ? c.transports.split(',') : undefined
+      }))
+    });
+
+    req.session.webauthnChallenge = options.challenge;
+    req.session.webauthnEmail = email;
+    res.json(options);
+  } catch (err) {
+    console.error('Erro ao gerar opções de login WebAuthn:', err);
+    res.status(500).json({ error: 'Erro ao gerar opções de login.' });
+  }
+});
+
+// Verifica a resposta biométrica e efetiva o login
+router.post("/login/biometria/verificar", requireWebauthn, async (req, res) => {
+  try {
+    const expectedChallenge = req.session.webauthnChallenge;
+    const email = req.session.webauthnEmail;
+    if (!expectedChallenge || !email) {
+      return res.status(400).json({ error: 'Sessão de login expirada. Tente novamente.' });
+    }
+
+    const credentialIdRecebido = req.body.id;
+    const credencial = await webauthnModel.getCredentialByCredentialId(credentialIdRecebido);
+    if (!credencial) return res.status(400).json({ error: 'Credencial não reconhecida.' });
+
+    const verification = await verifyAuthenticationResponse({
+      response: req.body,
+      expectedChallenge,
+      expectedOrigin: ORIGIN,
+      expectedRPID: RP_ID,
+      credential: {
+        id: credencial.credential_id,
+        publicKey: Buffer.from(credencial.public_key, 'base64'),
+        counter: Number(credencial.counter)
+      }
+    });
+
+    if (!verification.verified) {
+      return res.status(401).json({ error: 'Verificação biométrica falhou.' });
+    }
+
+    await webauthnModel.atualizarContador(
+      credencial.credential_id,
+      verification.authenticationInfo.newCounter
+    );
+
+    const usuario = await usuarioModel.findByEmail(email);
+    if (!usuario) return res.status(404).json({ error: 'Usuário não encontrado.' });
+    if (usuario.status === 'suspended') {
+      return res.status(403).json({ error: 'Sua conta foi suspensa pelo administrador.' });
+    }
+
+    req.session.userId = usuario.Usuario_ID;
+    req.session.nomeUsuario = usuario.Nome;
+    req.session.emailUsuario = usuario.Email;
+    req.session.perfil = usuario.Tipo === 'PJ' ? 'vendedor' : 'comprador';
+    req.session.tipo = usuario.Tipo;
+    delete req.session.webauthnChallenge;
+    delete req.session.webauthnEmail;
+
+    res.json({ success: true, redirect: '/perfil' });
+  } catch (err) {
+    console.error('Erro ao verificar login WebAuthn:', err);
+    res.status(500).json({ error: 'Erro ao verificar login.' });
   }
 });
 
