@@ -10,7 +10,7 @@ const { GoogleGenAI } = require('@google/genai');
 const baseConhecimento = require('./duvidasBaseConhecimento');
 
 const apiKey = process.env.GEMINI_API_KEY;
-const MODELO = process.env.GEMINI_MODEL || 'gemini-3.1-flash-lite';
+const MODELO = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 let ai = null;
 if (apiKey) {

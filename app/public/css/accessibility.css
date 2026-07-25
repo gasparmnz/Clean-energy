@@ -380,6 +380,38 @@ html.a11y-high-contrast i {
   filter: brightness(1.4) contrast(1.2);
 }
 
+/* O override acima ("body *") força a mesma cor em tudo, o que apagava
+   sinais visuais importantes (opção marcada como ativa, texto de
+   placeholder, indicador de notificação). Essas exceções vêm depois
+   para restaurar esses sinais sem abrir mão do alto contraste. */
+
+/* Opção ativa no painel de acessibilidade precisa continuar visível
+   enquanto o alto contraste está ligado — sem isso, dava pra saber
+   quais recursos estavam ligados só desligando o alto contraste. */
+html.a11y-high-contrast .a11y-card.is-active {
+  background-color: #1a1a1a !important;
+  border-color: #ffd700 !important;
+}
+html.a11y-high-contrast .a11y-card.is-active i,
+html.a11y-high-contrast .a11y-card.is-active span {
+  color: #ffd700 !important;
+}
+
+/* Texto de placeholder em campos de formulário (ficava com a mesma
+   cor do texto digitado e praticamente desaparecia) */
+html.a11y-high-contrast ::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
+}
+
+/* Badges de notificação/alerta (ex: contador do chat) precisam manter
+   destaque visual, senão viram um círculo preto sobre fundo preto */
+html.a11y-high-contrast .chatbot-badge {
+  background-color: #ffd700 !important;
+  color: #000 !important;
+  border-color: #000 !important;
+}
+
 html.a11y-invert {
   filter: invert(1) hue-rotate(180deg);
 }
