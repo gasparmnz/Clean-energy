@@ -412,6 +412,58 @@ html.a11y-high-contrast .chatbot-badge {
   border-color: #000 !important;
 }
 
+/* O rodapé usa "background: linear-gradient(...)" (verde), que é uma
+   propriedade diferente de "background-color" — por isso a regra geral
+   lá em cima não conseguia trocá-lo para preto, e o rodapé ficava verde
+   no meio de uma página toda preta/branca. Forçamos o "background"
+   inteiro (não só a cor) para preto aqui. */
+html.a11y-high-contrast footer,
+html.a11y-high-contrast #footer_content {
+  background: #000 !important;
+}
+
+/* O overlay escuro do carrossel (degradê que fica por cima da foto,
+   pra dar legibilidade ao texto) também usa "background:
+   linear-gradient(...)". A regra geral trocava só a cor de fundo por
+   trás do degradê, e como o degradê tem um trecho totalmente opaco
+   (rgba(0,0,0,.65)), o restante — que deveria ficar transparente pra
+   mostrar a foto — passava a mostrar o preto forçado, cobrindo a
+   imagem inteira. Aqui restauramos o degradê original, que já é
+   suficientemente escuro para o texto por cima ser lido. */
+html.a11y-high-contrast .carrossel-slide figure figcaption {
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,.75) 0%,
+    rgba(0,0,0,.45) 50%,
+    rgba(0,0,0,.15) 100%
+  ) !important;
+}
+
+/* O botão "Torne-se Vendedor" tinha fundo branco de propósito para se
+   destacar dentro do header verde. Com o header virando preto e o
+   botão também virando preto (só com uma borda fina branca), ele
+   praticamente sumia. Aqui ele vira um botão sólido amarelo (mesma
+   cor de destaque usada nos links), bem visível sobre o preto. */
+html.a11y-high-contrast .btn-vendedor {
+  background-color: #ffd700 !important;
+  color: #000 !important;
+  border-color: #000 !important;
+}
+
+/* O <nav class="navbar"> do header tem "position:relative; left:95px"
+   (um deslocamento que já existia antes, mas era invisível porque o
+   navbar nunca teve fundo próprio). Com o alto contraste forçando
+   fundo preto em TODO elemento, esse deslocamento passou a aparecer
+   como um retângulo preto sólido cobrindo o início do botão
+   "Torne-se Vendedor", ao lado. Containers que servem só para
+   organizar o layout (não são um "cartão"/botão/painel visual)
+   devem continuar transparentes, mostrando o preto do body por trás
+   sem criar essas caixas soltas. */
+html.a11y-high-contrast .navbar,
+html.a11y-high-contrast .login-container {
+  background-color: transparent !important;
+}
+
 html.a11y-invert {
   filter: invert(1) hue-rotate(180deg);
 }
