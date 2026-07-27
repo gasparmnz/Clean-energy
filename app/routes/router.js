@@ -7,6 +7,7 @@ const produtosModel = models;
 const { usuarioModel, vendedorModel, notificacoesModel, webauthnModel } = models;
 const cartModel = require("../models/cartModel");
 const { uploadProduto, uploadFoto } = require("../helpers/upload");
+const geminiChat = require("../helpers/geminiChat");
 var { validarCPF } = require("../helpers/validacao");
 const {
   disponivel: webauthnDisponivel,
@@ -268,6 +269,39 @@ router.post('/cart/remove', async (req, res) => {
 
 router.get("/transporte", (req, res) => res.render("pages/transporte"));
 router.get("/duvidas", (req, res) => res.render("pages/duvidas"));
+
+// Chatbot de IA da página de Dúvidas (Google Gemini)
+// A pergunta chega do front-end e a resposta é gerada aqui no servidor,
+// para que a chave da API do Gemini nunca fique exposta no front-end.
+router.post("/duvidas/chat", async (req, res) => {
+  try {
+    const { pergunta, historico } = req.body;
+
+    if (!pergunta || typeof pergunta !== 'string' || !pergunta.trim()) {
+      return res.status(400).json({ erro: 'Digite uma pergunta antes de enviar.' });
+    }
+
+    const resposta = await geminiChat.responderDuvida(pergunta, Array.isArray(historico) ? historico : []);
+    res.json({ resposta });
+  } catch (err) {
+    if (err.message === 'CHAVE_API_AUSENTE') {
+      console.error('[Chatbot Dúvidas] GEMINI_API_KEY não configurada no .env');
+      return res.status(503).json({ erro: 'O assistente virtual está indisponível no momento. Tente novamente mais tarde.' });
+    }
+    if (err.message === 'ERRO_API_GEMINI') {
+      // O log detalhado (status, causa provável) já foi impresso no console pelo geminiChat.js
+      if (err.status === 401 || err.status === 403) {
+        return res.status(503).json({ erro: 'Não foi possível autenticar com o assistente de IA. Verifique a chave da API do Gemini no servidor.' });
+      }
+      if (err.status === 429) {
+        return res.status(503).json({ erro: 'O assistente de IA está com muitas solicitações no momento. Tente novamente em instantes.' });
+      }
+      return res.status(500).json({ erro: 'Não foi possível obter uma resposta agora. Tente novamente em instantes.' });
+    }
+    console.error('Erro ao consultar o chatbot de dúvidas:', err.message);
+    res.status(500).json({ erro: 'Não foi possível obter uma resposta agora. Tente novamente em instantes.' });
+  }
+});
 router.get("/sobre_nos", (req, res) => res.render("pages/sobre_nos"));
 
 router.get("/adicione_produto", (req, res) => {
