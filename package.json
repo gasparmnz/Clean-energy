@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@google/genai": "^2.13.0",
+    "@google/genai": "^2.15.0",
     "@simplewebauthn/server": "^10.0.1",
     "bcryptjs": "^2.4.3",
     "dotenv": "^17.4.1",
