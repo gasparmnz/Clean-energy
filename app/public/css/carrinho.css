@@ -249,6 +249,22 @@ main > h2 {
   margin-bottom: 0;
 }
 
+/* Sem itens no carrinho: as linhas de separação não têm o que separar */
+.resumo.resumo-vazio h2 {
+  border-bottom-color: transparent;
+}
+
+.resumo.resumo-vazio .resumo-lista {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.resumo.resumo-vazio .total {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+}
+
 .total {
   font-weight: bold;
   margin-top: 15px;

@@ -89,21 +89,22 @@
 }
 
 @media (max-width: 768px) {
+  /* A navegação global (Início/Carrinho/Perfil) já fica fixa no rodapé
+     em todas as páginas — aqui o menu vira uma faixa rolável no topo
+     do conteúdo, em vez de outra barra fixa (evita duas navegações
+     sobrepostas no rodapé). */
   .sidebar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;                    
+    position: static;
     width: 100%;
     max-width: 100%;
-    box-sizing: border-box; 
-    padding: calc(8px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-left, 0px)) calc(8px + env(safe-area-inset-bottom, 0px)) calc(12px + env(safe-area-inset-right, 0px));
-    background-color: #fff;
-    border-top: 2px solid var(--accent);
-    box-shadow: 0 -6px 18px rgba(0,0,0,0.06);
-    z-index: 1000;
-    margin: 0; 
-    border-radius: 12px 12px 0 0; 
+    box-sizing: border-box;
+    padding: 0.75rem 0.5rem;
+    background-color: var(--sidebar-bg);
+    border-top: none;
+    box-shadow: none;
+    z-index: auto;
+    margin: 0;
+    border-radius: 0;
     overflow: visible;
   }
 
@@ -113,15 +114,17 @@
 
   .sidebar-nav ul {
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: flex-start;
     width: 100%;
     margin: 0;
-    padding: 0 6px;
-    gap: 45px;
+    padding: 0 2px;
+    gap: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .sidebar-nav li {
-    flex: 1;
+    flex: 0 0 auto;
     text-align: center;
   }
 
@@ -131,12 +134,12 @@
     align-items: center;
     justify-content: center;
     gap: 2px;
-    padding: 8px 0;
-    font-size: 0.88rem;
+    padding: 8px 10px;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--accent);
     background: transparent;
-    white-space: normal; 
+    white-space: nowrap;
   }
 
   .two-line {
@@ -146,10 +149,10 @@
   }
 
   .two-line .l1 {
-    font-size: 0.88rem;
+    font-size: 0.8rem;
   }
   .two-line .l2 {
-    font-size: 0.82rem;
+    font-size: 0.76rem;
   }
 
   .sidebar-nav a:hover,
@@ -162,7 +165,7 @@
 }
 
 .has-bottom-nav {
-  padding-bottom: 80px; 
+  padding-bottom: 0;
 }
 
 .sidebar-nav a:focus-visible {
