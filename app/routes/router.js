@@ -7,6 +7,7 @@ const produtosModel = models;
 const { usuarioModel, vendedorModel, notificacoesModel, webauthnModel } = models;
 const cartModel = require("../models/cartModel");
 const { uploadProduto, uploadFoto } = require("../helpers/upload");
+const { preferenceClient } = require("../../config/mercadopago");
 const geminiChat = require("../helpers/geminiChat");
 var { validarCPF } = require("../helpers/validacao");
 const {
@@ -29,7 +30,7 @@ function requireVendedor(req, res, next) {
   next();
 }
 
-const { preferenceClient } = require("../config/mercadopago");
+
 
 /* ROTAS */
 router.get("/", async (req, res) => {
@@ -165,6 +166,8 @@ router.post("/minhascompras/finalizar", requireLogin, async (req, res) => {
   }
 });
 
+
+
 // ── Atualizar perfil
 router.post("/perfil/atualizar", requireLogin, async (req, res) => {
   const { nome, biografia } = req.body;
@@ -243,6 +246,57 @@ router.get("/carrinho", async (req, res) => {
     res.render("pages/carrinho", { cart });
   } catch (err) {
     res.status(500).send('Erro ao obter carrinho');
+  }
+});
+
+router.post("/pagamento/criar", requireLogin, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    const cart = await cartModel.getCartByUser(userId);
+
+    if (!cart || cart.length === 0) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "O carrinho está vazio."
+      });
+    }
+
+    const items = cart.map(item => ({
+      id: String(item.productId),
+      title: item.nome,
+      quantity: Number(item.quantidade),
+      currency_id: "BRL",
+      unit_price: Number(item.preco)
+    }));
+
+    const preference = await preferenceClient.create({
+      body: {
+        back_urls: {
+      success: "https://clean-energy.onrender.com/pagamento/sucesso",
+      failure: "https://clean-energy.onrender.com/pagamento/falha",
+      pending: "https://clean-energy.onrender.com/pagamento/pendente"
+    },
+
+    notification_url: "https://clean-energy.onrender.com/pagamento/webhook"
+  }
+    });
+
+    console.log("Preference criada:", preference.id);
+
+    res.json({
+      sucesso: true,
+      preferenceId: preference.id,
+      initPoint: preference.init_point
+    });
+
+  } catch (err) {
+    console.error("Erro ao criar pagamento:", err);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Não foi possível criar o pagamento."
+    });
   }
 });
 
@@ -882,49 +936,27 @@ router.post("/login/biometria/verificar", requireWebauthn, async (req, res) => {
   }
 });
 
-router.post("/pagamento/criar", requireLogin, async (req, res) => {
-  try {
-    const userId = req.session.userId;
 
-    const cart = await cartModel.getCartByUser(userId);
 
-    if (!cart || cart.length === 0) {
-      return res.status(400).json({
-        sucesso: false,
-        erro: "O carrinho está vazio."
-      });
-    }
+router.get("/pagamento/sucesso", requireLogin, (req, res) => {
+    res.render("pages/pagamento-sucesso");
+});
 
-    const items = cart.map(item => ({
-      id: String(item.productId),
-      title: item.nome,
-      quantity: Number(item.quantidade),
-      currency_id: "BRL",
-      unit_price: Number(item.preco)
-    }));
+router.get("/pagamento/falha", requireLogin, (req, res) => {
+    res.render("pages/pagamento-falha");
+});
 
-    const preference = await preferenceClient.create({
-      body: {
-        items
-      }
-    });
+router.get("/pagamento/pendente", requireLogin, (req, res) => {
+    res.render("pages/pagamento-pendente");
+});
 
-    console.log("Preference criada:", preference.id);
+router.post("/pagamento/webhook", async (req, res) => {
 
-    res.json({
-      sucesso: true,
-      preferenceId: preference.id,
-      initPoint: preference.init_point
-    });
+    console.log("Notificação recebida do Mercado Pago");
 
-  } catch (err) {
-    console.error("Erro ao criar pagamento:", err);
+    console.log(req.body);
 
-    res.status(500).json({
-      sucesso: false,
-      erro: "Não foi possível criar o pagamento."
-    });
-  }
+    res.sendStatus(200);
 });
 
 module.exports = router;

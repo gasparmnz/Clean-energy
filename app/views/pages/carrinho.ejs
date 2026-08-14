@@ -97,7 +97,7 @@
       <ul class="resumo-lista"></ul>
       <p class="total"></p>
       
-      <button type="button" class="btn-comprar" id="btn-pagar">
+      <button type="button" class="btn-comprar" id="btn-finalizar">
   Finalizar Compra
 </button>
     </aside>
@@ -215,6 +215,28 @@
 
     botao.disabled = false;
     botao.textContent = "Finalizar Compra";
+  }
+});
+
+document.getElementById("btn-finalizar").addEventListener("click", async () => {
+  try {
+
+    const resposta = await fetch("/pagamento/criar", {
+      method: "POST"
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok) {
+      alert(dados.erro || "Erro ao iniciar pagamento.");
+      return;
+    }
+
+    window.location.href = dados.initPoint;
+
+  } catch (erro) {
+    console.error("Erro:", erro);
+    alert("Não foi possível iniciar o pagamento.");
   }
 });
   </script>
