@@ -97,9 +97,9 @@
       <ul class="resumo-lista"></ul>
       <p class="total"></p>
       
-      <form action="/minhascompras/finalizar" method="POST">
-        <button type="submit" class="btn-comprar">Finalizar Compra</button>
-      </form>
+      <button type="button" class="btn-comprar" id="btn-pagar">
+  Finalizar Compra
+</button>
     </aside>
 
     <br>
@@ -185,6 +185,38 @@
 
       atualizarResumo();
     });
+
+    document.getElementById("btn-pagar")?.addEventListener("click", async function () {
+  const botao = this;
+
+  try {
+    botao.disabled = true;
+    botao.textContent = "Preparando pagamento...";
+
+    const resposta = await fetch("/pagamento/criar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    const dados = await resposta.json();
+
+    if (!resposta.ok || !dados.sucesso) {
+      throw new Error(dados.erro || "Não foi possível criar o pagamento.");
+    }
+
+    // Redireciona para o Checkout Pro do Mercado Pago
+    window.location.href = dados.initPoint;
+
+  } catch (erro) {
+    console.error("Erro ao iniciar pagamento:", erro);
+    alert(erro.message);
+
+    botao.disabled = false;
+    botao.textContent = "Finalizar Compra";
+  }
+});
   </script>
 
 <%- include("../partial/footer.ejs") %>
