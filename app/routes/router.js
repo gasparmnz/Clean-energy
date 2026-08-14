@@ -29,6 +29,8 @@ function requireVendedor(req, res, next) {
   next();
 }
 
+const { preferenceClient } = require("../config/mercadopago");
+
 /* ROTAS */
 router.get("/", async (req, res) => {
   const { busca, estado, categoria, precoMin, precoMax } = req.query;
@@ -877,6 +879,51 @@ router.post("/login/biometria/verificar", requireWebauthn, async (req, res) => {
   } catch (err) {
     console.error('Erro ao verificar login WebAuthn:', err);
     res.status(500).json({ error: 'Erro ao verificar login.' });
+  }
+});
+
+router.post("/pagamento/criar", requireLogin, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    const cart = await cartModel.getCartByUser(userId);
+
+    if (!cart || cart.length === 0) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "O carrinho está vazio."
+      });
+    }
+
+    const items = cart.map(item => ({
+      id: String(item.productId),
+      title: item.nome,
+      quantity: Number(item.quantidade),
+      currency_id: "BRL",
+      unit_price: Number(item.preco)
+    }));
+
+    const preference = await preferenceClient.create({
+      body: {
+        items
+      }
+    });
+
+    console.log("Preference criada:", preference.id);
+
+    res.json({
+      sucesso: true,
+      preferenceId: preference.id,
+      initPoint: preference.init_point
+    });
+
+  } catch (err) {
+    console.error("Erro ao criar pagamento:", err);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: "Não foi possível criar o pagamento."
+    });
   }
 });
 
