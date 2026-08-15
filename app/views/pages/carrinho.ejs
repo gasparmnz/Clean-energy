@@ -200,7 +200,11 @@
       }
     });
 
-    const dados = await resposta.json();
+    const texto = await resposta.text();
+
+console.log("STATUS:", resposta.status);
+console.log("URL DA RESPOSTA:", resposta.url);
+console.log("RESPOSTA:", texto);
 
     if (!resposta.ok || !dados.sucesso) {
       throw new Error(dados.erro || "Não foi possível criar o pagamento.");
@@ -218,26 +222,31 @@
   }
 });
 
-document.getElementById("btn-finalizar").addEventListener("click", async () => {
-  try {
+document.getElementById("btn-finalizar").addEventListener("click", () => {
+  console.log(">>> BOTÃO FINALIZAR FOI CLICADO!");
 
-    const resposta = await fetch("/pagamento/criar", {
-      method: "POST"
-    });
+  fetch("/pagamento/criar", {
+    method: "POST"
+  })
+  .then(async resposta => {
+    const texto = await resposta.text();
 
-    const dados = await resposta.json();
+    console.log("STATUS:", resposta.status);
+    console.log("URL DA RESPOSTA:", resposta.url);
+    console.log("RESPOSTA:", texto);
 
-    if (!resposta.ok) {
-      alert(dados.erro || "Erro ao iniciar pagamento.");
-      return;
+    const dados = JSON.parse(texto);
+
+    if (!resposta.ok || !dados.sucesso) {
+      throw new Error(dados.erro || "Não foi possível iniciar o pagamento.");
     }
 
     window.location.href = dados.initPoint;
-
-  } catch (erro) {
-    console.error("Erro:", erro);
-    alert("Não foi possível iniciar o pagamento.");
-  }
+  })
+  .catch(erro => {
+    console.error("ERRO NO FETCH:", erro);
+    alert(erro.message);
+  });
 });
   </script>
 

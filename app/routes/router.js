@@ -250,52 +250,47 @@ router.get("/carrinho", async (req, res) => {
 });
 
 router.post("/pagamento/criar", requireLogin, async (req, res) => {
+  console.log(">>> ROTA DE PAGAMENTO FOI CHAMADA!");
   try {
-    const userId = req.session.userId;
 
+    const userId = req.session.userId || req.sessionID;
     const cart = await cartModel.getCartByUser(userId);
 
     if (!cart || cart.length === 0) {
       return res.status(400).json({
         sucesso: false,
-        erro: "O carrinho está vazio."
+        erro: "Seu carrinho está vazio."
       });
     }
 
     const items = cart.map(item => ({
       id: String(item.productId),
       title: item.nome,
-      quantity: Number(item.quantidade),
+      quantity: item.quantidade,
       currency_id: "BRL",
       unit_price: Number(item.preco)
     }));
 
     const preference = await preferenceClient.create({
-      body: {
-        back_urls: {
-      success: "https://clean-energy.onrender.com/pagamento/sucesso",
-      failure: "https://clean-energy.onrender.com/pagamento/falha",
-      pending: "https://clean-energy.onrender.com/pagamento/pendente"
-    },
-
-    notification_url: "https://clean-energy.onrender.com/pagamento/webhook"
-  }
+      body: { items }
     });
 
-    console.log("Preference criada:", preference.id);
+    console.log("Preference criada!");
+    console.log(preference);
 
     res.json({
       sucesso: true,
-      preferenceId: preference.id,
       initPoint: preference.init_point
     });
 
   } catch (err) {
-    console.error("Erro ao criar pagamento:", err);
+
+    console.error("ERRO COMPLETO:");
+    console.error(err);
 
     res.status(500).json({
       sucesso: false,
-      erro: "Não foi possível criar o pagamento."
+      erro: err.message
     });
   }
 });
