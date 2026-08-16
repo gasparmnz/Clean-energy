@@ -186,41 +186,7 @@
       atualizarResumo();
     });
 
-    document.getElementById("btn-pagar")?.addEventListener("click", async function () {
-  const botao = this;
-
-  try {
-    botao.disabled = true;
-    botao.textContent = "Preparando pagamento...";
-
-    const resposta = await fetch("/pagamento/criar", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    const texto = await resposta.text();
-
-console.log("STATUS:", resposta.status);
-console.log("URL DA RESPOSTA:", resposta.url);
-console.log("RESPOSTA:", texto);
-
-    if (!resposta.ok || !dados.sucesso) {
-      throw new Error(dados.erro || "Não foi possível criar o pagamento.");
-    }
-
-    // Redireciona para o Checkout Pro do Mercado Pago
-    window.location.href = dados.initPoint;
-
-  } catch (erro) {
-    console.error("Erro ao iniciar pagamento:", erro);
-    alert(erro.message);
-
-    botao.disabled = false;
-    botao.textContent = "Finalizar Compra";
-  }
-});
+  
 
 document.getElementById("btn-finalizar").addEventListener("click", () => {
   console.log(">>> BOTÃO FINALIZAR FOI CLICADO!");
@@ -229,6 +195,12 @@ document.getElementById("btn-finalizar").addEventListener("click", () => {
     method: "POST"
   })
   .then(async resposta => {
+
+    if (resposta.redirected && resposta.url.includes("/login")) {
+      window.location.href = "/login";
+      return;
+    }
+
     const texto = await resposta.text();
 
     console.log("STATUS:", resposta.status);

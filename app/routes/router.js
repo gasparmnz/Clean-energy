@@ -271,9 +271,28 @@ router.post("/pagamento/criar", requireLogin, async (req, res) => {
       unit_price: Number(item.preco)
     }));
 
-    const preference = await preferenceClient.create({
-      body: { items }
-    });
+    const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
+
+
+const isLocalhost = baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1");
+
+const preferenceBody = {
+  items,
+  back_urls: {
+    success: `${baseUrl}/pagamento/sucesso`,
+    failure: `${baseUrl}/pagamento/falha`,
+    pending: `${baseUrl}/pagamento/pendente`
+  },
+  notification_url: `${baseUrl}/pagamento/webhook`
+};
+
+if (!isLocalhost) {
+  preferenceBody.auto_return = "approved";
+}
+
+const preference = await preferenceClient.create({
+  body: preferenceBody
+});
 
     console.log("Preference criada!");
     console.log(preference);
