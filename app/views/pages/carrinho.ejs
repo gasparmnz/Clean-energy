@@ -97,9 +97,9 @@
       <ul class="resumo-lista"></ul>
       <p class="total"></p>
       
-      <form action="/minhascompras/finalizar" method="POST">
-        <button type="submit" class="btn-comprar">Finalizar Compra</button>
-      </form>
+      <button type="button" class="btn-comprar" id="btn-finalizar">
+  Finalizar Compra
+</button>
     </aside>
 
     <br>
@@ -185,6 +185,41 @@
 
       atualizarResumo();
     });
+
+  
+
+document.getElementById("btn-finalizar").addEventListener("click", () => {
+  console.log(">>> BOTÃO FINALIZAR FOI CLICADO!");
+
+  fetch("/pagamento/criar", {
+    method: "POST"
+  })
+  .then(async resposta => {
+
+    if (resposta.redirected && resposta.url.includes("/login")) {
+      window.location.href = "/login";
+      return;
+    }
+
+    const texto = await resposta.text();
+
+    console.log("STATUS:", resposta.status);
+    console.log("URL DA RESPOSTA:", resposta.url);
+    console.log("RESPOSTA:", texto);
+
+    const dados = JSON.parse(texto);
+
+    if (!resposta.ok || !dados.sucesso) {
+      throw new Error(dados.erro || "Não foi possível iniciar o pagamento.");
+    }
+
+    window.location.href = dados.initPoint;
+  })
+  .catch(erro => {
+    console.error("ERRO NO FETCH:", erro);
+    alert(erro.message);
+  });
+});
   </script>
 
 <%- include("../partial/footer.ejs") %>
