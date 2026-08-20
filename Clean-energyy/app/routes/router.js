@@ -301,7 +301,7 @@ const preference = await preferenceClient.create({
     // Move os itens do carrinho para "pendentes" assim que o checkout é iniciado
     req.session.pedidosPendentes = [...(req.session.pedidosPendentes || []), ...cart];
     const pool = require('../../config/pool_conexoes');
-    await pool.query('DELETE FROM carrinho WHERE userId = ?', [userId]);
+    await pool.query('DELETE FROM carrinho WHERE CAST(userId AS CHAR) = ?', [String(userId)]);
     for (const item of cart) {
       try {
         const produto = await produtosModel.findById(item.productId);

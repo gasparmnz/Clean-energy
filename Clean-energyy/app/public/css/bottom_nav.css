@@ -1,0 +1,186 @@
+/* ============================================================
+   Navegação inferior mobile (estilo app) — global, todas as páginas
+   ============================================================ */
+
+.bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+
+  /* Reserva espaço no fim da página para a barra fixa não cobrir
+     conteúdo — só quando a barra existe na página (login/cadastro
+     não incluem o header, então não são afetadas). */
+  body:has(.bottom-nav) {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+    background: #ffffff;
+    border-top: 2px solid #1b814e;
+    border-radius: 14px 14px 0 0;
+    box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.08);
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px));
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .bottom-nav__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+    text-decoration: none;
+    color: #6b7280;
+    font-size: 0.66rem;
+    font-weight: 600;
+    padding: 6px 2px;
+    border-radius: 10px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .bottom-nav__link span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .bottom-nav__link i {
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  .bottom-nav__link.is-active {
+    color: #1b814e;
+    background: rgba(27, 129, 78, 0.08);
+  }
+
+  body.dark-mode .bottom-nav {
+    background: #1a1a1a;
+    border-top-color: #16a34a;
+    box-shadow: 0 -6px 18px rgba(0, 0, 0, 0.35);
+  }
+
+  body.dark-mode .bottom-nav__link {
+    color: #9ca3af;
+  }
+
+  body.dark-mode .bottom-nav__link.is-active {
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.12);
+  }
+
+  /* ── Perfil (visitante): botão + dropdown Login/Cadastre-se ── */
+  .bottom-nav__account {
+    position: relative;
+    padding: 0;
+  }
+
+  .bottom-nav__account-trigger {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    padding: 6px 2px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .bottom-nav__account-trigger i {
+    font-size: 1.35rem;
+    line-height: 1;
+  }
+
+  .bottom-nav__account.is-active .bottom-nav__account-trigger {
+    color: #1b814e;
+    background: rgba(27, 129, 78, 0.08);
+  }
+
+  .bottom-nav__account-menu {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 10px);
+    right: -6px;
+    min-width: 170px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    padding: 8px 0;
+    text-align: left;
+  }
+
+  .bottom-nav__account-menu.show {
+    display: block;
+  }
+
+  .bottom-nav__account-title {
+    display: block;
+    padding: 4px 16px 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+
+  .bottom-nav__account-menu a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    text-decoration: none;
+  }
+
+  .bottom-nav__account-menu a i {
+    font-size: 1.05rem;
+    color: #1b814e;
+  }
+
+  .bottom-nav__account-menu a:hover {
+    background: #f3f4f6;
+  }
+
+  body.dark-mode .bottom-nav__account.is-active .bottom-nav__account-trigger {
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.12);
+  }
+
+  body.dark-mode .bottom-nav__account-menu {
+    background: #1f1f1f;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.45);
+  }
+
+  body.dark-mode .bottom-nav__account-menu a {
+    color: #e5e7eb;
+  }
+
+  body.dark-mode .bottom-nav__account-menu a:hover {
+    background: #2a2a2a;
+  }
+}
+
+@media (min-width: 769px) {
+  .bottom-nav {
+    display: none !important;
+  }
+}

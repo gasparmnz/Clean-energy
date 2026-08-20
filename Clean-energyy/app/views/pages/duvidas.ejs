@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="/css/duvidas.css" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <title>Dúvidas - Assistente Virtual Clean Energy</title>
+
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1b814e">
+  <link rel="apple-touch-icon" href="/imagem/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imagem/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/imagem/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/imagem/icon-512.png">
+</head>
+<body>
+  <%- include('../partial/header.ejs') %>
+  <main class="duvidas-main">
+
+    <nav class="back-navigation" aria-label="Navegação de retorno">
+      <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+        <i class='bx bx-arrow-back'></i>
+        <span>Voltar</span>
+      </button>
+    </nav>
+
+    <section class="chat-page">
+      <header class="chat-page-header">
+        <span class="chat-page-avatar"><i class='bx bx-leaf'></i></span>
+        <section class="chat-page-title">
+          <h1>Assistente Virtual Clean Energy</h1>
+          <p>Tire suas dúvidas sobre cadastro, login, compras, vendas, carrinho, pagamento, entrega e navegação no site.</p>
+        </section>
+      </header>
+
+      <section id="chatbot-messages" class="chat-messages" aria-live="polite"></section>
+
+      <form id="chatbot-form" class="chat-input-area">
+        <textarea
+          id="chatbot-input"
+          rows="1"
+          maxlength="500"
+          placeholder="Digite sua dúvida sobre o site..."
+          aria-label="Digite sua pergunta para o assistente virtual"
+        ></textarea>
+        <button id="chatbot-send" class="chat-send" type="submit" aria-label="Enviar pergunta">
+          <i class='bx bx-send'></i>
+        </button>
+      </form>
+    </section>
+  </main>
+  <%- include('../partial/footer.ejs') %>
+
+  <script src="/js/darkmode.js"></script>
+  <script src="/js/pwa.js" defer></script>
+  <script src="/js/chatbot.js" defer></script>
+</body>
+</html>

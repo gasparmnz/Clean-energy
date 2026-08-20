@@ -1,0 +1,100 @@
+<link rel="stylesheet" href="/css/bottom_nav.css">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+<%
+  var isVendedor = typeof usuario !== 'undefined' && usuario && usuario.perfil === 'vendedor';
+  var vendorHref = isVendedor ? '/cadastrar_produto' : '/adicione_produto';
+  var vendorLabel = isVendedor ? 'Vender' : 'Vendedor';
+%>
+
+<nav class="bottom-nav" aria-label="Navegação principal">
+  <a href="/" class="bottom-nav__link" data-nav="inicio">
+    <i class='bx bx-home'></i>
+    <span>Início</span>
+  </a>
+  <a href="/carrinho" class="bottom-nav__link" data-nav="carrinho">
+    <i class='bx bx-cart-alt'></i>
+    <span>Carrinho</span>
+  </a>
+  <a href="<%= vendorHref %>" class="bottom-nav__link" data-nav="vendedor">
+    <i class='bx bx-store'></i>
+    <span><%= vendorLabel %></span>
+  </a>
+  <% if (typeof usuario !== 'undefined' && usuario) { %>
+    <a href="/perfil" class="bottom-nav__link" data-nav="perfil">
+      <i class='bx bx-user'></i>
+      <span>Perfil</span>
+    </a>
+  <% } else { %>
+    <section class="bottom-nav__link bottom-nav__account" data-nav="perfil">
+      <button type="button" class="bottom-nav__account-trigger" id="bottomNavAccountBtn" aria-haspopup="true" aria-expanded="false">
+        <i class='bx bx-user'></i>
+        <span>Perfil</span>
+      </button>
+      <section class="bottom-nav__account-menu" id="bottomNavAccountMenu">
+        <span class="bottom-nav__account-title">Bem-vindo!</span>
+        <a href="/login"><i class='bx bx-log-in'></i> Login</a>
+        <a href="/cadastro"><i class='bx bx-user-plus'></i> Cadastre-se</a>
+      </section>
+    </section>
+  <% } %>
+</nav>
+
+<script>
+(function () {
+  var ICONS = {
+    inicio: { off: 'bx-home', on: 'bxs-home' },
+    carrinho: { off: 'bx-cart-alt', on: 'bxs-cart-alt' },
+    vendedor: { off: 'bx-store', on: 'bxs-store' },
+    perfil: { off: 'bx-user', on: 'bxs-user-circle' }
+  };
+
+  var ROUTES = {
+    inicio: ['/'],
+    carrinho: ['/carrinho'],
+    vendedor: ['/adicione_produto', '/cadastro_vendedor', '/upgrade_vendedor', '/cadastrar_produto'],
+    perfil: ['/perfil', '/listaprodutos', '/minhascompras', '/editar_usuario', '/perfil_vendedor', '/login', '/cadastro']
+  };
+
+  var path = window.location.pathname.replace(/\/+$/, '') || '/';
+  var activeKey = 'inicio';
+
+  Object.keys(ROUTES).forEach(function (key) {
+    ROUTES[key].forEach(function (route) {
+      if (path === route || (route !== '/' && path.indexOf(route) === 0)) {
+        activeKey = key;
+      }
+    });
+  });
+
+  document.querySelectorAll('.bottom-nav__link').forEach(function (link) {
+    var key = link.getAttribute('data-nav');
+    var icon = link.querySelector('i');
+    if (key === activeKey) {
+      link.classList.add('is-active');
+      if (icon) icon.classList.replace(ICONS[key].off, ICONS[key].on);
+    }
+  });
+
+  // Dropdown de Login/Cadastro no ícone Perfil (visitante não logado)
+  var accountBtn = document.getElementById('bottomNavAccountBtn');
+  var accountMenu = document.getElementById('bottomNavAccountMenu');
+
+  if (accountBtn && accountMenu) {
+    accountBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var isOpen = accountMenu.classList.toggle('show');
+      accountBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', function () {
+      accountMenu.classList.remove('show');
+      accountBtn.setAttribute('aria-expanded', 'false');
+    });
+
+    accountMenu.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+  }
+})();
+</script>
