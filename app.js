@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 
+app.set('trust proxy', 1);
+
 const path = require('path');
 
 app.set('view engine', 'ejs');

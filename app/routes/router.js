@@ -7,6 +7,7 @@ const produtosModel = models;
 const { usuarioModel, vendedorModel, notificacoesModel, webauthnModel } = models;
 const cartModel = require("../models/cartModel");
 const { uploadProduto, uploadFoto } = require("../helpers/upload");
+const { preferenceClient } = require("../../config/mercadopago");
 const geminiChat = require("../helpers/geminiChat");
 var { validarCPF } = require("../helpers/validacao");
 const {
@@ -28,6 +29,8 @@ function requireVendedor(req, res, next) {
   if (req.session.perfil !== 'vendedor') return res.redirect('/?erro=acesso_restrito');
   next();
 }
+
+
 
 /* ROTAS */
 router.get("/", async (req, res) => {
@@ -163,6 +166,8 @@ router.post("/minhascompras/finalizar", requireLogin, async (req, res) => {
   }
 });
 
+
+
 // ── Atualizar perfil
 router.post("/perfil/atualizar", requireLogin, async (req, res) => {
   const { nome, biografia } = req.body;
@@ -241,6 +246,71 @@ router.get("/carrinho", async (req, res) => {
     res.render("pages/carrinho", { cart });
   } catch (err) {
     res.status(500).send('Erro ao obter carrinho');
+  }
+});
+
+router.post("/pagamento/criar", requireLogin, async (req, res) => {
+  console.log(">>> ROTA DE PAGAMENTO FOI CHAMADA!");
+  try {
+
+    const userId = req.session.userId || req.sessionID;
+    const cart = await cartModel.getCartByUser(userId);
+
+    if (!cart || cart.length === 0) {
+      return res.status(400).json({
+        sucesso: false,
+        erro: "Seu carrinho está vazio."
+      });
+    }
+
+    const items = cart.map(item => ({
+      id: String(item.productId),
+      title: item.nome,
+      quantity: item.quantidade,
+      currency_id: "BRL",
+      unit_price: Number(item.preco)
+    }));
+
+    const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get("host")}`;
+
+
+const isLocalhost = baseUrl.includes("localhost") || baseUrl.includes("127.0.0.1");
+
+const preferenceBody = {
+  items,
+  back_urls: {
+    success: `${baseUrl}/pagamento/sucesso`,
+    failure: `${baseUrl}/pagamento/falha`,
+    pending: `${baseUrl}/pagamento/pendente`
+  },
+  notification_url: `${baseUrl}/pagamento/webhook`
+};
+
+if (!isLocalhost) {
+  preferenceBody.auto_return = "approved";
+}
+
+const preference = await preferenceClient.create({
+  body: preferenceBody
+});
+
+    console.log("Preference criada!");
+    console.log(preference);
+
+    res.json({
+      sucesso: true,
+      initPoint: preference.init_point
+    });
+
+  } catch (err) {
+
+    console.error("ERRO COMPLETO:");
+    console.error(err);
+
+    res.status(500).json({
+      sucesso: false,
+      erro: err.message
+    });
   }
 });
 
@@ -878,6 +948,29 @@ router.post("/login/biometria/verificar", requireWebauthn, async (req, res) => {
     console.error('Erro ao verificar login WebAuthn:', err);
     res.status(500).json({ error: 'Erro ao verificar login.' });
   }
+});
+
+
+
+router.get("/pagamento/sucesso", requireLogin, (req, res) => {
+    res.render("pages/pagamento-sucesso");
+});
+
+router.get("/pagamento/falha", requireLogin, (req, res) => {
+    res.render("pages/pagamento-falha");
+});
+
+router.get("/pagamento/pendente", requireLogin, (req, res) => {
+    res.render("pages/pagamento-pendente");
+});
+
+router.post("/pagamento/webhook", async (req, res) => {
+
+    console.log("Notificação recebida do Mercado Pago");
+
+    console.log(req.body);
+
+    res.sendStatus(200);
 });
 
 module.exports = router;
