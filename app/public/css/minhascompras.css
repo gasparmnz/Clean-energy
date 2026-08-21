@@ -25,6 +25,11 @@ main {
   margin-top: 87px;
 }
 
+/* Remove o padding do sidebar_perfil.css para o conteúdo ficar no topo */
+.perfil-layout__content {
+  padding: 0 !important;
+}
+
 .content {
   flex: 1;
   padding: 20px;
@@ -369,6 +374,7 @@ main {
   overflow: hidden;
   min-width: 0;
   width: 100%;
+  padding: 0 !important;
 }
 
 /* O content interno também precisa do limite */

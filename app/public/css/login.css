@@ -660,3 +660,24 @@ body {
     min-width: 50%;
   }
 }
+
+
+/* ═══════════════════════════════════════════════
+   Logo dentro do painel hero
+   ═══════════════════════════════════════════════ */
+.hero-logo-link {
+  display: inline-block;
+  margin-bottom: 24px;
+  transition: opacity 0.2s ease;
+}
+
+.hero-logo-link:hover {
+  opacity: 0.85;
+}
+
+.hero-logo-img {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* deixa branco para contrastar com o fundo verde escuro */
+}

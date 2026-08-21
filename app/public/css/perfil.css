@@ -209,6 +209,8 @@ body.dark-mode .toggle-track { background: #4b5563; }
 
 .perfil-error { padding: 2rem; text-align: center; color: var(--muted); font-size: 1rem; }
 
+
+
 @media (max-width: 768px) {
   .perfil-hero { flex-wrap: wrap; padding: 1.2rem; gap: 1rem; }
   .perfil-hero__edit-btn { position: static; width: 100%; justify-content: center; }

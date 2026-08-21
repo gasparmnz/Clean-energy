@@ -8,6 +8,12 @@
   <link rel="stylesheet" href="/css/sidebar_perfil.css">
   <link rel="stylesheet" href="/css/darkmode.css">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1b814e">
+  <link rel="apple-touch-icon" href="/imagem/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imagem/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/imagem/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/imagem/icon-512.png">
 </head>
 <body>
   <%- include('../partial/header.ejs') %>
@@ -185,7 +191,7 @@
       <section class="perfil-cards-grid" aria-label="Atalhos do perfil">
 
         <a href="/minhascompras" class="perfil-card">
-          <span class="perfil-card__icon" style="background: linear-gradient(135deg,#0891b2,#0e7490);">
+          <span class="perfil-card__icon" style="background: linear-gradient(135deg,#16a34a,#15803d);">
             <i class='bx bx-shopping-bag'></i>
           </span>
           <nav class="perfil-card__body">
@@ -197,7 +203,7 @@
 
         <% if (usuario.Tipo === 'PJ') { %>
         <a href="/listaprodutos" class="perfil-card">
-          <span class="perfil-card__icon" style="background: linear-gradient(135deg,#1565c0,#1976d2);">
+          <span class="perfil-card__icon" style="background: linear-gradient(135deg,#16a34a,#15803d);">
             <i class='bx bx-list-ul'></i>
           </span>
           <nav class="perfil-card__body">
@@ -221,7 +227,7 @@
 
         <% if (usuario.Tipo === 'PF') { %>
         <a href="/upgrade_vendedor" class="perfil-card">
-          <span class="perfil-card__icon" style="background: linear-gradient(135deg,#ea580c,#c2410c);">
+          <span class="perfil-card__icon" style="background: linear-gradient(135deg,#16a34a,#15803d);">
             <i class='bx bx-store'></i>
           </span>
           <nav class="perfil-card__body">
@@ -258,7 +264,7 @@
         <nav class="config-section">
           <p class="config-section-title">CONTA</p>
           <nav class="config-row non-link">
-            <nav class="config-icon-wrap" style="background:#7c3aed;">
+            <nav class="config-icon-wrap" style="background: linear-gradient(135deg,#16a34a,#15803d);"">
               <i class='bx bx-id-card'></i>
             </nav>
             <nav class="config-text">
@@ -279,6 +285,25 @@
             <i class='bx bx-chevron-right config-arrow'></i>
           </a>
         </nav>
+
+        <nav class="config-section" id="secaoBiometria">
+          <p class="config-section-title">SEGURANÇA</p>
+          <nav class="config-row non-link">
+            <nav class="config-icon-wrap" style="background:#0891b2;">
+              <i class='bx bx-fingerprint'></i>
+            </nav>
+            <nav class="config-text">
+              <span class="config-title">Biometria / Face ID</span>
+              <span class="config-sub">Entre mais rápido usando a biometria deste dispositivo</span>
+            </nav>
+            <button type="button" id="btnCadastrarBiometria" class="btn-toggle" style="border:1px solid #0891b2; color:#0891b2; padding:8px 14px; border-radius:8px; background:none; cursor:pointer;">
+              Cadastrar neste dispositivo
+            </button>
+          </nav>
+          <div id="listaBiometria" style="padding: 8px 16px;">
+            <p style="color:#9ca3af; font-size:.85rem;">Carregando dispositivos cadastrados...</p>
+          </div>
+        </nav>
       </section>
 
       <% } else { %>
@@ -291,5 +316,66 @@
   <%- include('../partial/footer.ejs') %>
   <script src="/js/darkmode.js"></script>
   <script src="/js/perfil.js"></script>
+  <script src="/js/pwa.js" defer></script>
+  <script src="/js/webauthn-client.js"></script>
+  <script>
+    (function () {
+      const btn = document.getElementById('btnCadastrarBiometria');
+      const lista = document.getElementById('listaBiometria');
+      if (!btn || !lista) return;
+
+      function renderLista(credenciais) {
+        if (!credenciais || credenciais.length === 0) {
+          lista.innerHTML = '<p style="color:#9ca3af; font-size:.85rem;">Nenhum dispositivo cadastrado ainda.</p>';
+          return;
+        }
+        lista.innerHTML = credenciais.map(function (c) {
+          const data = new Date(c.criado_em).toLocaleDateString('pt-BR');
+          return '<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #eee;">' +
+            '<span style="font-size:.9rem;"><i class="bx bx-fingerprint"></i> ' + (c.device_name || 'Dispositivo') + ' <small style="color:#9ca3af;">— cadastrado em ' + data + '</small></span>' +
+            '<button type="button" class="btn-remover-biometria" data-id="' + c.id + '" style="background:none; border:none; color:#dc2626; cursor:pointer; font-size:.85rem;">Remover</button>' +
+            '</div>';
+        }).join('');
+
+        lista.querySelectorAll('.btn-remover-biometria').forEach(function (b) {
+          b.addEventListener('click', function () {
+            fetch('/perfil/biometria/remover/' + b.dataset.id, { method: 'POST' })
+              .then(function (r) { return r.json(); })
+              .then(function () { carregarLista(); });
+          });
+        });
+      }
+
+      function carregarLista() {
+        fetch('/perfil/biometria/listar')
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!data.disponivel) {
+              lista.innerHTML = '<p style="color:#9ca3af; font-size:.85rem;">Recurso ainda não habilitado no servidor.</p>';
+              btn.style.display = 'none';
+              return;
+            }
+            renderLista(data.credenciais);
+          })
+          .catch(function () {
+            lista.innerHTML = '<p style="color:#9ca3af; font-size:.85rem;">Não foi possível carregar os dispositivos.</p>';
+          });
+      }
+
+      if (!window.PublicKeyCredential) {
+        btn.style.display = 'none';
+        lista.innerHTML = '<p style="color:#9ca3af; font-size:.85rem;">Este navegador/dispositivo não suporta biometria ou Face ID.</p>';
+      } else {
+        btn.addEventListener('click', function () {
+          btn.disabled = true;
+          cadastrarBiometria().then(function (ok) {
+            btn.disabled = false;
+            if (ok) carregarLista();
+          });
+        });
+        carregarLista();
+      }
+    })();
+  </script>
 </body>
 </html>

@@ -7,6 +7,7 @@
   width: 100%;
   background: #f5f7f5;
   padding: 0 0 2rem;
+  margin-top: 85px;
 }
 
 body.dark-mode .hero-section { background: #121212; }
@@ -153,7 +154,7 @@ body.dark-mode .hero-section { background: #121212; }
 .carrossel-btn-prev { left: 1.25rem; }
 .carrossel-btn-next { right: 1.25rem; }
 
-body.dark-mode .carrossel-btn { background: rgba(30,30,30,.9); color: #e5e7eb; }
+body.dark-mode .carrossel-btn { background: rgba(248, 248, 248, 0.9); color: #e5e7eb; }
 
 /* ── Dots de paginação ── */
 .carrossel-dots {

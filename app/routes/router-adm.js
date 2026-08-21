@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const pool = require("../../config/pool_conexoes");
 const produtosModel = require("../models/models.js");
+const { notificacoesModel } = require("../models/models.js");
 
 // Admin dashboard
 router.get("/", async (req, res) => {
@@ -72,6 +73,14 @@ router.post("/usuarios/suspender", async (req, res) => {
     const { id } = req.body;
     if (!id) return res.status(400).json({ error: 'ID obrigatório' });
     await pool.query("UPDATE Usuario SET status = 'suspended' WHERE Usuario_ID = ?", [id]);
+    try {
+      await notificacoesModel.criar({
+        usuarioId: id,
+        tipo: 'conta_suspensa',
+        mensagem: 'Sua conta foi suspensa pelo administrador.',
+        link: '/perfil'
+      });
+    } catch (e) { console.error('Erro ao notificar suspensão de conta:', e); }
     res.json({ success: true });
   } catch (err) {
     console.error('Erro ao suspender usuário', err);
@@ -85,6 +94,14 @@ router.post("/usuarios/reativar", async (req, res) => {
     const { id } = req.body;
     if (!id) return res.status(400).json({ error: 'ID obrigatório' });
     await pool.query("UPDATE Usuario SET status = 'active' WHERE Usuario_ID = ?", [id]);
+    try {
+      await notificacoesModel.criar({
+        usuarioId: id,
+        tipo: 'conta_reativada',
+        mensagem: 'Sua conta foi reativada pelo administrador.',
+        link: '/perfil'
+      });
+    } catch (e) { console.error('Erro ao notificar reativação de conta:', e); }
     res.json({ success: true });
   } catch (err) {
     console.error('Erro ao reativar usuário', err);
@@ -126,6 +143,21 @@ router.post("/produtos_adm/toggle_status", async (req, res) => {
     }
     const numericId = String(id).replace(/^PROD-/i, '');
     await produtosModel.updateStatus(numericId, status);
+
+    try {
+      const produto = await produtosModel.findById(numericId);
+      if (produto && produto.usuario_id) {
+        await notificacoesModel.criar({
+          usuarioId: produto.usuario_id,
+          tipo: status === 'suspended' ? 'produto_suspenso' : 'produto_reativado',
+          mensagem: status === 'suspended'
+            ? `Seu produto "${produto.nome}" foi suspenso pelo administrador.`
+            : `Seu produto "${produto.nome}" foi reativado.`,
+          link: '/listaprodutos'
+        });
+      }
+    } catch (e) { console.error('Erro ao notificar vendedor sobre produto:', e); }
+
     res.json({ success: true, id, status });
   } catch (err) {
     console.error('Erro ao alterar status do produto', err);
@@ -213,6 +245,151 @@ router.get("/detalhes_user", async (req, res) => {
   } catch (err) {
     console.error('Erro ao obter detalhes do usuário', err);
     res.render('pages/detalhes_user', { usuario: null });
+  }
+});
+
+// Tela de edição de usuário
+router.get("/editar_usuario", async (req, res) => {
+  try {
+    const userId = req.query.userId || req.query.id || req.params.id;
+
+    if (!userId) {
+      return res.render("pages/editar_usuario", {
+        usuario: null,
+        erro: "Selecione um usuário para editar."
+      });
+    }
+
+    const numeric = String(userId).match(/(\d+)$/);
+    const idToQuery = numeric ? Number(numeric[1]) : Number(userId);
+    if (Number.isNaN(idToQuery)) {
+      return res.render("pages/editar_usuario", {
+        usuario: null,
+        erro: "Usuário inválido."
+      });
+    }
+
+    const [rows] = await pool.query(
+      `SELECT u.Usuario_ID AS id, u.Nome, u.Email, u.Tipo, u.Biografia,
+              pf.CPF, pj.CNPJ
+       FROM Usuario u
+       LEFT JOIN Pessoa_Fisica   pf ON pf.Usuario_ID = u.Usuario_ID
+       LEFT JOIN Pessoa_Juridica pj ON pj.Usuario_ID = u.Usuario_ID
+       WHERE u.Usuario_ID = ?`,
+      [idToQuery]
+    );
+    const usuario = rows[0] || null;
+    res.render("pages/editar_usuario", { usuario, erro: null });
+  } catch (err) {
+    console.error("Erro ao carregar edição de usuário", err);
+    res.render("pages/editar_usuario", { usuario: null, erro: "Erro ao carregar a página." });
+  }
+});
+
+// Salva a edição do usuário
+router.post("/editar_usuario/atualizar", async (req, res) => {
+  const { userId, nome, email, biografia, tipoConta } = req.body;
+  try {
+    if (!userId || !nome || !nome.trim() || !email || !email.trim()) {
+      const [rows] = await pool.query(
+        `SELECT u.Usuario_ID AS id, u.Nome, u.Email, u.Tipo, u.Biografia,
+                pf.CPF, pj.CNPJ
+         FROM Usuario u
+         LEFT JOIN Pessoa_Fisica   pf ON pf.Usuario_ID = u.Usuario_ID
+         LEFT JOIN Pessoa_Juridica pj ON pj.Usuario_ID = u.Usuario_ID
+         WHERE u.Usuario_ID = ?`,
+        [userId]
+      );
+      return res.render("pages/editar_usuario", {
+        usuario: rows[0] || null,
+        erro: "Nome e e-mail são obrigatórios."
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      const [rows] = await pool.query(
+        `SELECT u.Usuario_ID AS id, u.Nome, u.Email, u.Tipo, u.Biografia,
+                pf.CPF, pj.CNPJ
+         FROM Usuario u
+         LEFT JOIN Pessoa_Fisica   pf ON pf.Usuario_ID = u.Usuario_ID
+         LEFT JOIN Pessoa_Juridica pj ON pj.Usuario_ID = u.Usuario_ID
+         WHERE u.Usuario_ID = ?`,
+        [userId]
+      );
+      return res.render("pages/editar_usuario", {
+        usuario: rows[0] || null,
+        erro: "E-mail inválido."
+      });
+    }
+
+    // Impede e-mail duplicado em outro usuário
+    const [existente] = await pool.query(
+      "SELECT Usuario_ID FROM Usuario WHERE Email = ? AND Usuario_ID != ?",
+      [email.trim(), userId]
+    );
+    if (existente.length > 0) {
+      const [rows] = await pool.query(
+        `SELECT u.Usuario_ID AS id, u.Nome, u.Email, u.Tipo, u.Biografia,
+                pf.CPF, pj.CNPJ
+         FROM Usuario u
+         LEFT JOIN Pessoa_Fisica   pf ON pf.Usuario_ID = u.Usuario_ID
+         LEFT JOIN Pessoa_Juridica pj ON pj.Usuario_ID = u.Usuario_ID
+         WHERE u.Usuario_ID = ?`,
+        [userId]
+      );
+      return res.render("pages/editar_usuario", {
+        usuario: rows[0] || null,
+        erro: "Este e-mail já está em uso por outro usuário."
+      });
+    }
+
+    const tipoFinal = String(tipoConta || "PF").toUpperCase() === "PJ" ? "PJ" : "PF";
+    const parsedUserId = Number(userId);
+    const [usuarioAtualRows] = await pool.query(
+      `SELECT u.Usuario_ID AS id, u.Nome, u.Email, u.Tipo, u.Biografia,
+              pf.CPF, pj.CNPJ
+       FROM Usuario u
+       LEFT JOIN Pessoa_Fisica   pf ON pf.Usuario_ID = u.Usuario_ID
+       LEFT JOIN Pessoa_Juridica pj ON pj.Usuario_ID = u.Usuario_ID
+       WHERE u.Usuario_ID = ?`,
+      [parsedUserId]
+    );
+    const usuarioAtual = usuarioAtualRows[0] || null;
+
+    await pool.query(
+      "UPDATE Usuario SET Nome = ?, Email = ?, Biografia = ?, Tipo = ? WHERE Usuario_ID = ?",
+      [nome.trim(), email.trim(), (biografia || "").trim() || null, tipoFinal, parsedUserId]
+    );
+
+    if (tipoFinal === "PJ") {
+      const [pjExistente] = await pool.query("SELECT 1 FROM Pessoa_Juridica WHERE Usuario_ID = ?", [parsedUserId]);
+      if (pjExistente.length === 0 && usuarioAtual && usuarioAtual.CNPJ) {
+        const cnpjNumeros = String(usuarioAtual.CNPJ).replace(/\D/g, '');
+        if (cnpjNumeros) {
+          await pool.query("INSERT INTO Pessoa_Juridica (Usuario_ID, CNPJ) VALUES (?, ?)", [parsedUserId, cnpjNumeros]);
+        }
+      }
+    } else {
+      await pool.query("DELETE FROM Pessoa_Juridica WHERE Usuario_ID = ?", [parsedUserId]);
+      const [pfExistente] = await pool.query("SELECT 1 FROM Pessoa_Fisica WHERE Usuario_ID = ?", [parsedUserId]);
+      if (pfExistente.length === 0 && usuarioAtual && usuarioAtual.CPF) {
+        const cpfNumeros = String(usuarioAtual.CPF).replace(/\D/g, '');
+        if (cpfNumeros) {
+          await pool.query("INSERT INTO Pessoa_Fisica (Usuario_ID, CPF) VALUES (?, ?)", [parsedUserId, cpfNumeros]);
+        }
+      }
+    }
+
+    if (req.session.userId && Number(req.session.userId) === parsedUserId) {
+      req.session.perfil = tipoFinal === "PJ" ? "vendedor" : "comprador";
+      req.session.tipo = tipoFinal;
+    }
+
+    res.redirect("/adm/detalhes_user?userId=" + encodeURIComponent(parsedUserId));
+  } catch (err) {
+    console.error("Erro ao atualizar usuário", err);
+    res.redirect("/adm/editar_usuario?userId=" + encodeURIComponent(userId || ""));
   }
 });
 

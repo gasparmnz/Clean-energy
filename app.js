@@ -9,8 +9,33 @@ app.set('views', path.join(__dirname, 'app', 'views'));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'app', 'public')));
-app.use('/imagem', express.static('app/public/imagem'));
+
+// O service worker precisa ser sempre revalidado para que atualizações
+// (novas versões do cache/app shell) cheguem aos usuários rapidamente.
+app.use('/sw.js', (req, res, next) => {
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Service-Worker-Allowed', '/');
+  next();
+});
+app.use('/manifest.json', (req, res, next) => {
+  res.setHeader('Cache-Control', 'public, max-age=3600');
+  next();
+});
+
+app.use(express.static(path.join(__dirname, 'app', 'public'), {
+  maxAge: '0',
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.js') || filePath.endsWith('.css') || filePath.endsWith('.json')) {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+    if (filePath.endsWith('sw.js')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  }
+}));
+app.use('/imagem', express.static('app/public/imagem', { maxAge: '7d' }));
 
 const session = require('express-session');
 app.use(session({
