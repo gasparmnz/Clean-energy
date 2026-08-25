@@ -5,7 +5,7 @@
   <header class="perfil-aside__header">
     <figure class="perfil-aside__avatar-wrap">
       <img
-        src="/imagem/<%= usuario && usuario.foto ? usuario.foto : 'avatar.png' %>"
+        src="<%= usuario && usuario.foto ? (usuario.foto.startsWith('data:') ? usuario.foto : '/imagem/' + usuario.foto) : '/imagem/avatar.png' %>"
         alt="Foto do usuário"
         class="perfil-aside__avatar"
       >

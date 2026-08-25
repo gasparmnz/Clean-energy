@@ -1,24 +1,10 @@
 var express = require("express");
 var router = express.Router();
-const { body, validationResult } = require("express-validator");
-const bcrypt = require('bcryptjs');
-const models = require("../models/models");
-const produtosModel = models;
-const { usuarioModel, vendedorModel, notificacoesModel, webauthnModel } = models;
-const cartModel = require("../models/cartModel");
-const { uploadProduto, uploadFoto } = require("../helpers/upload");
-const { preferenceClient } = require("../../config/mercadopago");
-const geminiChat = require("../helpers/geminiChat");
-var { validarCPF } = require("../helpers/validacao");
-const {
-  disponivel: webauthnDisponivel,
-  RP_NAME, RP_ID, ORIGIN,
-  generateRegistrationOptions,
-  verifyRegistrationResponse,
-  generateAuthenticationOptions,
-  verifyAuthenticationResponse
-} = require("../helpers/webauthn");
 
+const { requireLogin, requireVendedor, requireWebauthn } = require("../middlewares/auth");
+const { uploadProduto, uploadFoto } = require("../helpers/upload");
+
+<<<<<<< HEAD
 function requireLogin(req, res, next) {
   if (!req.session.userId) return res.redirect('/login');
   next();
@@ -497,295 +483,93 @@ router.post("/cadastrar_produto", requireVendedor, uploadProduto.single('imagem'
     res.status(500).send('Erro ao cadastrar produto. Tente novamente.');
   }
 });
+=======
+const paginaController = require("../controllers/paginaController");
+const produtoController = require("../controllers/produtoController");
+const carrinhoController = require("../controllers/carrinhoController");
+const pagamentoController = require("../controllers/pagamentoController");
+const perfilController = require("../controllers/perfilController");
+const authController = require("../controllers/authController");
+const vendedorController = require("../controllers/vendedorController");
+const notificacaoController = require("../controllers/notificacaoController");
+const biometriaController = require("../controllers/biometriaController");
+const duvidasController = require("../controllers/duvidasController");
+const adminController = require("../controllers/adminController");
+
+/* PÁGINAS / PRODUTOS */
+router.get("/", produtoController.listarProdutos);
+router.get("/home", paginaController.getHome);
+router.get("/transporte", paginaController.getTransporte);
+router.get("/sobre_nos", paginaController.getSobreNos);
+router.get("/adicione_produto", paginaController.getAdicioneProduto);
+router.get("/painel", requireLogin, paginaController.getPainel);
+router.get("/meus_produtos", requireLogin, paginaController.getMeusProdutos);
+
+router.get("/cadastrar_produto", requireVendedor, produtoController.getCadastrarProdutoForm);
+router.post("/cadastrar_produto", requireVendedor, uploadProduto.single("imagem"), produtoController.postCadastrarProduto);
+router.get("/listaprodutos", requireLogin, produtoController.getListaProdutos);
+router.get("/item/:id", produtoController.getItem);
+router.post("/item/:id/avaliar", requireLogin, produtoController.avaliarItem);
+router.delete("/produtos/:id", requireVendedor, produtoController.deleteProduto);
+
+/* CARRINHO */
+router.get("/carrinho", carrinhoController.getCarrinho);
+router.post("/cart/add", carrinhoController.addToCart);
+router.post("/cart/remove", carrinhoController.removeFromCart);
+
+/* PAGAMENTO / PEDIDOS */
+router.get("/minhascompras", requireLogin, pagamentoController.getMinhasCompras);
+router.post("/minhascompras/finalizar", requireLogin, pagamentoController.finalizarCompra);
+router.post("/pagamento/criar", requireLogin, pagamentoController.criarPagamento);
+router.get("/pagamento/sucesso", requireLogin, pagamentoController.getSucesso);
+router.get("/pagamento/falha", requireLogin, pagamentoController.getFalha);
+router.get("/pagamento/pendente", requireLogin, pagamentoController.getPendente);
+router.post("/pagamento/webhook", pagamentoController.webhook);
+
+/* PERFIL */
+router.get("/perfil", requireLogin, perfilController.getPerfil);
+router.post("/perfil/atualizar", requireLogin, perfilController.atualizarPerfil);
+router.post("/perfil/foto", requireLogin, uploadFoto.single("foto"), perfilController.atualizarFoto);
+router.get("/upgrade_vendedor", requireLogin, perfilController.getUpgradeVendedorForm);
+router.post("/upgrade_vendedor", requireLogin, perfilController.validarUpgradeVendedor, perfilController.postUpgradeVendedor);
+>>>>>>> f2d47f39c319642df8a05a6fa991e87b973df0e0
 
 /* AUTENTICAÇÃO */
-router.get("/cadastro", (req, res) => {
-  res.render("pages/cadastro", {
-    valoresPessoaFisica: { nome:'', cpf:'', email:'', senha:'', confirmarSenha:'' },
-    erroValidacaoPessoaFisica: {}, msgErroPessoaFisica: {},
-    valoresEmpresa: { nome:'', cpf:'', email:'', senha:'', confirmarSenha:'' },
-    erroValidacaoEmpresa: {}, msgErroEmpresa: {},
-    retorno: null,
-  });
-});
+router.get("/cadastro", authController.getCadastro);
+router.get("/cadastro_vendedor", authController.getCadastroVendedorForm);
+router.get("/login", authController.getLogin);
+router.get("/logout", authController.getLogout);
+router.post("/cadastroUsuario", authController.validarCadastroUsuario, authController.postCadastroUsuario);
+router.post("/cadastroEmpresa", authController.validarCadastroEmpresa, authController.postCadastroEmpresa);
+router.post("/login", authController.postLogin);
 
-router.get("/login", (req, res) => {
-  if (req.session.userId) return res.redirect('/perfil');
-  res.render("pages/login", { erro: null, valores: { usuarioDigitado:'', senhaDigitada:'' }, sucesso: false });
-});
+/* ADMIN LOGIN (rota fica fora do prefixo /adm, então continua aqui) */
+router.get("/adm-login", adminController.getAdmLogin);
+router.post("/adm-login", adminController.postAdmLogin);
 
-router.get("/logout", (req, res) => {
-  req.session.destroy(() => res.redirect('/login'));
-});
-
-/* CADASTRO COMPRADOR (PF) */
-router.post("/cadastroUsuario",
-  body("nome").trim().notEmpty().withMessage("*Campo obrigatório!").isLength({ min:3, max:50 }).withMessage("*O Nome deve conter entre 3 e 50 caracteres!"),
-  body("cpf").custom((value) => { if (validarCPF(value)) return true; throw new Error("CPF inválido!"); }),
-  body("email").notEmpty().withMessage("*Campo obrigatório!").isEmail().withMessage("*Endereço de email inválido!"),
-  body("senha").notEmpty().withMessage("*Campo obrigatório!").isStrongPassword({ minLowercase:1, minUppercase:1, minNumbers:1, minSymbols:1, minLength:8 }).withMessage("*Sua senha deve conter pelo menos: uma letra maiúscula, um número e um caractere especial!"),
-  body("confirmarSenha").notEmpty().withMessage("*Campo obrigatório!").custom((value, { req }) => { if (value !== req.body.senha) throw new Error("*As senhas não conferem!"); return true; }),
-
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const erroValidacaoPessoaFisica = {}, msgErroPessoaFisica = {};
-      errors.array().forEach(e => { erroValidacaoPessoaFisica[e.path]='erro'; msgErroPessoaFisica[e.path]=e.msg; });
-      return res.render("pages/cadastro", {
-        valoresPessoaFisica: req.body, erroValidacaoPessoaFisica, msgErroPessoaFisica,
-        valoresEmpresa: { nome:'', cnpj:'', email:'', senha:'', confirmarSenha:'' },
-        erroValidacaoEmpresa: {}, msgErroEmpresa: {}, formularioAtivo:'farmacia', retorno:null
-      });
-    }
-    try {
-      const existing = await usuarioModel.findByEmail(req.body.email);
-      if (existing) {
-        return res.render("pages/cadastro", {
-          valoresPessoaFisica: req.body,
-          erroValidacaoPessoaFisica: { email:'erro' }, msgErroPessoaFisica: { email:'*Este e-mail já está cadastrado!' },
-          valoresEmpresa: { nome:'', cnpj:'', email:'', senha:'', confirmarSenha:'' },
-          erroValidacaoEmpresa: {}, msgErroEmpresa: {}, retorno:null
-        });
-      }
-      const senhaHash = await bcrypt.hash(req.body.senha, 10);
-      const result = await usuarioModel.createPF({ nome: req.body.nome, email: req.body.email, senhaHash });
-      const cpfNumeros = req.body.cpf.replace(/\D/g, '');
-      await usuarioModel.createPessoaFisica(result.insertId, cpfNumeros);
-      res.redirect("/login");
-    } catch (err) {
-      console.error('Erro ao cadastrar usuário:', err);
-      res.status(500).send('Erro ao cadastrar. Tente novamente.');
-    }
-  }
-);
-
-/* CADASTRO VENDEDOR (PJ) */
-router.post("/cadastroEmpresa",
-  body("nome").trim().notEmpty().withMessage("*Campo obrigatório!").isLength({ min:3, max:50 }).withMessage("*O Nome da empresa deve conter entre 3 e 50 caracteres!"),
-  body("cnpj").notEmpty().withMessage("*Campo obrigatório!").custom((value) => { if (value.replace(/\D/g,'').length !== 14) throw new Error("*O CNPJ deve conter 14 números!"); return true; }),
-  body("email").notEmpty().withMessage("*Campo obrigatório!").isEmail().withMessage("*Endereço de email inválido!"),
-  body("senha").notEmpty().withMessage("*Campo obrigatório!").isStrongPassword({ minLowercase:1, minUppercase:1, minNumbers:1, minSymbols:1, minLength:8 }).withMessage("*Sua senha deve conter pelo menos: uma letra maiúscula, um número e um caractere especial!"),
-  body("confirmarSenha").notEmpty().withMessage("*Campo obrigatório!").custom((value, { req }) => { if (value !== req.body.senha) throw new Error("*As senhas não conferem!"); return true; }),
-
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      const erroValidacaoEmpresa = {}, msgErroEmpresa = {};
-      errors.array().forEach(e => { erroValidacaoEmpresa[e.path]='erro'; msgErroEmpresa[e.path]=e.msg; });
-      return res.render("pages/cadastro_vendedor", { valoresEmpresa: req.body, erroValidacaoEmpresa, msgErroEmpresa, retorno:null });
-    }
-    try {
-      const existing = await usuarioModel.findByEmail(req.body.email);
-      if (existing) {
-        return res.render("pages/cadastro_vendedor", {
-          valoresEmpresa: req.body,
-          erroValidacaoEmpresa: { email:'erro' }, msgErroEmpresa: { email:'*Este e-mail já está cadastrado!' }, retorno:null
-        });
-      }
-      const senhaHash = await bcrypt.hash(req.body.senha, 10);
-      const result = await usuarioModel.createPJ({ nome: req.body.nome, email: req.body.email, senhaHash });
-      const cnpjNumeros = req.body.cnpj.replace(/\D/g, '');
-      await usuarioModel.createPessoaJuridica(result.insertId, cnpjNumeros);
-      res.redirect("/login");
-    } catch (err) {
-      console.error('Erro ao cadastrar empresa:', err);
-      res.status(500).send('Erro ao cadastrar. Tente novamente.');
-    }
-  }
-);
-
-/* LOGIN COM BANCO */
-router.post("/login", async (req, res) => {
-  const { usuarioDigitado, senhaDigitada } = req.body;
-  try {
-    const usuario = await usuarioModel.findByEmail(usuarioDigitado);
-    if (!usuario || !(await bcrypt.compare(senhaDigitada, usuario.Senha))) {
-      return res.render("pages/login", {
-        erro: "*Não reconhecemos estas credenciais. Tente novamente.",
-        sucesso: false, valores: { usuarioDigitado, senhaDigitada: '' }
-      });
-    }
-
-    if (usuario.status === 'suspended') {
-      return res.render("pages/login", {
-        erro: "⚠️ Sua conta foi suspensa pelo administrador. Entre em contato com o suporte para mais informações.",
-        sucesso: false, valores: { usuarioDigitado, senhaDigitada: '' }
-      });
-    }
-
-    req.session.userId = usuario.Usuario_ID;
-    req.session.nomeUsuario = usuario.Nome;
-    req.session.emailUsuario = usuario.Email;
-    req.session.perfil = usuario.Tipo === 'PJ' ? 'vendedor' : 'comprador';
-    req.session.tipo = usuario.Tipo;
-    req.session.fotoUsuario = usuario.foto || null;
-    await usuarioModel.updateUltimoLogin(usuario.Usuario_ID);
-    return res.redirect("/perfil");
-  } catch (err) {
-    console.error('Erro no login:', err);
-    res.status(500).send('Erro interno. Tente novamente.');
-  }
-});
-
-router.delete('/produtos/:id', requireVendedor, async (req, res) => {
-  try {
-    await produtosModel.delete(req.params.id);
-    res.json({ success: true, message: 'Produto deletado com sucesso' });
-  } catch (err) {
-    res.status(500).json({ success: false, message: 'Erro ao deletar produto' });
-  }
-});
-
-router.get("/adm-login", (req, res) => {
-  res.render("pages/adm-login");
-});
-
-router.post("/adm-login", (req, res) => {
-  const { senha } = req.body;
-
-  if (senha === process.env.ADMIN_SECRET) {
-    req.session.isAdmin = true;
-    return res.redirect("/adm");
-  }
-
-  res.send("Senha incorreta");
-});
-
-function requireAdmin(req, res, next) {
-  if (!req.session.isAdmin) {
-    return res.redirect("/adm-login");
-  }
-  next();
-}
-
-// ── PERFIL PÚBLICO DO VENDEDOR ────────────────────────────────
-router.get("/vendedor/:id", async (req, res) => {
-  try {
-    const vendedorId = req.params.id;
-
-    const vendedor = await vendedorModel.findById(vendedorId);
-    if (!vendedor) return res.status(404).send("Vendedor não encontrado");
-
-    const avgData = await vendedorModel.findMediaAvaliacao(vendedorId);
-    vendedor.mediaAvaliacao = avgData.media;
-    vendedor.totalAvaliacoes = avgData.total;
-
-    const prodRows = await vendedorModel.findProdutos(vendedorId);
-    vendedor.totalVendas = await vendedorModel.findTotalVendas(vendedorId);
-    vendedor.totalProdutos = prodRows.length;
-
-    const comentarios = await vendedorModel.findAvaliacoes(vendedorId);
-
-    let jaAvaliou = false;
-    let minhaAvaliacao = null;
-    if (req.session.userId) {
-      minhaAvaliacao = await vendedorModel.findAvaliacaoByAvaliador(vendedorId, req.session.userId);
-      if (minhaAvaliacao) jaAvaliou = true;
-    }
-
-    const usuarioSessao = req.session.userId
-      ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil }
-      : null;
-
-    res.render("pages/perfil_vendedor", {
-      vendedor,
-      produtos: prodRows,
-      comentarios,
-      jaAvaliou,
-      minhaAvaliacao,
-      usuario: usuarioSessao
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Erro ao carregar perfil do vendedor");
-  }
-});
-
-// ── AVALIAR VENDEDOR ──────────────────────────────────────────
-router.post("/vendedor/:id/avaliar", requireLogin, async (req, res) => {
-  const vendedorId = req.params.id;
-  const { nota, comentario } = req.body;
-  const notaNum = parseInt(nota, 10);
-
-  if (!notaNum || notaNum < 1 || notaNum > 5) {
-    return res.redirect(`/vendedor/${vendedorId}?erro=nota`);
-  }
-
-  if (parseInt(vendedorId) === req.session.userId) {
-    return res.redirect(`/vendedor/${vendedorId}?erro=proprio`);
-  }
-
-  try {
-    const jaAv = await vendedorModel.findAvaliacaoId(vendedorId, req.session.userId);
-
-    if (jaAv) {
-      await vendedorModel.updateAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
-    } else {
-      await vendedorModel.createAvaliacao({ vendedorId, avaliadorId: req.session.userId, nota: notaNum, comentario });
-      try {
-        await notificacoesModel.criar({
-          usuarioId: vendedorId,
-          tipo: 'nova_avaliacao_vendedor',
-          mensagem: 'Seu perfil de vendedor recebeu uma nova avaliação.',
-          link: `/vendedor/${vendedorId}#avaliacoes`
-        });
-      } catch (e) { console.error('Erro ao notificar avaliação de vendedor:', e); }
-    }
-    res.redirect(`/vendedor/${vendedorId}?sucesso=1#avaliacoes`);
-  } catch (err) {
-    console.error(err);
-    res.redirect(`/vendedor/${vendedorId}?erro=salvar`);
-  }
-});
+/* PERFIL PÚBLICO DO VENDEDOR */
+router.get("/vendedor/:id", vendedorController.getPerfilVendedor);
+router.post("/vendedor/:id/avaliar", requireLogin, vendedorController.avaliarVendedor);
 
 /* NOTIFICAÇÕES */
-router.get("/notificacoes", requireLogin, async (req, res) => {
-  try {
-    const notificacoes = await notificacoesModel.listarPorUsuario(req.session.userId, 20);
-    res.json({ notificacoes });
-  } catch (err) {
-    console.error('Erro ao buscar notificações:', err);
-    res.status(500).json({ notificacoes: [] });
-  }
-});
-
-router.get("/notificacoes/nao-lidas", requireLogin, async (req, res) => {
-  try {
-    const total = await notificacoesModel.contarNaoLidas(req.session.userId);
-    res.json({ total });
-  } catch (err) {
-    console.error('Erro ao contar notificações não lidas:', err);
-    res.status(500).json({ total: 0 });
-  }
-});
-
-router.post("/notificacoes/:id/ler", requireLogin, async (req, res) => {
-  try {
-    await notificacoesModel.marcarLida(req.params.id, req.session.userId);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false });
-  }
-});
-
-router.post("/notificacoes/marcar-todas-lidas", requireLogin, async (req, res) => {
-  try {
-    await notificacoesModel.marcarTodasLidas(req.session.userId);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false });
-  }
-});
+router.get("/notificacoes", requireLogin, notificacaoController.listar);
+router.get("/notificacoes/nao-lidas", requireLogin, notificacaoController.contarNaoLidas);
+router.post("/notificacoes/:id/ler", requireLogin, notificacaoController.marcarLida);
+router.post("/notificacoes/marcar-todas-lidas", requireLogin, notificacaoController.marcarTodasLidas);
 
 /* BIOMETRIA / FACE ID (WebAuthn) */
+router.get("/perfil/biometria/listar", requireLogin, biometriaController.listarCredenciais);
+router.get("/perfil/biometria/opcoes-registro", requireLogin, requireWebauthn, biometriaController.opcoesRegistro);
+router.post("/perfil/biometria/verificar-registro", requireLogin, requireWebauthn, biometriaController.verificarRegistro);
+router.post("/perfil/biometria/remover/:id", requireLogin, biometriaController.removerCredencial);
+router.post("/login/biometria/opcoes", requireWebauthn, biometriaController.opcoesLoginBiometria);
+router.post("/login/biometria/verificar", requireWebauthn, biometriaController.verificarLoginBiometria);
 
-function requireWebauthn(req, res, next) {
-  if (!webauthnDisponivel) {
-    return res.status(503).json({ error: 'Biometria indisponível: rode "npm install" no servidor para habilitar este recurso.' });
-  }
-  next();
-}
+/* DÚVIDAS / CHATBOT */
+router.get("/duvidas", duvidasController.getDuvidas);
+router.post("/duvidas/chat", duvidasController.postChat);
 
+<<<<<<< HEAD
 // Lista os dispositivos biométricos cadastrados do usuário logado
 router.get("/perfil/biometria/listar", requireLogin, async (req, res) => {
   try {
@@ -998,3 +782,6 @@ router.post("/pagamento/webhook", async (req, res) => {
 });
 
 module.exports = router;
+=======
+module.exports = router;
+>>>>>>> f2d47f39c319642df8a05a6fa991e87b973df0e0

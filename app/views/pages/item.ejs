@@ -217,7 +217,7 @@
             <% if (vendedor) { %>
             <a href="/vendedor/<%= vendedor.Usuario_ID %>" class="rating-content rating-link" aria-label="Ver perfil do vendedor <%= vendedor.Nome %>">
               <figure class="user-avatar">
-                <img src="/imagem/<%= vendedor.foto || 'avatar.png' %>" alt="<%= vendedor.Nome %>" class="avatar-image">
+                <img src="<%= vendedor.foto && vendedor.foto.startsWith('data:') ? vendedor.foto : '/imagem/' + (vendedor.foto || 'avatar.png') %>" alt="<%= vendedor.Nome %>" class="avatar-image">
               </figure>
               <nav class="rating-details">
                 <cite class="username"><%= vendedor.Nome %></cite>
