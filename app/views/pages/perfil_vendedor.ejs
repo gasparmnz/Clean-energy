@@ -32,7 +32,7 @@
       <div class="vend-hero-inner">
         <figure class="vend-avatar-wrap">
           <img
-            src="/imagem/<%= vendedor.foto || 'avatar.png' %>"
+            src="<%= vendedor.foto && vendedor.foto.startsWith('data:') ? vendedor.foto : '/imagem/' + (vendedor.foto || 'avatar.png') %>"
             alt="Foto de <%= vendedor.Nome %>"
             class="vend-avatar">
         </figure>

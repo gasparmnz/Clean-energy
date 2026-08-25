@@ -210,7 +210,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!resp.ok) throw new Error('Erro no servidor');
         const json = await resp.json();
         if (json.sucesso) {
-          const src = json.foto + '?t=' + Date.now();
+          // json.foto agora pode vir como data URI (imagem embutida direto na
+          // resposta); nesse caso não dá pra colar "?t=" no final como se
+          // fosse uma URL de arquivo, senão a imagem quebra.
+          const src = json.foto.startsWith('data:') ? json.foto : json.foto + '?t=' + Date.now();
           if (imgPerfil) imgPerfil.src = src;
           fotoOriginal = src; // atualiza referência
           // Não atualiza o avatar do header para evitar bug visual — o header atualiza no reload
