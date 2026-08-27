@@ -16,13 +16,23 @@ const pool = mysql.createPool({
     connectTimeout: 10000,
 });
 
-pool.getConnection((err, conn) => {
-    if (err) {
-        console.error('Erro de conexão MySQL:', err.message);
-    } else {
-        console.log('Conectado ao SGBD!');
-        conn.release();
-    }
-});
+// A rede local pode interceptar/atrasar o handshake TLS de forma intermitente,
+// então tenta algumas vezes antes de reportar falha (a pool em si já reconecta
+// sozinha nas próximas queries, isso aqui é só o log de diagnóstico do startup).
+function testarConexao(tentativa = 1) {
+    pool.getConnection((err, conn) => {
+        if (err) {
+            if (tentativa < 3) {
+                setTimeout(() => testarConexao(tentativa + 1), 1500);
+            } else {
+                console.error('Erro de conexão MySQL:', err.message);
+            }
+        } else {
+            console.log('Conectado ao SGBD!');
+            conn.release();
+        }
+    });
+}
+testarConexao();
 
 module.exports = pool.promise();
