@@ -56,8 +56,9 @@
               </div>
             <% } else { %>
               <section class="produtos-grid">
-                <% pendentes.forEach(produto => { %>
+                <% pendentes.forEach((produto, index) => { %>
                   <article class="produto-card"
+                    data-index="<%= index %>"
                     data-nome="<%= produto.nome %>"
                     data-preco="<%= produto.preco %>"
                     data-quantidade="<%= produto.quantidade || 1 %>"
@@ -283,22 +284,38 @@
       });
     });
 
-    // Pagamento
+    // Pagamento — redireciona ao checkout do Mercado Pago, igual no carrinho
     document.querySelectorAll('.btn-pagar').forEach(btn => {
       btn.addEventListener('click', function () {
         const card = this.closest('.produto-card');
-        produtoSelecionadoParaPagamento = card;
-        document.getElementById('pagamento-produto').textContent = card.querySelector('h3').textContent;
-        document.getElementById('pagamento-quantidade').textContent = card.querySelector('.quantidade').textContent;
-        document.getElementById('pagamento-valor').textContent = card.querySelector('.preco').textContent;
-        document.getElementById('numeroCartao').value = '';
-        document.getElementById('validadeCartao').value = '';
-        document.getElementById('cvvCartao').value = '';
-        document.getElementById('nomeTitular').value = '';
-        document.getElementById('boletoCodigo').value = '';
-        document.getElementById('boletoContainer').style.display = 'none';
-        selectPayment('pix');
-        pagamentoModal.show();
+        const index = card.dataset.index;
+
+        this.disabled = true;
+        const textoOriginal = this.textContent;
+        this.textContent = 'Redirecionando...';
+
+        fetch('/pagamento/pendente/pagar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ index })
+        })
+        .then(async resposta => {
+          if (resposta.redirected && resposta.url.includes('/login')) {
+            window.location.href = '/login';
+            return;
+          }
+          const dados = await resposta.json();
+          if (!resposta.ok || !dados.sucesso) {
+            throw new Error(dados.erro || 'Não foi possível iniciar o pagamento.');
+          }
+          window.location.href = dados.initPoint;
+        })
+        .catch(erro => {
+          console.error('ERRO NO FETCH:', erro);
+          alert(erro.message);
+          this.disabled = false;
+          this.textContent = textoOriginal;
+        });
       });
     });
 
