@@ -41,6 +41,7 @@ router.post("/cart/remove", carrinhoController.removeFromCart);
 router.get("/minhascompras", requireLogin, pagamentoController.getMinhasCompras);
 router.post("/minhascompras/finalizar", requireLogin, pagamentoController.finalizarCompra);
 router.post("/pagamento/criar", requireLogin, pagamentoController.criarPagamento);
+router.post("/pagamento/pendente/pagar", requireLogin, pagamentoController.pagarPendente);
 router.get("/pagamento/sucesso", requireLogin, pagamentoController.getSucesso);
 router.get("/pagamento/falha", requireLogin, pagamentoController.getFalha);
 router.get("/pagamento/pendente", requireLogin, pagamentoController.getPendente);
