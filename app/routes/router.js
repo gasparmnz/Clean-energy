@@ -61,6 +61,10 @@ router.get("/logout", authController.getLogout);
 router.post("/cadastroUsuario", authController.validarCadastroUsuario, authController.postCadastroUsuario);
 router.post("/cadastroEmpresa", authController.validarCadastroEmpresa, authController.postCadastroEmpresa);
 router.post("/login", authController.postLogin);
+router.get("/recuperar-senha", authController.getRecuperarSenha);
+router.post("/recuperar-senha", authController.postRecuperarSenha);
+router.get("/redefinir-senha/:token", authController.getRedefinirSenha);
+router.post("/redefinir-senha/:token", authController.postRedefinirSenha);
 
 /* ADMIN LOGIN (rota fica fora do prefixo /adm, então continua aqui) */
 router.get("/adm-login", adminController.getAdmLogin);

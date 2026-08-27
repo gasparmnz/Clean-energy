@@ -251,6 +251,43 @@ const usuarioModel = {
     }
   },
 
+  // Salva o hash do token de redefinição de senha e sua validade
+  setResetToken: async (id, tokenHash, expiraEm) => {
+    try {
+      await pool.query(
+        "UPDATE Usuario SET Reset_Token_Hash = ?, Reset_Token_Expires = ? WHERE Usuario_ID = ?",
+        [tokenHash, expiraEm, id]
+      );
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  // Busca usuário por hash do token, desde que ainda válido
+  findByResetTokenHash: async (tokenHash) => {
+    try {
+      const [rows] = await pool.query(
+        "SELECT * FROM Usuario WHERE Reset_Token_Hash = ? AND Reset_Token_Expires > NOW()",
+        [tokenHash]
+      );
+      return rows[0] || null;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  // Define nova senha e invalida o token de redefinição
+  updateSenhaELimparToken: async (id, senhaHash) => {
+    try {
+      await pool.query(
+        "UPDATE Usuario SET Senha = ?, Reset_Token_Hash = NULL, Reset_Token_Expires = NULL WHERE Usuario_ID = ?",
+        [senhaHash, id]
+      );
+    } catch (err) {
+      throw err;
+    }
+  },
+
   // Cria usuário PF
   createPF: async ({ nome, email, senhaHash }) => {
     try {

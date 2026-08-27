@@ -1,8 +1,16 @@
+const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const models = require('../models/models');
 const { usuarioModel } = models;
 const { validarCPF } = require('../helpers/validacao');
+const { sendResetPasswordEmail } = require('../helpers/mailer');
+
+const RESET_TOKEN_VALIDADE_MS = 60 * 60 * 1000; // 1 hora
+
+function hashToken(token) {
+  return crypto.createHash('sha256').update(token).digest('hex');
+}
 
 // GET /cadastro
 function getCadastro(req, res) {
@@ -142,6 +150,91 @@ async function postLogin(req, res) {
   }
 }
 
+// GET /recuperar-senha
+function getRecuperarSenha(req, res) {
+  res.render('pages/recuperar-senha', { erro: null, sucesso: false, email: '' });
+}
+
+// POST /recuperar-senha
+async function postRecuperarSenha(req, res) {
+  const { email } = req.body;
+  try {
+    const usuario = await usuarioModel.findByEmail(email);
+    // Mesma resposta exista ou não o e-mail, para não revelar quais e-mails estão cadastrados
+    if (usuario) {
+      const token = crypto.randomBytes(32).toString('hex');
+      const tokenHash = hashToken(token);
+      const expiraEm = new Date(Date.now() + RESET_TOKEN_VALIDADE_MS);
+      await usuarioModel.setResetToken(usuario.Usuario_ID, tokenHash, expiraEm);
+
+      const link = `${process.env.APP_BASE_URL || 'http://localhost:3000'}/redefinir-senha/${token}`;
+      try {
+        await sendResetPasswordEmail(usuario.Email, link);
+      } catch (mailErr) {
+        console.error('Erro ao enviar e-mail de redefinição de senha:', mailErr);
+      }
+    }
+
+    return res.render('pages/recuperar-senha', {
+      erro: null, sucesso: true, email: ''
+    });
+  } catch (err) {
+    console.error('Erro ao solicitar redefinição de senha:', err);
+    return res.render('pages/recuperar-senha', {
+      erro: 'Erro ao processar a solicitação. Tente novamente.', sucesso: false, email
+    });
+  }
+}
+
+// GET /redefinir-senha/:token
+async function getRedefinirSenha(req, res) {
+  const { token } = req.params;
+  const usuario = await usuarioModel.findByResetTokenHash(hashToken(token));
+  if (!usuario) {
+    return res.render('pages/redefinir-senha', {
+      erro: 'Este link de redefinição é inválido ou já expirou. Solicite um novo.',
+      tokenValido: false, token, sucesso: false
+    });
+  }
+  res.render('pages/redefinir-senha', { erro: null, tokenValido: true, token, sucesso: false });
+}
+
+// POST /redefinir-senha/:token
+async function postRedefinirSenha(req, res) {
+  const { token } = req.params;
+  const { senha, confirmarSenha } = req.body;
+
+  const usuario = await usuarioModel.findByResetTokenHash(hashToken(token));
+  if (!usuario) {
+    return res.render('pages/redefinir-senha', {
+      erro: 'Este link de redefinição é inválido ou já expirou. Solicite um novo.',
+      tokenValido: false, token, sucesso: false
+    });
+  }
+
+  if (!senha || senha.length < 8) {
+    return res.render('pages/redefinir-senha', {
+      erro: '*A senha deve ter pelo menos 8 caracteres!', tokenValido: true, token, sucesso: false
+    });
+  }
+  if (senha !== confirmarSenha) {
+    return res.render('pages/redefinir-senha', {
+      erro: '*As senhas não conferem!', tokenValido: true, token, sucesso: false
+    });
+  }
+
+  try {
+    const senhaHash = await bcrypt.hash(senha, 10);
+    await usuarioModel.updateSenhaELimparToken(usuario.Usuario_ID, senhaHash);
+    return res.render('pages/redefinir-senha', { erro: null, tokenValido: true, token, sucesso: true });
+  } catch (err) {
+    console.error('Erro ao redefinir senha:', err);
+    return res.render('pages/redefinir-senha', {
+      erro: 'Erro ao redefinir a senha. Tente novamente.', tokenValido: true, token, sucesso: false
+    });
+  }
+}
+
 module.exports = {
   getCadastro,
   getCadastroVendedorForm,
@@ -151,5 +244,9 @@ module.exports = {
   postCadastroUsuario,
   validarCadastroEmpresa,
   postCadastroEmpresa,
-  postLogin
+  postLogin,
+  getRecuperarSenha,
+  postRecuperarSenha,
+  getRedefinirSenha,
+  postRedefinirSenha
 };
