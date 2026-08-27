@@ -519,19 +519,6 @@ module.exports.vendedorModel = vendedorModel;
 /* ════════════════════════════════════════════════
    NOTIFICAÇÕES (comprador/vendedor)
    ════════════════════════════════════════════════ */
-pool.query(`
-  CREATE TABLE IF NOT EXISTS notificacoes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    tipo VARCHAR(50) NOT NULL,
-    mensagem VARCHAR(255) NOT NULL,
-    link VARCHAR(255) DEFAULT NULL,
-    lida TINYINT(1) DEFAULT 0,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuario(Usuario_ID) ON DELETE CASCADE
-  )
-`).catch(err => console.error('Erro ao garantir tabela notificacoes:', err));
-
 const notificacoesModel = {
   criar: async ({ usuarioId, tipo, mensagem, link }) => {
     try {
@@ -595,20 +582,6 @@ module.exports.notificacoesModel = notificacoesModel;
 /* ════════════════════════════════════════════════
    BIOMETRIA / FACE ID (WebAuthn)
    ════════════════════════════════════════════════ */
-pool.query(`
-  CREATE TABLE IF NOT EXISTS credenciais_webauthn (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    credential_id VARCHAR(255) NOT NULL UNIQUE,
-    public_key TEXT NOT NULL,
-    counter BIGINT DEFAULT 0,
-    device_name VARCHAR(100) DEFAULT 'Dispositivo',
-    transports VARCHAR(100) DEFAULT NULL,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuario(Usuario_ID) ON DELETE CASCADE
-  )
-`).catch(err => console.error('Erro ao garantir tabela credenciais_webauthn:', err));
-
 const webauthnModel = {
   addCredential: async ({ usuarioId, credentialId, publicKey, counter, deviceName, transports }) => {
     try {
