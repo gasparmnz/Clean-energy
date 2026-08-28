@@ -1,8 +1,8 @@
-const transporter = require('../../config/mailer');
+const sgMail = require('../../config/mailer');
 
 async function sendResetPasswordEmail(destinatario, link) {
-  await transporter.sendMail({
-    from: `"Clean Energy" <${process.env.EMAIL_USER}>`,
+  await sgMail.send({
+    from: { email: process.env.SENDGRID_FROM_EMAIL, name: 'Clean Energy' },
     to: destinatario,
     subject: 'Redefinição de senha - Clean Energy',
     html: `
