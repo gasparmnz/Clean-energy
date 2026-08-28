@@ -48,6 +48,7 @@ router.get("/pagamento/pendente", requireLogin, pagamentoController.getPendente)
 router.post("/pagamento/webhook", pagamentoController.webhook);
 
 /* PERFIL */
+router.get("/dashboard", requireLogin, perfilController.getDashboard);
 router.get("/perfil", requireLogin, perfilController.getPerfil);
 router.post("/perfil/atualizar", requireLogin, perfilController.atualizarPerfil);
 router.post("/perfil/foto", requireLogin, uploadFoto.single("foto"), perfilController.atualizarFoto);

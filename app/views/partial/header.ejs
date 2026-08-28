@@ -37,7 +37,8 @@
         </button>
         <section id="dropdownMenu" class="dropdown-content">
           <span class="dropdown-nome"><%= usuario.nome %></span>
-          <span class="dropdown-perfil"><%= usuario.perfil === 'vendedor' ? '🏪 Vendedor' : '🛒 Comprador' %></span>
+          <br>
+          <span class="dropdown-perfil"><%= usuario.perfil === 'vendedor' ? 'Vendedor' : 'Comprador' %></span>
           <hr>
           <a href="/perfil">Meu Perfil</a>
           <a href="/logout" style="color:#e74c3c;">Sair</a>

@@ -16,7 +16,7 @@
       </strong>
       <% if (usuario) { %>
         <span class="perfil-aside__badge <%= (usuario.Tipo || usuario.tipo) === 'PJ' ? 'badge--vendedor' : 'badge--comprador' %>">
-          <%= (usuario.Tipo || usuario.tipo) === 'PJ' ? '🏪 Vendedor' : '🛒 Comprador' %>
+          <%= (usuario.Tipo || usuario.tipo) === 'PJ' ? 'Vendedor' : 'Comprador' %>
         </span>
       <% } %>
     </nav>
@@ -50,6 +50,18 @@
           <span>Minhas Compras</span>
         </a>
       </li>
+      
+      <% if (typeof usuario !== 'undefined' && usuario && (usuario.Tipo === 'PJ' || usuario.tipo === 'PJ')) { %>
+      <li>
+        <a href="/dashboard"
+           class="perfil-aside__link <% if (typeof activePage !== 'undefined' && activePage === 'dashboard') { %>is-active<% } %>">
+          <span class="perfil-aside__icon" style="background: linear-gradient(135deg,#16a34a,#15803d);">
+            <i class='bx bx-grid-alt'></i>
+          </span>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <% } %>
 
       <% if (typeof usuario !== 'undefined' && usuario && (usuario.Tipo === 'PJ' || usuario.tipo === 'PJ')) { %>
       <li>
