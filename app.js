@@ -2,6 +2,11 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 
+const { helmetMiddleware, compressionMiddleware } = require('./app/middlewares/security');
+
+app.use(helmetMiddleware);
+app.use(compressionMiddleware);
+
 app.set('trust proxy', 1);
 
 const path = require('path');
