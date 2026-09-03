@@ -74,6 +74,8 @@ app.use((req, res, next) => {
 
 const rotas = require('./app/routes/router');
 const rotasAdm = require('./app/routes/router-adm');
+const sitemapRoutes = require('./app/routes/sitemapRoutes');
+app.use('/', sitemapRoutes);
 app.use('/', rotas);
 app.use('/adm', rotasAdm);
 

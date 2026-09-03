@@ -1,42 +1,57 @@
+const produtosModel = require('../models/models.js');
+
 const BASE_URL = 'https://clean-energy.onrender.com';
 
 exports.getSitemap = async (req, res) => {
     try {
 
-        res.type('application/xml');
+        // Busca todos os produtos ativos
+        const produtos = await produtosModel.findAll({
+            apenasAtivos: true
+        });
 
-        res.send(`<?xml version="1.0" encoding="UTF-8"?>
+        // URLs fixas do site
+        const paginas = [
+            '/',
+            '/home',
+            '/transporte',
+            '/sobre_nos',
+            '/adicione_produto',
+            '/duvidas'
+        ];
 
+        let xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+`;
 
+        // Adiciona as páginas fixas
+        paginas.forEach(pagina => {
+            xml += `
     <url>
-        <loc>${BASE_URL}/</loc>
+        <loc>${BASE_URL}${pagina}</loc>
     </url>
+`;
+        });
 
+        // Adiciona os produtos automaticamente
+        produtos.forEach(produto => {
+            xml += `
     <url>
-        <loc>${BASE_URL}/home</loc>
+        <loc>${BASE_URL}/item/${produto.id}</loc>
     </url>
+`;
+        });
 
-    <url>
-        <loc>${BASE_URL}/transporte</loc>
-    </url>
+        xml += `
+</urlset>`;
 
-    <url>
-        <loc>${BASE_URL}/sobre_nos</loc>
-    </url>
-
-    <url>
-        <loc>${BASE_URL}/adicione_produto</loc>
-    </url>
-
-    <url>
-        <loc>${BASE_URL}/duvidas</loc>
-    </url>
-
-</urlset>`);
+        res.type('application/xml');
+        res.send(xml);
 
     } catch (error) {
+
         console.error('Erro ao gerar sitemap:', error);
+
         res.status(500).send('Erro ao gerar sitemap');
     }
 };

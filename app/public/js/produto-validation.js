@@ -43,7 +43,11 @@ class ProductFormValidator {
       bairro: document.getElementById('bairro'),
       rua: document.getElementById('rua'),
       numero: document.getElementById('numero'),
-      complemento: document.getElementById('complemento')
+      complemento: document.getElementById('complemento'),
+      // NOVO: campo estado não estava mapeado, então nunca era validado
+      // (nem no blur, nem em lugar nenhum) — precisa estar aqui para a
+      // validação imediata pós-CEP (item 1) conseguir validá-lo também.
+      estado: document.getElementById('estado')
     };
 
     console.log('🔍 Campos encontrados:', Object.keys(this.fields).filter(key => this.fields[key]));
@@ -77,7 +81,9 @@ class ProductFormValidator {
         required: true,
         min: 0.01,
         max: 999999.99,
-        pattern: /^\d+([.,]\d{1,2})?$/,
+        // ALTERADO: aceita opcionalmente o prefixo "R$ " que o formatador
+        // do próprio campo escreve (senão o valor formatado nunca passava).
+        pattern: /^(R\$\s*)?\d+([.,]\d{1,2})?$/,
         message: {
           required: 'Preço é obrigatório',
           min: 'Preço deve ser maior que zero',
@@ -89,7 +95,9 @@ class ProductFormValidator {
         required: true,
         min: 0.01,
         max: 99999.99,
-        pattern: /^\d+([.,]\d{1,2})?$/,
+        // ALTERADO: aceita opcionalmente o sufixo " t" que o formatador
+        // do próprio campo escreve no blur (senão o valor formatado nunca passava).
+        pattern: /^\d+([.,]\d{1,2})?(\s?t)?$/i,
         message: {
           required: 'Quantidade é obrigatória',
           min: 'Quantidade deve ser maior que zero',
@@ -153,7 +161,9 @@ class ProductFormValidator {
         required: true,
         minLength: 1,
         maxLength: 10,
-        pattern: /^[0-9a-zA-Z\s\-]+$/,
+        // ALTERADO: agora aceita "/" também, para permitir o valor "S/N"
+        // usado quando o endereço não possui número (checkbox "sem número").
+        pattern: /^[0-9a-zA-Z\s\-\/]+$/,
         message: {
           required: 'Número é obrigatório',
           minLength: 'Número é obrigatório',
@@ -168,6 +178,14 @@ class ProductFormValidator {
         message: {
           maxLength: 'Complemento muito longo',
           pattern: 'Complemento contém caracteres inválidos'
+        }
+      },
+      // NOVO: regra para o campo estado (existia no HTML e no back-end,
+      // mas nunca tinha regra de validação nem estava em `fields`).
+      estado: {
+        required: true,
+        message: {
+          required: 'Estado é obrigatório'
         }
       }
     };
@@ -201,9 +219,20 @@ class ProductFormValidator {
     // Validação no envio do formulário
     if (this.form) {
       this.form.addEventListener('submit', (e) => {
-        this.validateAllFields();
+        // ALTERADO: antes o retorno de validateAllFields() era ignorado e o
+        // formulário sempre era enviado (o <form> tem `novalidate`, então o
+        // navegador também não bloqueava nada). Agora, se algum campo estiver
+        // inválido — por exemplo Número vazio com a opção "sem número"
+        // desmarcada — o envio é cancelado.
+        const todosValidos = this.validateAllFields();
+
+        if (!todosValidos) {
+          e.preventDefault();
+          console.log('🚫 Envio bloqueado: há campos inválidos no formulário');
+          return;
+        }
+
         this.showLoadingState();
-        
 
         console.log('📤 Formulário enviado para validação backend');
       });
@@ -262,7 +291,11 @@ class ProductFormValidator {
 
     // Validação de valor numérico
     if (rules.min !== undefined || rules.max !== undefined) {
-      const numValue = parseFloat(value.replace(',', '.'));
+      // ALTERADO: remove qualquer coisa que não seja dígito/vírgula/ponto
+      // (ex: "R$ ", " t") antes de converter, senão parseFloat falhava
+      // (virava NaN) com o valor já formatado pelos campos de preço/quantidade.
+      const valorLimpo = value.replace(/[^\d,.-]/g, '').replace(',', '.');
+      const numValue = parseFloat(valorLimpo);
       
       if (isNaN(numValue)) {
         return { isValid: false, message: rules.message.pattern };
@@ -640,4 +673,4 @@ function setupAnimations() {
   }
 }
 
-console.log('🚀 Sistema de validação de cadastro de produto carregado e pronto!');
+console.log('Sistema de validação de cadastro de produto carregado e pronto! (v2 — preco/quantidade com R$/t corrigido)');
