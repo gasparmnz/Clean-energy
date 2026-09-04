@@ -171,7 +171,7 @@ async function postRecuperarSenha(req, res) {
       try {
         await sendResetPasswordEmail(usuario.Email, link);
       } catch (mailErr) {
-        console.error('Erro ao enviar e-mail de redefinição de senha:', mailErr);
+        console.error('Erro ao enviar e-mail de redefinição de senha:', mailErr.response?.body || mailErr);
       }
     }
 
