@@ -10,7 +10,7 @@ async function getPerfil(req, res) {
 
     if (usuarioDados) {
       usuarioDados.perfil = req.session.perfil;
-      usuarioDados.nome = usuarioDados.Nome;
+      usuarioDados.nome = usuarioDados.Nome || usuarioDados.nome;
       if (usuarioDados.foto) req.session.fotoUsuario = usuarioDados.foto;
       res.locals.usuario = { ...res.locals.usuario, ...usuarioDados, foto: usuarioDados.foto || null };
     }
@@ -46,8 +46,6 @@ async function atualizarFoto(req, res) {
       return res.status(400).json({ sucesso: false, erro: 'Nenhuma imagem enviada.' });
     }
 
-    // Antes: salvava o arquivo em disco e guardava só o nome do arquivo.
-    // Agora: a imagem em si (data URI) é salva na coluna `foto` do banco.
     const fotoDataUri = arquivoParaDataUri(req.file);
     await usuarioModel.updateFoto(req.session.userId, fotoDataUri);
     req.session.fotoUsuario = fotoDataUri;
@@ -77,7 +75,7 @@ function getUpgradeVendedorForm(req, res) {
   });
 }
 
-// Regras de validação usadas antes do handler de POST /upgrade_vendedor
+// Regras de validação para upgrade de vendedor
 const validarUpgradeVendedor = [
   body('company_name')
     .trim()
@@ -144,11 +142,64 @@ async function postUpgradeVendedor(req, res) {
   }
 }
 
+// GET /dashboard
+async function getDashboard(req, res) {
+  try {
+    const userId = req.session.userId;
+    const usuarioDados = await usuarioModel.findById(userId);
+
+    if (!usuarioDados) {
+      return res.redirect('/login');
+    }
+
+    // Identifica se é Vendedor (PJ)
+    const isVendedor = (usuarioDados.Tipo === 'PJ' || usuarioDados.tipo === 'PJ' || req.session.tipo === 'PJ');
+
+    // Se o usuário for Comprador (PF), redireciona suavemente para a página de perfil
+    if (!isVendedor) {
+      return res.redirect('/perfil');
+    }
+
+    // Organiza dados para não perder variáveis na view
+    usuarioDados.perfil = req.session.perfil;
+    usuarioDados.nome = usuarioDados.Nome || usuarioDados.nome || req.session.nomeUsuario;
+    usuarioDados.Tipo = usuarioDados.Tipo || usuarioDados.tipo || req.session.tipo;
+    if (usuarioDados.foto) req.session.fotoUsuario = usuarioDados.foto;
+
+    res.locals.usuario = Object.assign({}, res.locals.usuario, usuarioDados);
+
+    // Métricas do Vendedor (com fallbacks de segurança caso algum model ainda não exista)
+    const stats = {
+      totalVendido: (models.vendaModel?.countByVendedor ? await models.vendaModel.countByVendedor(userId) : 0),
+      valorArrecadado: (models.vendaModel?.sumValorByVendedor ? await models.vendaModel.sumValorByVendedor(userId) : 0),
+      pedidosPendentes: (models.pedidoModel?.countPendentes ? await models.pedidoModel.countPendentes(userId) : 0),
+      totalAvaliacoes: (models.avaliacaoModel?.countByUsuario ? await models.avaliacaoModel.countByUsuario(userId) : 0),
+      notaGeral: (models.avaliacaoModel?.getMediaByUsuario ? await models.avaliacaoModel.getMediaByUsuario(userId) : 0)
+    };
+
+    const vendas = models.vendaModel?.findByVendedor ? await models.vendaModel.findByVendedor(userId) : [];
+    const compras = models.compraModel?.findByComprador ? await models.compraModel.findByComprador(userId) : [];
+
+    res.render('pages/dashboard', {
+      usuario: usuarioDados,
+      activePage: 'dashboard',
+      stats,
+      vendas,
+      compras
+    });
+  } catch (err) {
+    console.error('Erro ao carregar o dashboard:', err);
+    res.redirect('/perfil');
+  }
+}
+
+// EXPORTAÇÕES (Fundamental ter o getDashboard aqui para o Express encontrar)
 module.exports = {
   getPerfil,
   atualizarPerfil,
   atualizarFoto,
   getUpgradeVendedorForm,
   validarUpgradeVendedor,
-  postUpgradeVendedor
+  postUpgradeVendedor,
+  getDashboard
 };
