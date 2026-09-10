@@ -15,7 +15,7 @@ const notificacaoController = require("../controllers/notificacaoController");
 const biometriaController = require("../controllers/biometriaController");
 const duvidasController = require("../controllers/duvidasController");
 const adminController = require("../controllers/adminController");
-
+const { authLimiter } = require("../middlewares/security");
 /* PÁGINAS / PRODUTOS */
 router.get("/", produtoController.listarProdutos);
 router.get("/home", paginaController.getHome);
@@ -48,6 +48,7 @@ router.get("/pagamento/pendente", requireLogin, pagamentoController.getPendente)
 router.post("/pagamento/webhook", pagamentoController.webhook);
 
 /* PERFIL */
+router.get("/dashboard", requireLogin, perfilController.getDashboard);
 router.get("/perfil", requireLogin, perfilController.getPerfil);
 router.post("/perfil/atualizar", requireLogin, perfilController.atualizarPerfil);
 router.post("/perfil/foto", requireLogin, uploadFoto.single("foto"), perfilController.atualizarFoto);
@@ -59,17 +60,17 @@ router.get("/cadastro", authController.getCadastro);
 router.get("/cadastro_vendedor", authController.getCadastroVendedorForm);
 router.get("/login", authController.getLogin);
 router.get("/logout", authController.getLogout);
-router.post("/cadastroUsuario", authController.validarCadastroUsuario, authController.postCadastroUsuario);
-router.post("/cadastroEmpresa", authController.validarCadastroEmpresa, authController.postCadastroEmpresa);
-router.post("/login", authController.postLogin);
+router.post("/cadastroUsuario", authLimiter, authController.validarCadastroUsuario, authController.postCadastroUsuario);
+router.post("/cadastroEmpresa", authLimiter, authController.validarCadastroEmpresa, authController.postCadastroEmpresa);
+router.post("/login", authLimiter, authController.postLogin);
 router.get("/recuperar-senha", authController.getRecuperarSenha);
-router.post("/recuperar-senha", authController.postRecuperarSenha);
+router.post("/recuperar-senha", authLimiter, authController.postRecuperarSenha);
 router.get("/redefinir-senha/:token", authController.getRedefinirSenha);
-router.post("/redefinir-senha/:token", authController.postRedefinirSenha);
+router.post("/redefinir-senha/:token", authLimiter, authController.postRedefinirSenha);
 
 /* ADMIN LOGIN (rota fica fora do prefixo /adm, então continua aqui) */
 router.get("/adm-login", adminController.getAdmLogin);
-router.post("/adm-login", adminController.postAdmLogin);
+router.post("/adm-login", authLimiter, adminController.postAdmLogin);
 
 /* PERFIL PÚBLICO DO VENDEDOR */
 router.get("/vendedor/:id", vendedorController.getPerfilVendedor);
