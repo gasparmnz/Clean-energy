@@ -428,8 +428,43 @@ body {
   gap: var(--spacing-xl);
 }
 
+/* O HTML tem uma <section class="address-grid"> aninhada dentro de outra
+   (mesma classe duas vezes). A grid de fora só tem esse único filho, então
+   ele ocupava só a 1ª coluna e a 2ª ficava vazia (o espaço em branco à
+   direita). Forçando a grid interna a ocupar as duas colunas da externa,
+   ela passa a usar 100% da largura disponível. */
+.address-grid > .address-grid {
+  grid-column: 1 / -1;
+}
+
 .complemento-full {
   grid-column: 1 / -1;
+}
+
+/* Faz um campo ocupar a linha inteira do grid de 2 colunas (usado no campo
+   Estado, para não sobrar espaço em branco quando ele fica sozinho na
+   última linha do endereço) */
+.span-full {
+  grid-column: 1 / -1;
+}
+
+/* Checkbox "Este endereço não possui número" */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: 0.4rem;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--primary-color);
+  cursor: pointer;
 }
 
 /* Mensagens de ajuda */

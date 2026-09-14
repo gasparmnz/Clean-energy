@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Dashboard - Minha Conta</title>
+    
+    <!-- CSS da página e ícones -->
+    <link rel="stylesheet" href="/css/adm.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1b814e">
+    <link rel="apple-touch-icon" href="/imagem/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/imagem/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/imagem/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/imagem/icon-512.png">
+</head>
+<body>
+    <%- include('../partial/header.ejs') %>
+
+<section class="admin-container">
+    <!-- Renderiza a Sidebar do Perfil do Usuário -->
+    <%- include('../partial/sidebar_perfil.ejs', { activePage: 'dashboard' }) %>
+
+    <main class="admin-main">
+        <nav class="back-navigation" aria-label="Navegação de retorno">
+            <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
+                <i class='bx bx-arrow-back'></i><span>Voltar</span>
+            </button>
+        </nav>
+
+        <section class="dashboard-summary" aria-labelledby="dashboard-heading">
+            <h2 id="dashboard-heading">
+                Resumo da Conta 
+                <span class="real-data-tag"><i class='bx bx-check-circle'></i> Dados atualizados</span>
+            </h2>
+
+            <!-- Cards de Métricas Solicitados -->
+            <section class="summary-cards">
+                <!-- Total Vendido -->
+                <article class="summary-card">
+                    <i class="bx bx-package"></i>
+                    <h3>Total Vendido</h3>
+                    <p><%= stats.totalVendido || 0 %> ite<%= stats.totalVendido === 1 ? 'm' : 'ns' %></p>
+                </article>
+
+                <!-- Valor Arrecadado -->
+                <article class="summary-card">
+                    <i class="bx bx-dollar-circle"></i>
+                    <h3>Valor Arrecadado</h3>
+                    <p>R$ <%= (stats.valorArrecadado || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></p>
+                </article>
+
+                <!-- Pedidos Pendentes -->
+                <article class="summary-card">
+                    <i class="bx bx-time-five"></i>
+                    <h3>Pedidos Pendentes</h3>
+                    <p><%= stats.pedidosPendentes || 0 %></p>
+                </article>
+
+                <!-- Avaliações -->
+                <article class="summary-card">
+                    <i class="bx bx-comment-detail"></i>
+                    <h3>Avaliações</h3>
+                    <p><%= stats.totalAvaliacoes || 0 %></p>
+                </article>
+
+                <!-- Nota Geral (Estrela + Nota de 1 a 5) -->
+                <article class="summary-card">
+                    <i class="bx bxs-star" style="color: #f59e0b;"></i>
+                    <h3>Nota Geral</h3>
+                    <p><%= (stats.notaGeral || 0).toFixed(1) %> <span style="font-size: 0.9rem; color: #6b7280;">/ 5.0</span></p>
+                </article>
+            </section>
+        </section>
+
+        <!-- Tabela de Minhas Vendas Recentes (Exibida caso o usuário seja Vendedor/PJ) -->
+        <% if (typeof usuario !== 'undefined' && usuario && (usuario.Tipo === 'PJ' || usuario.tipo === 'PJ')) { %>
+        <section class="transactions-section" aria-labelledby="vendas-heading">
+            <h2 id="vendas-heading">Minhas Vendas Recentes</h2>
+            <% if (vendas && vendas.length > 0) { %>
+            <section class="table-responsive">
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>ID Pedido</th>
+                            <th>Comprador</th>
+                            <th>Produto</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% vendas.forEach(function(v) { %>
+                        <tr>
+                            <td data-label="ID Pedido">#<%= String(v.id).padStart(5, '0') %></td>
+                            <td data-label="Comprador"><%= v.comprador %></td>
+                            <td data-label="Produto"><%= v.produto || '-' %></td>
+                            <td data-label="Valor">R$ <%= parseFloat(v.valor || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2}) %></td>
+                            <td data-label="Data"><%= v.data ? new Date(v.data).toLocaleDateString('pt-BR') : '-' %></td>
+                            <td data-label="Status">
+                                <span class="status-badge status-<%= v.status === 'concluido' ? 'concluido' : v.status === 'cancelado' ? 'cancelado' : v.status === 'pendente' ? 'pendente' : 'andamento' %>">
+                                    <%= v.status === 'concluido' ? 'Concluído' : v.status === 'cancelado' ? 'Cancelado' : v.status === 'pendente' ? 'Pendente' : 'Em Andamento' %>
+                                </span>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+            <% } else { %>
+            <article class="empty-transactions">
+                <i class='bx bx-store'></i>
+                <p>Nenhuma venda realizada ainda. Seus produtos vendidos aparecerão aqui.</p>
+            </article>
+            <% } %>
+        </section>
+        <% } %>
+
+        <!-- Tabela de Minhas Compras Recentes -->
+        <section class="transactions-section" aria-labelledby="compras-heading">
+            <h2 id="compras-heading">Minhas Compras Recentes</h2>
+            <% if (compras && compras.length > 0) { %>
+            <section class="table-responsive">
+                <table class="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>ID Pedido</th>
+                            <th>Vendedor</th>
+                            <th>Produto</th>
+                            <th>Valor</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% compras.forEach(function(c) { %>
+                        <tr>
+                            <td data-label="ID Pedido">#<%= String(c.id).padStart(5, '0') %></td>
+                            <td data-label="Vendedor"><%= c.vendedor %></td>
+                            <td data-label="Produto"><%= c.produto || '-' %></td>
+                            <td data-label="Valor">R$ <%= parseFloat(c.valor || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2}) %></td>
+                            <td data-label="Data"><%= c.data ? new Date(c.data).toLocaleDateString('pt-BR') : '-' %></td>
+                            <td data-label="Status">
+                                <span class="status-badge status-<%= c.status === 'concluido' ? 'concluido' : c.status === 'cancelado' ? 'cancelado' : c.status === 'pendente' ? 'pendente' : 'andamento' %>">
+                                    <%= c.status === 'concluido' ? 'Concluído' : c.status === 'cancelado' ? 'Cancelado' : c.status === 'pendente' ? 'Pendente' : 'Em Andamento' %>
+                                </span>
+                            </td>
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </section>
+            <% } else { %>
+            <article class="empty-transactions">
+                <i class='bx bx-cart'></i>
+                <p>Você ainda não realizou nenhuma compra.</p>
+            </article>
+            <% } %>
+        </section>
+    </main>
+</section>
+
+<script src="/js/darkmode.js"></script>
+<script src="/js/pwa.js" defer></script>
+</body>
+</html>

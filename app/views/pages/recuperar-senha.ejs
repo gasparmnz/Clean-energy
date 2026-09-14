@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar senha - Biomassa Hub</title>
+  <link rel="stylesheet" href="/css/login.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/darkmode.css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1b814e">
+  <link rel="apple-touch-icon" href="/imagem/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/imagem/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/imagem/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/imagem/icon-512.png">
+</head>
+<body>
+  <main class="login-main">
+
+    <aside class="hero-section">
+      <header class="hero-content">
+        <a href="/" class="hero-logo-link" aria-label="Página inicial da Clean Energy">
+          <img src="/imagem/logo-curva.svg" alt="Clean Energy" class="hero-logo-img" />
+        </a>
+        <h1 class="hero-title">Esqueceu sua senha?</h1>
+        <p class="hero-subtitle">
+          Sem problemas. Informe seu e-mail de cadastro e enviaremos um link para você criar uma nova senha.
+        </p>
+      </header>
+    </aside>
+
+    <section class="form-section">
+      <header class="form-header">
+        <h2 class="form-title">Recuperar senha</h2>
+        <p class="form-subtitle">Enviaremos um link de redefinição para o seu e-mail</p>
+      </header>
+
+      <% if (sucesso) { %>
+        <section class="backend-error" role="status" style="background:#e8f5e8; color:#28530b; border-color:#28530b;">
+          <i class='bx bx-check-circle'></i>
+          <span>Se este e-mail estiver cadastrado, você receberá em instantes uma mensagem com o link para redefinir sua senha. Verifique também a caixa de spam.</span>
+        </section>
+        <footer class="form-footer" style="margin-top: 20px;">
+          <p class="register-link"><a href="/login">Voltar para o login</a></p>
+        </footer>
+      <% } else { %>
+        <form action="/recuperar-senha" method="POST" class="login-form" novalidate aria-label="Formulário de recuperação de senha">
+          <fieldset class="form-fieldset">
+            <legend class="sr-only">Recuperação de senha</legend>
+
+            <section class="input-group">
+              <label for="email" class="input-label">
+                <i class='bx bx-envelope'></i>
+                E-mail
+              </label>
+              <section class="input-wrapper">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-input <%= erro ? 'erro' : '' %>"
+                  placeholder="Digite seu e-mail cadastrado"
+                  value="<%= email || '' %>"
+                  autocomplete="email"
+                  required
+                />
+                <i class='bx bx-envelope input-icon'></i>
+              </section>
+            </section>
+
+            <% if (erro) { %>
+            <section class="backend-error" role="alert">
+              <i class='bx bx-error-circle'></i>
+              <span><%= erro %></span>
+            </section>
+            <% } %>
+          </fieldset>
+
+          <button type="submit" class="submit-btn">
+            <i class='bx bx-envelope'></i>
+            <span>Enviar link de redefinição</span>
+          </button>
+
+          <footer class="form-footer">
+            <p class="register-link"><a href="/login">Voltar para o login</a></p>
+          </footer>
+        </form>
+      <% } %>
+    </section>
+  </main>
+
+  <script src="/js/darkmode.js"></script>
+  <script src="/js/pwa.js" defer></script>
+</body>
+</html>

@@ -56,8 +56,9 @@
               </div>
             <% } else { %>
               <section class="produtos-grid">
-                <% pendentes.forEach(produto => { %>
+                <% pendentes.forEach((produto, index) => { %>
                   <article class="produto-card"
+                    data-index="<%= index %>"
                     data-nome="<%= produto.nome %>"
                     data-preco="<%= produto.preco %>"
                     data-quantidade="<%= produto.quantidade || 1 %>"
@@ -92,10 +93,36 @@
 
           <!-- CONCLUÍDOS -->
           <section class="tab-pane fade" id="concluidos" role="tabpanel" aria-labelledby="concluidosTab">
-            <div class="sem-itens">
-              <i class='bx bx-package'></i>
-              <p>Você não tem pedidos concluídos.</p>
-            </div>
+            <% if (!concluidos || concluidos.length === 0) { %>
+              <div class="sem-itens">
+                <i class='bx bx-package'></i>
+                <p>Você não tem pedidos concluídos.</p>
+              </div>
+            <% } else { %>
+              <section class="produtos-grid">
+                <% concluidos.forEach(produto => { %>
+                  <article class="produto-card"
+                    data-nome="<%= produto.nome %>"
+                    data-preco="<%= produto.preco %>"
+                    data-quantidade="<%= produto.quantidade || 1 %>"
+                    data-local="<%= produto.local || '' %>">
+                    <figure>
+                      <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>" onerror="this.src='https://placehold.co/300x200?text=Sem+Foto'">
+                    </figure>
+                    <section class="produto-info">
+                      <h3><%= produto.nome %></h3>
+                      <p class="preco">R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) %></p>
+                      <p class="quantidade d-none"><%= produto.quantidade || 1 %> Tonelada(s)</p>
+                      <p class="endereco d-none"><%= produto.local || '' %></p>
+                    </section>
+                    <section class="acoes">
+                      <button class="btn btn-outline-success btn-sm btn-mostrar-endereco">Mostrar Endereço</button>
+                    </section>
+                    <p class="concluido">Concluído</p>
+                  </article>
+                <% }) %>
+              </section>
+            <% } %>
           </section>
 
         </section>
@@ -247,22 +274,48 @@
       cancelarModal.hide();
     });
 
-    // Pagamento
+    // Mostrar Endereço (concluídos)
+    document.querySelectorAll('.btn-mostrar-endereco').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const card = this.closest('.produto-card');
+        const endereco = card.querySelector('.endereco');
+        endereco.classList.remove('d-none');
+        this.style.display = 'none';
+      });
+    });
+
+    // Pagamento — redireciona ao checkout do Mercado Pago, igual no carrinho
     document.querySelectorAll('.btn-pagar').forEach(btn => {
       btn.addEventListener('click', function () {
         const card = this.closest('.produto-card');
-        produtoSelecionadoParaPagamento = card;
-        document.getElementById('pagamento-produto').textContent = card.querySelector('h3').textContent;
-        document.getElementById('pagamento-quantidade').textContent = card.querySelector('.quantidade').textContent;
-        document.getElementById('pagamento-valor').textContent = card.querySelector('.preco').textContent;
-        document.getElementById('numeroCartao').value = '';
-        document.getElementById('validadeCartao').value = '';
-        document.getElementById('cvvCartao').value = '';
-        document.getElementById('nomeTitular').value = '';
-        document.getElementById('boletoCodigo').value = '';
-        document.getElementById('boletoContainer').style.display = 'none';
-        selectPayment('pix');
-        pagamentoModal.show();
+        const index = card.dataset.index;
+
+        this.disabled = true;
+        const textoOriginal = this.textContent;
+        this.textContent = 'Redirecionando...';
+
+        fetch('/pagamento/pendente/pagar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ index })
+        })
+        .then(async resposta => {
+          if (resposta.redirected && resposta.url.includes('/login')) {
+            window.location.href = '/login';
+            return;
+          }
+          const dados = await resposta.json();
+          if (!resposta.ok || !dados.sucesso) {
+            throw new Error(dados.erro || 'Não foi possível iniciar o pagamento.');
+          }
+          window.location.href = dados.initPoint;
+        })
+        .catch(erro => {
+          console.error('ERRO NO FETCH:', erro);
+          alert(erro.message);
+          this.disabled = false;
+          this.textContent = textoOriginal;
+        });
       });
     });
 

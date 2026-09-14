@@ -2,6 +2,11 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 
+const { helmetMiddleware, compressionMiddleware } = require('./app/middlewares/security');
+
+app.use(helmetMiddleware);
+app.use(compressionMiddleware);
+
 app.set('trust proxy', 1);
 
 const path = require('path');
@@ -69,6 +74,8 @@ app.use((req, res, next) => {
 
 const rotas = require('./app/routes/router');
 const rotasAdm = require('./app/routes/router-adm');
+const sitemapRoutes = require('./app/routes/sitemapRoutes');
+app.use('/', sitemapRoutes);
 app.use('/', rotas);
 app.use('/adm', rotasAdm);
 

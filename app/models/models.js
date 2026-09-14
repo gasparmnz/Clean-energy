@@ -251,6 +251,43 @@ const usuarioModel = {
     }
   },
 
+  // Salva o hash do token de redefinição de senha e sua validade
+  setResetToken: async (id, tokenHash, expiraEm) => {
+    try {
+      await pool.query(
+        "UPDATE Usuario SET Reset_Token_Hash = ?, Reset_Token_Expires = ? WHERE Usuario_ID = ?",
+        [tokenHash, expiraEm, id]
+      );
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  // Busca usuário por hash do token, desde que ainda válido
+  findByResetTokenHash: async (tokenHash) => {
+    try {
+      const [rows] = await pool.query(
+        "SELECT * FROM Usuario WHERE Reset_Token_Hash = ? AND Reset_Token_Expires > NOW()",
+        [tokenHash]
+      );
+      return rows[0] || null;
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  // Define nova senha e invalida o token de redefinição
+  updateSenhaELimparToken: async (id, senhaHash) => {
+    try {
+      await pool.query(
+        "UPDATE Usuario SET Senha = ?, Reset_Token_Hash = NULL, Reset_Token_Expires = NULL WHERE Usuario_ID = ?",
+        [senhaHash, id]
+      );
+    } catch (err) {
+      throw err;
+    }
+  },
+
   // Cria usuário PF
   createPF: async ({ nome, email, senhaHash }) => {
     try {
@@ -482,19 +519,6 @@ module.exports.vendedorModel = vendedorModel;
 /* ════════════════════════════════════════════════
    NOTIFICAÇÕES (comprador/vendedor)
    ════════════════════════════════════════════════ */
-pool.query(`
-  CREATE TABLE IF NOT EXISTS notificacoes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    tipo VARCHAR(50) NOT NULL,
-    mensagem VARCHAR(255) NOT NULL,
-    link VARCHAR(255) DEFAULT NULL,
-    lida TINYINT(1) DEFAULT 0,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuario(Usuario_ID) ON DELETE CASCADE
-  )
-`).catch(err => console.error('Erro ao garantir tabela notificacoes:', err));
-
 const notificacoesModel = {
   criar: async ({ usuarioId, tipo, mensagem, link }) => {
     try {
@@ -558,20 +582,6 @@ module.exports.notificacoesModel = notificacoesModel;
 /* ════════════════════════════════════════════════
    BIOMETRIA / FACE ID (WebAuthn)
    ════════════════════════════════════════════════ */
-pool.query(`
-  CREATE TABLE IF NOT EXISTS credenciais_webauthn (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    credential_id VARCHAR(255) NOT NULL UNIQUE,
-    public_key TEXT NOT NULL,
-    counter BIGINT DEFAULT 0,
-    device_name VARCHAR(100) DEFAULT 'Dispositivo',
-    transports VARCHAR(100) DEFAULT NULL,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuario(Usuario_ID) ON DELETE CASCADE
-  )
-`).catch(err => console.error('Erro ao garantir tabela credenciais_webauthn:', err));
-
 const webauthnModel = {
   addCredential: async ({ usuarioId, credentialId, publicKey, counter, deviceName, transports }) => {
     try {

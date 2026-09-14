@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://clean-energy.onrender.com/sitemap.xml
+
