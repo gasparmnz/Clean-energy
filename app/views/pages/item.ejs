@@ -133,13 +133,14 @@
           <% if (typeof req !== 'undefined' && req.session && req.session.userId) { %>
           <%# Fallback: verificar via usuario passado na view %>
           <% } %>
-          <% if (typeof usuario !== 'undefined' && usuario) { %>
+          <% if (typeof usuario !== 'undefined' && usuario && comprou) { %>
           <nav class="review-form-section">
             <h3><i class='bx bx-edit'></i> Deixar minha avaliação</h3>
             <% if (typeof req !== 'undefined' && req.query && req.query.erro) { %>
               <nav class="erro-avaliacao">
                 <% if (req.query.erro === 'nota') { %>Selecione uma nota de 1 a 5 estrelas.<% } %>
                 <% if (req.query.erro === 'salvar') { %>Erro ao salvar avaliação. Tente novamente.<% } %>
+                <% if (req.query.erro === 'naocomprou') { %>Você precisa comprar este produto para poder avaliá-lo.<% } %>
               </nav>
             <% } %>
             <form action="/item/<%= produto.id %>/avaliar" method="POST">
@@ -155,6 +156,11 @@
                 <i class='bx bx-send'></i> Enviar avaliação
               </button>
             </form>
+          </nav>
+          <% } else if (typeof usuario !== 'undefined' && usuario) { %>
+          <nav class="login-to-review">
+            <i class='bx bx-lock-alt'></i>
+            Compre este produto para poder avaliá-lo.
           </nav>
           <% } else { %>
           <nav class="login-to-review">
@@ -292,7 +298,7 @@
             <nav class="no-comments">Nenhuma avaliação ainda. Seja o primeiro!</nav>
             <% } %>
 
-            <% if (typeof usuario !== 'undefined' && usuario) { %>
+            <% if (typeof usuario !== 'undefined' && usuario && comprou) { %>
             <nav class="review-form-section">
               <h3><i class='bx bx-edit'></i> Deixar minha avaliação</h3>
               <form action="/item/<%= produto.id %>/avaliar" method="POST">
@@ -305,6 +311,10 @@
                 <textarea name="comentario" placeholder="Conte sua experiência..." maxlength="255"></textarea>
                 <button type="submit"><i class='bx bx-send'></i> Enviar</button>
               </form>
+            </nav>
+            <% } else if (typeof usuario !== 'undefined' && usuario) { %>
+            <nav class="login-to-review">
+              Compre este produto para poder avaliá-lo.
             </nav>
             <% } else { %>
             <nav class="login-to-review">

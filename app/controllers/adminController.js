@@ -10,14 +10,14 @@ function getAdmLogin(req, res) {
 
 // POST /adm-login
 function postAdmLogin(req, res) {
-  const { senha } = req.body;
+  const { email, senha } = req.body;
 
-  if (senha === process.env.ADMIN_SECRET) {
+  if (email === process.env.ADMIN_EMAIL && senha === process.env.ADMIN_PASSWORD) {
     req.session.isAdmin = true;
     return res.redirect('/adm');
   }
 
-  res.send('Senha incorreta');
+  res.send('E-mail ou senha incorretos');
 }
 
 /* ── DASHBOARD ──────────────────────────────────────────────── */

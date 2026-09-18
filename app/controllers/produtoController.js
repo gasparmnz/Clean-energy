@@ -91,7 +91,10 @@ async function getItem(req, res) {
       ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil }
       : null;
 
-    res.render('pages/item', { produto, avaliacoes, mediaNotas, vendedor, usuario: usuarioSessao });
+    const pedidosConcluidos = req.session.pedidosConcluidos || [];
+    const comprou = pedidosConcluidos.some(item => String(item.productId) === String(req.params.id));
+
+    res.render('pages/item', { produto, avaliacoes, mediaNotas, vendedor, usuario: usuarioSessao, comprou });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erro interno do servidor');
@@ -106,6 +109,12 @@ async function avaliarItem(req, res) {
 
   if (!notaNum || notaNum < 1 || notaNum > 5) {
     return res.redirect(`/item/${produtoId}?erro=nota`);
+  }
+
+  const pedidosConcluidos = req.session.pedidosConcluidos || [];
+  const comprou = pedidosConcluidos.some(item => String(item.productId) === String(produtoId));
+  if (!comprou) {
+    return res.redirect(`/item/${produtoId}?erro=naocomprou`);
   }
 
   try {
