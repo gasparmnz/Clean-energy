@@ -351,7 +351,7 @@ body.dark-mode .vend-comentario { background: #252525; border-color: #2a2a2a; }
 .vend-com-avatar { flex-shrink: 0; margin: 0; }
 .vend-com-avatar img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
 
-.vend-com-corpo { flex: 1; }
+.vend-com-corpo { flex: 1; min-width: 0; }
 
 .vend-com-header {
   display: flex;
@@ -361,14 +361,14 @@ body.dark-mode .vend-comentario { background: #252525; border-color: #2a2a2a; }
   margin-bottom: .4rem;
 }
 
-.vend-com-nome { font-size: .9rem; font-weight: 700; color: var(--text); }
+.vend-com-nome { font-size: .9rem; font-weight: 700; color: var(--text); overflow-wrap: break-word; }
 body.dark-mode .vend-com-nome { color: #f3f4f6; }
 
 .vend-com-estrelas { display: flex; gap: 2px; color: var(--gold); font-size: .85rem; }
 
 .vend-com-data { font-size: .72rem; color: #9ca3af; margin-left: auto; }
 
-.vend-com-texto { font-size: .88rem; color: var(--text-muted); line-height: 1.6; }
+.vend-com-texto { font-size: .88rem; color: var(--text-muted); line-height: 1.6; overflow-wrap: break-word; }
 body.dark-mode .vend-com-texto { color: #9ca3af; }
 
 .vend-empty {
