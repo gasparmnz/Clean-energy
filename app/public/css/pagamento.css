@@ -1,0 +1,382 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ============================================
+   VARIÁVEIS
+   (compartilhado por pagamento-sucesso, -falha e -pendente)
+============================================ */
+:root {
+    --pg-verde: #1b814e;
+    --pg-verde-escuro: #14663d;
+    --pg-verde-claro: #2fa866;
+    --pg-verde-suave: #e6f4ec;
+    --pg-rodape: #032e19;
+    --pg-fundo: #f4f7f5;
+    --pg-card: #ffffff;
+    --pg-texto: #1f2a24;
+    --pg-texto-suave: #5b6b62;
+    --pg-erro: #d64545;
+    --pg-alerta: #e0a100;
+    --pg-header-altura: 85px;
+    --pg-raio: 20px;
+    --pg-sombra: 0 20px 45px -20px rgba(3, 46, 25, 0.35);
+}
+
+/* ============================================
+   RESET + LAYOUT DA PÁGINA
+   Footer sempre colado no fim da tela, sem bordas brancas
+============================================ */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    /* mesma cor da faixa de copyright: qualquer sobra abaixo do footer
+       (ex.: espaço reservado para a barra inferior no mobile) fica invisível */
+    background-color: var(--pg-rodape);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    color: var(--pg-texto);
+    overflow-x: hidden;
+}
+
+footer {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+/* ============================================
+   CONTEÚDO PRINCIPAL
+============================================ */
+.pagamento-container {
+    flex: 1 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: calc(var(--pg-header-altura) + clamp(1.5rem, 5vw, 4rem)) clamp(1rem, 4vw, 2rem) clamp(2rem, 6vw, 4.5rem);
+    background:
+        radial-gradient(circle at 15% 20%, rgba(47, 168, 102, 0.12), transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(27, 129, 78, 0.10), transparent 45%),
+        var(--pg-fundo);
+}
+
+/* ============================================
+   CARD
+============================================ */
+.pagamento-card {
+    width: 100%;
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: clamp(1.75rem, 5vw, 3rem) clamp(1.25rem, 5vw, 3rem);
+    text-align: center;
+    background-color: var(--pg-card);
+    border-radius: var(--pg-raio);
+    border-top: 6px solid var(--pg-verde);
+    box-shadow: var(--pg-sombra);
+    animation: pg-surgir 0.5s ease-out both;
+}
+
+.pagamento-card__topo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 0.25rem;
+}
+
+.pagamento-card__logo img {
+    display: block;
+    width: clamp(130px, 40vw, 190px);
+    height: auto;
+}
+
+.pagamento-card__status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--pg-verde-escuro);
+    background-color: var(--pg-verde-suave);
+}
+
+.pagamento-card h1 {
+    font-size: clamp(1.5rem, 4.5vw, 2.15rem);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--pg-verde-escuro);
+    text-wrap: balance;
+}
+
+.pagamento-card p {
+    font-size: clamp(0.95rem, 2.4vw, 1.05rem);
+    line-height: 1.6;
+    color: var(--pg-texto-suave);
+    max-width: 44ch;
+}
+
+.pagamento-card p strong {
+    color: var(--pg-texto);
+}
+
+.pagamento-card__texto--secundario {
+    font-size: 0.92rem !important;
+}
+
+/* ============================================
+   ÍCONES DE STATUS
+============================================ */
+.icone-sucesso {
+    width: clamp(64px, 16vw, 84px);
+    height: clamp(64px, 16vw, 84px);
+}
+
+.icone-sucesso__circulo {
+    fill: var(--pg-verde-suave);
+    stroke: var(--pg-verde-claro);
+    stroke-width: 2.5;
+    stroke-dasharray: 151;
+    stroke-dashoffset: 151;
+    animation: pg-tracar 0.6s ease-out 0.3s forwards;
+}
+
+.icone-sucesso__check {
+    fill: none;
+    stroke: var(--pg-verde);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 40;
+    stroke-dashoffset: 40;
+    animation: pg-tracar 0.4s ease-out 0.85s forwards;
+}
+
+/* ícones de texto usados nas páginas de falha / pendente */
+.icone-falha,
+.icone-pendente {
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.icone-falha {
+    background-color: var(--pg-erro);
+}
+
+.icone-pendente {
+    background-color: var(--pg-alerta);
+}
+
+/* ============================================
+   BOTÕES
+============================================ */
+.pagamento-card__acoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    margin-top: 0.75rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    border: 2px solid var(--pg-verde);
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    background-color: var(--pg-verde);
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn i {
+    font-size: 1.25rem;
+}
+
+.btn:hover {
+    background-color: var(--pg-verde-escuro);
+    border-color: var(--pg-verde-escuro);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -10px rgba(27, 129, 78, 0.7);
+}
+
+.btn:focus-visible {
+    outline: 3px solid var(--pg-verde-claro);
+    outline-offset: 3px;
+}
+
+.btn--primario {
+    flex: 1 1 220px;
+}
+
+.btn--secundario {
+    flex: 1 1 200px;
+    color: var(--pg-verde);
+    background-color: transparent;
+}
+
+.btn--secundario:hover {
+    color: #fff;
+}
+
+/* ============================================
+   ANIMAÇÕES
+============================================ */
+@keyframes pg-surgir {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes pg-tracar {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pagamento-card,
+    .icone-sucesso__circulo,
+    .icone-sucesso__check {
+        animation: none;
+        stroke-dashoffset: 0;
+    }
+
+    .btn,
+    .btn:hover {
+        transition: none;
+        transform: none;
+    }
+}
+
+/* ============================================
+   RESPONSIVIDADE
+============================================ */
+
+/* Telas grandes */
+@media (min-width: 1440px) {
+    .pagamento-card {
+        max-width: 620px;
+    }
+}
+
+/* Celulares */
+@media (max-width: 480px) {
+    .pagamento-card {
+        border-radius: 16px;
+        gap: 0.85rem;
+    }
+
+    .pagamento-card__acoes {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        flex-basis: auto;
+    }
+}
+
+/* Celulares muito pequenos (ex.: 320px) */
+@media (max-width: 340px) {
+    .pagamento-container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .btn {
+        font-size: 0.92rem;
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* Telas baixas / celular deitado */
+@media (max-height: 520px) and (orientation: landscape) {
+    .pagamento-container {
+        align-items: flex-start;
+    }
+
+    .pagamento-card__topo {
+        flex-direction: row;
+        gap: 1rem;
+    }
+}
+
+/* ============================================
+   MODO ESCURO (darkmode.css usa body.dark-mode)
+============================================ */
+body.dark-mode .pagamento-container {
+    background: #121212;
+}
+
+body.dark-mode .pagamento-card {
+    background-color: #1f1f1f;
+    box-shadow: 0 20px 45px -20px rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode .pagamento-card h1 {
+    color: #86efac !important;
+}
+
+body.dark-mode .pagamento-card p {
+    color: #b8c2bc;
+}
+
+body.dark-mode .pagamento-card p strong {
+    color: #e5e7eb;
+}
+
+body.dark-mode .pagamento-card__status {
+    color: #86efac;
+    background-color: rgba(134, 239, 172, 0.12);
+}
+
+body.dark-mode .icone-sucesso__circulo {
+    fill: rgba(134, 239, 172, 0.1);
+}
+
+body.dark-mode .btn--secundario {
+    color: #86efac;
+    border-color: #86efac;
+}
+
+body.dark-mode .btn--secundario:hover {
+    color: #0f2a1b;
+    background-color: #86efac;
+}
