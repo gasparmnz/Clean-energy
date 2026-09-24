@@ -44,7 +44,7 @@
             data-max="5">
 
             <nav class="produto-top">
-              <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>" onerror="this.src='/imagem/sem-foto.png'">
+              <img src="<%= srcImagem(produto.imagem) %>" alt="<%= produto.nome %>" onerror="this.src='/imagem/sem-foto.png'">
 
               <nav class="produto-info">
                 <h3><%= produto.nome %></h3>

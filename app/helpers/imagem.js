@@ -8,4 +8,15 @@ function arquivoParaDataUri(file) {
   return `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
 }
 
-module.exports = { arquivoParaDataUri };
+// Resolve o valor salvo na coluna `imagem` para um `src` válido de <img>.
+// Aceita os formatos que já existem no banco: data URI, URL absoluta,
+// caminho com "/imagem/..." ou apenas o nome do arquivo em public/imagem.
+function srcImagem(imagem) {
+  if (!imagem || typeof imagem !== 'string') return '/imagem/sem-foto.png';
+  const valor = imagem.trim();
+  if (!valor) return '/imagem/sem-foto.png';
+  if (/^(data:|https?:\/\/|\/)/i.test(valor)) return valor;
+  return '/imagem/' + valor.replace(/^imagem\//, '');
+}
+
+module.exports = { arquivoParaDataUri, srcImagem };
