@@ -119,7 +119,7 @@
                   R$ <%= Number(p.preco).toLocaleString('pt-BR', {minimumFractionDigits:2}) %>
                 </p>
                 <% if (p.local) { %>
-                  <p class="vend-produto-local"><i class='bx bx-map-pin'></i> <%= p.local %></p>
+                  <p class="vend-produto-local"><i class='bx bx-map-pin'></i> <%= p.local.split(',')[0].trim() %></p>
                 <% } %>
               </div>
             </a>
@@ -208,7 +208,7 @@
             <% comentarios.forEach(c => { %>
             <li class="vend-comentario">
               <figure class="vend-com-avatar">
-                <img src="/imagem/<%= c.foto_avaliador || 'avatar.png' %>" alt="<%= c.nome_avaliador %>">
+                <img src="<%= c.foto_avaliador && c.foto_avaliador.startsWith('data:') ? c.foto_avaliador : '/imagem/' + (c.foto_avaliador || 'avatar.png') %>" alt="<%= c.nome_avaliador %>">
               </figure>
               <div class="vend-com-corpo">
                 <header class="vend-com-header">
