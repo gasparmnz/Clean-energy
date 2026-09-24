@@ -169,25 +169,53 @@ footer {
     animation: pg-tracar 0.4s ease-out 0.85s forwards;
 }
 
-/* ícones de texto usados nas páginas de falha / pendente */
-.icone-falha,
-.icone-pendente {
-    display: grid;
-    place-items: center;
-    width: 76px;
-    height: 76px;
-    border-radius: 50%;
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: #fff;
+/* ícones das páginas de falha / pendente (cor definida pela variante do card) */
+.icone-status {
+    width: clamp(64px, 16vw, 84px);
+    height: clamp(64px, 16vw, 84px);
 }
 
-.icone-falha {
-    background-color: var(--pg-erro);
+.icone-status__circulo {
+    fill: var(--pg-destaque-suave);
+    stroke: var(--pg-destaque);
+    stroke-width: 2.5;
+    stroke-dasharray: 151;
+    stroke-dashoffset: 151;
+    animation: pg-tracar 0.6s ease-out 0.3s forwards;
 }
 
-.icone-pendente {
-    background-color: var(--pg-alerta);
+.icone-status__traco {
+    fill: none;
+    stroke: var(--pg-destaque);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 50;
+    stroke-dashoffset: 50;
+    animation: pg-tracar 0.4s ease-out 0.85s forwards;
+}
+
+/* ============================================
+   VARIANTES DO CARD (falha / pendente)
+============================================ */
+.pagamento-card--falha {
+    --pg-destaque: var(--pg-erro);
+    --pg-destaque-escuro: #a83232;
+    --pg-destaque-suave: #fdecec;
+    border-top-color: var(--pg-erro);
+}
+
+.pagamento-card--pendente {
+    --pg-destaque: var(--pg-alerta);
+    --pg-destaque-escuro: #8a6300;
+    --pg-destaque-suave: #fdf5dd;
+    border-top-color: var(--pg-alerta);
+}
+
+.pagamento-card--falha .pagamento-card__status,
+.pagamento-card--pendente .pagamento-card__status {
+    color: var(--pg-destaque-escuro);
+    background-color: var(--pg-destaque-suave);
 }
 
 /* ============================================
@@ -273,7 +301,9 @@ footer {
 @media (prefers-reduced-motion: reduce) {
     .pagamento-card,
     .icone-sucesso__circulo,
-    .icone-sucesso__check {
+    .icone-sucesso__check,
+    .icone-status__circulo,
+    .icone-status__traco {
         animation: none;
         stroke-dashoffset: 0;
     }
@@ -369,6 +399,24 @@ body.dark-mode .pagamento-card__status {
 
 body.dark-mode .icone-sucesso__circulo {
     fill: rgba(134, 239, 172, 0.1);
+}
+
+body.dark-mode .pagamento-card--falha {
+    --pg-destaque: #f87171;
+    --pg-destaque-escuro: #fca5a5;
+    --pg-destaque-suave: rgba(248, 113, 113, 0.12);
+}
+
+body.dark-mode .pagamento-card--pendente {
+    --pg-destaque: #fbbf24;
+    --pg-destaque-escuro: #fcd34d;
+    --pg-destaque-suave: rgba(251, 191, 36, 0.12);
+}
+
+body.dark-mode .pagamento-card--falha .pagamento-card__status,
+body.dark-mode .pagamento-card--pendente .pagamento-card__status {
+    color: var(--pg-destaque-escuro);
+    background-color: var(--pg-destaque-suave);
 }
 
 body.dark-mode .btn--secundario {
