@@ -60,8 +60,8 @@ const produtosModel = {
 
   update: async (id, dados) => {
     try {
-      const sql = `UPDATE produtos SET nome = ?, descricao = ?, preco = ?, quantidade = ? WHERE id = ?`;
-      const [result] = await pool.query(sql, [dados.nome, dados.descricao || null, dados.preco || 0, dados.quantidade || null, id]);
+      const sql = `UPDATE produtos SET nome = ?, quantidade = ? WHERE id = ?`;
+      const [result] = await pool.query(sql, [dados.nome, dados.quantidade || null, id]);
       return result;
     } catch (err) {
       throw err;
@@ -513,6 +513,44 @@ const vendedorModel = {
 };
 
 module.exports = produtosModel;
+const pedidoModel = {
+  _tabelaCriada: false,
+  _garantirTabela: async () => {
+    if (pedidoModel._tabelaCriada) return;
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS pedidos (
+        id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        comprador_id INT NOT NULL,
+        produto_id INT DEFAULT NULL,
+        valor_total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+        status ENUM('em_transito','concluido','cancelado') NOT NULL DEFAULT 'em_transito',
+        criado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+    `);
+    pedidoModel._tabelaCriada = true;
+  },
+
+  // Cria o pedido assim que o pagamento é confirmado (status inicial: em_transito)
+  criar: async ({ compradorId, produtoId, valorTotal }) => {
+    await pedidoModel._garantirTabela();
+    const [result] = await pool.query(
+      "INSERT INTO pedidos (comprador_id, produto_id, valor_total, status) VALUES (?, ?, ?, 'em_transito')",
+      [compradorId, produtoId, valorTotal]
+    );
+    return result.insertId;
+  },
+
+  // Comprador confirma o recebimento
+  marcarConcluido: async (id, compradorId) => {
+    await pedidoModel._garantirTabela();
+    await pool.query(
+      "UPDATE pedidos SET status = 'concluido' WHERE id = ? AND comprador_id = ?",
+      [id, compradorId]
+    );
+  }
+};
+
+module.exports.pedidoModel = pedidoModel;
 module.exports.usuarioModel = usuarioModel;
 module.exports.vendedorModel = vendedorModel;
 

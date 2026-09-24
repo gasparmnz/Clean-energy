@@ -427,13 +427,11 @@ async function toggleStatusProduto(req, res) {
 
 async function editarProdutoAdm(req, res) {
   try {
-    const { id, name, description, price, stock } = req.body;
+    const { id, name, stock } = req.body;
     if (!id) return res.status(400).json({ error: 'ID obrigatório' });
     const numericId = String(id).replace(/^PROD-/i, '');
     await produtosModel.update(numericId, {
       nome: name,
-      descricao: description,
-      preco: parseFloat(price) || 0,
       quantidade: parseInt(stock) || 0
     });
     res.json({ success: true });
