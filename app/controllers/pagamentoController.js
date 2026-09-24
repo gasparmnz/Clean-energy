@@ -1,13 +1,14 @@
 const produtosModel = require('../models/models.js');
-const { notificacoesModel } = require('../models/models.js');
+const { notificacoesModel, pedidoModel } = require('../models/models.js');
 const cartModel = require('../models/cartModel');
 const { preferenceClient } = require('../../config/mercadopago');
 
 // GET /minhascompras
 function getMinhasCompras(req, res) {
   const pendentes = req.session.pedidosPendentes || [];
+  const emTransito = req.session.pedidosEmTransito || [];
   const concluidos = req.session.pedidosConcluidos || [];
-  res.render('pages/minhascompras', { pendentes, concluidos });
+  res.render('pages/minhascompras', { pendentes, emTransito, concluidos });
 }
 
 // POST /minhascompras/finalizar — move itens do carrinho para pedidos pendentes na sessão
@@ -173,48 +174,46 @@ async function pagarPendente(req, res) {
 
 // GET /pagamento/sucesso
 async function getSucesso(req, res) {
-  try {
-    // 1) Fluxo de checkout imediato (carrinho -> Mercado Pago -> aprovado).
-    // Só agora, com o pagamento aprovado, o carrinho é de fato esvaziado
-    // e o pedido é considerado concluído.
-    const checkout = req.session.checkoutEmAndamento;
-    if (checkout && Array.isArray(checkout.cart) && checkout.cart.length > 0) {
-      const pool = require('../../config/pool_conexoes');
-      await pool.query('DELETE FROM carrinho WHERE CAST(userId AS CHAR) = ?', [checkout.userId]);
-
-      req.session.pedidosConcluidos = [...(req.session.pedidosConcluidos || []), ...checkout.cart];
-
-      for (const item of checkout.cart) {
-        try {
-          const produto = await produtosModel.findById(item.productId);
-          if (produto && produto.usuario_id) {
-            await notificacoesModel.criar({
-              usuarioId: produto.usuario_id,
-              tipo: 'novo_pedido',
-              mensagem: `Novo pedido recebido: ${item.nome}`,
-              link: '/listaprodutos'
-            });
-          }
-        } catch (e) { console.error('Erro ao notificar vendedor sobre novo pedido:', e); }
-      }
+  const pendentes = req.session.pedidosPendentes || [];
+  if (pendentes.length > 0) {
+    const compradorId = req.session.userId;
+    for (const item of pendentes) {
+      try {
+        const valorTotal = Number(item.preco) * (item.quantidade || 1);
+        item.pedidoId = await pedidoModel.criar({
+          compradorId,
+          produtoId: item.productId,
+          valorTotal
+        });
+      } catch (e) { console.error('Erro ao gravar pedido no banco:', e); }
     }
-    req.session.checkoutEmAndamento = null;
-
-    // 2) Fluxo de "pedidos pendentes" (finalizarCompra / pagarPendente),
-    // já existente — mantido como estava.
-    const pendentes = req.session.pedidosPendentes || [];
-    if (pendentes.length > 0) {
-      req.session.pedidosConcluidos = [...(req.session.pedidosConcluidos || []), ...pendentes];
-      req.session.pedidosPendentes = [];
-    }
-
-    res.render('pages/pagamento-sucesso');
-  } catch (err) {
-    console.error('Erro ao processar retorno de sucesso do pagamento:', err);
-    // Mesmo se algo falhar aqui, o pagamento já foi aprovado no Mercado Pago,
-    // então ainda mostramos a página de sucesso ao comprador.
-    res.render('pages/pagamento-sucesso');
+    req.session.pedidosEmTransito = [...(req.session.pedidosEmTransito || []), ...pendentes];
+    req.session.pedidosPendentes = [];
   }
+  res.render('pages/pagamento-sucesso');
+}
+
+// POST /pagamento/concluir — comprador confirma o recebimento e move para "Concluídos"
+async function concluirPedido(req, res) {
+  const { index } = req.body;
+  const emTransito = req.session.pedidosEmTransito || [];
+  const item = emTransito[index];
+
+  if (!item) {
+    return res.status(400).json({ sucesso: false, erro: 'Pedido em trânsito não encontrado.' });
+  }
+
+  try {
+    if (item.pedidoId) {
+      await pedidoModel.marcarConcluido(item.pedidoId, req.session.userId);
+    }
+  } catch (e) { console.error('Erro ao marcar pedido como concluído no banco:', e); }
+
+  req.session.pedidosConcluidos = [...(req.session.pedidosConcluidos || []), item];
+  emTransito.splice(index, 1);
+  req.session.pedidosEmTransito = emTransito;
+
+  res.json({ sucesso: true });
 }
 
 // GET /pagamento/falha
@@ -248,6 +247,7 @@ module.exports = {
   criarPagamento,
   pagarPendente,
   getSucesso,
+  concluirPedido,
   getFalha,
   getPendente,
   webhook

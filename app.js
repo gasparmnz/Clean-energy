@@ -45,8 +45,27 @@ app.use(express.static(path.join(__dirname, 'app', 'public'), {
 app.use('/imagem', express.static('app/public/imagem', { maxAge: '7d' }));
 
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+
+const sessionStore = new MySQLStore({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: (process.env.DB_NAME || 'produtos').toLowerCase(),
+  port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
+  ssl: { rejectUnauthorized: false },
+  clearExpired: true,
+  checkExpirationInterval: 900000, // 15 min
+  expiration: 86400000 // 24h
+});
+
+sessionStore.onReady().catch(err => {
+  console.error('Erro ao iniciar o store de sessão (MySQL):', err.message);
+});
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'clean-energy-secret-key',
+  store: sessionStore,
   resave: false,
   saveUninitialized: true
 }));
