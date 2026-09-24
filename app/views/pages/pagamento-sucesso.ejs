@@ -2,39 +2,65 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento aprovado</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Pagamento aprovado. Obrigado por comprar na Clean Energy.">
+    <meta name="robots" content="noindex">
+    <title>Pagamento aprovado | Clean Energy</title>
 
     <link rel="stylesheet" href="/css/pagamento.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1b814e">
+    <link rel="apple-touch-icon" href="/imagem/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/imagem/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/imagem/icon-192.png">
 </head>
 
-<body>
+<body class="pagamento-page">
 
     <%- include("../partial/header.ejs") %>
 
     <main class="pagamento-container">
 
-        <section class="pagamento-card">
+        <article class="pagamento-card pagamento-card--sucesso" aria-labelledby="titulo-sucesso">
 
-            <section class="icone-sucesso">
-                ✓
-            </section>
+            <header class="pagamento-card__topo">
+                <figure class="pagamento-card__logo">
+                    <img src="/imagem/logo-curva.svg" alt="Logo Clean Energy" width="200" height="84">
+                </figure>
 
-            <h1>Pagamento aprovado!</h1>
+                <svg class="icone-sucesso" viewBox="0 0 52 52" aria-hidden="true" focusable="false">
+                    <circle class="icone-sucesso__circulo" cx="26" cy="26" r="24" />
+                    <path class="icone-sucesso__check" d="M15 27 l7 7 l15 -16" />
+                </svg>
 
-            <p>
-                Seu pagamento foi realizado com sucesso.
+                <p class="pagamento-card__status" role="status">Pagamento aprovado</p>
+            </header>
+
+            <h1 id="titulo-sucesso">Obrigado pela sua compra!</h1>
+
+            <p class="pagamento-card__texto">
+                Seu pagamento foi confirmado com sucesso. Agradecemos por escolher a
+                <strong>Clean Energy</strong> e por apoiar a energia limpa a partir da biomassa.
             </p>
 
-            <p>
-                Obrigado por comprar na Clean Energy.
+            <p class="pagamento-card__texto pagamento-card__texto--secundario">
+                Você pode acompanhar o andamento do seu pedido a qualquer momento em
+                <em>Minhas compras</em>.
             </p>
 
-            <a href="/minhascompras" class="btn">
-                Ver minhas compras
-            </a>
+            <nav class="pagamento-card__acoes" aria-label="Próximos passos">
+                <a href="/minhascompras" class="btn btn--primario">
+                    <i class="bx bx-shopping-bag" aria-hidden="true"></i>
+                    Ir para minhas compras
+                </a>
+                <a href="/" class="btn btn--secundario">
+                    <i class="bx bx-store" aria-hidden="true"></i>
+                    Continuar comprando
+                </a>
+            </nav>
 
-        </section>
+        </article>
 
     </main>
 
