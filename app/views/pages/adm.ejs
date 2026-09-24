@@ -29,18 +29,50 @@
     </nav>
         <section class="dashboard-summary" aria-labelledby="dashboard-heading">
             <h2 id="dashboard-heading">Visão Geral <span class="real-data-tag"><i class='bx bx-check-circle'></i> Dados em tempo real</span></h2>
-            <section class="summary-cards">
-                <article class="summary-card"><i class="bx bx-group"></i><h3>Total de Usuários</h3><p><%= totals.users %></p></article>
-                <article class="summary-card"><i class="bx bx-package"></i><h3>Total de Produtos</h3><p><%= totals.products %></p></article>
-                <article class="summary-card"><i class="bx bx-check-circle"></i><h3>Produtos Ativos</h3><p><%= totals.active %></p></article>
-                <article class="summary-card"><i class='bx bx-block'></i><h3>Produtos Suspensos</h3><p><%= totals.suspended %></p></article>
-                <article class="summary-card"><i class="bx bx-cart-alt"></i><h3>Total de Transações</h3><p><%= stats.total %></p></article>
-                <article class="summary-card"><i class="bx bx-time-five"></i><h3>Pedidos Pendentes</h3><p><%= stats.pendentes %></p></article>
-                <article class="summary-card"><i class='bx bx-x-circle'></i><h3>Transações Canceladas</h3><p><%= stats.canceladas %></p></article>
-                <article class="summary-card"><i class="bx bx-check-circle"></i><h3>Transações Concluídas</h3><p><%= stats.concluidas %></p></article>
-                <article class="summary-card"><i class="bx bx-money"></i><h3>Total Transacionado</h3><p>R$ <%= stats.totalValor.toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}) %></p></article>
-                <article class="summary-card"><i class="bx bx-wallet"></i><h3>Comissão (5%)</h3><p>R$ <%= stats.comissao.toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}) %></p></article>
-            </section>
+            <%
+                const brl = v => Number(v || 0).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+                const totalTx = Number(stats.total) || 0;
+                const pct = n => totalTx ? Math.round((Number(n) || 0) / totalTx * 100) : 0;
+            %>
+            <div class="ov">
+                <div class="ov-highlight">
+                    <div class="ov-highlight-item">
+                        <span class="ov-label">Total transacionado</span>
+                        <strong class="ov-highlight-value">R$ <%= brl(stats.totalValor) %></strong>
+                    </div>
+                    <div class="ov-highlight-item">
+                        <span class="ov-label">Comissão da plataforma (5%)</span>
+                        <strong class="ov-highlight-value">R$ <%= brl(stats.comissao) %></strong>
+                    </div>
+                </div>
+
+                <div class="ov-groups">
+                    <div class="ov-group">
+                        <h3 class="ov-group-title">Usuários e Produtos</h3>
+                        <table class="ov-table">
+                            <thead><tr><th>Indicador</th><th class="ov-num">Quantidade</th></tr></thead>
+                            <tbody>
+                                <tr><td><i class="bx bx-group"></i> Usuários cadastrados</td><td class="ov-num"><%= totals.users %></td></tr>
+                                <tr><td><i class="bx bx-package"></i> Produtos cadastrados</td><td class="ov-num"><%= totals.products %></td></tr>
+                                <tr><td><span class="status-badge status-concluido">Ativos</span></td><td class="ov-num"><%= totals.active %></td></tr>
+                                <tr><td><span class="status-badge status-cancelado">Suspensos</span></td><td class="ov-num"><%= totals.suspended %></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="ov-group">
+                        <h3 class="ov-group-title">Transações <span class="ov-group-total"><%= totalTx %> <%= totalTx === 1 ? 'transação' : 'transações' %> no total</span></h3>
+                        <table class="ov-table">
+                            <thead><tr><th>Status</th><th class="ov-num">Quantidade</th><th class="ov-num">Percentual</th></tr></thead>
+                            <tbody>
+                                <tr><td><span class="status-badge status-concluido">Concluídas</span></td><td class="ov-num"><%= stats.concluidas %></td><td class="ov-num"><%= pct(stats.concluidas) %>%</td></tr>
+                                <tr><td><span class="status-badge status-pendente">Pendentes</span></td><td class="ov-num"><%= stats.pendentes %></td><td class="ov-num"><%= pct(stats.pendentes) %>%</td></tr>
+                                <tr><td><span class="status-badge status-cancelado">Canceladas</span></td><td class="ov-num"><%= stats.canceladas %></td><td class="ov-num"><%= pct(stats.canceladas) %>%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section class="transactions-section" aria-labelledby="compras-heading">
