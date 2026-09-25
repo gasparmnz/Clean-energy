@@ -1,4 +1,5 @@
 const mysql = require('mysql2');
+const { opcoesPool, validarConexoesOciosas } = require('./mysql_resiliente');
 
 const pool = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
@@ -6,10 +7,13 @@ const pool = mysql.createPool({
     password: process.env.DB_PASSWORD || '',
     database: (process.env.DB_NAME || 'produtos').toLowerCase(),
     port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
-   
-    connectionLimit: process.env.DB_CONNECTION_LIMIT ? Number(process.env.DB_CONNECTION_LIMIT) : 2,
-    maxIdle: 1,
-    idleTimeout: 10000,
+    // Reduzido de 10 para 3: o banco (plano gratuito) só permite 5 conexões
+    // simultâneas NO TOTAL para este usuário, e o session store (MySQLStore,
+    // no app.js) abre seu próprio pool separado apontando pro mesmo banco.
+    // 3 (app) + 2 (sessão) = 5, deixando ambos dentro do limite.
+    // maxIdle < connectionLimit + idleTimeout: faz o mysql2 renovar conexões
+    // paradas (ver config/mysql_resiliente.js).
+    ...opcoesPool(3),
     queueLimit: 0,
     ssl: { rejectUnauthorized: false },
     // Evita ECONNRESET por timeout do servidor MySQL
@@ -18,6 +22,10 @@ const pool = mysql.createPool({
     waitForConnections: true,
     connectTimeout: 10000,
 });
+
+// Conexões paradas recebem um PING antes de serem usadas; se o MySQL já as
+// tiver derrubado, são descartadas e outra é usada (evita ECONNRESET).
+validarConexoesOciosas(pool);
 
 // A rede local pode interceptar/atrasar o handshake TLS de forma intermitente,
 // então tenta algumas vezes antes de reportar falha (a pool em si já reconecta
@@ -37,18 +45,5 @@ function testarConexao(tentativa = 1) {
     });
 }
 testarConexao();
-
-// Fecha as conexões ao encerrar o processo (Ctrl+C, restart do deploy),
-// senão elas ficam presas no servidor MySQL até expirarem e ocupam o limite.
-let encerrando = false;
-function encerrarPool(sinal) {
-    if (encerrando) return;
-    encerrando = true;
-    pool.end(() => process.kill(process.pid, sinal));
-    setTimeout(() => process.exit(0), 3000).unref();
-}
-['SIGINT', 'SIGTERM', 'SIGUSR2'].forEach((sinal) => {
-    process.once(sinal, () => encerrarPool(sinal));
-});
 
 module.exports = pool.promise();

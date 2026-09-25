@@ -4,6 +4,21 @@ const bcrypt = require('bcryptjs');
 const models = require('../models/models');
 const { usuarioModel } = models;
 const { validarCPF } = require('../helpers/validacao');
+// Mesmas regras de senha usadas no navegador (app/public/js/senha-regras.js).
+const SenhaRegras = require('../public/js/senha-regras');
+
+// Validação de senha do cadastro (PF e PJ). O backend continua sendo a
+// autoridade final: isStrongPassword com as mesmas opções do frontend e,
+// em caso de erro, uma mensagem que diz exatamente o que está faltando.
+const regraSenha = () => body('senha')
+  .notEmpty().withMessage('*Campo obrigatório!').bail()
+  .isStrongPassword(SenhaRegras.OPCOES_VALIDATOR)
+  .withMessage((value) => '*' + (SenhaRegras.mensagemErro(value) || 'Senha inválida!')).bail()
+  .custom((value) => {
+    const msg = SenhaRegras.mensagemErro(value);
+    if (msg) throw new Error('*' + msg);
+    return true;
+  });
 const { sendResetPasswordEmail } = require('../helpers/mailer');
 
 const RESET_TOKEN_VALIDADE_MS = 60 * 60 * 1000; // 1 hora
@@ -44,7 +59,7 @@ const validarCadastroUsuario = [
   body('nome').trim().notEmpty().withMessage('*Campo obrigatório!').isLength({ min: 3, max: 50 }).withMessage('*O Nome deve conter entre 3 e 50 caracteres!'),
   body('cpf').custom((value) => { if (validarCPF(value)) return true; throw new Error('CPF inválido!'); }),
   body('email').notEmpty().withMessage('*Campo obrigatório!').isEmail().withMessage('*Endereço de email inválido!'),
-  body('senha').notEmpty().withMessage('*Campo obrigatório!').isStrongPassword({ minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1, minLength: 8 }).withMessage('*Sua senha deve conter pelo menos: uma letra maiúscula, um número e um caractere especial!'),
+  regraSenha(),
   body('confirmarSenha').notEmpty().withMessage('*Campo obrigatório!').custom((value, { req }) => { if (value !== req.body.senha) throw new Error('*As senhas não conferem!'); return true; })
 ];
 
@@ -86,7 +101,7 @@ const validarCadastroEmpresa = [
   body('nome').trim().notEmpty().withMessage('*Campo obrigatório!').isLength({ min: 3, max: 50 }).withMessage('*O Nome da empresa deve conter entre 3 e 50 caracteres!'),
   body('cnpj').notEmpty().withMessage('*Campo obrigatório!').custom((value) => { if (value.replace(/\D/g, '').length !== 14) throw new Error('*O CNPJ deve conter 14 números!'); return true; }),
   body('email').notEmpty().withMessage('*Campo obrigatório!').isEmail().withMessage('*Endereço de email inválido!'),
-  body('senha').notEmpty().withMessage('*Campo obrigatório!').isStrongPassword({ minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1, minLength: 8 }).withMessage('*Sua senha deve conter pelo menos: uma letra maiúscula, um número e um caractere especial!'),
+  regraSenha(),
   body('confirmarSenha').notEmpty().withMessage('*Campo obrigatório!').custom((value, { req }) => { if (value !== req.body.senha) throw new Error('*As senhas não conferem!'); return true; })
 ];
 
@@ -212,9 +227,11 @@ async function postRedefinirSenha(req, res) {
     });
   }
 
-  if (!senha || senha.length < 8) {
+  // Mesmas regras de senha do cadastro.
+  const erroSenha = SenhaRegras.mensagemErro(senha);
+  if (erroSenha) {
     return res.render('pages/redefinir-senha', {
-      erro: '*A senha deve ter pelo menos 8 caracteres!', tokenValido: true, token, sucesso: false
+      erro: '*' + erroSenha, tokenValido: true, token, sucesso: false
     });
   }
   if (senha !== confirmarSenha) {

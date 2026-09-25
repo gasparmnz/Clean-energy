@@ -30,22 +30,30 @@ router.post("/cadastrar_produto", requireVendedor, uploadProduto.single("imagem"
 router.get("/listaprodutos", requireLogin, produtoController.getListaProdutos);
 router.get("/item/:id", produtoController.getItem);
 router.post("/item/:id/avaliar", requireLogin, produtoController.avaliarItem);
+router.put("/produtos/:id", requireVendedor, produtoController.atualizarProduto);
 router.delete("/produtos/:id", requireVendedor, produtoController.deleteProduto);
 
 /* CARRINHO */
 router.get("/carrinho", carrinhoController.getCarrinho);
 router.post("/cart/add", carrinhoController.addToCart);
 router.post("/cart/remove", carrinhoController.removeFromCart);
+router.post("/cart/quantidade", carrinhoController.updateQuantity);
 
 /* PAGAMENTO / PEDIDOS */
 router.get("/minhascompras", requireLogin, pagamentoController.getMinhasCompras);
 router.post("/minhascompras/finalizar", requireLogin, pagamentoController.finalizarCompra);
+router.post("/minhascompras/confirmar-recebimento", requireLogin, pagamentoController.confirmarRecebimento);
+router.post("/minhascompras/cancelar", requireLogin, pagamentoController.cancelarPendente);
 router.post("/pagamento/criar", requireLogin, pagamentoController.criarPagamento);
 router.post("/pagamento/pendente/pagar", requireLogin, pagamentoController.pagarPendente);
-router.get("/pagamento/sucesso", requireLogin, pagamentoController.getSucesso);
-router.post("/pagamento/concluir", requireLogin, pagamentoController.concluirPedido);
-router.get("/pagamento/falha", requireLogin, pagamentoController.getFalha);
-router.get("/pagamento/pendente", requireLogin, pagamentoController.getPendente);
+// Sem requireLogin: o Mercado Pago retorna para cá sem garantia de que o
+// cookie de sessão ainda esteja válido (ex.: sessão expirou/perdida durante
+// o tempo em que o comprador estava no site do Mercado Pago). O pedido é
+// localizado pelo preference_id que vem na própria URL de retorno, não pela
+// sessão — ver pagamentoController.getSucesso/getFalha.
+router.get("/pagamento/sucesso", pagamentoController.getSucesso);
+router.get("/pagamento/falha", pagamentoController.getFalha);
+router.get("/pagamento/pendente", pagamentoController.getPendente);
 router.post("/pagamento/webhook", pagamentoController.webhook);
 
 /* PERFIL */

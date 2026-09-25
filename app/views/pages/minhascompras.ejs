@@ -33,12 +33,39 @@
 
       
 
+        <%
+          // Endereço completo do produto (cidade, bairro, rua, número,
+          // complemento), montado em pagamentoController.mapPedidoParaView.
+          // Imagem do produto: novos cadastros salvam a imagem como Data URI
+          // (data:image/...;base64,...) direto no banco; cadastros antigos
+          // guardam só o nome do arquivo em /public/imagem.
+          function srcImagem(imagem) {
+            const valor = typeof imagem === 'string' ? imagem.trim() : '';
+            if (valor.startsWith('data:image/')) return valor;
+            return '/imagem/' + (valor || 'sem-foto.png');
+          }
+
+          function blocoEndereco(produto) {
+            const e = produto.endereco || {};
+            const linhas = [];
+            if (e.rua)         linhas.push(['Rua', e.rua]);
+            if (e.numero)      linhas.push(['Número', e.numero]);
+            if (e.complemento) linhas.push(['Complemento', e.complemento]);
+            if (e.bairro)      linhas.push(['Bairro', e.bairro]);
+            if (e.cidade)      linhas.push(['Cidade', e.estado ? e.cidade + ' - ' + e.estado : e.cidade]);
+            if (linhas.length === 0 && (e.completo || produto.local)) {
+              linhas.push(['Endereço', (e.completo || produto.local) + (e.estado ? ' - ' + e.estado : '')]);
+            }
+            return linhas;
+          }
+        %>
+
         <ul class="nav nav-tabs" id="productTabs" role="tablist">
           <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="pendentesTab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-controls="pendentes" aria-selected="true">Pendentes</a>
+            <a class="nav-link active" id="emAndamentoTab" data-bs-toggle="tab" href="#emAndamento" role="tab" aria-controls="emAndamento" aria-selected="true">Em trânsito</a>
           </li>
           <li class="nav-item" role="presentation">
-            <a class="nav-link" id="emAndamentoTab" data-bs-toggle="tab" href="#emAndamento" role="tab" aria-controls="emAndamento" aria-selected="false">Em trânsito</a>
+            <a class="nav-link" id="pendentesTab" data-bs-toggle="tab" href="#pendentes" role="tab" aria-controls="pendentes" aria-selected="false">Pendentes</a>
           </li>
           <li class="nav-item" role="presentation">
             <a class="nav-link" id="concluidosTab" data-bs-toggle="tab" href="#concluidos" role="tab" aria-controls="concluidos" aria-selected="false">Concluídos</a>
@@ -47,8 +74,53 @@
 
         <section class="tab-content" id="productTabsContent">
 
+          <!-- EM TRÂNSITO -->
+          <section class="tab-pane fade show active" id="emAndamento" role="tabpanel" aria-labelledby="emAndamentoTab">
+            <% if (!emTransito || emTransito.length === 0) { %>
+              <div class="sem-itens">
+                <i class='bx bx-package'></i>
+                <p>Você não tem pedidos em trânsito.</p>
+              </div>
+            <% } else { %>
+              <section class="produtos-grid">
+                <% emTransito.forEach((produto) => { %>
+                  <article class="produto-card"
+                    data-id="<%= produto.id %>"
+                    data-nome="<%= produto.nome %>"
+                    data-preco="<%= produto.preco %>"
+                    data-quantidade="<%= produto.quantidade || 1 %>"
+                    data-local="<%= produto.local || '' %>">
+                    <figure>
+                      <img src="<%= srcImagem(produto.imagem) %>" alt="<%= produto.nome %>" onerror="this.onerror=null;this.src='https://placehold.co/300x200?text=Sem+Foto'">
+                    </figure>
+                    <section class="produto-info">
+                      <h3><%= produto.nome %></h3>
+                      <p class="preco">R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) %></p>
+                      <p class="quantidade"><%= produto.quantidade || 1 %> Tonelada(s)</p>
+                      <% const linhasTransito = blocoEndereco(produto); %>
+                      <dl class="endereco-completo d-none" id="endereco-<%= produto.id %>">
+                        <% if (linhasTransito.length === 0) { %>
+                          <dd>Endereço não informado</dd>
+                        <% } else { linhasTransito.forEach(([rotulo, valor]) => { %>
+                          <dt><%= rotulo %>:</dt><dd><%= valor %></dd>
+                        <% }) } %>
+                      </dl>
+                    </section>
+                    <section class="acoes">
+                      <button type="button" class="btn btn-outline-secondary btn-sm btn-mostrar-endereco" aria-expanded="false" aria-controls="endereco-<%= produto.id %>">
+                        <i class='bx bx-map'></i> Mostrar Endereço
+                      </button>
+                      <button type="button" class="btn btn-outline-success btn-sm btn-confirmar-recebimento">Marcar como Concluído</button>
+                    </section>
+                    <p class="andamento">Em trânsito</p>
+                  </article>
+                <% }) %>
+              </section>
+            <% } %>
+          </section>
+
           <!-- PENDENTES -->
-          <section class="tab-pane fade show active" id="pendentes" role="tabpanel" aria-labelledby="pendentesTab">
+          <section class="tab-pane fade" id="pendentes" role="tabpanel" aria-labelledby="pendentesTab">
             <% if (!pendentes || pendentes.length === 0) { %>
               <div class="sem-itens">
                 <i class='bx bx-package'></i>
@@ -56,9 +128,9 @@
               </div>
             <% } else { %>
               <section class="produtos-grid">
-                <% pendentes.forEach((produto, index) => { %>
+                <% pendentes.forEach((produto) => { %>
                   <article class="produto-card"
-                    data-index="<%= index %>"
+                    data-id="<%= produto.id %>"
                     data-nome="<%= produto.nome %>"
                     data-preco="<%= produto.preco %>"
                     data-quantidade="<%= produto.quantidade || 1 %>"
@@ -83,42 +155,6 @@
             <% } %>
           </section>
 
-          <!-- EM TRÂNSITO -->
-          <section class="tab-pane fade" id="emAndamento" role="tabpanel" aria-labelledby="emAndamentoTab">
-            <% if (!emTransito || emTransito.length === 0) { %>
-              <div class="sem-itens">
-                <i class='bx bx-package'></i>
-                <p>Você não tem pedidos em trânsito.</p>
-              </div>
-            <% } else { %>
-              <section class="produtos-grid">
-                <% emTransito.forEach((produto, index) => { %>
-                  <article class="produto-card"
-                    data-index="<%= index %>"
-                    data-nome="<%= produto.nome %>"
-                    data-preco="<%= produto.preco %>"
-                    data-quantidade="<%= produto.quantidade || 1 %>"
-                    data-local="<%= produto.local || '' %>">
-                    <figure>
-                      <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>" onerror="this.src='https://placehold.co/300x200?text=Sem+Foto'">
-                    </figure>
-                    <section class="produto-info">
-                      <h3><%= produto.nome %></h3>
-                      <p class="preco">R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) %></p>
-                      <p class="quantidade d-none"><%= produto.quantidade || 1 %> Tonelada(s)</p>
-                      <p class="endereco d-none"><%= produto.local || '' %></p>
-                    </section>
-                    <section class="acoes">
-                      <button class="btn btn-outline-success btn-sm btn-mostrar-endereco">Mostrar Endereço</button>
-                      <button class="btn btn-success btn-sm btn-concluir">Concluído</button>
-                    </section>
-                    <p class="em-transito">Em trânsito</p>
-                  </article>
-                <% }) %>
-              </section>
-            <% } %>
-          </section>
-
           <!-- CONCLUÍDOS -->
           <section class="tab-pane fade" id="concluidos" role="tabpanel" aria-labelledby="concluidosTab">
             <% if (!concluidos || concluidos.length === 0) { %>
@@ -130,6 +166,7 @@
               <section class="produtos-grid">
                 <% concluidos.forEach(produto => { %>
                   <article class="produto-card"
+                    data-id="<%= produto.id %>"
                     data-nome="<%= produto.nome %>"
                     data-preco="<%= produto.preco %>"
                     data-quantidade="<%= produto.quantidade || 1 %>"
@@ -141,10 +178,17 @@
                       <h3><%= produto.nome %></h3>
                       <p class="preco">R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) %></p>
                       <p class="quantidade d-none"><%= produto.quantidade || 1 %> Tonelada(s)</p>
-                      <p class="endereco d-none"><%= produto.local || '' %></p>
+                      <% const linhasConcluido = blocoEndereco(produto); %>
+                      <dl class="endereco-completo d-none" id="endereco-<%= produto.id %>">
+                        <% if (linhasConcluido.length === 0) { %>
+                          <dd>Endereço não informado</dd>
+                        <% } else { linhasConcluido.forEach(([rotulo, valor]) => { %>
+                          <dt><%= rotulo %>:</dt><dd><%= valor %></dd>
+                        <% }) } %>
+                      </dl>
                     </section>
                     <section class="acoes">
-                      <button class="btn btn-outline-success btn-sm btn-mostrar-endereco">Mostrar Endereço</button>
+                      <button type="button" class="btn btn-outline-success btn-sm btn-mostrar-endereco" aria-expanded="false" aria-controls="endereco-<%= produto.id %>">Mostrar Endereço</button>
                     </section>
                     <p class="concluido">Concluído</p>
                   </article>
@@ -272,6 +316,14 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // Abre a aba indicada no endereço (ex.: /minhascompras#concluidos).
+    (function abrirAbaDoHash() {
+      const alvo = window.location.hash;
+      if (!alvo) return;
+      const link = document.querySelector('#productTabs a[href="' + alvo + '"]');
+      if (link) bootstrap.Tab.getOrCreateInstance(link).show();
+    })();
+
     const cancelarModal = new bootstrap.Modal(document.getElementById('cancelarModal'));
     const pagamentoModal = new bootstrap.Modal(document.getElementById('pagamentoModal'));
     let cardParaCancelar = null;
@@ -287,8 +339,25 @@
     });
 
     document.getElementById('confirmarCancelamento').addEventListener('click', function () {
-      if (cardParaCancelar) {
-        cardParaCancelar.remove();
+      if (!cardParaCancelar) { cancelarModal.hide(); return; }
+
+      const card = cardParaCancelar;
+      const id = card.dataset.id;
+      const botao = this;
+      botao.disabled = true;
+
+      fetch('/minhascompras/cancelar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      })
+      .then(async resposta => {
+        const dados = await resposta.json();
+        if (!resposta.ok || !dados.sucesso) {
+          throw new Error(dados.erro || 'Não foi possível cancelar o pedido.');
+        }
+
+        card.remove();
         // Se não há mais cards, mostra mensagem vazia
         const grid = document.querySelector('#pendentes .produtos-grid');
         if (grid && grid.querySelectorAll('.produto-card').length === 0) {
@@ -298,48 +367,42 @@
               <p>Você não tem pedidos pendentes.</p>
             </div>`;
         }
-      }
-      cancelarModal.hide();
-    });
-
-    // Mostrar Endereço (em trânsito / concluídos)
-    document.querySelectorAll('.btn-mostrar-endereco').forEach(btn => {
-      btn.addEventListener('click', function () {
-        const card = this.closest('.produto-card');
-        const endereco = card.querySelector('.endereco');
-        endereco.classList.remove('d-none');
-        this.style.display = 'none';
+      })
+      .catch(erro => {
+        alert(erro.message);
+      })
+      .finally(() => {
+        botao.disabled = false;
+        cardParaCancelar = null;
+        cancelarModal.hide();
       });
     });
 
-    // Concluir pedido (em trânsito) — move o card para a aba Concluídos
-    document.querySelectorAll('.btn-concluir').forEach(btn => {
+    // Confirmar Recebimento (em trânsito -> concluído)
+    document.querySelectorAll('.btn-confirmar-recebimento').forEach(btn => {
       btn.addEventListener('click', function () {
         const card = this.closest('.produto-card');
-        const index = card.dataset.index;
+        const id = card.dataset.id;
 
         this.disabled = true;
         const textoOriginal = this.textContent;
-        this.textContent = 'Concluindo...';
+        this.textContent = 'Confirmando...';
 
-        fetch('/pagamento/concluir', {
+        fetch('/minhascompras/confirmar-recebimento', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ index })
+          body: JSON.stringify({ id })
         })
         .then(async resposta => {
-          if (resposta.redirected && resposta.url.includes('/login')) {
-            window.location.href = '/login';
-            return;
-          }
           const dados = await resposta.json();
           if (!resposta.ok || !dados.sucesso) {
-            throw new Error(dados.erro || 'Não foi possível concluir o pedido.');
+            throw new Error(dados.erro || 'Não foi possível confirmar o recebimento.');
           }
+          // Recarrega já na aba "Concluídos", onde o pedido passa a aparecer.
+          window.location.href = '/minhascompras#concluidos';
           window.location.reload();
         })
         .catch(erro => {
-          console.error('ERRO NO FETCH:', erro);
           alert(erro.message);
           this.disabled = false;
           this.textContent = textoOriginal;
@@ -347,11 +410,26 @@
       });
     });
 
+    // Mostrar/Ocultar Endereço (em trânsito e concluídos): revela o
+    // endereço completo dentro do próprio card.
+    document.querySelectorAll('.btn-mostrar-endereco').forEach(btn => {
+      const textoMostrar = btn.innerHTML;
+      btn.addEventListener('click', function () {
+        const card = this.closest('.produto-card');
+        const endereco = card.querySelector('.endereco-completo');
+        if (!endereco) return;
+        const vaiMostrar = endereco.classList.contains('d-none');
+        endereco.classList.toggle('d-none', !vaiMostrar);
+        this.setAttribute('aria-expanded', String(vaiMostrar));
+        this.innerHTML = vaiMostrar ? "<i class='bx bx-hide'></i> Ocultar Endereço" : textoMostrar;
+      });
+    });
+
     // Pagamento — redireciona ao checkout do Mercado Pago, igual no carrinho
     document.querySelectorAll('.btn-pagar').forEach(btn => {
       btn.addEventListener('click', function () {
         const card = this.closest('.produto-card');
-        const index = card.dataset.index;
+        const id = card.dataset.id;
 
         this.disabled = true;
         const textoOriginal = this.textContent;
@@ -360,7 +438,7 @@
         fetch('/pagamento/pendente/pagar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ index })
+          body: JSON.stringify({ id })
         })
         .then(async resposta => {
           if (resposta.redirected && resposta.url.includes('/login')) {

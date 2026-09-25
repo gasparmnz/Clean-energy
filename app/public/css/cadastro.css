@@ -730,3 +730,43 @@ body {
   object-fit: contain;
   filter: brightness(0) invert(1); /* deixa branco para contrastar com o fundo verde escuro */
 }
+
+/* ============================================
+   REQUISITOS DA SENHA (✓ atendido / ✗ pendente)
+   Atualizados em tempo real por cadastro-validation.js
+   ============================================ */
+.password-requirements {
+  list-style: none;
+  margin: var(--spacing-sm, 8px) 0 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+  font-size: var(--font-size-sm, 0.85rem);
+  color: #6b7280;
+}
+
+.password-requirements li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+}
+
+.password-requirements .req-icone {
+  display: inline-block;
+  width: 1em;
+  text-align: center;
+  font-weight: 700;
+}
+
+.password-requirements li.ok {
+  color: var(--success-color, #16a34a);
+}
+
+.password-requirements li.falta {
+  color: var(--error-color, #dc2626);
+}
+
+body.dark-mode .password-requirements {
+  color: #9ca3af;
+}

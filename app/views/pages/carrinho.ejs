@@ -33,18 +33,31 @@
   <nav class="coluna-produtos">
     <section class="produtos">
 
+      <%
+        // Imagem do produto: cadastros novos guardam a imagem como Data URI
+        // (data:image/...;base64,...) direto no banco; cadastros antigos
+        // guardam só o nome do arquivo em /public/imagem. Cada template EJS
+        // tem seu próprio escopo, então a função precisa existir aqui também
+        // (a de minhascompras.ejs não é visível neste arquivo).
+        function srcImagem(imagem) {
+          const valor = typeof imagem === 'string' ? imagem.trim() : '';
+          if (valor.startsWith('data:image/')) return valor;
+          return '/imagem/' + (valor || 'sem-foto.png');
+        }
+      %>
       <% if (!cart || cart.length === 0) { %>
         <p>Seu carrinho está vazio.</p>
       <% } else { %>
 
         <% cart.forEach((produto, index) => { %>
           <article class="produto-card"
+            data-product-id="<%= produto.productId %>"
             data-nome="<%= produto.nome %>"
             data-preco="<%= produto.preco %>"
-            data-max="5">
+            data-max="<%= produto.limite || 1 %>">
 
             <nav class="produto-top">
-              <img src="<%= srcImagem(produto.imagem) %>" alt="<%= produto.nome %>" onerror="this.src='/imagem/sem-foto.png'">
+              <img src="<%= srcImagem(produto.imagem) %>" alt="<%= produto.nome %>" onerror="this.onerror=null;this.src='https://placehold.co/300x200?text=Sem+Foto'">
 
               <nav class="produto-info">
                 <h3><%= produto.nome %></h3>
@@ -57,15 +70,21 @@
                 <p><%= produto.descricao || "Sem descrição" %></p>
 
                 <p class="disponivel">
-                  <strong>Disponível:</strong> 5 toneladas
+                  <strong>Disponível:</strong>
+                  <% if (produto.estoque === null || produto.estoque === undefined) { %>
+                    não informado
+                  <% } else { %>
+                    <%= Number(produto.estoque).toLocaleString('pt-BR', { maximumFractionDigits: 2 }) %> tonelada<%= Number(produto.estoque) === 1 ? '' : 's' %>
+                  <% } %>
                 </p>
 
                 <span class="preco">R$ <%= produto.preco %></span>
 
                 <nav class="quantidade-controls">
-                  <button class="quantidade-btn btn-menos">−</button>
-                  <span class="quantidade-num">1</span>
-                  <button class="quantidade-btn btn-mais">+</button>
+                  <button type="button" class="quantidade-btn btn-menos" aria-label="Diminuir quantidade">−</button>
+                  <!-- Quantidade REAL salva no banco (é a mesma enviada ao Mercado Pago) -->
+                  <span class="quantidade-num"><%= produto.quantidade %></span>
+                  <button type="button" class="quantidade-btn btn-mais" aria-label="Aumentar quantidade">+</button>
                 </nav>
               </nav>
             </nav>
@@ -150,6 +169,42 @@
       resumo.classList.toggle("resumo-vazio", resumoLista.children.length === 0);
     }
 
+    // Atualizações de quantidade ainda não confirmadas pelo servidor. O
+    // "Finalizar Compra" espera por elas, para o Mercado Pago receber a
+    // mesma quantidade que está na tela.
+    let sincronizacaoPendente = Promise.resolve();
+
+    // Salva a nova quantidade no banco (POST /cart/quantidade) e só então
+    // atualiza a tela com o valor que o servidor confirmou.
+    function alterarQuantidade(card, novaQuantidade) {
+      const num = card.querySelector(".quantidade-num");
+      const botoes = card.querySelectorAll(".quantidade-btn");
+      botoes.forEach(b => b.disabled = true);
+
+      const tarefa = fetch("/cart/quantidade", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId: card.dataset.productId, quantidade: novaQuantidade })
+      })
+      .then(async resposta => {
+        const dados = await resposta.json().catch(() => ({}));
+        if (!resposta.ok || !dados.sucesso) {
+          throw new Error(dados.erro || "Não foi possível atualizar a quantidade.");
+        }
+        num.textContent = dados.quantidade;
+      })
+      .catch(erro => {
+        alert(erro.message);
+      })
+      .finally(() => {
+        botoes.forEach(b => b.disabled = false);
+        atualizarResumo();
+      });
+
+      sincronizacaoPendente = sincronizacaoPendente.then(() => tarefa);
+      return tarefa;
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
 
       document.querySelectorAll(".btn-mais").forEach(btn => {
@@ -160,20 +215,20 @@
           const atual = Number(num.textContent);
 
           if (atual < max) {
-            num.textContent = atual + 1;
-            atualizarResumo();
+            alterarQuantidade(card, atual + 1);
           } else {
-            alert(`Limite máximo atingido: ${max} unidades.`);
+            alert(`Limite atingido: só há ${max} tonelada(s) disponível(is) deste produto.`);
           }
         });
       });
 
       document.querySelectorAll(".btn-menos").forEach(btn => {
         btn.addEventListener("click", function() {
+          const card = this.closest(".produto-card");
           const num = this.parentElement.querySelector(".quantidade-num");
-          if (Number(num.textContent) > 1) {
-            num.textContent = Number(num.textContent) - 1;
-            atualizarResumo();
+          const atual = Number(num.textContent);
+          if (atual > 1) {
+            alterarQuantidade(card, atual - 1);
           }
         });
       });
@@ -188,12 +243,17 @@
 
   
 
-document.getElementById("btn-finalizar").addEventListener("click", () => {
+document.getElementById("btn-finalizar").addEventListener("click", function () {
   console.log(">>> BOTÃO FINALIZAR FOI CLICADO!");
+  const botao = this;
+  botao.disabled = true;
 
-  fetch("/pagamento/criar", {
+  // Garante que qualquer +/− ainda em andamento já foi salvo no banco antes
+  // de criar o checkout.
+  sincronizacaoPendente
+  .then(() => fetch("/pagamento/criar", {
     method: "POST"
-  })
+  }))
   .then(async resposta => {
 
     if (resposta.redirected && resposta.url.includes("/login")) {
@@ -218,6 +278,7 @@ document.getElementById("btn-finalizar").addEventListener("click", () => {
   .catch(erro => {
     console.error("ERRO NO FETCH:", erro);
     alert(erro.message);
+    botao.disabled = false;
   });
 });
   </script>

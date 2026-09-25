@@ -58,10 +58,32 @@ const produtosModel = {
     }
   },
 
-  update: async (id, dados) => {
+  // Atualiza apenas os campos enviados em `dados` (nome, descricao, local,
+  // preco, quantidade). Antes só gravava nome e quantidade, então preço e
+  // endereço editados nunca chegavam ao banco.
+  // Com `opcoes.usuarioId`, o UPDATE só acontece se o produto pertencer a
+  // esse usuário (WHERE ... AND usuario_id = ?) — result.affectedRows = 0
+  // indica que o produto não existe ou é de outro vendedor.
+  update: async (id, dados, opcoes = {}) => {
     try {
-      const sql = `UPDATE produtos SET nome = ?, quantidade = ? WHERE id = ?`;
-      const [result] = await pool.query(sql, [dados.nome, dados.quantidade || null, id]);
+      const colunas = ['nome', 'descricao', 'local', 'preco', 'quantidade'];
+      const sets = [];
+      const valores = [];
+      for (const coluna of colunas) {
+        if (dados[coluna] !== undefined) {
+          sets.push(`${coluna} = ?`);
+          valores.push(dados[coluna]);
+        }
+      }
+      if (sets.length === 0) return { affectedRows: 0 };
+
+      let sql = `UPDATE produtos SET ${sets.join(', ')} WHERE id = ?`;
+      valores.push(id);
+      if (opcoes.usuarioId !== undefined) {
+        sql += ' AND usuario_id = ?';
+        valores.push(opcoes.usuarioId);
+      }
+      const [result] = await pool.query(sql, valores);
       return result;
     } catch (err) {
       throw err;
@@ -523,32 +545,93 @@ const pedidoModel = {
         comprador_id INT NOT NULL,
         produto_id INT DEFAULT NULL,
         valor_total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-        status ENUM('em_transito','concluido','cancelado') NOT NULL DEFAULT 'em_transito',
+        status ENUM('pendente','em_transito','concluido','cancelado') NOT NULL DEFAULT 'pendente',
         criado_em TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8
     `);
+
+    // Colunas adicionadas depois: garante que existam mesmo se a tabela já tiver sido criada por uma versão anterior
+    const colunasNovas = [
+      "nome VARCHAR(255) DEFAULT NULL",
+      "preco DECIMAL(10,2) NOT NULL DEFAULT 0.00",
+      "quantidade INT NOT NULL DEFAULT 1",
+      "imagem VARCHAR(255) DEFAULT NULL",
+      "local VARCHAR(255) DEFAULT NULL",
+      "estado VARCHAR(2) DEFAULT NULL",
+      "external_ref VARCHAR(100) DEFAULT NULL"
+    ];
+    for (const definicao of colunasNovas) {
+      try {
+        await pool.query(`ALTER TABLE pedidos ADD COLUMN ${definicao}`);
+      } catch (e) {
+        if (e.code !== 'ER_DUP_FIELDNAME') throw e;
+      }
+    }
+    try {
+      await pool.query("ALTER TABLE pedidos MODIFY status ENUM('pendente','em_transito','concluido','cancelado') NOT NULL DEFAULT 'pendente'");
+    } catch (e) { /* já está correto */ }
+
     pedidoModel._tabelaCriada = true;
   },
 
-  // Cria o pedido assim que o pagamento é confirmado (status inicial: em_transito)
-  criar: async ({ compradorId, produtoId, valorTotal }) => {
+  // Cria o pedido já ao iniciar o checkout, como 'pendente' — o webhook confirma o pagamento depois
+  criarPendente: async ({ compradorId, produtoId, nome, preco, quantidade, imagem, local, estado, externalRef }) => {
     await pedidoModel._garantirTabela();
+    const valorTotal = Number(preco) * (quantidade || 1);
     const [result] = await pool.query(
-      "INSERT INTO pedidos (comprador_id, produto_id, valor_total, status) VALUES (?, ?, ?, 'em_transito')",
-      [compradorId, produtoId, valorTotal]
+      `INSERT INTO pedidos
+        (comprador_id, produto_id, nome, preco, quantidade, imagem, local, estado, valor_total, external_ref, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendente')`,
+      [compradorId, produtoId, nome, preco, quantidade || 1, imagem, local, estado, valorTotal, externalRef]
     );
     return result.insertId;
+  },
+
+  // Chamado pelo webhook do Mercado Pago quando o pagamento é aprovado
+  marcarPago: async (externalRef) => {
+    await pedidoModel._garantirTabela();
+    const [result] = await pool.query(
+      "UPDATE pedidos SET status = 'em_transito' WHERE external_ref = ? AND status = 'pendente'",
+      [externalRef]
+    );
+    return result.affectedRows;
   },
 
   // Comprador confirma o recebimento
   marcarConcluido: async (id, compradorId) => {
     await pedidoModel._garantirTabela();
-    await pool.query(
-      "UPDATE pedidos SET status = 'concluido' WHERE id = ? AND comprador_id = ?",
+    const [result] = await pool.query(
+      "UPDATE pedidos SET status = 'concluido' WHERE id = ? AND comprador_id = ? AND status = 'em_transito'",
       [id, compradorId]
     );
+    return result.affectedRows;
+  },
+
+  // Lista os pedidos de um comprador, separados por status, para a tela "Minhas Compras"
+  listarPorComprador: async (compradorId) => {
+    await pedidoModel._garantirTabela();
+    const [rows] = await pool.query(
+      "SELECT * FROM pedidos WHERE comprador_id = ? ORDER BY criado_em DESC",
+      [compradorId]
+    );
+    return {
+      pendentes: rows.filter(p => p.status === 'pendente'),
+      emTransito: rows.filter(p => p.status === 'em_transito'),
+      concluidos: rows.filter(p => p.status === 'concluido')
+    };
+  },
+
+  // Busca um pedido pendente específico do comprador (usado para reemitir o checkout)
+  buscarPendentePorId: async (id, compradorId) => {
+    await pedidoModel._garantirTabela();
+    const [rows] = await pool.query(
+      "SELECT * FROM pedidos WHERE id = ? AND comprador_id = ? AND status = 'pendente'",
+      [id, compradorId]
+    );
+    return rows[0] || null;
   }
 };
+
 
 module.exports.pedidoModel = pedidoModel;
 module.exports.usuarioModel = usuarioModel;

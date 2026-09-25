@@ -1,7 +1,18 @@
- let cardParaExcluir = null;
 let cardParaEditar = null;
-const excluirModal = new bootstrap.Modal(document.getElementById('excluirModal'));
 const editarModal = new bootstrap.Modal(document.getElementById('editarModal'));
+
+// Converte os valores crus do banco (ex.: "1500.00", "25.00") para o formato
+// que o modal e a validação usam ("1.500,00", "25").
+function formatarPrecoBR(valor) {
+  const n = Number(valor);
+  if (!Number.isFinite(n)) return '';
+  return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function formatarQuantidadeBR(valor) {
+  const n = Number(valor);
+  if (!Number.isFinite(n)) return String(valor ?? '');
+  return String(Number(n.toFixed(2))).replace('.', ',');
+}
 
 
 // Validação em Tempo Real
@@ -222,22 +233,10 @@ document.getElementById('editarQuantidade').addEventListener('blur', function(e)
 });
 
 
-// Funcionalidade de Exclusão
-
-document.querySelectorAll('.btn-excluir').forEach(btn => {
-  btn.addEventListener('click', function() {
-    cardParaExcluir = this.closest('.produto-card');
-    excluirModal.show();
-  });
-});
-
-document.getElementById('confirmarExcluirBtn').addEventListener('click', function() {
-  if (cardParaExcluir) {
-    cardParaExcluir.remove();
-    excluirModal.hide();
-    cardParaExcluir = null;
-  }
-});
+// Exclusão: continua sendo feita por /js/produto-delete.js (confirmação +
+// DELETE /produtos/:id). O antigo handler daqui só removia o card da tela,
+// sem apagar no banco, e nunca chegava a rodar (o script falhava ao
+// carregar); foi retirado para a exclusão continuar funcionando como hoje.
 
 
 // Funcionalidade de Edição
@@ -245,11 +244,13 @@ document.getElementById('confirmarExcluirBtn').addEventListener('click', functio
 document.querySelectorAll('.btn-warning').forEach(btn => {
   btn.addEventListener('click', function() {
     cardParaEditar = this.closest('.produto-card');
-    
-    const nome = cardParaEditar.querySelector('h3').textContent;
-    const endereco = cardParaEditar.querySelector('.endereco').textContent;
-    const preco = cardParaEditar.querySelector('.preco').textContent;
-    const quantidade = cardParaEditar.querySelector('.quantidade').textContent;
+    esconderErroGeral();
+
+    // Valores reais do produto (data-* do card), no formato aceito pela validação.
+    const nome = cardParaEditar.dataset.nome ?? cardParaEditar.querySelector('h3').textContent;
+    const endereco = cardParaEditar.dataset.local ?? cardParaEditar.querySelector('.endereco').textContent;
+    const preco = formatarPrecoBR(cardParaEditar.dataset.preco);
+    const quantidade = formatarQuantidadeBR(cardParaEditar.dataset.quantidade);
 
 
     document.getElementById('editarNome').value = nome;
@@ -268,38 +269,101 @@ document.querySelectorAll('.btn-warning').forEach(btn => {
   });
 });
 
-// Salvar alterações
-document.getElementById('salvarEdicaoBtn').addEventListener('click', function() {
-  if (cardParaEditar) {
+// Mensagem de erro geral do modal (falha ao salvar no servidor).
+function mostrarErroGeral(mensagem) {
+  let el = document.getElementById('erroSalvarProduto');
+  if (!el) {
+    el = document.createElement('p');
+    el.id = 'erroSalvarProduto';
+    el.className = 'text-danger mt-2 mb-0';
+    el.setAttribute('role', 'alert');
+    document.getElementById('formEditarProduto').appendChild(el);
+  }
+  el.textContent = mensagem;
+  el.style.display = 'block';
+}
+function esconderErroGeral() {
+  const el = document.getElementById('erroSalvarProduto');
+  if (el) { el.textContent = ''; el.style.display = 'none'; }
+}
 
-    const nomeValido = validarNome(document.getElementById('editarNome').value);
-    const enderecoValido = validarEndereco(document.getElementById('editarEndereco').value);
-    const precoValido = validarPreco(document.getElementById('editarPreco').value);
-    const quantidadeValido = validarQuantidade(document.getElementById('editarQuantidade').value);
-    
-    if (nomeValido && enderecoValido && precoValido && quantidadeValido) {
-      const nome = document.getElementById('editarNome').value;
-      const endereco = document.getElementById('editarEndereco').value;
-      const preco = document.getElementById('editarPreco').value;
-      const quantidade = document.getElementById('editarQuantidade').value;
+// Campos do backend -> input/erro do modal
+const CAMPOS_EDICAO = {
+  nome: ['editarNome', 'errorNome'],
+  local: ['editarEndereco', 'errorEndereco'],
+  preco: ['editarPreco', 'errorPreco'],
+  quantidade: ['editarQuantidade', 'errorQuantidade']
+};
 
-      cardParaEditar.querySelector('h3').textContent = nome;
-      cardParaEditar.querySelector('.endereco').textContent = endereco;
-      cardParaEditar.querySelector('.preco').textContent = preco;
-      cardParaEditar.querySelector('.quantidade').textContent = quantidade;
+// Salvar alterações: envia ao backend (PUT /produtos/:id), que valida,
+// confere se o produto é do vendedor logado e grava no MySQL. O card só é
+// atualizado depois da resposta positiva, com os valores que o banco salvou.
+document.getElementById('salvarEdicaoBtn').addEventListener('click', async function() {
+  if (!cardParaEditar) return;
 
+  const nomeValido = validarNome(document.getElementById('editarNome').value);
+  const enderecoValido = validarEndereco(document.getElementById('editarEndereco').value);
+  const precoValido = validarPreco(document.getElementById('editarPreco').value);
+  const quantidadeValido = validarQuantidade(document.getElementById('editarQuantidade').value);
+  if (!(nomeValido && enderecoValido && precoValido && quantidadeValido)) return;
 
-      document.querySelectorAll('.form-control').forEach(input => {
-        input.classList.remove('is-valid', 'is-invalid');
-      });
-      
-      document.querySelectorAll('.error-message').forEach(error => {
-        error.style.display = 'none';
-        error.textContent = '';
-      });
+  const botao = this;
+  const textoOriginal = botao.textContent;
+  botao.disabled = true;
+  botao.textContent = 'Salvando...';
+  esconderErroGeral();
 
-      editarModal.hide();
+  const card = cardParaEditar;
+  try {
+    const resposta = await fetch('/produtos/' + encodeURIComponent(card.dataset.id), {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        nome: document.getElementById('editarNome').value,
+        local: document.getElementById('editarEndereco').value,
+        preco: document.getElementById('editarPreco').value,
+        quantidade: document.getElementById('editarQuantidade').value
+      })
+    });
+
+    if (resposta.redirected && resposta.url.includes('/login')) {
+      window.location.href = '/login';
+      return;
     }
+
+    const dados = await resposta.json().catch(() => ({}));
+    if (!resposta.ok || !dados.sucesso) {
+      if (dados.erros) {
+        Object.entries(dados.erros).forEach(([campo, mensagem]) => {
+          const ids = CAMPOS_EDICAO[campo];
+          if (ids) mostrarErro(document.getElementById(ids[0]), document.getElementById(ids[1]), mensagem);
+        });
+      }
+      throw new Error(dados.erro || 'Não foi possível salvar as alterações.');
+    }
+
+    // Atualiza o card com o que foi realmente gravado no banco.
+    const p = dados.produto;
+    card.dataset.nome = p.nome;
+    card.dataset.local = p.local || '';
+    card.dataset.preco = p.preco;
+    card.dataset.quantidade = p.quantidade;
+    card.querySelector('h3').textContent = p.nome;
+    card.querySelector('.endereco').textContent = p.local || '';
+    card.querySelector('.preco').textContent = 'R$ ' + formatarPrecoBR(p.preco);
+    card.querySelector('.quantidade').textContent = p.quantidade;
+    const img = card.querySelector('img');
+    if (img) img.alt = p.nome;
+
+    editarModal.hide();
+    if (typeof mostrarNotificacao === 'function') {
+      mostrarNotificacao('✓ Produto atualizado com sucesso!', 'success');
+    }
+  } catch (erro) {
+    mostrarErroGeral(erro.message);
+  } finally {
+    botao.textContent = textoOriginal;
+    verificarFormularioValido();
   }
 });
 

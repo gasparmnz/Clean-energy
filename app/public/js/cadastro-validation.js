@@ -31,28 +31,69 @@ class FormValidator {
   init() {
 
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        this.setupEventListeners();
-        this.setupPasswordToggles();
-        this.setupFormSubmission();
-        this.clearBackendErrors();
-      });
+      document.addEventListener('DOMContentLoaded', () => this.start());
     } else {
-      this.setupEventListeners();
-      this.setupPasswordToggles();
-      this.setupFormSubmission();
-      this.clearBackendErrors();
+      this.start();
     }
   }
 
-  clearBackendErrors() {
-    
-    const errorElements = document.querySelectorAll('.error-message');
-    errorElements.forEach(element => {
-      if (element.textContent.trim()) {
-        element.textContent = '';
-      }
+  start() {
+    // IMPORTANTE: as mensagens vindas do backend precisam ser preservadas.
+    // Antes, clearBackendErrors() apagava todas elas assim que a página
+    // carregava, então quando o servidor rejeitava o cadastro (ex.: e-mail
+    // já cadastrado, senha fora da regra) o usuário via a página recarregar
+    // sem nenhuma explicação — e o CSS (.error-message { display: none })
+    // escondia o que sobrava. Agora elas são exibidas e só somem quando o
+    // usuário altera o campo correspondente.
+    this.showBackendErrors();
+    this.setupEventListeners();
+    this.setupPasswordToggles();
+    this.setupFormSubmission();
+    this.initPasswordRequirements();
+
+    // Se o usuário voltar para esta página pelo botão "voltar" do
+    // navegador, o botão não pode ficar preso no estado de carregamento.
+    window.addEventListener('pageshow', () => {
+      document.querySelectorAll('.submit-btn.loading').forEach(btn => {
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      });
     });
+  }
+
+  // Exibe as mensagens de erro renderizadas pelo servidor e guarda, no
+  // próprio input, o valor que foi rejeitado. Enquanto o valor não mudar,
+  // o erro do backend continua valendo (ex.: "Este e-mail já está
+  // cadastrado!" — o formato do e-mail é válido, mas o servidor recusou).
+  showBackendErrors() {
+    Object.keys(this.forms).forEach(formType => {
+      const form = this.forms[formType];
+      if (!form) return;
+
+      form.querySelectorAll('.form-input').forEach(input => {
+        const inputGroup = input.closest('.input-group');
+        const errorElement = inputGroup && inputGroup.querySelector('.error-message');
+        const mensagem = errorElement ? errorElement.textContent.trim() : '';
+
+        if (mensagem) {
+          input.dataset.backendError = mensagem.replace(/^\*/, '');
+          input.dataset.backendValue = input.value;
+          this.updateFieldUI(input, { isValid: false, message: input.dataset.backendError });
+        } else if (errorElement) {
+          errorElement.textContent = '';
+        }
+      });
+    });
+  }
+
+  // Erro do backend ainda válido para este input (valor não foi alterado)?
+  getBackendError(input) {
+    if (input.dataset.backendError === undefined) return null;
+    if (input.value === input.dataset.backendValue) return input.dataset.backendError;
+    // O usuário mudou o valor: o erro antigo do servidor deixa de valer.
+    delete input.dataset.backendError;
+    delete input.dataset.backendValue;
+    return null;
   }
 
   setupEventListeners() {
@@ -72,14 +113,23 @@ class FormValidator {
           this.validateField(formType, e.target);
         }, 300));
 
-         // indicador de força da senha
-        if (input.type === 'password' && input.name === 'senha') {
+         // indicador de força da senha + lista de requisitos
+        if (input.name === 'senha') {
           input.addEventListener('focus', (e) => {
             this.showPasswordStrength(e.target);
           });
           
           input.addEventListener('input', (e) => {
             this.updatePasswordStrength(e.target);
+            // Sem debounce: cada requisito é marcado assim que é atendido.
+            this.updatePasswordRequirements(e.target);
+
+            // Se a confirmação já foi preenchida, revalida (as senhas
+            // podem ter passado a coincidir ou deixado de coincidir).
+            const confirmar = form.querySelector('input[name="confirmarSenha"]');
+            if (confirmar && confirmar.value) {
+              this.validateField(formType, confirmar);
+            }
           });
         }
 
@@ -115,8 +165,18 @@ class FormValidator {
       if (!form) return;
 
       form.addEventListener('submit', (e) => {
-        this.validateAllFields(formType);
-        
+        const valido = this.validateAllFields(formType);
+
+        if (!valido) {
+          // Formulário inválido: NÃO envia, NÃO recarrega a página e NÃO
+          // entra em estado de carregamento. Os erros já foram exibidos em
+          // cada campo por validateAllFields; levamos o usuário ao primeiro.
+          e.preventDefault();
+          this.hideLoadingState(form);
+          this.focusFirstInvalid(form);
+          return;
+        }
+
         this.showLoadingState(form);
       });
     });
@@ -128,10 +188,32 @@ class FormValidator {
     
     if (!validator) return { isValid: true, message: '' };
 
-    const result = validator.call(this, input.value, formType, input);
+    let result = validator.call(this, input.value, formType, input);
+
+    // Passou na validação do navegador, mas o servidor já recusou este
+    // mesmo valor: mantém a mensagem do servidor.
+    if (result.isValid) {
+      const erroBackend = this.getBackendError(input);
+      if (erroBackend) {
+        result = { isValid: false, message: erroBackend };
+      }
+    } else {
+      this.getBackendError(input);
+    }
+
     this.updateFieldUI(input, result);
     
     return result;
+  }
+
+  focusFirstInvalid(form) {
+    const primeiro = form.querySelector('.input-group.invalid .form-input');
+    if (primeiro) {
+      primeiro.focus();
+      if (typeof primeiro.scrollIntoView === 'function') {
+        primeiro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
   }
 
   validateAllFields(formType) {
@@ -181,7 +263,17 @@ class FormValidator {
     const submitButton = form.querySelector('.submit-btn');
     if (submitButton) {
       submitButton.classList.add('loading');
+      // Evita duplo envio. (Desabilitar dentro do evento submit não cancela
+      // o envio que já está em andamento.)
+      submitButton.disabled = true;
+    }
+  }
 
+  hideLoadingState(form) {
+    const submitButton = form.querySelector('.submit-btn');
+    if (submitButton) {
+      submitButton.classList.remove('loading');
+      submitButton.disabled = false;
     }
   }
   // Validações específicas
@@ -329,49 +421,50 @@ class FormValidator {
   }
 
   validatePassword(value, formType, input) {
-    if (!value) {
-      return {
-        isValid: false,
-        message: 'Senha é obrigatória'
-      };
+    // Mesmas regras do backend (authController usa o mesmo arquivo:
+    // app/public/js/senha-regras.js). Antes faltava a checagem de
+    // caractere especial aqui, então "Clean123" passava no navegador e era
+    // recusada pelo servidor.
+    if (window.SenhaRegras) {
+      const mensagem = window.SenhaRegras.mensagemErro(value || '');
+      return { isValid: !mensagem, message: mensagem };
     }
 
-    if (value.length < 8) {
-      return {
-        isValid: false,
-        message: 'Senha deve ter pelo menos 8 caracteres'
-      };
-    }
-
-    if (value.length > 128) {
-      return {
-        isValid: false,
-        message: 'Senha muito longa (máximo 128 caracteres)'
-      };
-    }
-
-    if (!/(?=.*[a-z])/.test(value)) {
-      return {
-        isValid: false,
-        message: 'Senha deve conter pelo menos uma letra minúscula'
-      };
-    }
-
-    if (!/(?=.*[A-Z])/.test(value)) {
-      return {
-        isValid: false,
-        message: 'Senha deve conter pelo menos uma letra maiúscula'
-      };
-    }
-
-    if (!/(?=.*\d)/.test(value)) {
-      return {
-        isValid: false,
-        message: 'Senha deve conter pelo menos um número'
-      };
-    }
-
+    // Fallback (caso /js/senha-regras.js não carregue): mesmas regras.
+    if (!value) return { isValid: false, message: 'Senha é obrigatória' };
+    if (value.length > 128) return { isValid: false, message: 'Senha muito longa (máximo 128 caracteres)' };
+    const faltando = [];
+    if (value.length < 8) faltando.push('pelo menos 8 caracteres');
+    if (!/[a-z]/.test(value)) faltando.push('uma letra minúscula');
+    if (!/[A-Z]/.test(value)) faltando.push('uma letra maiúscula');
+    if (!/[0-9]/.test(value)) faltando.push('um número');
+    if (!/[-#!$@£%^&*()_+|~=`{}\[\]:";'<>?,.\/\\ ]/.test(value)) faltando.push('um caractere especial');
+    if (faltando.length) return { isValid: false, message: 'A senha precisa ter ' + faltando.join(', ') + '.' };
     return { isValid: true, message: '' };
+  }
+
+  // Lista "✓ / ✗" de requisitos abaixo do campo de senha.
+  initPasswordRequirements() {
+    document.querySelectorAll('input[name="senha"]').forEach(input => {
+      if (input.value) this.updatePasswordRequirements(input);
+    });
+  }
+
+  updatePasswordRequirements(input) {
+    const inputGroup = input.closest('.input-group');
+    const lista = inputGroup && inputGroup.querySelector('.password-requirements');
+    if (!lista || !window.SenhaRegras) return;
+
+    const vazio = !input.value;
+    window.SenhaRegras.verificar(input.value).forEach(req => {
+      const item = lista.querySelector('[data-req="' + req.id + '"]');
+      if (!item) return;
+      const icone = item.querySelector('.req-icone');
+      item.classList.toggle('ok', !vazio && req.ok);
+      item.classList.toggle('falta', !vazio && !req.ok);
+      if (icone) icone.textContent = vazio ? '•' : (req.ok ? '✓' : '✗');
+      item.setAttribute('aria-label', req.texto + (vazio ? '' : (req.ok ? ': atendido' : ': pendente')));
+    });
   }
 
   validateConfirmPassword(value, formType, input) {
@@ -512,7 +605,9 @@ class FormValidator {
     if (/[a-z]/.test(password)) score++;
     if (/[A-Z]/.test(password)) score++;
     if (/\d/.test(password)) score++;
-    if (/[^a-zA-Z\d]/.test(password)) score++;
+    if (window.SenhaRegras
+      ? window.SenhaRegras.verificar(password).some(r => r.id === 'especial' && r.ok)
+      : /[^a-zA-Z\d]/.test(password)) score++;
     if (password.length >= 12) score++;
 
     return {
