@@ -241,6 +241,20 @@ body {
         .status-cancelado{background:#fee2e2;color:#991b1b;}
         .real-data-tag{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;color:#10b981;background:#d1fae5;padding:2px 8px;border-radius:10px;margin-left:8px;font-weight:600;}
 /* Responsividade */
+/* Dashboard do vendedor (/dashboard): a sidebar é a do perfil
+   (.perfil-aside, 260px), que fica DENTRO do fluxo do flex de
+   .admin-container. O margin-left: 250px + width: calc(100% - 250px) de
+   .admin-main existe para o painel admin, onde a .sidebar é position:
+   fixed (fora do fluxo). Aqui ele somava o espaço da sidebar duas vezes —
+   daí o espaço branco. Com a sidebar no fluxo, o conteúdo só precisa
+   ocupar o restante (flex: 1). No mobile a .perfil-aside some
+   (sidebar_perfil.css) e o conteúdo usa a largura toda. */
+.admin-container > .perfil-aside + .admin-main {
+    margin-left: 0;
+    width: auto;
+    min-width: 0;
+}
+
 @media (max-width: 767px) {
 
     .transactions-section .table-responsive {

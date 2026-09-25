@@ -58,10 +58,32 @@ const produtosModel = {
     }
   },
 
-  update: async (id, dados) => {
+  // Atualiza apenas os campos enviados em `dados` (nome, descricao, local,
+  // preco, quantidade). Antes só gravava nome e quantidade, então preço e
+  // endereço editados nunca chegavam ao banco.
+  // Com `opcoes.usuarioId`, o UPDATE só acontece se o produto pertencer a
+  // esse usuário (WHERE ... AND usuario_id = ?) — result.affectedRows = 0
+  // indica que o produto não existe ou é de outro vendedor.
+  update: async (id, dados, opcoes = {}) => {
     try {
-      const sql = `UPDATE produtos SET nome = ?, quantidade = ? WHERE id = ?`;
-      const [result] = await pool.query(sql, [dados.nome, dados.quantidade || null, id]);
+      const colunas = ['nome', 'descricao', 'local', 'preco', 'quantidade'];
+      const sets = [];
+      const valores = [];
+      for (const coluna of colunas) {
+        if (dados[coluna] !== undefined) {
+          sets.push(`${coluna} = ?`);
+          valores.push(dados[coluna]);
+        }
+      }
+      if (sets.length === 0) return { affectedRows: 0 };
+
+      let sql = `UPDATE produtos SET ${sets.join(', ')} WHERE id = ?`;
+      valores.push(id);
+      if (opcoes.usuarioId !== undefined) {
+        sql += ' AND usuario_id = ?';
+        valores.push(opcoes.usuarioId);
+      }
+      const [result] = await pool.query(sql, valores);
       return result;
     } catch (err) {
       throw err;

@@ -237,6 +237,78 @@ const pedidoModel = {
     return resultado.affectedRows > 0;
   },
 
+  // ── Dashboard do vendedor ─────────────────────────────────────────
+  // Fonte: tabela `pedidos` (é nela que o checkout grava todas as compras;
+  // Item_Compra/Compra não são mais preenchidas pelo fluxo atual). O
+  // vendedor é o dono do produto: produtos.usuario_id.
+  //  - itensVendidos / valorArrecadado: só pedidos com pagamento aprovado
+  //    (em_transito ou concluido);
+  //  - pedidosPendentes: pedidos ainda aguardando pagamento (pendente).
+  resumoVendas: async (vendedorId) => {
+    await garantirTabela();
+    const [[linha]] = await pool.query(
+      `SELECT
+         COALESCE(SUM(CASE WHEN p.status IN ('em_transito','concluido') THEN p.quantidade END), 0) AS itensVendidos,
+         COALESCE(SUM(CASE WHEN p.status IN ('em_transito','concluido') THEN p.valor_total END), 0) AS valorArrecadado,
+         COUNT(CASE WHEN p.status = 'pendente' THEN 1 END) AS pedidosPendentes
+       FROM pedidos p
+       JOIN produtos pr ON pr.id = p.produto_id
+       WHERE pr.usuario_id = ?`,
+      [vendedorId]
+    );
+    return {
+      itensVendidos: Number(linha.itensVendidos) || 0,
+      valorArrecadado: Number(linha.valorArrecadado) || 0,
+      pedidosPendentes: Number(linha.pedidosPendentes) || 0
+    };
+  },
+
+  // Pedidos mais recentes dos produtos do vendedor (qualquer status; a
+  // tabela do dashboard mostra o status de cada um).
+  vendasRecentes: async (vendedorId, limite = 10) => {
+    await garantirTabela();
+    const [rows] = await pool.query(
+      `SELECT p.id,
+              COALESCE(u.Nome, 'Comprador removido') AS comprador,
+              COALESCE(NULLIF(p.produto_nome, ''), pr.nome) AS produto,
+              p.quantidade,
+              p.valor_total AS valor,
+              p.criado_em AS data,
+              p.status
+         FROM pedidos p
+         JOIN produtos pr ON pr.id = p.produto_id
+         LEFT JOIN Usuario u ON u.Usuario_ID = p.comprador_id
+        WHERE pr.usuario_id = ?
+        ORDER BY p.criado_em DESC, p.id DESC
+        LIMIT ?`,
+      [vendedorId, limite]
+    );
+    return rows;
+  },
+
+  // Compras recentes do próprio usuário (tabela "Minhas Compras Recentes"
+  // do dashboard), com o nome do vendedor do produto.
+  comprasRecentes: async (compradorId, limite = 10) => {
+    await garantirTabela();
+    const [rows] = await pool.query(
+      `SELECT p.id,
+              COALESCE(v.Nome, '-') AS vendedor,
+              COALESCE(NULLIF(p.produto_nome, ''), pr.nome) AS produto,
+              p.quantidade,
+              p.valor_total AS valor,
+              p.criado_em AS data,
+              p.status
+         FROM pedidos p
+         LEFT JOIN produtos pr ON pr.id = p.produto_id
+         LEFT JOIN Usuario v ON v.Usuario_ID = pr.usuario_id
+        WHERE p.comprador_id = ?
+        ORDER BY p.criado_em DESC, p.id DESC
+        LIMIT ?`,
+      [compradorId, limite]
+    );
+    return rows;
+  },
+
   // Usado para liberar avaliações: o comprador já pagou por esse produto
   // (em trânsito ou já concluído)?
   comprouProduto: async (compradorId, produtoId) => {

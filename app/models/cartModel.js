@@ -1,18 +1,36 @@
 const pool = require("../../config/pool_conexoes");
 
-// Quantidade máxima de um mesmo produto no carrinho. É o mesmo limite que a
-// tela do carrinho já exibia ("Disponível: 5 toneladas" / data-max="5");
-// agora ele vale também no backend, para tela, banco e checkout
-// concordarem.
-const QTD_MAXIMA = 5;
+// Limite de quantidade de um produto no carrinho = estoque cadastrado pelo
+// vendedor (produtos.quantidade, em toneladas). Antes era um 5 fixo, por
+// isso todo produto aparecia como "Disponível: 5 toneladas". O carrinho
+// trabalha com toneladas inteiras; o mínimo é 1 para o item não ficar
+// travado quando o estoque não foi informado.
+function limiteDoEstoque(estoque) {
+  const n = Number(estoque);
+  if (!Number.isFinite(n) || n < 1) return 1;
+  return Math.floor(n);
+}
 
 // A quantidade é gravada dentro do JSON do carrinho e pode ter chegado como
 // string em registros antigos ("2"). Com `+=`, "2" + 1 vira "21". Aqui
-// garantimos sempre um inteiro entre 1 e QTD_MAXIMA.
-function normalizarQuantidade(valor) {
+// garantimos sempre um inteiro entre 1 e o limite do produto. Tela do
+// carrinho, botões +/− e checkout usam esta mesma função.
+function normalizarQuantidade(valor, limite = Infinity) {
   const n = parseInt(valor, 10);
   if (!Number.isFinite(n) || n < 1) return 1;
-  return Math.min(n, QTD_MAXIMA);
+  return Math.min(n, Math.max(1, limite));
+}
+
+// Estoque atual de cada produto do carrinho: Map productId -> { estoque, limite }.
+async function estoquePorProduto(productIds) {
+  const ids = [...new Set((productIds || []).map(id => parseInt(id, 10)).filter(Number.isInteger))];
+  const mapa = new Map();
+  if (ids.length === 0) return mapa;
+  const [rows] = await pool.query("SELECT id, quantidade FROM produtos WHERE id IN (?)", [ids]);
+  for (const r of rows) {
+    mapa.set(String(r.id), { estoque: r.quantidade === null ? null : Number(r.quantidade), limite: limiteDoEstoque(r.quantidade) });
+  }
+  return mapa;
 }
 
 function lerItens(bruto) {
@@ -25,13 +43,13 @@ function lerItens(bruto) {
 
 const cartModel = {
   // Adiciona um item ao carrinho do usuário
-  addItem: async (userId, item) => {
+  addItem: async (userId, item, limite = Infinity) => {
     try {
       let [cartRows] = await pool.query("SELECT idCarrinho, items FROM carrinho WHERE userId = ?", [userId]);
       let cartId, items;
 
       if (cartRows.length === 0) {
-        items = [{ ...item, quantidade: normalizarQuantidade(item.quantidade) }];
+        items = [{ ...item, quantidade: normalizarQuantidade(item.quantidade, limite) }];
         const [result] = await pool.query("INSERT INTO carrinho (userId, items) VALUES (?, ?)", [userId, JSON.stringify(items)]);
         cartId = result.insertId;
       } else {
@@ -47,12 +65,13 @@ const cartModel = {
         const existingIndex = items.findIndex(i => String(i.productId) === String(item.productId));
         if (existingIndex >= 0) {
           // Soma numérica (antes podia concatenar strings) e respeita o
-          // mesmo limite máximo que a tela do carrinho.
+          // estoque do produto.
           items[existingIndex].quantidade = normalizarQuantidade(
-            normalizarQuantidade(items[existingIndex].quantidade) + normalizarQuantidade(item.quantidade)
+            normalizarQuantidade(items[existingIndex].quantidade) + normalizarQuantidade(item.quantidade),
+            limite
           );
         } else {
-          items.push({ ...item, quantidade: normalizarQuantidade(item.quantidade) });
+          items.push({ ...item, quantidade: normalizarQuantidade(item.quantidade, limite) });
         }
         await pool.query("UPDATE carrinho SET items = ? WHERE idCarrinho = ?", [JSON.stringify(items), cartId]);
       }
@@ -86,7 +105,7 @@ const cartModel = {
   // Define a quantidade de um produto do carrinho (botões + e − da tela).
   // Retorna a quantidade efetivamente gravada, ou null se o produto não
   // está no carrinho.
-  atualizarQuantidade: async (userId, productId, quantidade) => {
+  atualizarQuantidade: async (userId, productId, quantidade, limite = Infinity) => {
     const [rows] = await pool.query("SELECT idCarrinho, items FROM carrinho WHERE userId = ?", [userId]);
     if (rows.length === 0) return null;
 
@@ -94,7 +113,7 @@ const cartModel = {
     const item = items.find(i => String(i.productId) === String(productId));
     if (!item) return null;
 
-    item.quantidade = normalizarQuantidade(quantidade);
+    item.quantidade = normalizarQuantidade(quantidade, limite);
     await pool.query("UPDATE carrinho SET items = ? WHERE idCarrinho = ?", [JSON.stringify(items), rows[0].idCarrinho]);
     return item.quantidade;
   },
@@ -157,7 +176,8 @@ const cartModel = {
   }
 };
 
-cartModel.QTD_MAXIMA = QTD_MAXIMA;
+cartModel.limiteDoEstoque = limiteDoEstoque;
 cartModel.normalizarQuantidade = normalizarQuantidade;
+cartModel.estoquePorProduto = estoquePorProduto;
 
 module.exports = cartModel;

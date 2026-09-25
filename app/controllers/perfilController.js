@@ -1,6 +1,7 @@
 const { body, validationResult } = require('express-validator');
 const models = require('../models/models');
-const { usuarioModel } = models;
+const { usuarioModel, vendedorModel } = models;
+const pedidoModel = require('../models/pedidoModel');
 const { arquivoParaDataUri } = require('../helpers/imagem');
 
 // GET /perfil
@@ -168,17 +169,25 @@ async function getDashboard(req, res) {
 
     res.locals.usuario = Object.assign({}, res.locals.usuario, usuarioDados);
 
-    // Métricas do Vendedor (com fallbacks de segurança caso algum model ainda não exista)
-    const stats = {
-      totalVendido: (models.vendaModel?.countByVendedor ? await models.vendaModel.countByVendedor(userId) : 0),
-      valorArrecadado: (models.vendaModel?.sumValorByVendedor ? await models.vendaModel.sumValorByVendedor(userId) : 0),
-      pedidosPendentes: (models.pedidoModel?.countPendentes ? await models.pedidoModel.countPendentes(userId) : 0),
-      totalAvaliacoes: (models.avaliacaoModel?.countByUsuario ? await models.avaliacaoModel.countByUsuario(userId) : 0),
-      notaGeral: (models.avaliacaoModel?.getMediaByUsuario ? await models.avaliacaoModel.getMediaByUsuario(userId) : 0)
-    };
+    // Métricas reais do vendedor. Antes o código chamava models.vendaModel,
+    // models.compraModel e models.avaliacaoModel, que não existem no
+    // projeto — por isso tudo aparecia como 0. Agora os dados vêm de:
+    //  - pedidos + produtos (produtos.usuario_id = vendedor) + Usuario;
+    //  - Avaliacao_Vendedor (avaliações do vendedor).
+    const [resumo, avaliacao, vendas, compras] = await Promise.all([
+      pedidoModel.resumoVendas(userId),
+      vendedorModel.findMediaAvaliacao(userId),
+      pedidoModel.vendasRecentes(userId, 10),
+      pedidoModel.comprasRecentes(userId, 10)
+    ]);
 
-    const vendas = models.vendaModel?.findByVendedor ? await models.vendaModel.findByVendedor(userId) : [];
-    const compras = models.compraModel?.findByComprador ? await models.compraModel.findByComprador(userId) : [];
+    const stats = {
+      totalVendido: resumo.itensVendidos,
+      valorArrecadado: resumo.valorArrecadado,
+      pedidosPendentes: resumo.pedidosPendentes,
+      totalAvaliacoes: Number(avaliacao && avaliacao.total) || 0,
+      notaGeral: Number(avaliacao && avaliacao.media) || 0
+    };
 
     res.render('pages/dashboard', {
       usuario: usuarioDados,

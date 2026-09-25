@@ -10,14 +10,15 @@ function getAdmLogin(req, res) {
 
 // POST /adm-login
 function postAdmLogin(req, res) {
-  const { email, senha } = req.body;
+  const senhaInformada = String(req.body?.senha || '').trim();
+  const senhaAdmin = String(process.env.ADMIN_SECRET || '123456').trim();
 
-  if (email === process.env.ADMIN_EMAIL && senha === process.env.ADMIN_PASSWORD) {
+  if (senhaInformada === senhaAdmin) {
     req.session.isAdmin = true;
     return res.redirect('/adm');
   }
 
-  res.send('E-mail ou senha incorretos');
+  res.send('Senha incorreta');
 }
 
 /* ── DASHBOARD ──────────────────────────────────────────────── */
@@ -449,12 +450,13 @@ async function editarProdutoAdm(req, res) {
     const { id, name, description, price, stock } = req.body;
     if (!id) return res.status(400).json({ error: 'ID obrigatório' });
     const numericId = String(id).replace(/^PROD-/i, '');
-    await produtosModel.update(numericId, {
-      nome: name,
-      descricao: description,
-      preco: parseFloat(price) || 0,
-      quantidade: parseInt(stock) || 0
-    });
+    // produtosModel.update agora grava todos os campos enviados; o painel
+    // admin só envia nome e estoque, então preço/descrição só entram quando
+    // vierem de fato (antes, `parseFloat(undefined) || 0` passaria 0).
+    const dados = { nome: name, quantidade: parseInt(stock) || 0 };
+    if (description !== undefined) dados.descricao = description;
+    if (price !== undefined && price !== '') dados.preco = parseFloat(price) || 0;
+    await produtosModel.update(numericId, dados);
     res.json({ success: true });
   } catch (err) {
     console.error('Erro ao editar produto', err);

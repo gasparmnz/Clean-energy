@@ -33,6 +33,18 @@
   <nav class="coluna-produtos">
     <section class="produtos">
 
+      <%
+        // Imagem do produto: cadastros novos guardam a imagem como Data URI
+        // (data:image/...;base64,...) direto no banco; cadastros antigos
+        // guardam só o nome do arquivo em /public/imagem. Cada template EJS
+        // tem seu próprio escopo, então a função precisa existir aqui também
+        // (a de minhascompras.ejs não é visível neste arquivo).
+        function srcImagem(imagem) {
+          const valor = typeof imagem === 'string' ? imagem.trim() : '';
+          if (valor.startsWith('data:image/')) return valor;
+          return '/imagem/' + (valor || 'sem-foto.png');
+        }
+      %>
       <% if (!cart || cart.length === 0) { %>
         <p>Seu carrinho está vazio.</p>
       <% } else { %>
@@ -42,10 +54,10 @@
             data-product-id="<%= produto.productId %>"
             data-nome="<%= produto.nome %>"
             data-preco="<%= produto.preco %>"
-            data-max="<%= typeof qtdMaxima !== 'undefined' ? qtdMaxima : 5 %>">
+            data-max="<%= produto.limite || 1 %>">
 
             <nav class="produto-top">
-              <img src="<%= srcImagem(produto.imagem) %>" alt="<%= produto.nome %>" onerror="this.src='/imagem/sem-foto.png'">
+              <img src="<%= srcImagem(produto.imagem) %>" alt="<%= produto.nome %>" onerror="this.onerror=null;this.src='https://placehold.co/300x200?text=Sem+Foto'">
 
               <nav class="produto-info">
                 <h3><%= produto.nome %></h3>
@@ -58,7 +70,12 @@
                 <p><%= produto.descricao || "Sem descrição" %></p>
 
                 <p class="disponivel">
-                  <strong>Disponível:</strong> <%= typeof qtdMaxima !== 'undefined' ? qtdMaxima : 5 %> toneladas
+                  <strong>Disponível:</strong>
+                  <% if (produto.estoque === null || produto.estoque === undefined) { %>
+                    não informado
+                  <% } else { %>
+                    <%= Number(produto.estoque).toLocaleString('pt-BR', { maximumFractionDigits: 2 }) %> tonelada<%= Number(produto.estoque) === 1 ? '' : 's' %>
+                  <% } %>
                 </p>
 
                 <span class="preco">R$ <%= produto.preco %></span>
@@ -200,7 +217,7 @@
           if (atual < max) {
             alterarQuantidade(card, atual + 1);
           } else {
-            alert(`Limite máximo atingido: ${max} unidades.`);
+            alert(`Limite atingido: só há ${max} tonelada(s) disponível(is) deste produto.`);
           }
         });
       });

@@ -319,11 +319,14 @@ async function criarPagamento(req, res) {
     }
 
     // Exatamente os itens do carrinho gravado no banco — o mesmo que
-    // GET /carrinho exibe (quantidade normalizada do mesmo jeito).
+    // GET /carrinho exibe (quantidade normalizada do mesmo jeito, limitada
+    // ao estoque atual de cada produto).
+    const estoques = await cartModel.estoquePorProduto(cart.map(item => item.productId));
+    const limiteDe = (item) => (estoques.get(String(item.productId)) || { limite: 1 }).limite;
     const items = cart.map(item => ({
       id: String(item.productId),
       title: item.nome,
-      quantity: cartModel.normalizarQuantidade(item.quantidade),
+      quantity: cartModel.normalizarQuantidade(item.quantidade, limiteDe(item)),
       currency_id: 'BRL',
       unit_price: Math.round(Number(item.preco) * 100) / 100
     }));
@@ -367,7 +370,7 @@ async function criarPagamento(req, res) {
     if (req.session.userId) {
       await pedidoModel.criarPendentes(
         req.session.userId,
-        cart.map(item => ({ ...item, quantidade: cartModel.normalizarQuantidade(item.quantidade) })),
+        cart.map(item => ({ ...item, quantidade: cartModel.normalizarQuantidade(item.quantidade, limiteDe(item)) })),
         preference.id
       );
     }

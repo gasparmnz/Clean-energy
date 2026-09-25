@@ -43,7 +43,11 @@
       <section class="produtos-grid">
         <% if (produtos && produtos.length > 0) { %>
           <% produtos.forEach(produto => { %>
-            <article class="produto-card" data-id="<%= produto.id %>">
+            <article class="produto-card" data-id="<%= produto.id %>"
+              data-nome="<%= produto.nome %>"
+              data-local="<%= produto.local || '' %>"
+              data-preco="<%= produto.preco %>"
+              data-quantidade="<%= produto.quantidade %>">
               <figure>
                 <img src="<%= produto.imagem && produto.imagem.startsWith('data:') ? produto.imagem : '/imagem/' + (produto.imagem || 'sem-foto.png') %>" alt="<%= produto.nome %>" onerror="this.src='https://placehold.co/300x200?text=Sem+Foto'">
               </figure>
@@ -69,7 +73,11 @@
     </main>
   </nav>
 
-  <script src="/js/listaprodutos.js"></script>
+  <%# listaprodutos.js era incluído aqui E no fim da página. Aqui ele rodava
+      antes do Bootstrap e dos modais existirem ("bootstrap is not defined"),
+      e a segunda inclusão falhava por redeclarar variáveis ("Identifier
+      'cardParaExcluir' has already been declared") — então o Editar nunca
+      funcionava. Agora ele é incluído uma única vez, depois do Bootstrap. %>
   <script src="/js/produto-delete.js"></script>
 
   <!-- Modal de Edição -->

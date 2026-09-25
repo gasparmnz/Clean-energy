@@ -44,6 +44,70 @@ h1{color:#085847;font-size:1.4rem}button{background:#1b814e;color:#fff;border:0;
 
 const { helmetMiddleware, compressionMiddleware } = require('./app/middlewares/security');
 
+// ── UMA resposta por requisição ──────────────────────────────────────
+// O erro "ERR_HTTP_HEADERS_SENT ... at done at renderTick" acontece assim:
+// res.render() renderiza o EJS e deixa o res.send() para o próximo tick
+// (process.nextTick → renderTick). Se, nesse meio-tempo, OUTRA resposta
+// da mesma requisição já saiu, o send() lança o erro fora de qualquer
+// try/catch e o Node encerra. Aqui:
+//  1. registramos (barato: só uma pilha por requisição) de onde saiu a
+//     primeira resposta;
+//  2. se um res.render terminar depois disso, o caso é registrado no log
+//     com a rota e a origem da primeira resposta, em vez de derrubar o
+//     processo inteiro. Não é um "if (headersSent)" espalhado: é um único
+//     ponto que transforma um crash em diagnóstico.
+// Linhas da pilha que pertencem ao código do projeto (sem node_modules,
+// internos do Node e este próprio arquivo) — é o que interessa para achar
+// qual controller/rota respondeu.
+function linhasDoProjeto(stack, limite = 4) {
+  const linhas = (stack || '').split('\n').slice(1);
+  const doProjeto = linhas.filter(l => !l.includes('node_modules') && !l.includes('node:') && !l.includes(__filename));
+  return (doProjeto.length ? doProjeto : linhas).slice(0, limite).join('\n');
+}
+
+app.use((req, res, next) => {
+  const writeHeadOriginal = res.writeHead;
+  res.writeHead = function (...args) {
+    if (!res.locals.__origemPrimeiraResposta) {
+      // Se a primeira resposta veio de um res.render, a pilha daqui só tem
+      // Express/EJS; por isso usamos o local de onde o render foi chamado.
+      res.locals.__origemPrimeiraResposta = res.locals.__renderEmAndamento
+        ? `res.render('${res.locals.__renderEmAndamento.view}') chamado em:\n${res.locals.__renderEmAndamento.local}`
+        : linhasDoProjeto(new Error('primeira resposta').stack);
+    }
+    return writeHeadOriginal.apply(this, args);
+  };
+
+  const renderOriginal = res.render;
+  res.render = function (view, options, callback) {
+    if (typeof options === 'function') { callback = options; options = undefined; }
+    if (typeof callback === 'function') return renderOriginal.call(this, view, options, callback);
+
+    // De onde este res.render foi chamado (arquivo:linha do controller).
+    const local = linhasDoProjeto(new Error('res.render').stack, 3);
+
+    return renderOriginal.call(this, view, options, (err, html) => {
+      if (err) return req.next(err);
+      if (res.headersSent) {
+        console.error(
+          `[resposta duplicada] ${req.method} ${req.originalUrl}: res.render('${view}') terminou, ` +
+          'mas outra resposta já tinha sido enviada para esta requisição.\n' +
+          `  Este res.render foi chamado em:\n${local}\n` +
+          `  A primeira resposta veio de:\n${res.locals.__origemPrimeiraResposta || '(desconhecida)'}`
+        );
+        return;
+      }
+      res.locals.__renderEmAndamento = { view, local };
+      try {
+        res.send(html);
+      } finally {
+        res.locals.__renderEmAndamento = null;
+      }
+    });
+  };
+  next();
+});
+
 app.use(helmetMiddleware);
 app.use(compressionMiddleware);
 
@@ -100,6 +164,7 @@ app.use('/imagem', express.static('app/public/imagem', { maxAge: '7d' }));
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 const mysqlSessao = require('mysql2');
+const { opcoesPool, validarConexoesOciosas, erroDeConexaoPerdida } = require('./config/mysql_resiliente');
 
 // O express-mysql-session só repassa host/port/user/password/database e
 // opções de pool para o mysql2 — `ssl` e timeouts eram ignorados em
@@ -117,13 +182,16 @@ const poolSessao = mysqlSessao.createPool({
   // (limitado a 3) apontando pro mesmo banco. 3 (app) + 2 (sessão) = 5.
   // Sem isso, os dois pools competem pelo limite e o MySQLStore passa a
   // falhar com "max_user_connections exceeded".
-  connectionLimit: 2,
+  ...opcoesPool(2),
   waitForConnections: true,
   queueLimit: 0,
   connectTimeout: 10000,
   enableKeepAlive: true,
   keepAliveInitialDelay: 0
 });
+// Mesma proteção do pool da aplicação: conexão parada recebe PING antes de
+// ser usada, e conexão derrubada pelo MySQL é trocada por outra.
+validarConexoesOciosas(poolSessao);
 
 const INTERVALO_LIMPEZA_SESSOES = 900000; // 15 min
 
@@ -131,6 +199,33 @@ const sessionStore = new MySQLStore({
   clearExpired: false, // a limpeza é agendada manualmente abaixo, com tratamento de erro
   expiration: 86400000 // 24h
 }, poolSessao);
+
+// O express-mysql-session entrega o resultado ao express-session com
+// `promise.then(r => callback(null, r)).catch(callback)`. Se qualquer coisa
+// lançar erro durante a primeira chamada, o MESMO callback é chamado de
+// novo com o erro — o express-session então segue a requisição duas vezes
+// (next() e depois next(err)) e duas respostas são enviadas: uma delas
+// é exatamente o res.render que estoura em renderTick. Aqui cada callback
+// é chamado no máximo UMA vez, fora da cadeia da Promise.
+['get', 'set', 'touch', 'destroy', 'length', 'all', 'clear'].forEach((metodo) => {
+  const original = sessionStore[metodo];
+  if (typeof original !== 'function') return;
+  sessionStore[metodo] = function (...args) {
+    const callback = typeof args[args.length - 1] === 'function' ? args.pop() : null;
+    // As operações do store são idempotentes (ler/gravar/renovar a mesma
+    // sessão), então uma queda de conexão no meio pode ser repetida 1 vez.
+    const promessa = original.apply(this, args).catch((erro) => {
+      if (!erroDeConexaoPerdida(erro)) throw erro;
+      return original.apply(this, args);
+    });
+    if (!callback) return promessa;
+    promessa.then(
+      (resultado) => process.nextTick(callback, null, resultado),
+      (erro) => process.nextTick(callback, erro)
+    );
+    return promessa.catch(() => {}); // o erro já foi entregue ao callback
+  };
+});
 
 sessionStore.onReady().catch(err => {
   console.error('Erro ao iniciar o store de sessão (MySQL):', err.code || '', err.message);
@@ -163,9 +258,6 @@ app.use((req, res, next) => {
   });
 });
 
-// Helper global para montar o src das imagens de produto nas views
-app.locals.srcImagem = require('./app/helpers/imagem').srcImagem;
-
 // Middleware global: injeta usuário na sessão em res.locals
 // Assim todas as views (header, sidebar) têm acesso a `usuario`
 app.use((req, res, next) => {
@@ -197,7 +289,15 @@ app.use('/adm', rotasAdm);
 // Tratamento central de erros (Express 5 também encaminha para cá os erros
 // de handlers async). Banco inacessível -> 503; demais erros -> 500.
 app.use((err, req, res, next) => {
-  if (res.headersSent) return next(err);
+  if (res.headersSent) {
+    // Erro depois que a resposta já saiu: não há como responder de novo.
+    // Registra a rota e a origem da primeira resposta para achar a causa.
+    console.error(
+      `[erro após resposta] ${req.method} ${req.originalUrl}:`, err && (err.stack || err),
+      '\nOrigem da primeira resposta:\n' + (res.locals.__origemPrimeiraResposta || '(desconhecida)')
+    );
+    return next(err);
+  }
   if (erroDeBancoIndisponivel(err)) {
     console.error(`[erro] Banco indisponível em ${req.method} ${req.originalUrl}:`, err.code, err.message);
     return responderServicoIndisponivel(req, res);
