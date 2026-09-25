@@ -394,3 +394,31 @@ h2{
     flex-direction: column;
   }
 }
+/* Impede que o conteúdo mobile aumente a largura global da página. */
+@media (max-width: 480px) {
+  html, body {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  main {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  main section,
+  .filtro-container,
+  .filtro-box,
+  .produtos-scroll {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .produtos-scroll {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}

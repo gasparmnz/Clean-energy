@@ -35,6 +35,7 @@ footer {
     width: 100%;
     color: var(--color-neutral-40);
     font-family: 'Inter', sans-serif;
+    margin-top: auto;
 }
 
 /* ============================================
@@ -329,5 +330,42 @@ footer {
     #footer_copyright {
         font-size: 0.65rem;
         padding: 0.75rem 0.5rem;
+    }
+}
+/* Correção de largura/responsividade em celulares estreitos */
+@media (max-width: 480px) {
+    footer,
+    #footer_content,
+    #footer_copyright {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    #footer_content {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 2rem 1.25rem;
+        gap: 1.75rem;
+    }
+
+    #footer_contacts,
+    .footer-list {
+        min-width: 0;
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+
+    #footer_contacts {
+        grid-column: 1;
+    }
+
+    #footer_social_media {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .footer-list .footer-link {
+        overflow-wrap: anywhere;
     }
 }

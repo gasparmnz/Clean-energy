@@ -6,6 +6,9 @@
 
 body {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .header {
@@ -235,6 +238,25 @@ body {
     color: #1e8e3e;
 }
 
+/* ── Intermediário (largura ainda "desktop", mas sem espaço para o deslocamento
+   manual do navbar + botão de vendedor lado a lado sem risco de sobreposição) ── */
+@media (max-width: 1350px) {
+    .header {
+        padding: 0 2.5%;
+    }
+    .navbar {
+        left: 0;
+        gap: 1.6rem;
+    }
+    .login-container {
+        gap: 0.9rem;
+    }
+    .btn-vendedor {
+        padding: 9px 16px;
+        font-size: 0.8rem;
+    }
+}
+
 @media (max-width: 1150px) {
     .navbar {
         gap: 1.2rem;
@@ -246,6 +268,9 @@ body {
         padding: 8px 18px;
         font-size: 0.8rem;
     }
+    .login-container {
+        gap: 0.9rem;
+    }
     /* Esconde login-links texto, mostra ícone guest */
     .login-links {
         display: none;
@@ -255,7 +280,7 @@ body {
     }
 }
 
-@media (max-width: 950px) {
+@media (max-width: 1024px) {
     .icons {
         display: inline-flex;
         order: 3;
