@@ -97,6 +97,7 @@ router.post('/cart/add', async (req, res) => {
       preco: produto.preco,
       imagem: produto.imagem,
       local: produto.local,
+      estado: produto.estado,
       quantidade: qty
     };
 

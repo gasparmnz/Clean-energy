@@ -43,6 +43,7 @@ router.post("/minhascompras/finalizar", requireLogin, pagamentoController.finali
 router.post("/pagamento/criar", requireLogin, pagamentoController.criarPagamento);
 router.post("/pagamento/pendente/pagar", requireLogin, pagamentoController.pagarPendente);
 router.get("/pagamento/sucesso", requireLogin, pagamentoController.getSucesso);
+router.post("/pagamento/concluir", requireLogin, pagamentoController.concluirPedido);
 router.get("/pagamento/falha", requireLogin, pagamentoController.getFalha);
 router.get("/pagamento/pendente", requireLogin, pagamentoController.getPendente);
 router.post("/pagamento/webhook", pagamentoController.webhook);

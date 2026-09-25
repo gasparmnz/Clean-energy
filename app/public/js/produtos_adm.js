@@ -103,8 +103,6 @@ function openEditModal(productId) {
   currentEditingProduct = productsData.find(p => p.id === productId);
   if (currentEditingProduct) {
     document.getElementById('editName').value = currentEditingProduct.name;
-    document.getElementById('editDescription').value = currentEditingProduct.description;
-    document.getElementById('editPrice').value = currentEditingProduct.price;
     document.getElementById('editStock').value = currentEditingProduct.stock;
     document.getElementById('editModal').classList.add('show');
   }
@@ -122,8 +120,6 @@ async function saveProduct() {
   const updatedData = {
     id: currentEditingProduct.id,
     name: document.getElementById('editName').value,
-    description: document.getElementById('editDescription').value,
-    price: parseFloat(document.getElementById('editPrice').value),
     stock: parseInt(document.getElementById('editStock').value)
   };
 
@@ -142,8 +138,6 @@ async function saveProduct() {
 
     // Atualiza localmente após confirmar
     currentEditingProduct.name = updatedData.name;
-    currentEditingProduct.description = updatedData.description;
-    currentEditingProduct.price = updatedData.price;
     currentEditingProduct.stock = updatedData.stock;
 
     displayProducts();

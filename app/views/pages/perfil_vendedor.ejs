@@ -118,9 +118,6 @@
                 <p class="vend-produto-preco">
                   R$ <%= Number(p.preco).toLocaleString('pt-BR', {minimumFractionDigits:2}) %>
                 </p>
-                <% if (p.local) { %>
-                  <p class="vend-produto-local"><i class='bx bx-map-pin'></i> <%= p.local.split(',')[0].trim() %></p>
-                <% } %>
               </div>
             </a>
           </li>

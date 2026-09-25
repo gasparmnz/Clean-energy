@@ -85,10 +85,38 @@
 
           <!-- EM TRÂNSITO -->
           <section class="tab-pane fade" id="emAndamento" role="tabpanel" aria-labelledby="emAndamentoTab">
-            <div class="sem-itens">
-              <i class='bx bx-package'></i>
-              <p>Você não tem pedidos em trânsito.</p>
-            </div>
+            <% if (!emTransito || emTransito.length === 0) { %>
+              <div class="sem-itens">
+                <i class='bx bx-package'></i>
+                <p>Você não tem pedidos em trânsito.</p>
+              </div>
+            <% } else { %>
+              <section class="produtos-grid">
+                <% emTransito.forEach((produto, index) => { %>
+                  <article class="produto-card"
+                    data-index="<%= index %>"
+                    data-nome="<%= produto.nome %>"
+                    data-preco="<%= produto.preco %>"
+                    data-quantidade="<%= produto.quantidade || 1 %>"
+                    data-local="<%= produto.local || '' %>">
+                    <figure>
+                      <img src="/imagem/<%= produto.imagem %>" alt="<%= produto.nome %>" onerror="this.src='https://placehold.co/300x200?text=Sem+Foto'">
+                    </figure>
+                    <section class="produto-info">
+                      <h3><%= produto.nome %></h3>
+                      <p class="preco">R$ <%= parseFloat(produto.preco).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) %></p>
+                      <p class="quantidade d-none"><%= produto.quantidade || 1 %> Tonelada(s)</p>
+                      <p class="endereco d-none"><%= produto.local || '' %></p>
+                    </section>
+                    <section class="acoes">
+                      <button class="btn btn-outline-success btn-sm btn-mostrar-endereco">Mostrar Endereço</button>
+                      <button class="btn btn-success btn-sm btn-concluir">Concluído</button>
+                    </section>
+                    <p class="em-transito">Em trânsito</p>
+                  </article>
+                <% }) %>
+              </section>
+            <% } %>
           </section>
 
           <!-- CONCLUÍDOS -->
@@ -274,13 +302,48 @@
       cancelarModal.hide();
     });
 
-    // Mostrar Endereço (concluídos)
+    // Mostrar Endereço (em trânsito / concluídos)
     document.querySelectorAll('.btn-mostrar-endereco').forEach(btn => {
       btn.addEventListener('click', function () {
         const card = this.closest('.produto-card');
         const endereco = card.querySelector('.endereco');
         endereco.classList.remove('d-none');
         this.style.display = 'none';
+      });
+    });
+
+    // Concluir pedido (em trânsito) — move o card para a aba Concluídos
+    document.querySelectorAll('.btn-concluir').forEach(btn => {
+      btn.addEventListener('click', function () {
+        const card = this.closest('.produto-card');
+        const index = card.dataset.index;
+
+        this.disabled = true;
+        const textoOriginal = this.textContent;
+        this.textContent = 'Concluindo...';
+
+        fetch('/pagamento/concluir', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ index })
+        })
+        .then(async resposta => {
+          if (resposta.redirected && resposta.url.includes('/login')) {
+            window.location.href = '/login';
+            return;
+          }
+          const dados = await resposta.json();
+          if (!resposta.ok || !dados.sucesso) {
+            throw new Error(dados.erro || 'Não foi possível concluir o pedido.');
+          }
+          window.location.reload();
+        })
+        .catch(erro => {
+          console.error('ERRO NO FETCH:', erro);
+          alert(erro.message);
+          this.disabled = false;
+          this.textContent = textoOriginal;
+        });
       });
     });
 

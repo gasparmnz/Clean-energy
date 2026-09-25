@@ -24,7 +24,7 @@ async function addToCart(req, res) {
     const produto = await produtosModel.findById(productId);
     if (!produto) return res.status(404).send('Produto não encontrado');
     const userId = req.session.userId || req.sessionID;
-    await cartModel.addItem(userId, { productId, nome: produto.nome, preco: produto.preco, imagem: produto.imagem, local: produto.local, quantidade: parseInt(quantidade, 10) || 1 });
+    await cartModel.addItem(userId, { productId, nome: produto.nome, preco: produto.preco, imagem: produto.imagem, local: produto.local, estado: produto.estado, quantidade: parseInt(quantidade, 10) || 1 });
     res.redirect('/carrinho');
   } catch (err) {
     res.status(500).send('Erro ao adicionar ao carrinho: ' + err.message);

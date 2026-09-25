@@ -51,7 +51,7 @@
 
                 <p class="localizacao">
                   <i class="fas fa-map-marker-alt"></i>
-                  <%= produto.local || "Local não informado" %>
+                  <%= [produto.local ? produto.local.split(',')[0].trim() : '', produto.estado || ''].filter(Boolean).join(' - ') || 'Localização não informada' %>
                 </p>
 
                 <p><%= produto.descricao || "Sem descrição" %></p>
