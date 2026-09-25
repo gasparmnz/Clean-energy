@@ -2,40 +2,64 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Pagamento não concluído</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Pagamento não concluído na Clean Energy.">
+    <meta name="robots" content="noindex">
+    <title>Pagamento não concluído | Clean Energy</title>
 
     <link rel="stylesheet" href="/css/pagamento.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1b814e">
+    <link rel="apple-touch-icon" href="/imagem/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/imagem/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/imagem/icon-192.png">
 </head>
 
-<body>
+<body class="pagamento-page">
 
     <%- include("../partial/header.ejs") %>
 
     <main class="pagamento-container">
 
-        <section class="pagamento-card">
+        <article class="pagamento-card pagamento-card--falha" aria-labelledby="titulo-falha">
 
-            <section class="icone-falha">
-                ×
-            </section>
+            <header class="pagamento-card__topo">
+                <figure class="pagamento-card__logo">
+                    <img src="/imagem/logo-curva.svg" alt="Logo Clean Energy" width="200" height="84">
+                </figure>
 
-            <h1>Pagamento não concluído</h1>
+                <svg class="icone-status icone-falha" viewBox="0 0 52 52" aria-hidden="true" focusable="false">
+                    <circle class="icone-status__circulo" cx="26" cy="26" r="24" />
+                    <path class="icone-status__traco" d="M18 18 L34 34 M34 18 L18 34" />
+                </svg>
 
-            <p>
-                Não foi possível concluir o pagamento.
+                <p class="pagamento-card__status" role="status">Pagamento não concluído</p>
+            </header>
+
+            <h1 id="titulo-falha">Não foi possível concluir o pagamento</h1>
+
+            <p class="pagamento-card__texto">
+                O pagamento foi recusado ou cancelado. <strong>Nenhum valor foi cobrado</strong>
+                e os itens continuam no seu carrinho.
             </p>
 
-            <p>
-                Você pode voltar ao carrinho e tentar novamente.
+            <p class="pagamento-card__texto pagamento-card__texto--secundario">
+                Confira os dados do pagamento ou escolha outra forma de pagamento e tente novamente.
             </p>
 
-            <a href="/carrinho" class="btn">
-                Voltar ao carrinho
-            </a>
+            <nav class="pagamento-card__acoes" aria-label="Próximos passos">
+                <a href="/carrinho" class="btn btn--primario">
+                    <i class="bx bx-cart" aria-hidden="true"></i>
+                    Voltar ao carrinho
+                </a>
+                <a href="/" class="btn btn--secundario">
+                    <i class="bx bx-store" aria-hidden="true"></i>
+                    Continuar comprando
+                </a>
+            </nav>
 
-        </section>
+        </article>
 
     </main>
 

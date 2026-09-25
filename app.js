@@ -163,6 +163,9 @@ app.use((req, res, next) => {
   });
 });
 
+// Helper global para montar o src das imagens de produto nas views
+app.locals.srcImagem = require('./app/helpers/imagem').srcImagem;
+
 // Middleware global: injeta usuário na sessão em res.locals
 // Assim todas as views (header, sidebar) têm acesso a `usuario`
 app.use((req, res, next) => {

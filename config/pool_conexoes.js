@@ -6,11 +6,10 @@ const pool = mysql.createPool({
     password: process.env.DB_PASSWORD || '',
     database: (process.env.DB_NAME || 'produtos').toLowerCase(),
     port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
-    // Reduzido de 10 para 3: o banco (plano gratuito) só permite 5 conexões
-    // simultâneas NO TOTAL para este usuário, e o session store (MySQLStore,
-    // no app.js) abre seu próprio pool separado apontando pro mesmo banco.
-    // 3 (app) + 2 (sessão) = 5, deixando ambos dentro do limite.
-    connectionLimit: 3,
+   
+    connectionLimit: process.env.DB_CONNECTION_LIMIT ? Number(process.env.DB_CONNECTION_LIMIT) : 2,
+    maxIdle: 1,
+    idleTimeout: 10000,
     queueLimit: 0,
     ssl: { rejectUnauthorized: false },
     // Evita ECONNRESET por timeout do servidor MySQL
@@ -38,5 +37,18 @@ function testarConexao(tentativa = 1) {
     });
 }
 testarConexao();
+
+// Fecha as conexões ao encerrar o processo (Ctrl+C, restart do deploy),
+// senão elas ficam presas no servidor MySQL até expirarem e ocupam o limite.
+let encerrando = false;
+function encerrarPool(sinal) {
+    if (encerrando) return;
+    encerrando = true;
+    pool.end(() => process.kill(process.pid, sinal));
+    setTimeout(() => process.exit(0), 3000).unref();
+}
+['SIGINT', 'SIGTERM', 'SIGUSR2'].forEach((sinal) => {
+    process.once(sinal, () => encerrarPool(sinal));
+});
 
 module.exports = pool.promise();

@@ -10,6 +10,12 @@ async function getCarrinho(req, res) {
     // mostrava 1, enquanto o checkout usava a quantidade do banco).
     const itens = cart.map(item => ({ ...item, quantidade: cartModel.normalizarQuantidade(item.quantidade) }));
     res.render('pages/carrinho', { cart: itens, qtdMaxima: cartModel.QTD_MAXIMA });
+    // Garante que a imagem exibida é a atual do produto (itens antigos podem estar sem imagem)
+    await Promise.all(cart.map(async (item) => {
+      const produto = await produtosModel.findById(item.productId).catch(() => null);
+      if (produto && produto.imagem) item.imagem = produto.imagem;
+    }));
+    res.render('pages/carrinho', { cart });
   } catch (err) {
     res.status(500).send('Erro ao obter carrinho');
   }

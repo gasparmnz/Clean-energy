@@ -136,7 +136,7 @@
                     data-quantidade="<%= produto.quantidade || 1 %>"
                     data-local="<%= produto.local || '' %>">
                     <figure>
-                      <img src="<%= srcImagem(produto.imagem) %>" alt="<%= produto.nome %>" onerror="this.onerror=null;this.src='https://placehold.co/300x200?text=Sem+Foto'">
+                      <img src="<%= srcImagem(produto.imagem) %>" alt="<%= produto.nome %>" onerror="this.src='https://placehold.co/300x200?text=Sem+Foto'">
                     </figure>
                     <section class="produto-info">
                       <h3><%= produto.nome %></h3>
@@ -172,7 +172,7 @@
                     data-quantidade="<%= produto.quantidade || 1 %>"
                     data-local="<%= produto.local || '' %>">
                     <figure>
-                      <img src="<%= srcImagem(produto.imagem) %>" alt="<%= produto.nome %>" onerror="this.onerror=null;this.src='https://placehold.co/300x200?text=Sem+Foto'">
+                      <img src="<%= srcImagem(produto.imagem) %>" alt="<%= produto.nome %>" onerror="this.src='https://placehold.co/300x200?text=Sem+Foto'">
                     </figure>
                     <section class="produto-info">
                       <h3><%= produto.nome %></h3>

@@ -2,41 +2,65 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Pagamento pendente</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Pagamento em processamento na Clean Energy.">
+    <meta name="robots" content="noindex">
+    <title>Pagamento pendente | Clean Energy</title>
 
     <link rel="stylesheet" href="/css/pagamento.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1b814e">
+    <link rel="apple-touch-icon" href="/imagem/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/imagem/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/imagem/icon-192.png">
 </head>
 
-<body>
+<body class="pagamento-page">
 
     <%- include("../partial/header.ejs") %>
 
     <main class="pagamento-container">
 
-        <section class="pagamento-card">
+        <article class="pagamento-card pagamento-card--pendente" aria-labelledby="titulo-pendente">
 
-            <section class="icone-pendente">
-                !
-            </section>
+            <header class="pagamento-card__topo">
+                <figure class="pagamento-card__logo">
+                    <img src="/imagem/logo-curva.svg" alt="Logo Clean Energy" width="200" height="84">
+                </figure>
 
-            <h1>Pagamento pendente</h1>
+                <svg class="icone-status icone-pendente" viewBox="0 0 52 52" aria-hidden="true" focusable="false">
+                    <circle class="icone-status__circulo" cx="26" cy="26" r="24" />
+                    <path class="icone-status__traco" d="M26 14 L26 27 L34 32" />
+                </svg>
 
-            <p>
-                Seu pagamento ainda está sendo processado.
+                <p class="pagamento-card__status" role="status">Pagamento em análise</p>
+            </header>
+
+            <h1 id="titulo-pendente">Seu pagamento está sendo processado</h1>
+
+            <p class="pagamento-card__texto">
+                Recebemos o seu pedido! Assim que o <strong>Mercado Pago</strong> confirmar o
+                pagamento, ele será atualizado automaticamente.
             </p>
 
-            <p>
-                Assim que o Mercado Pago confirmar o pagamento,
-                seu pedido será atualizado.
+            <p class="pagamento-card__texto pagamento-card__texto--secundario">
+                Pagamentos por boleto ou Pix podem levar alguns minutos (ou até 3 dias úteis, no caso do boleto)
+                para serem confirmados. Acompanhe o status em <em>Minhas compras</em>.
             </p>
 
-            <a href="/minhascompras" class="btn">
-                Ver minhas compras
-            </a>
+            <nav class="pagamento-card__acoes" aria-label="Próximos passos">
+                <a href="/minhascompras" class="btn btn--primario">
+                    <i class="bx bx-shopping-bag" aria-hidden="true"></i>
+                    Ir para minhas compras
+                </a>
+                <a href="/" class="btn btn--secundario">
+                    <i class="bx bx-store" aria-hidden="true"></i>
+                    Continuar comprando
+                </a>
+            </nav>
 
-        </section>
+        </article>
 
     </main>
 
