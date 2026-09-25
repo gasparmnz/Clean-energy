@@ -165,7 +165,7 @@
                 <i class='bx bx-hide'></i>
               </button>
             </section>
-            <small id="senha-pf-help" class="input-help">Mínimo 8 caracteres, com letras e números</small>
+            <small id="senha-pf-help" class="input-help">Mínimo 8 caracteres, com letra maiúscula, letra minúscula, número e caractere especial</small>
             <span id="senha-pf-error" class="error-message" role="alert">
               <%= typeof msgErroPessoaFisica !== 'undefined' ? msgErroPessoaFisica.senha : '' %>
             </span>
@@ -179,6 +179,15 @@
               </section>
               <span class="strength-text">Força da senha</span>
             </section>
+            <!-- Requisitos da senha (atualizados em tempo real por cadastro-validation.js
+                 usando as mesmas regras do backend: /js/senha-regras.js) -->
+            <ul class="password-requirements" id="senha-pf-requisitos" aria-label="Requisitos da senha">
+              <li data-req="tamanho"><span class="req-icone" aria-hidden="true">•</span> Pelo menos 8 caracteres</li>
+              <li data-req="minuscula"><span class="req-icone" aria-hidden="true">•</span> Uma letra minúscula</li>
+              <li data-req="maiuscula"><span class="req-icone" aria-hidden="true">•</span> Uma letra maiúscula</li>
+              <li data-req="numero"><span class="req-icone" aria-hidden="true">•</span> Um número</li>
+              <li data-req="especial"><span class="req-icone" aria-hidden="true">•</span> Um caractere especial (ex.: ! @ # $ %)</li>
+            </ul>
           </section>
 
           <!-- Campo Confirmar Senha -->
@@ -228,6 +237,7 @@
         </footer>
       </form>
     </section>
+    <script src="/js/senha-regras.js"></script>
     <script src="/js/cadastro-validation.js"></script>
   </main>
   <script src="/js/darkmode.js"></script>

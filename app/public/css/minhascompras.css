@@ -150,6 +150,33 @@ main {
   flex-shrink: 0;
 }
 
+/* Endereço completo revelado pelo botão "Mostrar Endereço" */
+.produto-info .endereco-completo {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 6px;
+  row-gap: 2px;
+  margin: 4px 0 10px;
+  padding: 8px 10px;
+  border-left: 3px solid #146363;
+  background: rgba(20, 99, 99, 0.06);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #444;
+  text-align: left;
+}
+.produto-info .endereco-completo.d-none {
+  display: none !important;
+}
+.produto-info .endereco-completo dt {
+  font-weight: 600;
+  margin: 0;
+}
+.produto-info .endereco-completo dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
 /* Ações */
 .acoes {
   display: flex;
@@ -441,4 +468,29 @@ main {
 .sem-itens p {
   font-size: 1rem;
   margin: 0;
+}
+body.dark-mode .produto-info .endereco-completo {
+  color: #d1d5db;
+  background: rgba(134, 239, 172, 0.08);
+}
+
+/* ============================================
+   Card cresce com o conteúdo
+   Antes o card tinha height: 380px fixo, então ao clicar em "Mostrar
+   Endereço" o endereço transbordava e ficava por trás dos botões. Agora a
+   altura mínima continua 380px, mas o card cresce para caber o endereço e
+   volta ao tamanho normal quando ele é ocultado. align-items: start evita
+   que os outros cards da mesma linha estiquem junto.
+   ============================================ */
+.produtos-grid {
+  align-items: start;
+}
+
+.produto-card {
+  height: auto;
+  min-height: 380px;
+}
+
+.produto-card .acoes {
+  margin-top: 8px;
 }

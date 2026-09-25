@@ -36,6 +36,7 @@
                 <article class="summary-card"><i class='bx bx-block'></i><h3>Produtos Suspensos</h3><p><%= totals.suspended %></p></article>
                 <article class="summary-card"><i class="bx bx-cart-alt"></i><h3>Total de Transações</h3><p><%= stats.total %></p></article>
                 <article class="summary-card"><i class="bx bx-time-five"></i><h3>Pedidos Pendentes</h3><p><%= stats.pendentes %></p></article>
+                <article class="summary-card"><i class='bx bx-loader-circle'></i><h3>Em Trânsito</h3><p><%= stats.emTransito %></p></article>
                 <article class="summary-card"><i class='bx bx-x-circle'></i><h3>Transações Canceladas</h3><p><%= stats.canceladas %></p></article>
                 <article class="summary-card"><i class="bx bx-check-circle"></i><h3>Transações Concluídas</h3><p><%= stats.concluidas %></p></article>
                 <article class="summary-card"><i class="bx bx-money"></i><h3>Total Transacionado</h3><p>R$ <%= stats.totalValor.toLocaleString('pt-BR', {minimumFractionDigits:2,maximumFractionDigits:2}) %></p></article>

@@ -10,15 +10,14 @@ function getAdmLogin(req, res) {
 
 // POST /adm-login
 function postAdmLogin(req, res) {
-  const senhaInformada = String(req.body?.senha || '').trim();
-  const senhaAdmin = String(process.env.ADMIN_SECRET || '123456').trim();
+  const { email, senha } = req.body;
 
-  if (senhaInformada === senhaAdmin) {
+  if (email === process.env.ADMIN_EMAIL && senha === process.env.ADMIN_PASSWORD) {
     req.session.isAdmin = true;
     return res.redirect('/adm');
   }
 
-  res.send('Senha incorreta');
+  res.send('E-mail ou senha incorretos');
 }
 
 /* ── DASHBOARD ──────────────────────────────────────────────── */
@@ -32,13 +31,33 @@ async function getDashboard(req, res) {
 
     let compras = [];
     let vendas = [];
-    let stats = { total: 0, pendentes: 0, canceladas: 0, concluidas: 0, totalValor: 0, comissao: 0 };
+    let stats = { total: 0, pendentes: 0, emTransito: 0, canceladas: 0, concluidas: 0, totalValor: 0, comissao: 0 };
 
     try {
       const [tables] = await pool.query("SHOW TABLES LIKE 'pedidos'");
       if (tables.length > 0) {
-        const [[s]] = await pool.query(`SELECT COUNT(*) AS total, SUM(CASE WHEN status='pendente' THEN 1 ELSE 0 END) AS pendentes, SUM(CASE WHEN status='cancelado' THEN 1 ELSE 0 END) AS canceladas, SUM(CASE WHEN status='concluido' THEN 1 ELSE 0 END) AS concluidas, COALESCE(SUM(valor_total),0) AS totalValor FROM pedidos`);
-        stats = { total: s.total || 0, pendentes: s.pendentes || 0, canceladas: s.canceladas || 0, concluidas: s.concluidas || 0, totalValor: parseFloat(s.totalValor) || 0, comissao: (parseFloat(s.totalValor) || 0) * 0.05 };
+        // totalValor/comissao consideram só pedidos com pagamento aprovado
+        // (em_transito ou concluido) — pendente/cancelado não são dinheiro
+        // que de fato entrou.
+        const [[s]] = await pool.query(`
+          SELECT
+            COUNT(*) AS total,
+            SUM(CASE WHEN status='pendente' THEN 1 ELSE 0 END) AS pendentes,
+            SUM(CASE WHEN status='em_transito' THEN 1 ELSE 0 END) AS emTransito,
+            SUM(CASE WHEN status='cancelado' THEN 1 ELSE 0 END) AS canceladas,
+            SUM(CASE WHEN status='concluido' THEN 1 ELSE 0 END) AS concluidas,
+            COALESCE(SUM(CASE WHEN status IN ('em_transito','concluido') THEN valor_total ELSE 0 END), 0) AS totalValor
+          FROM pedidos
+        `);
+        stats = {
+          total: s.total || 0,
+          pendentes: s.pendentes || 0,
+          emTransito: s.emTransito || 0,
+          canceladas: s.canceladas || 0,
+          concluidas: s.concluidas || 0,
+          totalValor: parseFloat(s.totalValor) || 0,
+          comissao: (parseFloat(s.totalValor) || 0) * 0.05
+        };
         const [comprasRows] = await pool.query(`SELECT p.id, u.Nome AS comprador, pr.nome AS produto, p.valor_total AS valor, p.criado_em AS data, p.status FROM pedidos p JOIN Usuario u ON p.comprador_id = u.Usuario_ID LEFT JOIN produtos pr ON p.produto_id = pr.id ORDER BY p.criado_em DESC LIMIT 5`);
         compras = comprasRows;
         const [vendasRows] = await pool.query(`SELECT p.id, u.Nome AS vendedor, pr.nome AS produto, p.valor_total AS valor, p.criado_em AS data, p.status FROM pedidos p JOIN produtos pr ON p.produto_id = pr.id JOIN Usuario u ON pr.usuario_id = u.Usuario_ID ORDER BY p.criado_em DESC LIMIT 5`);
@@ -54,7 +73,7 @@ async function getDashboard(req, res) {
     console.error('Erro ao carregar dashboard admin', err);
     res.render('pages/adm', {
       totals: { users: 0, products: 0, active: 0, suspended: 0 },
-      stats: { total: 0, pendentes: 0, canceladas: 0, concluidas: 0, totalValor: 0, comissao: 0 },
+      stats: { total: 0, pendentes: 0, emTransito: 0, canceladas: 0, concluidas: 0, totalValor: 0, comissao: 0 },
       compras: [], vendas: []
     });
   }
@@ -427,11 +446,13 @@ async function toggleStatusProduto(req, res) {
 
 async function editarProdutoAdm(req, res) {
   try {
-    const { id, name, stock } = req.body;
+    const { id, name, description, price, stock } = req.body;
     if (!id) return res.status(400).json({ error: 'ID obrigatório' });
     const numericId = String(id).replace(/^PROD-/i, '');
     await produtosModel.update(numericId, {
       nome: name,
+      descricao: description,
+      preco: parseFloat(price) || 0,
       quantidade: parseInt(stock) || 0
     });
     res.json({ success: true });

@@ -1,6 +1,7 @@
 const produtosModel = require('../models/models.js');
 const { vendedorModel, notificacoesModel } = require('../models/models.js');
 const { arquivoParaDataUri } = require('../helpers/imagem');
+const pedidoModel = require('../models/pedidoModel');
 
 // GET / — vitrine pública de produtos, com filtros de busca
 async function listarProdutos(req, res) {
@@ -91,8 +92,10 @@ async function getItem(req, res) {
       ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil }
       : null;
 
-    const pedidosConcluidos = req.session.pedidosConcluidos || [];
-    const comprou = pedidosConcluidos.some(item => String(item.productId) === String(req.params.id));
+    // "Comprou" considera tanto pedidos já concluídos quanto em trânsito
+    // (o pagamento já foi aprovado nos dois casos, só falta a entrega).
+    // Consultado no banco (tabela `pedidos`), não na sessão.
+    const comprou = await pedidoModel.comprouProduto(req.session.userId, req.params.id);
 
     res.render('pages/item', { produto, avaliacoes, mediaNotas, vendedor, usuario: usuarioSessao, comprou });
   } catch (err) {
@@ -111,8 +114,7 @@ async function avaliarItem(req, res) {
     return res.redirect(`/item/${produtoId}?erro=nota`);
   }
 
-  const pedidosConcluidos = req.session.pedidosConcluidos || [];
-  const comprou = pedidosConcluidos.some(item => String(item.productId) === String(produtoId));
+  const comprou = await pedidoModel.comprouProduto(req.session.userId, produtoId);
   if (!comprou) {
     return res.redirect(`/item/${produtoId}?erro=naocomprou`);
   }

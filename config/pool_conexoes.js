@@ -6,7 +6,11 @@ const pool = mysql.createPool({
     password: process.env.DB_PASSWORD || '',
     database: (process.env.DB_NAME || 'produtos').toLowerCase(),
     port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306,
-    connectionLimit: 10,
+    // Reduzido de 10 para 3: o banco (plano gratuito) só permite 5 conexões
+    // simultâneas NO TOTAL para este usuário, e o session store (MySQLStore,
+    // no app.js) abre seu próprio pool separado apontando pro mesmo banco.
+    // 3 (app) + 2 (sessão) = 5, deixando ambos dentro do limite.
+    connectionLimit: 3,
     queueLimit: 0,
     ssl: { rejectUnauthorized: false },
     // Evita ECONNRESET por timeout do servidor MySQL

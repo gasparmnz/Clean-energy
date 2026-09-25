@@ -50,6 +50,16 @@
     <h1>Sem conexão com a internet</h1>
     <p>Não foi possível carregar esta página porque você está offline e ela ainda não tinha sido salva no seu dispositivo. Verifique sua conexão e tente novamente.</p>
     <button onclick="window.location.reload()">Tentar novamente</button>
+    <script>
+      // Esta página também aparece quando a internet está funcionando mas o
+      // servidor não respondeu (ex.: reiniciando). Nesse caso, não dizemos
+      // que o usuário está offline.
+      if (navigator.onLine) {
+        document.querySelector('h1').textContent = 'Servidor temporariamente indisponível';
+        document.querySelector('h1').nextElementSibling.textContent =
+          'Sua conexão com a internet está funcionando, mas o servidor da Clean Energy não respondeu agora. Aguarde alguns instantes e tente novamente.';
+      }
+    </script>
     <p class="dica">Páginas que você já visitou continuam disponíveis offline.</p>
   </section>
 </body>

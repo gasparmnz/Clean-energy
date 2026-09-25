@@ -4,7 +4,8 @@
  * Estratégias:
  *  - App shell (offline.html, manifest, ícones, CSS/JS core) -> pré-cache no install
  *  - Navegação (HTML)               -> Network First, fallback para cache e depois offline.html
- *  - Estáticos same-origin (css/js/imagem/fontes) -> Cache First com atualização em segundo plano
+ *  - CSS/JS do próprio site         -> Network First (sempre a versão mais nova; cache só offline)
+ *  - Imagens/manifest same-origin   -> Cache First com atualização em segundo plano
  *  - Recursos de terceiros (CDNs: boxicons, google fonts, bootstrap, fontawesome) -> Stale While Revalidate
  *  - Requisições não-GET (POST/PUT/DELETE, ex: login, formularios) -> sempre vão direto para a rede
  *
@@ -12,7 +13,9 @@
  * para forçar a atualização dos clients.
  */
 
-const SW_VERSION = 'v2';
+// v3: invalida os caches da v2, que podiam servir versões antigas de
+// /js/cadastro-validation.js, /css/*.css e de páginas já visitadas.
+const SW_VERSION = 'v3';
 const STATIC_CACHE = `clean-energy-static-${SW_VERSION}`;
 const RUNTIME_CACHE = `clean-energy-runtime-${SW_VERSION}`;
 const CDN_CACHE = `clean-energy-cdn-${SW_VERSION}`;
@@ -69,6 +72,16 @@ function isCdnRequest(url) {
     'cdn.jsdelivr.net',
     'cdnjs.cloudflare.com'
   ].some((host) => url.hostname.includes(host));
+}
+
+// CSS e JS mudam a cada deploy; servi-los do cache primeiro fazia o
+// navegador rodar o código antigo (ex.: validação de cadastro velha) até a
+// visita seguinte. O servidor já os entrega com Cache-Control: no-store.
+function isCodeAsset(url) {
+  return url.origin === self.location.origin && (
+    url.pathname.startsWith('/css/') ||
+    url.pathname.startsWith('/js/')
+  );
 }
 
 function isStaticAsset(url) {
@@ -166,7 +179,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Estáticos do próprio site -> cache first.
+  // CSS/JS do próprio site -> network first (cache apenas como fallback offline).
+  if (isCodeAsset(url)) {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  // Imagens e demais estáticos do próprio site -> cache first.
   if (isStaticAsset(url)) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
