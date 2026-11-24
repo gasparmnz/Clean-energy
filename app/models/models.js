@@ -1,7 +1,6 @@
 const pool = require("../../config/pool_conexoes");
 
 const produtosModel = {
-  // apenasAtivos: clientes só veem produtos com status = 'active'
   findAll: async ({ apenasAtivos = false } = {}) => {
     try {
       const sql = apenasAtivos
@@ -58,12 +57,6 @@ const produtosModel = {
     }
   },
 
-  // Atualiza apenas os campos enviados em `dados` (nome, descricao, local,
-  // preco, quantidade). Antes só gravava nome e quantidade, então preço e
-  // endereço editados nunca chegavam ao banco.
-  // Com `opcoes.usuarioId`, o UPDATE só acontece se o produto pertencer a
-  // esse usuário (WHERE ... AND usuario_id = ?) — result.affectedRows = 0
-  // indica que o produto não existe ou é de outro vendedor.
   update: async (id, dados, opcoes = {}) => {
     try {
       const colunas = ['nome', 'descricao', 'local', 'preco', 'quantidade'];
@@ -99,7 +92,6 @@ const produtosModel = {
     }
   },
 
-  // Busca produtos ativos com filtros opcionais (busca, estado, categoria, precoMin, precoMax)
   findAllComFiltros: async ({ busca, estado, categoria, precoMin, precoMax } = {}) => {
     try {
       let sql = "SELECT * FROM produtos WHERE status = 'active'";
@@ -146,7 +138,6 @@ const produtosModel = {
     }
   },
 
-  // Busca avaliações de um produto com nome do avaliador
   findAvaliacoes: async (produtoId) => {
     try {
       const [rows] = await pool.query(
@@ -164,7 +155,6 @@ const produtosModel = {
     }
   },
 
-  // Verifica se usuário já avaliou o produto; retorna a avaliação ou null
   findAvaliacaoByUsuario: async (usuarioId, produtoId) => {
     try {
       const [rows] = await pool.query(
@@ -177,7 +167,6 @@ const produtosModel = {
     }
   },
 
-  // Cria avaliação de produto
   createAvaliacao: async ({ nota, comentario, usuarioId, produtoId, nomeUsuario }) => {
     try {
       const [result] = await pool.query(
@@ -190,7 +179,6 @@ const produtosModel = {
     }
   },
 
-  // Atualiza avaliação existente de produto
   updateAvaliacao: async ({ nota, comentario, usuarioId, produtoId }) => {
     try {
       const [result] = await pool.query(
@@ -205,7 +193,6 @@ const produtosModel = {
 };
 
 const usuarioModel = {
-  // Busca usuário por ID
   findById: async (id) => {
     try {
       const [rows] = await pool.query("SELECT * FROM Usuario WHERE Usuario_ID = ?", [id]);
@@ -215,7 +202,6 @@ const usuarioModel = {
     }
   },
 
-  // Busca usuário por email
   findByEmail: async (email) => {
     try {
       const [rows] = await pool.query("SELECT * FROM Usuario WHERE Email = ?", [email]);
@@ -225,7 +211,6 @@ const usuarioModel = {
     }
   },
 
-  // Atualiza nome e biografia do usuário
   updatePerfil: async (id, { nome, biografia }) => {
     try {
       const [result] = await pool.query(
@@ -238,7 +223,6 @@ const usuarioModel = {
     }
   },
 
-  // Atualiza dados do usuário via admin (nome, email, biografia)
   updateAdmin: async (id, { nome, email, biografia }) => {
     try {
       const [result] = await pool.query(
@@ -251,7 +235,6 @@ const usuarioModel = {
     }
   },
 
-  // Atualiza foto do usuário
   updateFoto: async (id, filename) => {
     try {
       const [result] = await pool.query(
@@ -264,7 +247,6 @@ const usuarioModel = {
     }
   },
 
-  // Registra último login
   updateUltimoLogin: async (id) => {
     try {
       await pool.query("UPDATE Usuario SET Ultimo_Login = NOW() WHERE Usuario_ID = ?", [id]);
@@ -273,7 +255,6 @@ const usuarioModel = {
     }
   },
 
-  // Salva o hash do token de redefinição de senha e sua validade
   setResetToken: async (id, tokenHash, expiraEm) => {
     try {
       await pool.query(
@@ -285,7 +266,6 @@ const usuarioModel = {
     }
   },
 
-  // Busca usuário por hash do token, desde que ainda válido
   findByResetTokenHash: async (tokenHash) => {
     try {
       const [rows] = await pool.query(
@@ -298,7 +278,6 @@ const usuarioModel = {
     }
   },
 
-  // Define nova senha e invalida o token de redefinição
   updateSenhaELimparToken: async (id, senhaHash) => {
     try {
       await pool.query(
@@ -310,7 +289,6 @@ const usuarioModel = {
     }
   },
 
-  // Cria usuário PF
   createPF: async ({ nome, email, senhaHash }) => {
     try {
       const [result] = await pool.query(
@@ -323,7 +301,6 @@ const usuarioModel = {
     }
   },
 
-  // Cria usuário PJ
   createPJ: async ({ nome, email, senhaHash }) => {
     try {
       const [result] = await pool.query(
@@ -336,7 +313,6 @@ const usuarioModel = {
     }
   },
 
-  // Insere CPF na tabela Pessoa_Fisica
   createPessoaFisica: async (usuarioId, cpf) => {
     try {
       await pool.query("INSERT INTO Pessoa_Fisica (Usuario_ID, CPF) VALUES (?, ?)", [usuarioId, cpf]);
@@ -345,7 +321,6 @@ const usuarioModel = {
     }
   },
 
-  // Insere CNPJ na tabela Pessoa_Juridica
   createPessoaJuridica: async (usuarioId, cnpj) => {
     try {
       await pool.query("INSERT INTO Pessoa_Juridica (Usuario_ID, CNPJ) VALUES (?, ?)", [usuarioId, cnpj]);
@@ -354,7 +329,6 @@ const usuarioModel = {
     }
   },
 
-  // Verifica se CNPJ já existe
   findByCNPJ: async (cnpj) => {
     try {
       const [rows] = await pool.query("SELECT Usuario_ID FROM Pessoa_Juridica WHERE CNPJ = ?", [cnpj]);
@@ -364,7 +338,6 @@ const usuarioModel = {
     }
   },
 
-  // Converte comprador em vendedor (upgrade)
   upgradeParaVendedor: async (usuarioId, { companyName, cnpj }) => {
     try {
       await pool.query(
@@ -379,7 +352,6 @@ const usuarioModel = {
 };
 
 const vendedorModel = {
-  // Busca dados públicos do vendedor (apenas PJ)
   findById: async (id) => {
     try {
       const [rows] = await pool.query(
@@ -393,7 +365,6 @@ const vendedorModel = {
     }
   },
 
-  // Busca dados do usuário para exibir como vendedor do produto (qualquer Tipo)
   findUsuarioById: async (id) => {
     try {
       const [rows] = await pool.query(
@@ -406,7 +377,6 @@ const vendedorModel = {
     }
   },
 
-  // Média e total de avaliações do vendedor
   findMediaAvaliacao: async (vendedorId) => {
     try {
       const [rows] = await pool.query(
@@ -420,7 +390,6 @@ const vendedorModel = {
     }
   },
 
-  // Total de vendas do vendedor
   findTotalVendas: async (vendedorId) => {
     try {
       const [rows] = await pool.query(
@@ -436,7 +405,6 @@ const vendedorModel = {
     }
   },
 
-  // Total de produtos ativos do vendedor
   findTotalProdutos: async (vendedorId) => {
     try {
       const [rows] = await pool.query(
@@ -449,7 +417,6 @@ const vendedorModel = {
     }
   },
 
-  // Produtos ativos do vendedor
   findProdutos: async (vendedorId) => {
     try {
       const [rows] = await pool.query(
@@ -462,7 +429,6 @@ const vendedorModel = {
     }
   },
 
-  // Avaliações/comentários feitos sobre o vendedor
   findAvaliacoes: async (vendedorId) => {
     try {
       const [rows] = await pool.query(
@@ -480,7 +446,6 @@ const vendedorModel = {
     }
   },
 
-  // Verifica se avaliador já avaliou este vendedor
   findAvaliacaoByAvaliador: async (vendedorId, avaliadorId) => {
     try {
       const [rows] = await pool.query(
@@ -493,7 +458,6 @@ const vendedorModel = {
     }
   },
 
-  // Verifica se avaliação existe (retorna registro com id)
   findAvaliacaoId: async (vendedorId, avaliadorId) => {
     try {
       const [rows] = await pool.query(
@@ -506,7 +470,6 @@ const vendedorModel = {
     }
   },
 
-  // Cria avaliação de vendedor
   createAvaliacao: async ({ vendedorId, avaliadorId, nota, comentario }) => {
     try {
       const [result] = await pool.query(
@@ -519,7 +482,6 @@ const vendedorModel = {
     }
   },
 
-  // Atualiza avaliação existente de vendedor
   updateAvaliacao: async ({ vendedorId, avaliadorId, nota, comentario }) => {
     try {
       const [result] = await pool.query(
@@ -550,7 +512,6 @@ const pedidoModel = {
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8
     `);
 
-    // Colunas adicionadas depois: garante que existam mesmo se a tabela já tiver sido criada por uma versão anterior
     const colunasNovas = [
       "nome VARCHAR(255) DEFAULT NULL",
       "preco DECIMAL(10,2) NOT NULL DEFAULT 0.00",
@@ -569,12 +530,11 @@ const pedidoModel = {
     }
     try {
       await pool.query("ALTER TABLE pedidos MODIFY status ENUM('pendente','em_transito','concluido','cancelado') NOT NULL DEFAULT 'pendente'");
-    } catch (e) { /* já está correto */ }
+    } catch (e) { }
 
     pedidoModel._tabelaCriada = true;
   },
 
-  // Cria o pedido já ao iniciar o checkout, como 'pendente' — o webhook confirma o pagamento depois
   criarPendente: async ({ compradorId, produtoId, nome, preco, quantidade, imagem, local, estado, externalRef }) => {
     await pedidoModel._garantirTabela();
     const valorTotal = Number(preco) * (quantidade || 1);
@@ -587,7 +547,6 @@ const pedidoModel = {
     return result.insertId;
   },
 
-  // Chamado pelo webhook do Mercado Pago quando o pagamento é aprovado
   marcarPago: async (externalRef) => {
     await pedidoModel._garantirTabela();
     const [result] = await pool.query(
@@ -597,7 +556,6 @@ const pedidoModel = {
     return result.affectedRows;
   },
 
-  // Comprador confirma o recebimento
   marcarConcluido: async (id, compradorId) => {
     await pedidoModel._garantirTabela();
     const [result] = await pool.query(
@@ -607,7 +565,6 @@ const pedidoModel = {
     return result.affectedRows;
   },
 
-  // Lista os pedidos de um comprador, separados por status, para a tela "Minhas Compras"
   listarPorComprador: async (compradorId) => {
     await pedidoModel._garantirTabela();
     const [rows] = await pool.query(
@@ -621,7 +578,6 @@ const pedidoModel = {
     };
   },
 
-  // Busca um pedido pendente específico do comprador (usado para reemitir o checkout)
   buscarPendentePorId: async (id, compradorId) => {
     await pedidoModel._garantirTabela();
     const [rows] = await pool.query(
@@ -637,9 +593,6 @@ module.exports.pedidoModel = pedidoModel;
 module.exports.usuarioModel = usuarioModel;
 module.exports.vendedorModel = vendedorModel;
 
-/* ════════════════════════════════════════════════
-   NOTIFICAÇÕES (comprador/vendedor)
-   ════════════════════════════════════════════════ */
 const notificacoesModel = {
   criar: async ({ usuarioId, tipo, mensagem, link }) => {
     try {
@@ -649,7 +602,6 @@ const notificacoesModel = {
       );
       return result;
     } catch (err) {
-      // Notificação nunca deve derrubar o fluxo principal (compra, avaliação, etc.)
       console.error('Erro ao criar notificação:', err);
       return null;
     }
@@ -700,9 +652,6 @@ const notificacoesModel = {
 
 module.exports.notificacoesModel = notificacoesModel;
 
-/* ════════════════════════════════════════════════
-   BIOMETRIA / FACE ID (WebAuthn)
-   ════════════════════════════════════════════════ */
 const webauthnModel = {
   addCredential: async ({ usuarioId, credentialId, publicKey, counter, deviceName, transports }) => {
     try {
@@ -741,7 +690,6 @@ const webauthnModel = {
     }
   },
 
-  // Credenciais registradas por e-mail (para montar o desafio de login sem exigir digitar senha)
   getCredentialsByEmail: async (email) => {
     try {
       const [rows] = await pool.query(

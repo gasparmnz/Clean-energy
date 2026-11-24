@@ -16,7 +16,7 @@ class ProductFormValidator {
         this.setupEventListeners();
         this.setupFileUpload();
         this.setupFormatters();
-        console.log('🚀 Sistema de validação de produto iniciado');
+        console.log('Sistema de validação de produto iniciado');
       });
     } else {
       this.setupElements();
@@ -24,14 +24,13 @@ class ProductFormValidator {
       this.setupEventListeners();
       this.setupFileUpload();
       this.setupFormatters();
-      console.log('🚀 Sistema de validação de produto iniciado');
+      console.log('Sistema de validação de produto iniciado');
     }
   }
 
   setupElements() {
     this.form = document.querySelector('.product-form') || document.querySelector('form');
     
-    // Mapear todos os campos
     this.fields = {
       nome: document.getElementById('nome'),
       descricao: document.getElementById('descricao'),
@@ -44,13 +43,10 @@ class ProductFormValidator {
       rua: document.getElementById('rua'),
       numero: document.getElementById('numero'),
       complemento: document.getElementById('complemento'),
-      // NOVO: campo estado não estava mapeado, então nunca era validado
-      // (nem no blur, nem em lugar nenhum) — precisa estar aqui para a
-      // validação imediata pós-CEP (item 1) conseguir validá-lo também.
       estado: document.getElementById('estado')
     };
 
-    console.log('🔍 Campos encontrados:', Object.keys(this.fields).filter(key => this.fields[key]));
+    console.log('Campos encontrados:', Object.keys(this.fields).filter(key => this.fields[key]));
   }
 
   setupValidationRules() {
@@ -81,8 +77,6 @@ class ProductFormValidator {
         required: true,
         min: 0.01,
         max: 999999.99,
-        // ALTERADO: aceita opcionalmente o prefixo "R$ " que o formatador
-        // do próprio campo escreve (senão o valor formatado nunca passava).
         pattern: /^(R\$\s*)?\d+([.,]\d{1,2})?$/,
         message: {
           required: 'Preço é obrigatório',
@@ -95,8 +89,6 @@ class ProductFormValidator {
         required: true,
         min: 0.01,
         max: 99999.99,
-        // ALTERADO: aceita opcionalmente o sufixo " t" que o formatador
-        // do próprio campo escreve no blur (senão o valor formatado nunca passava).
         pattern: /^\d+([.,]\d{1,2})?(\s?t)?$/i,
         message: {
           required: 'Quantidade é obrigatória',
@@ -114,7 +106,7 @@ class ProductFormValidator {
       imagem: {
         required: true,
         fileTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
-        maxSize: 5 * 1024 * 1024, // 5MB
+        maxSize: 5 * 1024 * 1024,
         message: {
           required: 'Selecione uma imagem',
           fileType: 'Formato inválido. Use JPG, PNG ou WEBP',
@@ -161,8 +153,6 @@ class ProductFormValidator {
         required: true,
         minLength: 1,
         maxLength: 10,
-        // ALTERADO: agora aceita "/" também, para permitir o valor "S/N"
-        // usado quando o endereço não possui número (checkbox "sem número").
         pattern: /^[0-9a-zA-Z\s\-\/]+$/,
         message: {
           required: 'Número é obrigatório',
@@ -180,8 +170,6 @@ class ProductFormValidator {
           pattern: 'Complemento contém caracteres inválidos'
         }
       },
-      // NOVO: regra para o campo estado (existia no HTML e no back-end,
-      // mas nunca tinha regra de validação nem estava em `fields`).
       estado: {
         required: true,
         message: {
@@ -216,29 +204,23 @@ class ProductFormValidator {
       }
     });
 
-    // Validação no envio do formulário
     if (this.form) {
       this.form.addEventListener('submit', (e) => {
-        // ALTERADO: antes o retorno de validateAllFields() era ignorado e o
-        // formulário sempre era enviado (o <form> tem `novalidate`, então o
-        // navegador também não bloqueava nada). Agora, se algum campo estiver
-        // inválido — por exemplo Número vazio com a opção "sem número"
-        // desmarcada — o envio é cancelado.
         const todosValidos = this.validateAllFields();
 
         if (!todosValidos) {
           e.preventDefault();
-          console.log('🚫 Envio bloqueado: há campos inválidos no formulário');
+          console.log('Envio bloqueado: há campos inválidos no formulário');
           return;
         }
 
         this.showLoadingState();
 
-        console.log('📤 Formulário enviado para validação backend');
+        console.log('Formulário enviado para validação backend');
       });
     }
 
-    console.log('✅ Event listeners configurados');
+    console.log('Event listeners configurados');
   }
 
   validateField(fieldName) {
@@ -257,7 +239,7 @@ class ProductFormValidator {
     }
 
     this.updateFieldUI(field, result);
-    console.log(`${result.isValid ? '✅' : '❌'} ${fieldName}: ${result.message || 'válido'}`);
+    console.log(`${result.isValid ? '' : ''} ${fieldName}: ${result.message || 'válido'}`);
     
     return result;
   }
@@ -265,7 +247,6 @@ class ProductFormValidator {
   validateTextInput(field, rules) {
     const value = field.value.trim();
 
-    // Campo obrigatório
     if (rules.required && !value) {
       return { isValid: false, message: rules.message.required };
     }
@@ -274,26 +255,19 @@ class ProductFormValidator {
       return { isValid: true, message: '' };
     }
 
-    // Tamanho mínimo
     if (rules.minLength && value.length < rules.minLength) {
       return { isValid: false, message: rules.message.minLength };
     }
 
-    // Tamanho máximo
     if (rules.maxLength && value.length > rules.maxLength) {
       return { isValid: false, message: rules.message.maxLength };
     }
 
-    // Padrão regex
     if (rules.pattern && !rules.pattern.test(value)) {
       return { isValid: false, message: rules.message.pattern };
     }
 
-    // Validação de valor numérico
     if (rules.min !== undefined || rules.max !== undefined) {
-      // ALTERADO: remove qualquer coisa que não seja dígito/vírgula/ponto
-      // (ex: "R$ ", " t") antes de converter, senão parseFloat falhava
-      // (virava NaN) com o valor já formatado pelos campos de preço/quantidade.
       const valorLimpo = value.replace(/[^\d,.-]/g, '').replace(',', '.');
       const numValue = parseFloat(valorLimpo);
       
@@ -316,22 +290,18 @@ class ProductFormValidator {
   validateFile(field, rules) {
     const file = field.files[0];
 
-    // Campo obrigatório
     if (rules.required && !file) {
       return { isValid: false, message: rules.message.required };
     }
 
-    // Se não é obrigatório e não tem arquivo, é válido
     if (!rules.required && !file) {
       return { isValid: true, message: '' };
     }
 
-    // Tipo de arquivo
     if (rules.fileTypes && !rules.fileTypes.includes(file.type)) {
       return { isValid: false, message: rules.message.fileType };
     }
 
-    // Tamanho do arquivo
     if (rules.maxSize && file.size > rules.maxSize) {
       return { isValid: false, message: rules.message.maxSize };
     }
@@ -349,7 +319,7 @@ class ProductFormValidator {
       }
     });
 
-    console.log(`📋 Validação geral: ${allValid ? 'todos os campos válidos' : 'há campos inválidos'}`);
+    console.log(`Validação geral: ${allValid ? 'todos os campos válidos' : 'há campos inválidos'}`);
     return allValid;
   }
 
@@ -378,7 +348,6 @@ class ProductFormValidator {
         successElement.style.display = 'flex';
       }
     } else {
-      // Estado inválido
       inputGroup.classList.add('invalid');
       field.classList.add('invalid');
       
@@ -404,7 +373,6 @@ class ProductFormValidator {
       const file = e.target.files[0];
       
       if (file) {
-        // Validar arquivo
         const result = this.validateField('imagem');
         
         if (result.isValid) {
@@ -460,7 +428,7 @@ class ProductFormValidator {
       }
     });
 
-    console.log('📁 Upload de arquivo configurado');
+    console.log('Upload de arquivo configurado');
   }
 
   clearFilePreview() {
@@ -523,7 +491,7 @@ class ProductFormValidator {
       });
     }
 
-    console.log('🔢 Formatadores configurados');
+    console.log('Formatadores configurados');
   }
 
   updateCharCounter(textarea) {
@@ -547,7 +515,7 @@ class ProductFormValidator {
     const submitBtn = document.querySelector('.submit-btn');
     if (submitBtn) {
       submitBtn.classList.add('loading');
-      console.log('🔄 Estado de loading ativado');
+      console.log('Estado de loading ativado');
     }
   }
 
@@ -555,11 +523,10 @@ class ProductFormValidator {
     const submitBtn = document.querySelector('.submit-btn');
     if (submitBtn) {
       submitBtn.classList.remove('loading');
-      console.log('✅ Estado de loading desativado');
+      console.log('Estado de loading desativado');
     }
   }
 
-  // Utilitários
   debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -587,7 +554,6 @@ class ProductFormValidator {
   }
 }
 
-// Inicializar validação
 let productValidator;
 
 if (document.readyState === 'loading') {

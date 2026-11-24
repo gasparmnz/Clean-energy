@@ -1,16 +1,9 @@
-/* ============================================================
-   Navegação inferior mobile (estilo app) — global, todas as páginas
-   ============================================================ */
-
 .bottom-nav {
   display: none;
 }
 
 @media (max-width: 768px) {
 
-  /* Reserva espaço no fim da página para a barra fixa não cobrir
-     conteúdo — só quando a barra existe na página (login/cadastro
-     não incluem o header, então não são afetadas). */
   body:has(.bottom-nav) {
     padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   }
@@ -81,7 +74,6 @@
     background: rgba(74, 222, 128, 0.12);
   }
 
-  /* ── Perfil (visitante): botão + dropdown Login/Cadastre-se ── */
   .bottom-nav__account {
     position: relative;
     padding: 0;

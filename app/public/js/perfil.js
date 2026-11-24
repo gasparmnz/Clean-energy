@@ -20,9 +20,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ─────────────────────────────────────────
-     Salvar dados do perfil (nome + telefone)
-  ───────────────────────────────────────── */
   const form = document.getElementById('formEdicao');
   if (form) {
     form.addEventListener('submit', async function (e) {
@@ -57,9 +54,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ─────────────────────────────────────────
-     Redefinir senha
-  ───────────────────────────────────────── */
   const formSenha = document.getElementById('formRedefinirSenha');
   if (formSenha) {
     formSenha.addEventListener('submit', async function (e) {
@@ -95,9 +89,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ─────────────────────────────────────────
-     Redefinir email
-  ───────────────────────────────────────── */
   const formEmail = document.getElementById('formRedefinirEmail');
   if (formEmail) {
     formEmail.addEventListener('submit', async function (e) {
@@ -127,9 +118,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ─────────────────────────────────────────
-     Toggle de sub-formulários de edição
-  ───────────────────────────────────────── */
   document.querySelectorAll('[data-toggle-form]').forEach(btn => {
     btn.addEventListener('click', function () {
       const targetId = this.getAttribute('data-toggle-form');
@@ -143,9 +131,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* ─────────────────────────────────────────
-     Upload de foto de perfil + atualiza header
-  ───────────────────────────────────────── */
   const inputFoto     = document.getElementById('inputFoto');
   const imgPerfil     = document.getElementById('fotoPerfil');
   const btnConfirmarFoto = document.getElementById('btnConfirmarFoto');
@@ -154,7 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const labelFoto     = document.getElementById('labelFoto');
 
   let arquivoSelecionado = null;
-  let fotoOriginal = imgPerfil ? imgPerfil.src : null; // guarda a foto atual antes de trocar
+  let fotoOriginal = imgPerfil ? imgPerfil.src : null;
 
   function mostrarAcoes(mostrar) {
     if (fotoActions) fotoActions.style.display = mostrar ? 'flex' : 'none';
@@ -167,34 +152,30 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!file) return;
 
       arquivoSelecionado = file;
-      fotoOriginal = imgPerfil ? imgPerfil.src : null; // salva a src atual ANTES do preview
+      fotoOriginal = imgPerfil ? imgPerfil.src : null;
 
       const reader = new FileReader();
       reader.onload = e => {
-        // Mostra preview da nova foto
         if (imgPerfil) imgPerfil.src = e.target.result;
         const asideAvatar = document.querySelector('.perfil-aside__avatar');
         if (asideAvatar) asideAvatar.src = e.target.result;
-        // Exibe botões confirmar/cancelar
         mostrarAcoes(true);
       };
       reader.readAsDataURL(file);
     });
   }
 
-  // ── Cancelar: volta para a foto anterior ───────────────────────────────────
   if (btnCancelarFoto) {
     btnCancelarFoto.addEventListener('click', function () {
       if (imgPerfil && fotoOriginal) imgPerfil.src = fotoOriginal;
       const asideAvatar = document.querySelector('.perfil-aside__avatar');
       if (asideAvatar && fotoOriginal) asideAvatar.src = fotoOriginal;
       arquivoSelecionado = null;
-      inputFoto.value = ''; // limpa o input para permitir selecionar mesmo arquivo novamente
+      inputFoto.value = '';
       mostrarAcoes(false);
     });
   }
 
-  // ── Confirmar: envia para o servidor ───────────────────────────────────────
   if (btnConfirmarFoto) {
     btnConfirmarFoto.addEventListener('click', async function () {
       if (!arquivoSelecionado) return;
@@ -210,13 +191,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!resp.ok) throw new Error('Erro no servidor');
         const json = await resp.json();
         if (json.sucesso) {
-          // json.foto agora pode vir como data URI (imagem embutida direto na
-          // resposta); nesse caso não dá pra colar "?t=" no final como se
-          // fosse uma URL de arquivo, senão a imagem quebra.
           const src = json.foto.startsWith('data:') ? json.foto : json.foto + '?t=' + Date.now();
           if (imgPerfil) imgPerfil.src = src;
-          fotoOriginal = src; // atualiza referência
-          // Não atualiza o avatar do header para evitar bug visual — o header atualiza no reload
+          fotoOriginal = src;
           const asideAvatar = document.querySelector('.perfil-aside__avatar');
           if (asideAvatar) asideAvatar.src = src;
           arquivoSelecionado = null;

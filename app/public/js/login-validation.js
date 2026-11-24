@@ -1,7 +1,4 @@
 
- /* Sistema de Validação em Tempo Real para Login*/
-
-
 class LoginValidator {
   constructor() {
     this.form = null;
@@ -40,7 +37,7 @@ class LoginValidator {
                        document.querySelector('.submit-btn') ||
                        document.querySelector('button[type="submit"]');
 
-    console.log('🔍 Elementos encontrados:', {
+    console.log('Elementos encontrados:', {
       form: !!this.form,
       email: !!this.emailInput,
       password: !!this.passwordInput,
@@ -66,11 +63,10 @@ class LoginValidator {
 
   setupEventListeners() {
     if (!this.emailInput || !this.passwordInput) {
-      console.warn('⚠️ Inputs não encontrados');
+      console.warn('Inputs não encontrados');
       return;
     }
 
-    // Validação do e-mail
     this.emailInput.addEventListener('blur', () => {
       this.validateEmail();
     });
@@ -79,7 +75,6 @@ class LoginValidator {
       this.validateEmail();
     }, 300));
 
-    // Validação da senha
     this.passwordInput.addEventListener('blur', () => {
       this.validatePassword();
     });
@@ -88,16 +83,14 @@ class LoginValidator {
       this.validatePassword();
     }, 300));
 
-    // Validação no envio do formulário
     if (this.form) {
       this.form.addEventListener('submit', (e) => {
         this.validateAllFields();
         this.showLoadingState();
-        //
       });
     }
 
-    console.log('✅ Event listeners configurados');
+    console.log('Event listeners configurados');
   }
 
   validateEmail() {
@@ -177,7 +170,7 @@ class LoginValidator {
         successElement.style.display = 'flex';
       }
       
-      console.log(`✅ Campo válido: ${input.name || input.id}`);
+      console.log(`Campo válido: ${input.name || input.id}`);
     } else {
 
       inputGroup.classList.add('invalid');
@@ -203,14 +196,14 @@ class LoginValidator {
         successElement.style.display = 'none';
       }
       
-      console.log(`❌ Campo inválido: ${input.name || input.id} - ${result.message}`);
+      console.log(`Campo inválido: ${input.name || input.id} - ${result.message}`);
     }
   }
 
   showLoadingState() {
     if (this.submitButton) {
       this.submitButton.classList.add('loading');
-      console.log('🔄 Estado de loading ativado');
+      console.log('Estado de loading ativado');
     }
   }
 
@@ -223,7 +216,7 @@ class LoginValidator {
         this.togglePasswordVisibility();
       });
       
-      console.log('👁️ Toggle de senha configurado');
+      console.log('Toggle de senha configurado');
     }
   }
 
@@ -252,7 +245,6 @@ class LoginValidator {
     }
   }
 
-  // Utilitários
   isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -357,4 +349,4 @@ if (typeof module !== 'undefined' && module.exports) {
   module.exports = LoginValidator;
 }
 
-console.log('🚀 Sistema de validação de login carregado e pronto!');
+console.log('Sistema de validação de login carregado e pronto!');

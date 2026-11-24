@@ -1,27 +1,17 @@
 const pool = require("../../config/pool_conexoes");
 
-// Limite de quantidade de um produto no carrinho = estoque cadastrado pelo
-// vendedor (produtos.quantidade, em toneladas). Antes era um 5 fixo, por
-// isso todo produto aparecia como "Disponível: 5 toneladas". O carrinho
-// trabalha com toneladas inteiras; o mínimo é 1 para o item não ficar
-// travado quando o estoque não foi informado.
 function limiteDoEstoque(estoque) {
   const n = Number(estoque);
   if (!Number.isFinite(n) || n < 1) return 1;
   return Math.floor(n);
 }
 
-// A quantidade é gravada dentro do JSON do carrinho e pode ter chegado como
-// string em registros antigos ("2"). Com `+=`, "2" + 1 vira "21". Aqui
-// garantimos sempre um inteiro entre 1 e o limite do produto. Tela do
-// carrinho, botões +/− e checkout usam esta mesma função.
 function normalizarQuantidade(valor, limite = Infinity) {
   const n = parseInt(valor, 10);
   if (!Number.isFinite(n) || n < 1) return 1;
   return Math.min(n, Math.max(1, limite));
 }
 
-// Estoque atual de cada produto do carrinho: Map productId -> { estoque, limite }.
 async function estoquePorProduto(productIds) {
   const ids = [...new Set((productIds || []).map(id => parseInt(id, 10)).filter(Number.isInteger))];
   const mapa = new Map();
@@ -42,7 +32,6 @@ function lerItens(bruto) {
 }
 
 const cartModel = {
-  // Adiciona um item ao carrinho do usuário
   addItem: async (userId, item, limite = Infinity) => {
     try {
       let [cartRows] = await pool.query("SELECT idCarrinho, items FROM carrinho WHERE userId = ?", [userId]);
@@ -64,8 +53,6 @@ const cartModel = {
         }
         const existingIndex = items.findIndex(i => String(i.productId) === String(item.productId));
         if (existingIndex >= 0) {
-          // Soma numérica (antes podia concatenar strings) e respeita o
-          // estoque do produto.
           items[existingIndex].quantidade = normalizarQuantidade(
             normalizarQuantidade(items[existingIndex].quantidade) + normalizarQuantidade(item.quantidade),
             limite
@@ -81,20 +68,17 @@ const cartModel = {
     }
   },
 
-  // Obtém o carrinho do usuário
   getCartByUser: async (userId) => {
     try {
       const [rows] = await pool.query("SELECT items FROM carrinho WHERE userId = ?", [userId]);
       if (rows.length === 0) return [];
 
       const items = rows[0].items;
-      // Verificar se já é um array ou precisa ser parseado
       if (Array.isArray(items)) {
         return items;
       } else if (typeof items === 'string') {
         return JSON.parse(items || '[]');
       } else {
-        // Se for um objeto, tentar converter
         return Array.isArray(items) ? items : [items];
       }
     } catch (err) {
@@ -102,9 +86,6 @@ const cartModel = {
     }
   },
 
-  // Define a quantidade de um produto do carrinho (botões + e − da tela).
-  // Retorna a quantidade efetivamente gravada, ou null se o produto não
-  // está no carrinho.
   atualizarQuantidade: async (userId, productId, quantidade, limite = Infinity) => {
     const [rows] = await pool.query("SELECT idCarrinho, items FROM carrinho WHERE userId = ?", [userId]);
     if (rows.length === 0) return null;
@@ -118,10 +99,6 @@ const cartModel = {
     return item.quantidade;
   },
 
-  // Remove do carrinho apenas os produtos informados (usado quando um
-  // pagamento é aprovado). Assim, itens adicionados ao carrinho depois do
-  // checkout não são apagados junto. Chamar de novo com os mesmos IDs é
-  // inofensivo (os itens já não estão lá).
   removerProdutos: async (userId, productIds) => {
     if (!userId || !productIds || productIds.length === 0) return;
     const alvo = new Set(productIds.filter(id => id != null).map(String));
@@ -149,7 +126,6 @@ const cartModel = {
     }
   },
 
-  // Remove um item do carrinho por índice
   removeByIndex: async (userId, index) => {
     try {
       const [rows] = await pool.query("SELECT idCarrinho, items FROM carrinho WHERE userId = ?", [userId]);

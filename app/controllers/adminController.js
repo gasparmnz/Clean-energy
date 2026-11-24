@@ -2,13 +2,10 @@ const pool = require('../../config/pool_conexoes');
 const produtosModel = require('../models/models.js');
 const { notificacoesModel } = require('../models/models.js');
 
-/* ── LOGIN DO ADMIN ─────────────────────────────────────────── */
-
 function getAdmLogin(req, res) {
   res.render('pages/adm-login');
 }
 
-// POST /adm-login
 function postAdmLogin(req, res) {
   const senhaInformada = String(req.body?.senha || '').trim();
   const senhaAdmin = String(process.env.ADMIN_SECRET || '123456').trim();
@@ -20,8 +17,6 @@ function postAdmLogin(req, res) {
 
   res.send('Senha incorreta');
 }
-
-/* ── DASHBOARD ──────────────────────────────────────────────── */
 
 async function getDashboard(req, res) {
   try {
@@ -37,9 +32,6 @@ async function getDashboard(req, res) {
     try {
       const [tables] = await pool.query("SHOW TABLES LIKE 'pedidos'");
       if (tables.length > 0) {
-        // totalValor/comissao consideram só pedidos com pagamento aprovado
-        // (em_transito ou concluido) — pendente/cancelado não são dinheiro
-        // que de fato entrou.
         const [[s]] = await pool.query(`
           SELECT
             COUNT(*) AS total,
@@ -79,8 +71,6 @@ async function getDashboard(req, res) {
     });
   }
 }
-
-/* ── USUÁRIOS ───────────────────────────────────────────────── */
 
 async function getUsuariosCadastrados(req, res) {
   try {
@@ -177,8 +167,6 @@ async function excluirUsuario(req, res) {
     res.status(500).json({ error: err.message || 'Erro interno' });
   }
 }
-
-/* ── DETALHES / EDIÇÃO DE USUÁRIO ──────────────────────────────*/
 
 async function getDetalhesUser(req, res) {
   try {
@@ -317,7 +305,6 @@ async function postEditarUsuario(req, res) {
       });
     }
 
-    // Impede e-mail duplicado em outro usuário
     const [existente] = await pool.query(
       'SELECT Usuario_ID FROM Usuario WHERE Email = ? AND Usuario_ID != ?',
       [email.trim(), userId]
@@ -387,9 +374,6 @@ async function postEditarUsuario(req, res) {
   }
 }
 
-/* ── PRODUTOS (ADMIN) ───────────────────────────────────────── */
-
-
 async function getProdutosAdm(req, res) {
   try {
     const [rows] = await pool.query(
@@ -450,9 +434,6 @@ async function editarProdutoAdm(req, res) {
     const { id, name, description, price, stock } = req.body;
     if (!id) return res.status(400).json({ error: 'ID obrigatório' });
     const numericId = String(id).replace(/^PROD-/i, '');
-    // produtosModel.update agora grava todos os campos enviados; o painel
-    // admin só envia nome e estoque, então preço/descrição só entram quando
-    // vierem de fato (antes, `parseFloat(undefined) || 0` passaria 0).
     const dados = { nome: name, quantidade: parseInt(stock) || 0 };
     if (description !== undefined) dados.descricao = description;
     if (price !== undefined && price !== '') dados.preco = parseFloat(price) || 0;
@@ -463,8 +444,6 @@ async function editarProdutoAdm(req, res) {
     res.status(500).json({ error: 'Erro interno ao editar produto' });
   }
 }
-
-/* ── AVALIAÇÕES (ADMIN) ─────────────────────────────────────── */
 
 async function reativarAvaliacao(req, res) {
   try {

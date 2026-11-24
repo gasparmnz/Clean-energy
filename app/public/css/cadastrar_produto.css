@@ -5,20 +5,17 @@
 }
 
 :root {
-  /* Cores principais */
   --primary-color: #488D6A;
   --primary-hover: #3a7159;
   --primary-light: #e8f5e8;
   --secondary-color: #1d3557;
   --accent-color: #f4c430;
   
-  /* Cores de status */
   --success-color: #22c55e;
   --error-color: #ef4444;
   --warning-color: #f59e0b;
   --info-color: #3b82f6;
   
-  /* Cores neutras */
   --text-primary: #1a1a1a;
   --text-secondary: #666666;
   --text-light: #888888;
@@ -30,7 +27,6 @@
   --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
   --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.2);
   
-  /* Tipografia */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
@@ -41,7 +37,6 @@
   --font-size-3xl: 1.875rem;
   --font-size-4xl: 2.25rem;
   
-  /* Espaçamentos */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
@@ -50,14 +45,12 @@
   --spacing-2xl: 3rem;
   --spacing-3xl: 4rem;
   
-  /* Bordas */
   --border-radius-sm: 0.375rem;
   --border-radius-md: 0.5rem;
   --border-radius-lg: 0.75rem;
   --border-radius-xl: 1rem;
   --border-radius-full: 9999px;
   
-  /* Transições */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
@@ -74,7 +67,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Utilitários */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -87,7 +79,6 @@ body {
   border: 0;
 }
 
-/* Layout principal */
 .product-main {
   max-width: 900px;
   margin: 0 auto;
@@ -98,7 +89,6 @@ body {
   gap: var(--spacing-2xl);
 }
 
-/* Cabeçalho da página */
 .page-header {
   text-align: center;
   margin-bottom: var(--spacing-xl);
@@ -130,7 +120,6 @@ body {
   margin: 0 auto;
 }
 
-/* Formulário */
 .product-form {
   background: var(--background);
   border-radius: var(--border-radius-xl);
@@ -140,7 +129,6 @@ body {
   animation: fadeInUp 0.6s ease-out;
 }
 
-/* Seções do formulário */
 .form-section {
   padding: var(--spacing-2xl);
   border-bottom: 1px solid var(--border-color);
@@ -177,7 +165,6 @@ body {
   font-weight: 400;
 }
 
-/* Fieldsets */
 .form-fieldset {
   border: none;
   padding: 0;
@@ -187,7 +174,6 @@ body {
   gap: var(--spacing-xl);
 }
 
-/* Grupos de input */
 .input-group {
   display: flex;
   flex-direction: column;
@@ -202,7 +188,6 @@ body {
 .input-group:nth-child(4) { animation-delay: 0.4s; }
 .input-group:nth-child(5) { animation-delay: 0.5s; }
 
-/* Labels */
 .input-label {
   display: flex;
   align-items: center;
@@ -228,14 +213,12 @@ body {
   font-size: var(--font-size-xs);
 }
 
-/* Wrapper dos inputs */
 .input-wrapper {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-/* Inputs base */
 .form-input,
 .form-textarea,
 .form-select {
@@ -270,21 +253,18 @@ body {
   color: var(--text-light);
 }
 
-/* Textarea específico */
 .form-textarea {
   resize: vertical;
   min-height: 120px;
   line-height: 1.5;
 }
 
-/* Select específico */
 .form-select {
   cursor: pointer;
   appearance: none;
   background-image: none;
 }
 
-/* Ícones dos inputs */
 .input-icon {
   position: absolute;
   left: var(--spacing-md);
@@ -312,7 +292,6 @@ body {
   color: var(--primary-color);
 }
 
-/* Contador de caracteres */
 .char-counter {
   position: absolute;
   bottom: var(--spacing-sm);
@@ -325,7 +304,6 @@ body {
   pointer-events: none;
 }
 
-/* Upload de arquivo */
 .file-upload-wrapper {
   position: relative;
 }
@@ -374,7 +352,6 @@ body {
   color: var(--text-secondary);
 }
 
-/* Preview da imagem */
 .file-preview {
   position: relative;
   display: flex;
@@ -415,7 +392,6 @@ body {
   transform: scale(1.1);
 }
 
-/* Grids */
 .input-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -428,11 +404,6 @@ body {
   gap: var(--spacing-xl);
 }
 
-/* O HTML tem uma <section class="address-grid"> aninhada dentro de outra
-   (mesma classe duas vezes). A grid de fora só tem esse único filho, então
-   ele ocupava só a 1ª coluna e a 2ª ficava vazia (o espaço em branco à
-   direita). Forçando a grid interna a ocupar as duas colunas da externa,
-   ela passa a usar 100% da largura disponível. */
 .address-grid > .address-grid {
   grid-column: 1 / -1;
 }
@@ -441,14 +412,10 @@ body {
   grid-column: 1 / -1;
 }
 
-/* Faz um campo ocupar a linha inteira do grid de 2 colunas (usado no campo
-   Estado, para não sobrar espaço em branco quando ele fica sozinho na
-   última linha do endereço) */
 .span-full {
   grid-column: 1 / -1;
 }
 
-/* Checkbox "Este endereço não possui número" */
 .checkbox-group {
   display: flex;
   align-items: center;
@@ -467,14 +434,12 @@ body {
   cursor: pointer;
 }
 
-/* Mensagens de ajuda */
 .input-help {
   font-size: var(--font-size-xs);
   color: var(--text-light);
   font-weight: 400;
 }
 
-/* Mensagens de erro e sucesso */
 .error-message,
 .success-message {
   display: none;
@@ -504,7 +469,6 @@ body {
   font-size: var(--font-size-base);
 }
 
-/* Estados de validação */
 .input-group.valid .form-input,
 .input-group.valid .form-textarea,
 .input-group.valid .form-select {
@@ -519,7 +483,6 @@ body {
   background: rgba(239, 68, 68, 0.05);
 }
 
-/* Ações do formulário */
 .form-actions {
   padding: var(--spacing-2xl);
   background: var(--background-light);
@@ -529,7 +492,6 @@ body {
   align-items: center;
 }
 
-/* Botões */
 .submit-btn,
 .cancel-btn {
   display: flex;

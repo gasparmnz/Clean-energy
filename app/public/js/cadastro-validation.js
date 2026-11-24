@@ -7,7 +7,6 @@ class FormValidator {
     };
     
     this.validators = {
-      // Validadores para Pessoa Física
       pessoaFisica: {
         nome: this.validateName,
         cpf: this.validateCPF,
@@ -15,7 +14,6 @@ class FormValidator {
         senha: this.validatePassword,
         confirmarSenha: this.validateConfirmPassword
       },
-      // Validadores para Empresa
       empresa: {
         nome: this.validateCompanyName,
         cnpj: this.validateCNPJ,
@@ -38,21 +36,12 @@ class FormValidator {
   }
 
   start() {
-    // IMPORTANTE: as mensagens vindas do backend precisam ser preservadas.
-    // Antes, clearBackendErrors() apagava todas elas assim que a página
-    // carregava, então quando o servidor rejeitava o cadastro (ex.: e-mail
-    // já cadastrado, senha fora da regra) o usuário via a página recarregar
-    // sem nenhuma explicação — e o CSS (.error-message { display: none })
-    // escondia o que sobrava. Agora elas são exibidas e só somem quando o
-    // usuário altera o campo correspondente.
     this.showBackendErrors();
     this.setupEventListeners();
     this.setupPasswordToggles();
     this.setupFormSubmission();
     this.initPasswordRequirements();
 
-    // Se o usuário voltar para esta página pelo botão "voltar" do
-    // navegador, o botão não pode ficar preso no estado de carregamento.
     window.addEventListener('pageshow', () => {
       document.querySelectorAll('.submit-btn.loading').forEach(btn => {
         btn.classList.remove('loading');
@@ -61,10 +50,6 @@ class FormValidator {
     });
   }
 
-  // Exibe as mensagens de erro renderizadas pelo servidor e guarda, no
-  // próprio input, o valor que foi rejeitado. Enquanto o valor não mudar,
-  // o erro do backend continua valendo (ex.: "Este e-mail já está
-  // cadastrado!" — o formato do e-mail é válido, mas o servidor recusou).
   showBackendErrors() {
     Object.keys(this.forms).forEach(formType => {
       const form = this.forms[formType];
@@ -86,11 +71,9 @@ class FormValidator {
     });
   }
 
-  // Erro do backend ainda válido para este input (valor não foi alterado)?
   getBackendError(input) {
     if (input.dataset.backendError === undefined) return null;
     if (input.value === input.dataset.backendValue) return input.dataset.backendError;
-    // O usuário mudou o valor: o erro antigo do servidor deixa de valer.
     delete input.dataset.backendError;
     delete input.dataset.backendValue;
     return null;
@@ -103,17 +86,14 @@ class FormValidator {
 
       const inputs = form.querySelectorAll('.form-input');
       inputs.forEach(input => {
-        // Validação em tempo real
         input.addEventListener('blur', (e) => {
           this.validateField(formType, e.target);
         });
 
-        // Validação durante a digitação
         input.addEventListener('input', this.debounce((e) => {
           this.validateField(formType, e.target);
         }, 300));
 
-         // indicador de força da senha + lista de requisitos
         if (input.name === 'senha') {
           input.addEventListener('focus', (e) => {
             this.showPasswordStrength(e.target);
@@ -121,11 +101,8 @@ class FormValidator {
           
           input.addEventListener('input', (e) => {
             this.updatePasswordStrength(e.target);
-            // Sem debounce: cada requisito é marcado assim que é atendido.
             this.updatePasswordRequirements(e.target);
 
-            // Se a confirmação já foi preenchida, revalida (as senhas
-            // podem ter passado a coincidir ou deixado de coincidir).
             const confirmar = form.querySelector('input[name="confirmarSenha"]');
             if (confirmar && confirmar.value) {
               this.validateField(formType, confirmar);
@@ -133,7 +110,6 @@ class FormValidator {
           });
         }
 
-        // Formatação para CPF e CNPJ
         if (input.name === 'cpf') {
           input.addEventListener('input', (e) => {
             this.formatCPF(e.target);
@@ -168,9 +144,6 @@ class FormValidator {
         const valido = this.validateAllFields(formType);
 
         if (!valido) {
-          // Formulário inválido: NÃO envia, NÃO recarrega a página e NÃO
-          // entra em estado de carregamento. Os erros já foram exibidos em
-          // cada campo por validateAllFields; levamos o usuário ao primeiro.
           e.preventDefault();
           this.hideLoadingState(form);
           this.focusFirstInvalid(form);
@@ -190,8 +163,6 @@ class FormValidator {
 
     let result = validator.call(this, input.value, formType, input);
 
-    // Passou na validação do navegador, mas o servidor já recusou este
-    // mesmo valor: mantém a mensagem do servidor.
     if (result.isValid) {
       const erroBackend = this.getBackendError(input);
       if (erroBackend) {
@@ -263,8 +234,6 @@ class FormValidator {
     const submitButton = form.querySelector('.submit-btn');
     if (submitButton) {
       submitButton.classList.add('loading');
-      // Evita duplo envio. (Desabilitar dentro do evento submit não cancela
-      // o envio que já está em andamento.)
       submitButton.disabled = true;
     }
   }
@@ -276,7 +245,6 @@ class FormValidator {
       submitButton.disabled = false;
     }
   }
-  // Validações específicas
   validateName(value) {
     if (!value || value.trim().length < 2) {
       return {
@@ -328,7 +296,6 @@ class FormValidator {
       };
     }
 
-    // Remove formatação
     const cpf = value.replace(/\D/g, '');
 
     if (cpf.length !== 11) {
@@ -338,7 +305,6 @@ class FormValidator {
       };
     }
 
-    // Verifica se todos os dígitos são iguais
     if (/^(\d)\1{10}$/.test(cpf)) {
       return {
         isValid: false,
@@ -346,7 +312,6 @@ class FormValidator {
       };
     }
 
-    // Validação do algoritmo do CPF
     if (!this.isValidCPF(cpf)) {
       return {
         isValid: false,
@@ -365,7 +330,6 @@ class FormValidator {
       };
     }
 
-    // Remove formatação
     const cnpj = value.replace(/\D/g, '');
 
     if (cnpj.length !== 14) {
@@ -375,7 +339,6 @@ class FormValidator {
       };
     }
 
-    // Verifica se todos os dígitos são iguais
     if (/^(\d)\1{13}$/.test(cnpj)) {
       return {
         isValid: false,
@@ -383,7 +346,6 @@ class FormValidator {
       };
     }
 
-    // Validação do algoritmo do CNPJ
     if (!this.isValidCNPJ(cnpj)) {
       return {
         isValid: false,
@@ -421,16 +383,11 @@ class FormValidator {
   }
 
   validatePassword(value, formType, input) {
-    // Mesmas regras do backend (authController usa o mesmo arquivo:
-    // app/public/js/senha-regras.js). Antes faltava a checagem de
-    // caractere especial aqui, então "Clean123" passava no navegador e era
-    // recusada pelo servidor.
     if (window.SenhaRegras) {
       const mensagem = window.SenhaRegras.mensagemErro(value || '');
       return { isValid: !mensagem, message: mensagem };
     }
 
-    // Fallback (caso /js/senha-regras.js não carregue): mesmas regras.
     if (!value) return { isValid: false, message: 'Senha é obrigatória' };
     if (value.length > 128) return { isValid: false, message: 'Senha muito longa (máximo 128 caracteres)' };
     const faltando = [];
@@ -443,7 +400,6 @@ class FormValidator {
     return { isValid: true, message: '' };
   }
 
-  // Lista "✓ / ✗" de requisitos abaixo do campo de senha.
   initPasswordRequirements() {
     document.querySelectorAll('input[name="senha"]').forEach(input => {
       if (input.value) this.updatePasswordRequirements(input);
@@ -489,7 +445,6 @@ class FormValidator {
     return { isValid: true, message: '' };
   }
 
-  // Utilitários
   isValidCPF(cpf) {
     let sum = 0;
     let remainder;
@@ -573,7 +528,6 @@ class FormValidator {
     const password = input.value;
     const strength = this.calculatePasswordStrength(password);
 
-    // Remove classes anteriores
     strengthFill.className = 'strength-fill';
     
     switch (strength.level) {

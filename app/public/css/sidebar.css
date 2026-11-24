@@ -89,10 +89,6 @@
 }
 
 @media (max-width: 768px) {
-  /* A navegação global (Início/Carrinho/Perfil) já fica fixa no rodapé
-     em todas as páginas — aqui o menu vira uma faixa rolável no topo
-     do conteúdo, em vez de outra barra fixa (evita duas navegações
-     sobrepostas no rodapé). */
   .sidebar {
     position: static;
     width: 100%;

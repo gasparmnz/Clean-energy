@@ -14,7 +14,6 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/imagem/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/imagem/icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="/imagem/icon-512.png">
-  <!-- Estilo pontual para o checkbox "sem número" (não existia nenhuma classe de checkbox em cadastrar_produto.css) -->
   <style>
     .checkbox-group {
       display: flex;
@@ -32,8 +31,6 @@
       accent-color: var(--primary-color);
       cursor: pointer;
     }
-    /* Faz um campo ocupar a linha inteira do grid de 2 colunas do endereço,
-       evitando espaço em branco quando ele sobra sozinho numa linha. */
     .span-full {
       grid-column: 1 / -1;
     }
@@ -41,7 +38,6 @@
 </head>
 <body>
   <main class="product-main">
-    <!-- Cabeçalho da página -->
     <header class="page-header">
       <h1 class="page-title">
         <i class='bx bx-package'></i>
@@ -52,7 +48,6 @@
       </p>
     </header>
 
-    <!-- Formulário de cadastro -->
     <form 
         class="product-form" 
         method="POST" 
@@ -61,7 +56,6 @@
         novalidate
         aria-label="Formulário de cadastro de produto"
       >
-      <!-- Seção: Informações do Produto -->
       <section class="form-section">
         <header class="section-header">
           <h2 class="section-title">
@@ -74,7 +68,6 @@
         <fieldset class="form-fieldset">
           <legend class="sr-only">Informações básicas do produto</legend>
 
-          <!-- Nome do Produto -->
           <article class="input-group">
             <label for="nome" class="input-label">
               <i class='bx bx-tag'></i>
@@ -102,7 +95,6 @@
             </span>
           </article>
 
-          <!-- Descrição -->
           <article class="input-group">
             <label for="descricao" class="input-label">
               <i class='bx bx-text'></i>
@@ -129,9 +121,7 @@
             </span>
           </article>
 
-          <!-- Grid para Preço e Quantidade -->
           <section class="input-grid">
-            <!-- Preço -->
             <article class="input-group">
               <label for="preco" class="input-label">
                 <i class='bx bx-dollar-circle'></i>
@@ -159,7 +149,6 @@
               </span>
             </article>
 
-            <!-- Quantidade -->
             <article class="input-group">
               <label for="quantidade" class="input-label">
                 <i class='bx bx-package'></i>
@@ -188,7 +177,6 @@
             </article>
           </section>
 
-          <!-- Categoria -->
           <article class="input-group">
             <label for="categoria" class="input-label">
               <i class='bx bx-category'></i>
@@ -219,7 +207,6 @@
             </span>
           </article>
 
-          <!-- Upload de Imagem -->
           <article class="input-group">
             <label for="imagem" class="input-label">
               <i class='bx bx-image'></i>
@@ -258,7 +245,6 @@
         </fieldset>
       </section>
 
-      <!-- Seção: Endereço de Retirada -->
       <section class="form-section">
         <header class="section-header">
           <h2 class="section-title">
@@ -271,11 +257,9 @@
         <fieldset class="form-fieldset">
           <legend class="sr-only">Endereço para retirada do produto</legend>
 
-          <!-- Grid de Endereço -->
           <section class="address-grid">
             <section class="address-grid">
 
-  <!-- CEP -->
   <article class="input-group">
     <label for="cep" class="input-label">
       <i class='bx bx-map-pin'></i>
@@ -311,7 +295,6 @@
     </span>
   </article>
 
-  <!-- Cidade -->
   <article class="input-group">
     <label for="cidade" class="input-label">
       <i class='bx bx-buildings'></i>
@@ -346,7 +329,6 @@
     </span>
   </article>
 
-  <!-- Bairro -->
   <article class="input-group">
     <label for="bairro" class="input-label">
       <i class='bx bx-home'></i>
@@ -381,7 +363,6 @@
     </span>
   </article>
 
-  <!-- Rua -->
   <article class="input-group">
     <label for="rua" class="input-label">
       <i class='bx bx-street-view'></i>
@@ -416,7 +397,6 @@
     </span>
   </article>
 
-  <!-- Número -->
   <article class="input-group">
     <label for="numero" class="input-label">
       <i class='bx bx-hash'></i>
@@ -438,7 +418,6 @@
       <i class='bx bx-hash input-icon'></i>
     </section>
 
-    <!-- NOVO: opção para endereço sem número -->
     <label class="checkbox-group" for="sem-numero">
       <input type="checkbox" id="sem-numero" name="sem_numero" />
       <span>Este endereço não possui número</span>
@@ -456,7 +435,6 @@
     </span>
   </article>
 
-  <!-- Complemento -->
   <article class="input-group">
     <label for="complemento" class="input-label">
       <i class='bx bx-detail'></i>
@@ -482,7 +460,6 @@
     </small>
   </article>
 
-  <!-- Estado -->
   <article class="input-group span-full">
     <label for="estado" class="input-label">
       <i class='bx bx-map-pin'></i>
@@ -547,7 +524,6 @@
         </fieldset>
       </section>
 
-      <!-- Ações do Formulário -->
       <footer class="form-actions">
         <button type="submit" class="submit-btn">
           <i class='bx bx-check'></i>
@@ -570,7 +546,6 @@
     const estadoInput = document.getElementById('estado');
     const cepError = document.getElementById('cep-error');
 
-    // Formata o CEP enquanto o usuário digita
     cepInput.addEventListener('input', function () {
         let cep = this.value.replace(/\D/g, '');
 
@@ -580,19 +555,16 @@
 
         this.value = cep;
 
-        // Limpa os campos enquanto o CEP ainda está sendo digitado
         if (cep.replace(/\D/g, '').length < 8) {
             limparEndereco();
         }
     });
 
-    // Consulta o CEP quando o usuário termina de digitar
     cepInput.addEventListener('blur', consultarCep);
 
     async function consultarCep() {
         const cep = cepInput.value.replace(/\D/g, '');
 
-        // CEP incompleto
         if (cep.length !== 8) {
             limparEndereco();
 
@@ -614,26 +586,20 @@
 
             const dados = await resposta.json();
 
-            // CEP não encontrado
             if (dados.erro) {
                 limparEndereco();
                 mostrarErroCep('CEP não encontrado.');
                 return;
             }
 
-            // Preenche os campos automaticamente
             ruaInput.value = dados.logradouro || '';
             bairroInput.value = dados.bairro || '';
             cidadeInput.value = dados.localidade || '';
 
-            // Seleciona o estado correspondente
             selecionarEstado(dados.uf);
 
             limparErroCep();
 
-            // NOVO: dispara a validação já existente (produto-validation.js) para os
-            // campos que acabaram de ser preenchidos automaticamente, sem esperar
-            // o usuário clicar/interagir com cada um deles.
             if (typeof productValidator !== 'undefined' && productValidator) {
                 ['rua', 'bairro', 'cidade', 'estado'].forEach(function (campo) {
                     productValidator.validateField(campo);
@@ -699,7 +665,6 @@
         cepInput.classList.remove('input-error');
     }
 
-    // NOVO: checkbox "Este endereço não possui número"
     const numeroInput = document.getElementById('numero');
     const semNumeroCheckbox = document.getElementById('sem-numero');
     const numeroRequiredIndicator = document.getElementById('numero-required-indicator');
@@ -712,11 +677,6 @@
                 numeroInput.required = false;
                 if (numeroRequiredIndicator) numeroRequiredIndicator.style.display = 'none';
 
-                // "S/N" é um valor que a própria página está definindo (não foi
-                // digitado pelo usuário), então marcamos o campo como válido
-                // direto pela função de UI que o produto-validation.js já usa
-                // para pintar os campos de verde/vermelho — sem depender do
-                // regex de texto livre, que é pensado para números digitados.
                 if (typeof productValidator !== 'undefined' && productValidator) {
                     productValidator.updateFieldUI(numeroInput, { isValid: true, message: '' });
                 }
@@ -729,8 +689,6 @@
                 if (numeroRequiredIndicator) numeroRequiredIndicator.style.display = '';
                 numeroInput.focus();
 
-                // Aqui sim é texto livre (ou vazio) de novo, então volta a usar
-                // a validação normal já existente.
                 if (typeof productValidator !== 'undefined' && productValidator) {
                     productValidator.validateField('numero');
                 }

@@ -21,11 +21,9 @@
     <% const activePage = 'produtos'; %>
     <%- include('../partial/sidebar_perfil.ejs') %>
 
-    <!-- Conteúdo -->
     <main class="perfil-layout__content">
     <section class="content" style="padding:0;">
       
-      <!-- Botão voltar -->
       <nav class="back-navigation" aria-label="Navegação de retorno">
     <button class="back-button" onclick="history.back()" aria-label="Voltar à página anterior">
       <i class='bx bx-arrow-back'></i>
@@ -33,13 +31,11 @@
     </button>
   </nav>
 
-      <!-- Botão novo produto -->
       <a href="/cadastrar_produto" class="btn-novo-produto">
         <i class='bx bx-plus'></i>
         Novo Produto
       </a>
 
-      <!-- Lista de produtos -->
       <section class="produtos-grid">
         <% if (produtos && produtos.length > 0) { %>
           <% produtos.forEach(produto => { %>
@@ -73,14 +69,8 @@
     </main>
   </nav>
 
-  <%# listaprodutos.js era incluído aqui E no fim da página. Aqui ele rodava
-      antes do Bootstrap e dos modais existirem ("bootstrap is not defined"),
-      e a segunda inclusão falhava por redeclarar variáveis ("Identifier
-      'cardParaExcluir' has already been declared") — então o Editar nunca
-      funcionava. Agora ele é incluído uma única vez, depois do Bootstrap. %>
   <script src="/js/produto-delete.js"></script>
 
-  <!-- Modal de Edição -->
   <section class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
     <section class="modal-dialog modal-dialog-centered">
       <section class="modal-content">

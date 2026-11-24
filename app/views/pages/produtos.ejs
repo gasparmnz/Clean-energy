@@ -29,16 +29,12 @@
 <body>
   <%- include('../partial/header.ejs') %>
 
-  <!-- ══ HERO CARROSSEL ══ -->
   <section class="hero-section" aria-label="Destaques do marketplace">
 
-    <!-- Carrossel principal -->
     <section class="carrossel-wrapper" aria-label="Banners promocionais">
 
-      <!-- Track -->
       <div class="carrossel-track" role="list">
 
-        <!-- SLIDE 1: Biomassa Florestal -->
         <article class="carrossel-slide" role="listitem">
           <figure>
             <img
@@ -58,7 +54,6 @@
           </figure>
         </article>
 
-        <!-- SLIDE 2: Bagaço de Cana -->
         <article class="carrossel-slide" role="listitem">
           <figure>
             <img
@@ -78,7 +73,6 @@
           </figure>
         </article>
 
-        <!-- SLIDE 3: Pellets -->
         <article class="carrossel-slide" role="listitem">
           <figure>
             <img
@@ -98,7 +92,6 @@
           </figure>
         </article>
 
-        <!-- SLIDE 4: Palha e Resíduos -->
         <article class="carrossel-slide" role="listitem">
           <figure>
             <img
@@ -118,7 +111,6 @@
           </figure>
         </article>
 
-        <!-- SLIDE 5: Sustentabilidade -->
         <article class="carrossel-slide" role="listitem">
           <figure>
             <img
@@ -138,9 +130,8 @@
           </figure>
         </article>
 
-      </div><!-- /carrossel-track -->
+      </div>
 
-      <!-- Setas -->
       <button class="carrossel-btn carrossel-btn-prev" aria-label="Slide anterior">
         <i class='bx bx-chevron-left'></i>
       </button>
@@ -148,9 +139,8 @@
         <i class='bx bx-chevron-right'></i>
       </button>
 
-    </section><!-- /carrossel-wrapper -->
+    </section>
 
-    <!-- Dots -->
     <ul class="carrossel-dots" role="tablist" aria-label="Navegação do carrossel">
       <li><button class="carrossel-dot ativo" role="tab" aria-label="Slide 1"></button></li>
       <li><button class="carrossel-dot" role="tab" aria-label="Slide 2"></button></li>
@@ -160,18 +150,15 @@
     </ul>
 
   </section>
-  <!-- /hero-section -->
 
   <main>
 
     <% if (typeof filtros !== 'undefined' && typeof usuario === 'undefined' || !usuario) { %>
     <% } %>
 
-    <!-- Filtro funcional via GET -->
     <section class="filtro-container">
       <form class="filtro-box" method="GET" action="/">
 
-        <!-- Barra de busca com nome "Buscar produtos" -->
         <div class="filtro-topo">
           <i class='bx bx-search'></i>
           <input
@@ -182,7 +169,6 @@
           />
         </div>
 
-        <!-- Filtros -->
         <div class="filtro-linha">
           <select name="estado">
             <option value="">Todos os estados</option>

@@ -1,4 +1,3 @@
-// ── Utilitários de conversão (o navegador trabalha com ArrayBuffer, a API com base64url) ──
 function bufferParaBase64url(buffer) {
   const bytes = new Uint8Array(buffer);
   let str = '';
@@ -15,7 +14,6 @@ function base64urlParaBuffer(base64url) {
   return buffer.buffer;
 }
 
-// ── Cadastro de biometria/Face ID neste dispositivo (chamado a partir da tela de Perfil) ──
 async function cadastrarBiometria() {
   if (!window.PublicKeyCredential) {
     alert('Este navegador/dispositivo não suporta biometria ou Face ID.');
@@ -70,7 +68,6 @@ async function cadastrarBiometria() {
   }
 }
 
-// ── Login com biometria/Face ID (chamado a partir da tela de Login) ──
 async function loginComBiometria(email) {
   if (!window.PublicKeyCredential) {
     alert('Este navegador/dispositivo não suporta biometria ou Face ID.');

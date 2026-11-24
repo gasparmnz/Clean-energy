@@ -1,22 +1,15 @@
-/**
- * pwa.js — registro do Service Worker e controle do prompt de instalação (A2HS).
- * Incluído em todas as páginas do site.
- */
 (function () {
   'use strict';
 
-  // ── Registro do Service Worker ──────────────────────────────────
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
       navigator.serviceWorker.register('/sw.js')
         .then(function (registration) {
-          // Verifica periodicamente se há uma nova versão do SW.
           registration.addEventListener('updatefound', function () {
             var novoWorker = registration.installing;
             if (!novoWorker) return;
             novoWorker.addEventListener('statechange', function () {
               if (novoWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // Uma nova versão foi instalada e está pronta para assumir.
                 console.log('[PWA] Nova versão disponível. Ela será usada no próximo carregamento.');
               }
             });
@@ -28,7 +21,6 @@
     });
   }
 
-  // ── Aviso de status de conexão ───────────────────────────────────
   function atualizarStatusConexao() {
     document.body.classList.toggle('app-offline', !navigator.onLine);
   }
@@ -73,7 +65,6 @@
     removerBotaoInstalacao();
   });
 
-  // ── Prompt de instalação (Adicionar à tela inicial) ─────────────
   var isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.matchMedia('(max-width: 768px)').matches;
 
   if (isMobile) {

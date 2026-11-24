@@ -1,16 +1,11 @@
 const produtosModel = require('../models/models.js');
 const cartModel = require('../models/cartModel');
 
-// GET /carrinho
 async function getCarrinho(req, res) {
   try {
     const userId = req.session.userId || req.sessionID;
     const cart = await cartModel.getCartByUser(userId);
-    // Estoque atual de cada produto (produtos.quantidade), cadastrado pelo
-    // vendedor — é o "Disponível" da tela e o limite do botão "+".
     const estoques = await cartModel.estoquePorProduto(cart.map(item => item.productId));
-    // A tela mostra a quantidade REAL gravada no banco, normalizada da mesma
-    // forma que o checkout (pagamentoController.criarPagamento).
     const itens = cart.map(item => {
       const info = estoques.get(String(item.productId)) || { estoque: null, limite: 1 };
       return {
@@ -26,7 +21,6 @@ async function getCarrinho(req, res) {
   }
 }
 
-// POST /cart/add
 async function addToCart(req, res) {
   try {
     const { productId, quantidade } = req.body;
@@ -44,9 +38,6 @@ async function addToCart(req, res) {
   }
 }
 
-// POST /cart/quantidade — { productId, quantidade } (JSON)
-// Persiste a quantidade escolhida nos botões + e − do carrinho e devolve o
-// valor gravado, que a tela passa a exibir.
 async function updateQuantity(req, res) {
   try {
     const { productId } = req.body || {};
@@ -55,7 +46,6 @@ async function updateQuantity(req, res) {
       return res.status(400).json({ sucesso: false, erro: 'Quantidade inválida.' });
     }
 
-    // Limite = estoque atual do produto cadastrado pelo vendedor.
     const produto = await produtosModel.findById(productId);
     if (!produto) {
       return res.status(404).json({ sucesso: false, erro: 'Produto não encontrado.' });
@@ -77,7 +67,6 @@ async function updateQuantity(req, res) {
   }
 }
 
-// POST /cart/remove
 async function removeFromCart(req, res) {
   try {
     const userId = req.session.userId || req.sessionID;

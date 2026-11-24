@@ -6,7 +6,6 @@ const cartModel = require('../models/cartModel');
 
 const router = express.Router();
 
-// Multer config
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, '..', 'public', 'imagem'));
@@ -19,12 +18,10 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Página de cadastro
 router.get('/cadastrar_produto', (req, res) => {
   res.render('pages/cadastrar_produto');
 });
 
-// Processa cadastro
 router.post('/cadastrar_produto', upload.single('imagem'), async (req, res) => {
   try {
     const body = req.body;
@@ -46,7 +43,7 @@ router.post('/cadastrar_produto', upload.single('imagem'), async (req, res) => {
       categoria: body.categoria,
       local,
       imagem: req.file ? `/imagem/${req.file.filename}` : null,
-      estado: body.estado || null   // estado = UF (SP, RJ...)
+      estado: body.estado || null
     };
 
     await produtosModel.create(produto);
@@ -57,7 +54,6 @@ router.post('/cadastrar_produto', upload.single('imagem'), async (req, res) => {
   }
 });
 
-// Lista produtos para clientes
 router.get('/produtos', async (req, res) => {
   try {
     const produtos = await produtosModel.findAll({ apenasAtivos: true });
@@ -68,7 +64,6 @@ router.get('/produtos', async (req, res) => {
   }
 });
 
-// Detalhe do item
 router.get('/item/:id', async (req, res) => {
   try {
     const produto = await produtosModel.findById(req.params.id);
@@ -81,7 +76,6 @@ router.get('/item/:id', async (req, res) => {
   }
 });
 
-// Carrinho
 router.post('/cart/add', async (req, res) => {
   try {
     const { productId, quantidade } = req.body;

@@ -186,7 +186,6 @@ body {
 
 .section-header .badge.danger { background: var(--danger); }
 
-/* LAYOUT DESKTOP (mantém o grid) */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -351,9 +350,7 @@ img{
   cursor: pointer;
 }
 
-/* TABLET (768px - 1024px) - CARROSSEL */
 @media (max-width: 1024px) {
-    /* Ajustes gerais para tablet */
     .admin-main {
         padding: 20px;
     }
@@ -486,7 +483,6 @@ img{
 }
 
 @media (max-width: 768px) {
-    /* Ajustes para mobile */
     .admin-main {
         padding: 16px;
     }

@@ -1,4 +1,3 @@
-/* ══ CARROSSEL AUTOMÁTICO ══ */
 (function () {
   const track  = document.querySelector('.carrossel-track');
   const slides  = document.querySelectorAll('.carrossel-slide');
@@ -11,7 +10,7 @@
   let atual = 0;
   let timer;
   const total = slides.length;
-  const INTERVALO = 5500; // ms
+  const INTERVALO = 5500;
 
   function irPara(idx) {
     atual = (idx + total) % total;
@@ -34,7 +33,6 @@
     d.addEventListener('click', () => { irPara(i); iniciarTimer(); });
   });
 
-  // Swipe touch
   let touchX = 0;
   track.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
   track.addEventListener('touchend', e => {
@@ -42,7 +40,6 @@
     if (Math.abs(diff) > 40) { diff > 0 ? avancar() : voltar(); iniciarTimer(); }
   });
 
-  // Pausa ao hover
   track.addEventListener('mouseenter', () => clearInterval(timer));
   track.addEventListener('mouseleave', iniciarTimer);
 

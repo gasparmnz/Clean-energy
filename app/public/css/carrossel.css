@@ -1,8 +1,3 @@
-/* ══════════════════════════════════════════════════
-   CARROSSEL HERO — estilo Mercado Livre / Clean Energy
-   ══════════════════════════════════════════════════ */
-
-/* ── Seção hero completa ── */
 .hero-section {
   width: 100%;
   background: #f5f7f5;
@@ -12,7 +7,6 @@
 
 body.dark-mode .hero-section { background: #121212; }
 
-/* ── Wrapper do carrossel ── */
 .carrossel-wrapper {
   position: relative;
   width: 100%;
@@ -21,14 +15,12 @@ body.dark-mode .hero-section { background: #121212; }
   box-shadow: 0 4px 24px rgba(0,0,0,.1);
 }
 
-/* ── Track (faixa que desliza) ── */
 .carrossel-track {
   display: flex;
   transition: transform .55s cubic-bezier(.4,0,.2,1);
   will-change: transform;
 }
 
-/* ── Cada slide ── */
 .carrossel-slide {
   flex: 0 0 100%;
   position: relative;
@@ -52,7 +44,6 @@ body.dark-mode .hero-section { background: #121212; }
 
 .carrossel-slide:hover figure img { transform: scale(1.03); }
 
-/* ── Overlay degradê ── */
 .carrossel-slide figure figcaption {
   position: absolute;
   inset: 0;
@@ -123,7 +114,6 @@ body.dark-mode .hero-section { background: #121212; }
   transform: translateY(-2px);
 }
 
-/* ── Setas de navegação ── */
 .carrossel-btn {
   position: absolute;
   top: 50%;
@@ -156,7 +146,6 @@ body.dark-mode .hero-section { background: #121212; }
 
 body.dark-mode .carrossel-btn { background: rgba(248, 248, 248, 0.9); color: #e5e7eb; }
 
-/* ── Dots de paginação ── */
 .carrossel-dots {
   display: flex;
   justify-content: center;
@@ -185,7 +174,6 @@ body.dark-mode .carrossel-btn { background: rgba(248, 248, 248, 0.9); color: #e5
 body.dark-mode .carrossel-dot { background: #374151; }
 body.dark-mode .carrossel-dot.ativo { background: #4ade80; }
 
-/* ── Barra de categorias (logo abaixo do carrossel, estilo ML) ── */
 .categorias-rapidas {
   max-width: 1400px;
   margin: 1.5rem auto 0;
@@ -250,7 +238,6 @@ body.dark-mode .categoria-pill:hover {
   color: #86efac;
 }
 
-/* ── Responsivo ── */
 @media (max-width: 1024px) {
   .carrossel-slide figure { height: 380px; }
   .carrossel-slide figure figcaption { padding: 2.5rem 3rem; }
@@ -288,7 +275,6 @@ body.dark-mode .categoria-pill:hover {
   .categoria-pill { font-size: .78rem; padding: .4rem .85rem; }
 }
 
-/* ── Ajuste: main abaixo do hero não precisa de margin-top grande ── */
 .hero-section + main {
   margin-top: 0 !important;
   padding-top: 1.5rem;

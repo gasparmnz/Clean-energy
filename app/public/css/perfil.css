@@ -118,7 +118,6 @@ body.dark-mode .perfil-edit-card__form input { background: #111; border-color: #
 .btn-cancelar:hover { background: #e5e7eb; }
 body.dark-mode .btn-cancelar { background: #2a2a2a; color: #d1d5db; border-color: #374151; }
 
-/* Cards Grid */
 .perfil-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -147,7 +146,6 @@ body.dark-mode .perfil-card { background: #1e1e1e; border-color: #2a2a2a; color:
 .perfil-card__body span { font-size: 0.75rem; color: var(--muted); display: block; }
 .perfil-card__arrow { color: #d1d5db; font-size: 1.2rem; flex-shrink: 0; }
 
-/* Seção configurações */
 .perfil-section {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 16px; padding: 1.5rem 2rem;
@@ -192,7 +190,6 @@ body.dark-mode .config-title { color: #e5e7eb; }
 .config-arrow { color: #d1d5db; font-size: 1.2rem; flex-shrink: 0; }
 body.dark-mode .config-arrow { color: #4b5563; }
 
-/* Toggle switch */
 .toggle-switch { position: relative; display: inline-flex; align-items: center; cursor: pointer; flex-shrink: 0; }
 .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
 .toggle-track { width: 46px; height: 26px; background: #d1d5db; border-radius: 999px; transition: background .25s; position: relative; }
@@ -259,7 +256,6 @@ body.dark-mode .edit-divider { border-top-color: #2a2a2a; }
   margin-bottom: .5rem;
 }
 
-/* ── Avatar com botão de câmera ── */
 .perfil-foto-wrap {
   position: relative;
   flex-shrink: 0;
@@ -312,7 +308,6 @@ body.dark-mode .btn-toggle-sub:hover { background: #374151; }
 
 body.dark-mode .foto-edit-btn { border-color: #1e1e1e; }
 
-/* ── Barra de ações da foto ─────────────────────────────── */
 .foto-actions {
   display: flex;
   gap: 6px;

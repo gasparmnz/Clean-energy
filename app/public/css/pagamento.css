@@ -1,9 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* ============================================
-   VARIÁVEIS
-   (compartilhado por pagamento-sucesso, -falha e -pendente)
-============================================ */
 :root {
     --pg-verde: #1b814e;
     --pg-verde-escuro: #14663d;
@@ -21,10 +17,6 @@
     --pg-sombra: 0 20px 45px -20px rgba(3, 46, 25, 0.35);
 }
 
-/* ============================================
-   RESET + LAYOUT DA PÁGINA
-   Footer sempre colado no fim da tela, sem bordas brancas
-============================================ */
 *,
 *::before,
 *::after {
@@ -43,8 +35,6 @@ body {
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    /* mesma cor da faixa de copyright: qualquer sobra abaixo do footer
-       (ex.: espaço reservado para a barra inferior no mobile) fica invisível */
     background-color: var(--pg-rodape);
     font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     color: var(--pg-texto);
@@ -56,9 +46,6 @@ footer {
     margin: 0;
 }
 
-/* ============================================
-   CONTEÚDO PRINCIPAL
-============================================ */
 .pagamento-container {
     flex: 1 0 auto;
     display: flex;
@@ -72,9 +59,6 @@ footer {
         var(--pg-fundo);
 }
 
-/* ============================================
-   CARD
-============================================ */
 .pagamento-card {
     width: 100%;
     max-width: 560px;
@@ -141,9 +125,6 @@ footer {
     font-size: 0.92rem !important;
 }
 
-/* ============================================
-   ÍCONES DE STATUS
-============================================ */
 .icone-sucesso {
     width: clamp(64px, 16vw, 84px);
     height: clamp(64px, 16vw, 84px);
@@ -169,7 +150,6 @@ footer {
     animation: pg-tracar 0.4s ease-out 0.85s forwards;
 }
 
-/* ícones das páginas de falha / pendente (cor definida pela variante do card) */
 .icone-status {
     width: clamp(64px, 16vw, 84px);
     height: clamp(64px, 16vw, 84px);
@@ -195,9 +175,6 @@ footer {
     animation: pg-tracar 0.4s ease-out 0.85s forwards;
 }
 
-/* ============================================
-   VARIANTES DO CARD (falha / pendente)
-============================================ */
 .pagamento-card--falha {
     --pg-destaque: var(--pg-erro);
     --pg-destaque-escuro: #a83232;
@@ -218,9 +195,6 @@ footer {
     background-color: var(--pg-destaque-suave);
 }
 
-/* ============================================
-   BOTÕES
-============================================ */
 .pagamento-card__acoes {
     display: flex;
     flex-wrap: wrap;
@@ -278,9 +252,6 @@ footer {
     color: #fff;
 }
 
-/* ============================================
-   ANIMAÇÕES
-============================================ */
 @keyframes pg-surgir {
     from {
         opacity: 0;
@@ -315,18 +286,12 @@ footer {
     }
 }
 
-/* ============================================
-   RESPONSIVIDADE
-============================================ */
-
-/* Telas grandes */
 @media (min-width: 1440px) {
     .pagamento-card {
         max-width: 620px;
     }
 }
 
-/* Celulares */
 @media (max-width: 480px) {
     .pagamento-card {
         border-radius: 16px;
@@ -343,7 +308,6 @@ footer {
     }
 }
 
-/* Celulares muito pequenos (ex.: 320px) */
 @media (max-width: 340px) {
     .pagamento-container {
         padding-left: 0.75rem;
@@ -356,7 +320,6 @@ footer {
     }
 }
 
-/* Telas baixas / celular deitado */
 @media (max-height: 520px) and (orientation: landscape) {
     .pagamento-container {
         align-items: flex-start;
@@ -368,9 +331,6 @@ footer {
     }
 }
 
-/* ============================================
-   MODO ESCURO (darkmode.css usa body.dark-mode)
-============================================ */
 body.dark-mode .pagamento-container {
     background: #121212;
 }

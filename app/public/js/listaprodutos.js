@@ -1,8 +1,6 @@
 let cardParaEditar = null;
 const editarModal = new bootstrap.Modal(document.getElementById('editarModal'));
 
-// Converte os valores crus do banco (ex.: "1500.00", "25.00") para o formato
-// que o modal e a validação usam ("1.500,00", "25").
 function formatarPrecoBR(valor) {
   const n = Number(valor);
   if (!Number.isFinite(n)) return '';
@@ -15,8 +13,6 @@ function formatarQuantidadeBR(valor) {
 }
 
 
-// Validação em Tempo Real
-
 const validationState = {
   nome: false,
   endereco: false,
@@ -24,7 +20,6 @@ const validationState = {
   quantidade: false
 };
 
-// Função para validar o campo Nome
 function validarNome(valor) {
   const errorElement = document.getElementById('errorNome');
   const inputElement = document.getElementById('editarNome');
@@ -56,7 +51,6 @@ function validarNome(valor) {
   return true;
 }
 
-// Endereco
 function validarEndereco(valor) {
   const errorElement = document.getElementById('errorEndereco');
   const inputElement = document.getElementById('editarEndereco');
@@ -87,7 +81,6 @@ function validarEndereco(valor) {
   return true;
 }
 
-// Preco
 function validarPreco(valor) {
   const errorElement = document.getElementById('errorPreco');
   const inputElement = document.getElementById('editarPreco');
@@ -123,7 +116,6 @@ function validarPreco(valor) {
   return true;
 }
 
-// Quantidade
 function validarQuantidade(valor) {
   const errorElement = document.getElementById('errorQuantidade');
   const inputElement = document.getElementById('editarQuantidade');
@@ -187,25 +179,21 @@ function verificarFormularioValido() {
 }
 
 
-// NOME
 document.getElementById('editarNome').addEventListener('input', function(e) {
   validationState.nome = validarNome(e.target.value);
   verificarFormularioValido();
 });
 
-//ENdereco
 document.getElementById('editarEndereco').addEventListener('input', function(e) {
   validationState.endereco = validarEndereco(e.target.value);
   verificarFormularioValido();
 });
 
-// Preco
 document.getElementById('editarPreco').addEventListener('input', function(e) {
   validationState.preco = validarPreco(e.target.value);
   verificarFormularioValido();
 });
 
-// QUAntidade
 document.getElementById('editarQuantidade').addEventListener('input', function(e) {
   validationState.quantidade = validarQuantidade(e.target.value);
   verificarFormularioValido();
@@ -233,20 +221,11 @@ document.getElementById('editarQuantidade').addEventListener('blur', function(e)
 });
 
 
-// Exclusão: continua sendo feita por /js/produto-delete.js (confirmação +
-// DELETE /produtos/:id). O antigo handler daqui só removia o card da tela,
-// sem apagar no banco, e nunca chegava a rodar (o script falhava ao
-// carregar); foi retirado para a exclusão continuar funcionando como hoje.
-
-
-// Funcionalidade de Edição
-
 document.querySelectorAll('.btn-warning').forEach(btn => {
   btn.addEventListener('click', function() {
     cardParaEditar = this.closest('.produto-card');
     esconderErroGeral();
 
-    // Valores reais do produto (data-* do card), no formato aceito pela validação.
     const nome = cardParaEditar.dataset.nome ?? cardParaEditar.querySelector('h3').textContent;
     const endereco = cardParaEditar.dataset.local ?? cardParaEditar.querySelector('.endereco').textContent;
     const preco = formatarPrecoBR(cardParaEditar.dataset.preco);
@@ -269,7 +248,6 @@ document.querySelectorAll('.btn-warning').forEach(btn => {
   });
 });
 
-// Mensagem de erro geral do modal (falha ao salvar no servidor).
 function mostrarErroGeral(mensagem) {
   let el = document.getElementById('erroSalvarProduto');
   if (!el) {
@@ -287,7 +265,6 @@ function esconderErroGeral() {
   if (el) { el.textContent = ''; el.style.display = 'none'; }
 }
 
-// Campos do backend -> input/erro do modal
 const CAMPOS_EDICAO = {
   nome: ['editarNome', 'errorNome'],
   local: ['editarEndereco', 'errorEndereco'],
@@ -295,9 +272,6 @@ const CAMPOS_EDICAO = {
   quantidade: ['editarQuantidade', 'errorQuantidade']
 };
 
-// Salvar alterações: envia ao backend (PUT /produtos/:id), que valida,
-// confere se o produto é do vendedor logado e grava no MySQL. O card só é
-// atualizado depois da resposta positiva, com os valores que o banco salvou.
 document.getElementById('salvarEdicaoBtn').addEventListener('click', async function() {
   if (!cardParaEditar) return;
 
@@ -342,7 +316,6 @@ document.getElementById('salvarEdicaoBtn').addEventListener('click', async funct
       throw new Error(dados.erro || 'Não foi possível salvar as alterações.');
     }
 
-    // Atualiza o card com o que foi realmente gravado no banco.
     const p = dados.produto;
     card.dataset.nome = p.nome;
     card.dataset.local = p.local || '';
@@ -357,7 +330,7 @@ document.getElementById('salvarEdicaoBtn').addEventListener('click', async funct
 
     editarModal.hide();
     if (typeof mostrarNotificacao === 'function') {
-      mostrarNotificacao('✓ Produto atualizado com sucesso!', 'success');
+      mostrarNotificacao('Produto atualizado com sucesso!', 'success');
     }
   } catch (erro) {
     mostrarErroGeral(erro.message);

@@ -1,11 +1,3 @@
-/**
- * Helper responsável por conversar com a API do Google Gemini para o
- * chatbot da página de Dúvidas.
- *
- * A chave da API (GEMINI_API_KEY) fica só aqui no servidor, lida do .env
- * via `process.env`. Ela nunca é enviada para o front-end.
- */
-
 const { GoogleGenAI } = require('@google/genai');
 const baseConhecimento = require('./duvidasBaseConhecimento');
 
@@ -22,10 +14,8 @@ if (apiKey) {
 const MENSAGEM_FORA_DE_CONTEXTO =
   'Desculpe, fui criado apenas para responder dúvidas sobre o funcionamento do site Clean Energy.';
 
-// Limite de caracteres para a pergunta do usuário (evita abuso/gasto excessivo de API)
 const LIMITE_PERGUNTA = 500;
 
-// Quantas mensagens anteriores (usuário + IA) mantemos como contexto da conversa
 const LIMITE_HISTORICO = 10;
 
 function montarPromptSistema() {
@@ -60,13 +50,6 @@ ${info}
 === FIM DAS INFORMAÇÕES ===`;
 }
 
-/**
- * Envia a pergunta do usuário para o Gemini e retorna a resposta em texto.
- *
- * @param {string} pergunta - Pergunta feita pelo usuário no chat.
- * @param {Array<{autor: 'usuario'|'ia', texto: string}>} historico - Mensagens anteriores da conversa (opcional).
- * @returns {Promise<string>} Resposta gerada pela IA.
- */
 async function responderDuvida(pergunta, historico = []) {
   if (!ai) {
     throw new Error('CHAVE_API_AUSENTE');
@@ -95,7 +78,6 @@ async function responderDuvida(pergunta, historico = []) {
       }
     });
   } catch (err) {
-    // Log detalhado no console do servidor para diagnóstico (nunca exposto ao front-end)
     const status = err.status || err.code || 'desconhecido';
     console.error(`[Chatbot Dúvidas] Falha na chamada à API do Gemini — status: ${status} — mensagem: ${err.message}`);
 

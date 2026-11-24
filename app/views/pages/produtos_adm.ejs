@@ -127,7 +127,6 @@
     </article>
   </dialog>
 
-  <!-- MODAL DE CONFIRMAÇÃO -->
 <section id="customModal" class="custom-modal">
   <section class="modal-content">
     <h3 id="modalTitle">Confirmação</h3>
@@ -140,10 +139,8 @@
   </section>
 </section>
 
-  <!-- JS separado -->
   <script id="admin-products-data" type="application/json"><%- JSON.stringify(produtos || []) %></script>
   <script>
-    // server-provided products (if route set them)
   window.__ADMIN_PRODUCTS__ = JSON.parse(document.getElementById('admin-products-data').textContent);
   </script>
   <script src="/js/produtos_adm.js"></script>

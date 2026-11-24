@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (!form || !mensagensEl) return;
 
-  // Guarda o histórico da conversa (usuário + IA) para dar contexto ao Gemini
   let historico = [];
   let aguardandoResposta = false;
 
@@ -56,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           pergunta,
-          historico: historico.slice(0, -1) // não reenvia a pergunta atual, ela já vai no campo "pergunta"
+          historico: historico.slice(0, -1)
         })
       });
 
@@ -86,7 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
     enviarPergunta(pergunta);
   });
 
-  // Enter envia; Shift+Enter quebra linha
   textarea.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -94,13 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Auto-resize do textarea conforme o usuário digita
   textarea.addEventListener('input', () => {
     textarea.style.height = 'auto';
     textarea.style.height = Math.min(textarea.scrollHeight, 110) + 'px';
   });
 
-  // Mensagem de boas-vindas ao carregar a página
   adicionarMensagem(
     'ia',
     'Olá! Sou o assistente virtual do Clean Energy. Posso ajudar com dúvidas sobre cadastro, login, perfil, compras, vendas, carrinho, pagamentos, entrega e navegação no site. Como posso ajudar?',

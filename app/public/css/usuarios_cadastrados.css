@@ -550,7 +550,6 @@
         font-size: 0.95rem;
     }
 
-    /* Cards de Resumo de Usuários */
     .summary-cards-users {
         grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
         gap: 15px; 
@@ -725,7 +724,6 @@
   
   
   
-  /* Rating Icon Button */
   .rating-icon {
     color: #f59e0b;
   }
@@ -734,7 +732,6 @@
     background-color: #fef3c7;
   }
   
-  /* Modal Styles */
   .modal {
     display: none;
     position: fixed;
@@ -842,7 +839,6 @@
     flex: 1;
   }
   
-  /* Ratings Summary */
   .ratings-summary {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -967,7 +963,6 @@
     margin: 0;
   }
   
-  /* Empty State */
   .empty-ratings {
     text-align: center;
     padding: 40px 20px;

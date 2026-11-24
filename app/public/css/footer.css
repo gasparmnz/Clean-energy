@@ -1,8 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
 
-/* ============================================
-   VARIÁVEIS
-============================================ */
 :root {
     --color-neutral-0: #032e19;
     --color-neutral-10: #1b814e;
@@ -19,18 +16,12 @@
     --font-lg: 1.125rem;
 }
 
-/* ============================================
-   RESET
-============================================ */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* ============================================
-   FOOTER  (base: Desktop 769px – 1200px)
-============================================ */
 footer {
     width: 100%;
     color: var(--color-neutral-40);
@@ -38,9 +29,6 @@ footer {
     margin-top: auto;
 }
 
-/* ============================================
-   CONTEÚDO PRINCIPAL
-============================================ */
 #footer_content {
     background: linear-gradient(180deg, #1b814e 0%, #14663d 100%);
     display: grid;
@@ -51,9 +39,6 @@ footer {
 }
 
 
-/* ============================================
-   CONTATOS
-============================================ */
 #footer_contacts {
     display: flex;
     flex-direction: column;
@@ -72,9 +57,6 @@ footer {
     font-size: var(--font-sm);
 }
 
-/* ============================================
-   REDES SOCIAIS
-============================================ */
 #footer_social_media {
     display: flex;
     align-items: center;
@@ -119,9 +101,6 @@ footer {
     background: #25d366;
 }
 
-/* ============================================
-   LISTAS
-============================================ */
 .footer-list {
     list-style: none;
 
@@ -152,9 +131,6 @@ footer {
     color: #a8d5ba;
 }
 
-/* ============================================
-   COPYRIGHT
-============================================ */
 #footer_copyright {
     background-color: var(--color-neutral-0);
 
@@ -170,11 +146,6 @@ footer {
 }
 
 
-/* ============================================
-   RESPONSIVIDADE
-============================================ */
-
-/* ---------- DESKTOP GRANDE  > 1200px ---------- */
 @media (min-width: 1201px) {
     #footer_content {
         padding: 1.5rem 1.2rem;
@@ -212,7 +183,6 @@ footer {
     }
 }
 
-/* ---------- TABLET  481px – 768px ---------- */
 @media (max-width: 768px) and (min-width: 481px) {
     #footer_content {
         grid-template-columns: 1fr 1fr;
@@ -235,7 +205,6 @@ footer {
     }
 }
 
-/* ---------- MOBILE GRANDE  376px – 480px ---------- */
 @media (max-width: 480px) and (min-width: 376px) {
     #footer_content {
         grid-template-columns: 1fr;
@@ -277,7 +246,6 @@ footer {
     }
 }
 
-/* ---------- MOBILE PEQUENO  < 375px ---------- */
 @media (max-width: 375px) {
     #footer_content {
         grid-template-columns: 1fr;
@@ -332,7 +300,6 @@ footer {
         padding: 0.75rem 0.5rem;
     }
 }
-/* Correção de largura/responsividade em celulares estreitos */
 @media (max-width: 480px) {
     footer,
     #footer_content,

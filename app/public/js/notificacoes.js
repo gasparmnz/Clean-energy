@@ -101,5 +101,5 @@
   }
 
   atualizarContador();
-  setInterval(atualizarContador, 30000); // checa a cada 30s
+  setInterval(atualizarContador, 30000);
 })();

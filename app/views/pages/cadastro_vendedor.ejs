@@ -17,10 +17,8 @@
 </head>
 <body>
   <main class="cadastro-main">
-    <!-- Hero Section -->
     <aside class="hero-section">
       <header class="hero-content">
-          <!-- ═══ Logo dentro do painel de apresentação ═══ -->
         <a href="/" class="hero-logo-link" aria-label="Página inicial da Clean Energy">
           <img src="/imagem/logo-curva.svg" alt="Clean Energy" class="hero-logo-img" />
         </a>
@@ -46,14 +44,12 @@
       </header>
     </aside>
 
-    <!-- Formulário de Cadastro -->
     <section class="form-section">
       <header class="form-header">
         <h2 class="form-title">Cadastrar empresa</h2>
         <p class="form-subtitle">Libere a função de venda em poucos minutos!</p>
       </header>
 
-      <!-- Formulário Empresa -->
       <form
         id="formEmpresa"
         class="cadastro-form"
@@ -64,7 +60,6 @@
         <fieldset class="form-fieldset">
           <legend class="sr-only">Dados para cadastro como Empresa</legend>
 
-          <!-- Campo Nome da Empresa -->
           <section class="input-group">
             <label for="nome-empresa" class="input-label">
               <i class='bx bx-buildings'></i>
@@ -91,7 +86,6 @@
             </span>
           </section>
 
-          <!-- Campo CNPJ -->
           <section class="input-group">
             <label for="cnpj-empresa" class="input-label">
               <i class='bx bx-id-card'></i>
@@ -119,7 +113,6 @@
             </span>
           </section>
 
-          <!-- Campo Email -->
           <section class="input-group">
             <label for="email-empresa" class="input-label">
               <i class='bx bx-envelope'></i>
@@ -146,7 +139,6 @@
             </span>
           </section>
 
-          <!-- Campo Senha -->
           <section class="input-group">
             <label for="senha-empresa" class="input-label">
               <i class='bx bx-lock-alt'></i>
@@ -182,8 +174,6 @@
               </section>
               <span class="strength-text">Força da senha</span>
             </section>
-            <!-- Requisitos da senha (atualizados em tempo real por cadastro-validation.js
-                 usando as mesmas regras do backend: /js/senha-regras.js) -->
             <ul class="password-requirements" id="senha-empresa-requisitos" aria-label="Requisitos da senha">
               <li data-req="tamanho"><span class="req-icone" aria-hidden="true">•</span> Pelo menos 8 caracteres</li>
               <li data-req="minuscula"><span class="req-icone" aria-hidden="true">•</span> Uma letra minúscula</li>
@@ -193,7 +183,6 @@
             </ul>
           </section>
 
-          <!-- Campo Confirmar Senha -->
           <section class="input-group">
             <label for="confirmar-senha-empresa" class="input-label">
               <i class='bx bx-lock-alt'></i>

@@ -194,7 +194,6 @@ body {
   font-weight: 400;
 }
 
-/* Formulário */
 .login-form {
   animation: fadeIn 0.4s ease-in-out;
 }
@@ -662,9 +661,6 @@ body {
 }
 
 
-/* ═══════════════════════════════════════════════
-   Logo dentro do painel hero
-   ═══════════════════════════════════════════════ */
 .hero-logo-link {
   display: inline-block;
   margin-bottom: 24px;
@@ -679,5 +675,5 @@ body {
   height: 56px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1); /* deixa branco para contrastar com o fundo verde escuro */
+  filter: brightness(0) invert(1);
 }

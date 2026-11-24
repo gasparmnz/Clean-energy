@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Dashboard - Minha Conta</title>
     
-    <!-- CSS da página e ícones -->
     <link rel="stylesheet" href="/css/adm.css">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +22,6 @@
     <%- include('../partial/header.ejs') %>
 
 <section class="admin-container">
-    <!-- Renderiza a Sidebar do Perfil do Usuário -->
     <%- include('../partial/sidebar_perfil.ejs', { activePage: 'dashboard' }) %>
 
     <main class="admin-main">
@@ -39,37 +37,31 @@
                 <span class="real-data-tag"><i class='bx bx-check-circle'></i> Dados atualizados</span>
             </h2>
 
-            <!-- Cards de Métricas Solicitados -->
             <section class="summary-cards">
-                <!-- Total Vendido -->
                 <article class="summary-card">
                     <i class="bx bx-package"></i>
                     <h3>Total Vendido</h3>
                     <p><%= stats.totalVendido || 0 %> ite<%= stats.totalVendido === 1 ? 'm' : 'ns' %></p>
                 </article>
 
-                <!-- Valor Arrecadado -->
                 <article class="summary-card">
                     <i class="bx bx-dollar-circle"></i>
                     <h3>Valor Arrecadado</h3>
                     <p>R$ <%= (stats.valorArrecadado || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></p>
                 </article>
 
-                <!-- Pedidos Pendentes -->
                 <article class="summary-card">
                     <i class="bx bx-time-five"></i>
                     <h3>Pedidos Pendentes</h3>
                     <p><%= stats.pedidosPendentes || 0 %></p>
                 </article>
 
-                <!-- Avaliações -->
                 <article class="summary-card">
                     <i class="bx bx-comment-detail"></i>
                     <h3>Avaliações</h3>
                     <p><%= stats.totalAvaliacoes || 0 %></p>
                 </article>
 
-                <!-- Nota Geral (Estrela + Nota de 1 a 5) -->
                 <article class="summary-card">
                     <i class="bx bxs-star" style="color: #f59e0b;"></i>
                     <h3>Nota Geral</h3>
@@ -78,7 +70,6 @@
             </section>
         </section>
 
-        <!-- Tabela de Minhas Vendas Recentes (Exibida caso o usuário seja Vendedor/PJ) -->
         <% if (typeof usuario !== 'undefined' && usuario && (usuario.Tipo === 'PJ' || usuario.tipo === 'PJ')) { %>
         <section class="transactions-section" aria-labelledby="vendas-heading">
             <h2 id="vendas-heading">Minhas Vendas Recentes</h2>
@@ -122,7 +113,6 @@
         </section>
         <% } %>
 
-        <!-- Tabela de Minhas Compras Recentes -->
         <section class="transactions-section" aria-labelledby="compras-heading">
             <h2 id="compras-heading">Minhas Compras Recentes</h2>
             <% if (compras && compras.length > 0) { %>

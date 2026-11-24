@@ -23,7 +23,6 @@ main {
   border: 1px solid #eee;
 }
 
-/* Linha de busca */
 .filtro-topo {
   display: flex;
   align-items: center;
@@ -47,7 +46,6 @@ main {
   font-size: 1rem;
 }
 
-/* Linha de filtros */
 .filtro-linha {
   display: flex;
   gap: 1rem;
@@ -65,7 +63,6 @@ main {
   font-size: 0.9rem;
 }
 
-/* Hover */
 .filtro-linha select:focus,
 .filtro-linha input:focus {
   border-color: #488D6A;
@@ -394,7 +391,6 @@ h2{
     flex-direction: column;
   }
 }
-/* Impede que o conteúdo mobile aumente a largura global da página. */
 @media (max-width: 480px) {
   html, body {
     width: 100%;

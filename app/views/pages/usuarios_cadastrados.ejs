@@ -34,15 +34,11 @@
             </header>
 
             <%
-                // FIX 1: variáveis declaradas com const no topo do bloco EJS, fora dos loops,
-                // evitando re-declarações acidentais e escopo confuso com var.
                 const listaAtivos = Array.isArray(usuarios)  ? usuarios  : [];
                 const listaSusp   = Array.isArray(suspensos) ? suspensos : [];
                 const totalPJ = listaAtivos.filter(u => u.Tipo === 'PJ').length;
                 const totalPF = listaAtivos.filter(u => u.Tipo === 'PF').length;
 
-                // FIX 2: helper de sanitização centralizado no EJS para evitar XSS e quebra de
-                // atributo HTML inline. Escapa aspas simples, duplas e tags.
                 function sanitizeAttr(str) {
                     return String(str || '')
                         .replace(/&/g, '&amp;')
@@ -52,13 +48,11 @@
                         .replace(/>/g, '&gt;');
                 }
 
-                // FIX 3: helper de iniciais seguro — evita crash com nomes vazios ou undefined.
                 function getInitials(nome) {
                     const parts = String(nome || '').trim().split(/\s+/).slice(0, 2);
                     return parts.map(w => w[0] || '').join('').toUpperCase() || '?';
                 }
 
-                // FIX 4: helper de data seguro — evita "Invalid Date" visível na tela.
                 function formatDate(raw) {
                     if (!raw) return '-';
                     const d = new Date(raw);
@@ -66,10 +60,6 @@
                 }
             %>
 
-            <!-- STATS -->
-            <!-- FIX 5: <article> e <figure> substituídos por <nav> semântico correto.
-                 <article> exige conteúdo independente/autônomo; <figure> é para mídia com legenda.
-                 Ícones decorativos não se encaixam em nenhum dos dois. -->
             <nav class="uc-stats" role="list" aria-label="Resumo de usuários">
                 <nav class="uc-stat" role="listitem">
                     <nav class="uc-stat-icon purple" aria-hidden="true"><i class='bx bx-group'></i></nav>
@@ -89,9 +79,6 @@
                 </nav>
             </nav>
 
-            <!-- TABELA ATIVOS -->
-            <!-- FIX 6: <header> removido de dentro de <section> (já existe <header> pai na página).
-                 Substituído por <nav> para evitar múltiplos <header> no mesmo escopo de seção. -->
             <section class="uc-table-card" aria-labelledby="tbl-ativos-title">
                 <nav class="uc-table-header">
                     <nav>
@@ -125,7 +112,6 @@
                             <% if (listaAtivos.length > 0) { %>
                                 <% listaAtivos.forEach(function(u, idx) { %>
                                 <%
-                                    // FIX 1 (continuação): const por iteração em bloco próprio
                                     const nomeExibir  = u.nome  || u.Nome  || '-';
                                     const emailExibir = u.email || u.Email || '-';
                                     const displayId   = 'USR-' + String(u.id).padStart(5, '0');
@@ -133,7 +119,6 @@
                                     const dataCriacao = formatDate(u.Data_Criacao);
                                     const initials    = getInitials(nomeExibir);
                                     const colorClass  = 'av-' + (idx % 8);
-                                    // FIX 2: sanitização completa para uso em data-* e onclick
                                     const nomeSafe    = sanitizeAttr(nomeExibir);
                                     const searchData  = (nomeExibir + ' ' + emailExibir + ' ' + displayId).toLowerCase();
                                 %>
@@ -149,8 +134,6 @@
                                     <td><span class="badge-tipo badge-<%= tipo %>"><%= tipo === 'PJ' ? 'Vendedor' : 'Comprador' %></span></td>
                                     <td style="color:#6b7280;font-size:.85rem;"><%= dataCriacao %></td>
                                     <td>
-                                        <!-- FIX 4: data-id e data-nome no elemento, removendo parâmetros inline
-                                             com escape frágil. O JS lê via dataset, eliminando risco de XSS/quebra. -->
                                         <nav class="uc-dropdown" id="dd-a-<%= idx %>"
                                              data-uid="<%= u.id %>"
                                              data-nome="<%= nomeSafe %>"
@@ -180,7 +163,6 @@
                 </nav>
             </section>
 
-            <!-- TABELA SUSPENSOS -->
             <section class="uc-table-card suspended-card" aria-labelledby="tbl-susp-title">
                 <nav class="uc-table-header">
                     <nav>
@@ -275,14 +257,12 @@
             <p id="modalMessage"></p>
             <nav class="modal-actions">
                 <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-                <!-- FIX 7: type="button" explícito para evitar submit acidental em contextos de form -->
                 <button class="btn-confirm" type="button" id="confirmBtn">Confirmar</button>
             </nav>
         </nav>
     </nav>
 
     <script>
-        // ─── Navegação ────────────────────────────────────────────────────────────
         function verDetalhes(userId) {
             window.location.href = '/adm/detalhes_user?userId=' + encodeURIComponent(userId);
         }
@@ -291,7 +271,6 @@
             window.location.href = '/adm/editar_usuario?userId=' + encodeURIComponent(userId);
         }
 
-        // ─── Dropdown ─────────────────────────────────────────────────────────────
         function toggleDD(id) {
             document.querySelectorAll('.uc-dropdown').forEach(function (d) {
                 if (d.id !== id) d.classList.remove('open');
@@ -307,19 +286,15 @@
             }
         });
 
-        // ─── Filtro de tabela ─────────────────────────────────────────────────────
         function filterTable(tableId, inputId) {
             const q = document.getElementById(inputId).value.toLowerCase();
             document.querySelectorAll('#' + tableId + ' tbody tr').forEach(function (row) {
-                // FIX 8: ignora linhas de "empty state" (sem data-search) para evitar
-                // escondê-las indevidamente durante uma busca.
                 const text = row.getAttribute('data-search');
                 if (text === null) return;
                 row.style.display = (!q || text.includes(q)) ? '' : 'none';
             });
         }
 
-        // ─── Toast ────────────────────────────────────────────────────────────────
         function showToast(msg, type) {
             const t    = document.getElementById('ucToast');
             const icon = t.querySelector('i');
@@ -330,10 +305,6 @@
             setTimeout(function () { t.classList.remove('show'); }, 3000);
         }
 
-        // ─── Modal ────────────────────────────────────────────────────────────────
-        // FIX 9: confirmBtn usa addEventListener/removeEventListener em vez de
-        // substituir .onclick repetidamente. Isso evita vazamento de handlers e o
-        // warning de "assigned but never used" que linters apontam na abordagem anterior.
         function openModal(title, message, onConfirm) {
             document.getElementById('modalTitle').textContent   = title;
             document.getElementById('modalMessage').textContent = message;
@@ -344,7 +315,6 @@
                 closeModal();
                 onConfirm();
             };
-            // Remove qualquer handler anterior antes de adicionar novo
             confirmBtn.replaceWith(confirmBtn.cloneNode(true));
             document.getElementById('confirmBtn').addEventListener('click', handler);
 
@@ -355,12 +325,7 @@
             document.getElementById('customModal').classList.remove('show');
         }
 
-        // ─── API helper ───────────────────────────────────────────────────────────
-        // FIX 10: apiPost agora retorna uma Promise e o callback de confirmação é
-        // async corretamente, eliminando o "Promise returned from async function
-        // is ignored" que ocorria quando openModal chamava a função sem await.
         function apiPost(endpoint, id, nome, ddId, confirmMsg, successMsg) {
-            // Fecha dropdown SOMENTE se o elemento existir
             const ddEl = document.getElementById(ddId);
             if (ddEl) ddEl.classList.remove('open');
 
@@ -386,8 +351,6 @@
             });
         }
 
-        // FIX 4 (continuação): funções leem uid/nome/ddid do dataset do elemento pai
-        // (.uc-dropdown), eliminando parâmetros inline com escape manual.
         function getDropdownData(btn) {
             const dd = btn.closest('.uc-dropdown');
             return {
@@ -414,7 +377,7 @@
         function excluirUsuario(btn) {
             const { uid, nome, ddid } = getDropdownData(btn);
             apiPost('/adm/usuarios/excluir', uid, nome, ddid,
-                '⚠️ Deseja excluir permanentemente a conta de ' + nome + '?',
+                'Deseja excluir permanentemente a conta de ' + nome + '?',
                 'Conta de ' + nome + ' excluída.');
         }
     </script>

@@ -1,7 +1,3 @@
-/* ============================================================
-   Página de Dúvidas — Assistente Virtual (chat) — Clean Energy
-   ============================================================ */
-
 :root {
   --primary-color: #10b981;
   --primary-dark: #059669;
@@ -37,7 +33,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Layout principal da página */
 .duvidas-main {
   max-width: 900px;
   margin: 0 auto;
@@ -72,7 +67,6 @@ body {
   color: var(--text-primary);
 }
 
-/* Container do chat */
 .chat-page {
   flex: 1;
   min-height: 0;
@@ -119,7 +113,6 @@ body {
   line-height: 1.4;
 }
 
-/* Área de mensagens */
 .chat-messages {
   flex: 1;
   min-height: 0;
@@ -191,7 +184,6 @@ body {
   30% { transform: translateY(-4px); opacity: 1; }
 }
 
-/* Área de digitação */
 .chat-input-area {
   flex-shrink: 0;
   display: flex;
@@ -239,16 +231,14 @@ body {
 .chat-send:hover:not(:disabled) { background: var(--primary-dark); }
 .chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
 
-/* Responsivo */
 @media (max-width: 768px) {
   .duvidas-main {
     padding: 0 0.5rem 1rem;
-    height: calc(100dvh - 87px - 64px); /* desconta a barra de navegação inferior fixa no mobile */
+    height: calc(100dvh - 87px - 64px);
   }
   .chat-msg { max-width: 85%; }
 }
 
-/* Modo escuro */
 body.dark-mode .chat-page {
   background: #1e1e1e;
   border-color: #2a2a2a;

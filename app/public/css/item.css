@@ -1,4 +1,3 @@
-/* Definições de Variáveis Globais (Root) */
 :root {
   --primary-color: #37b65d;
   --primary-hover: #2fa553;
@@ -32,7 +31,6 @@
   --transition-normal: 0.3s ease;
 }
 
-/* Reset e Estilos Base */
 * {
   margin: 0;
   padding: 0;
@@ -45,7 +43,6 @@ body {
   background-color: var(--background);
 }
 
-/* Layout Principal do Produto */
 .product-main {
   padding: var(--spacing-xl);
   margin-top: 100px;
@@ -73,7 +70,6 @@ body {
   gap: var(--spacing-lg);
 }
 
-/* Componentes do Produto */
 .product-image-wrapper {
   border-radius: var(--border-radius-xl);
   overflow: hidden;
@@ -124,7 +120,6 @@ body {
   margin-top: var(--spacing-sm);
 }
 
-/* Seção de Avaliação do Usuário */
 .user-rating {
   padding: var(--spacing-xl);
   background: var(--background);
@@ -195,7 +190,6 @@ body {
   color: var(--accent-color);
 }
 
-/* Seção de Termos */
 .terms-section {
   padding: var(--spacing-xl);
   background: white;
@@ -238,7 +232,6 @@ body {
   top: 2px;
 }
 
-/* Seção da Comunidade (Comentários)*/
 .product-community {
   width: 100%;
   padding: var(--spacing-xl);
@@ -321,7 +314,6 @@ body {
   margin-right: var(--spacing-sm);
 }
 
-/* Botões e Elementos de UI */
 .buy-button {
   display: inline-flex;
   align-items: center;
@@ -369,7 +361,6 @@ body {
   display: none;
 }
 
-/* Utilitários */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -381,24 +372,20 @@ body {
   border: 0;
 }
 
-/* Comentários para Desktop (coluna esquerda) */
 .desktop-comments {
   display: block;
 }
 
-/* Comentários para Mobile/Tablet (coluna direita) */
 .mobile-comments {
   display: none;
 }
 
-/* Media Queries para Responsividade */
 @media (max-width: 1024px) {
   .product-container {
     grid-template-columns: 1fr;
     gap: var(--spacing-2xl);
   }
 
-  /* Ajustes para telas médias (tablets) */
   .product-main {
     padding: var(--spacing-lg);
   }
@@ -449,7 +436,6 @@ body {
     font-size: var(--font-size-sm);
   }
 
-  /* Ajustes de espaçamento para tablet */
   .comment-item {
     gap: var(--spacing-md);
     padding: var(--spacing-md) 0;
@@ -459,7 +445,6 @@ body {
     gap: var(--spacing-sm);
   }
 
-  /* Mostrar comentários mobile e esconder desktop em tablets */
   .desktop-comments {
     display: none;
   }
@@ -499,7 +484,6 @@ body {
     font-size: 20px;
   }
 
-  /* Ajustes de espaçamento para mobile */
   .comment-item {
     gap: var(--spacing-md);
     padding: var(--spacing-md) 0;
@@ -514,7 +498,6 @@ body {
     gap: var(--spacing-sm);
   }
 
-  /* Garantir que apenas os comentários mobile sejam mostrados */
   .desktop-comments {
     display: none;
   }
@@ -572,7 +555,6 @@ body {
     height: 35px;
   }
 
-  /* Ajustes finos de espaçamento para mobile pequeno */
   .product-community {
     padding: var(--spacing-md);
     gap: var(--spacing-lg);
@@ -582,7 +564,6 @@ body {
     padding-bottom: var(--spacing-md);
   }
 
-  /* Garantir que apenas os comentários mobile sejam mostrados */
   .desktop-comments {
     display: none;
   }
@@ -591,7 +572,6 @@ body {
     display: flex;
   }
 }
-/* ── Link do vendedor na seção user-rating ── */
 .rating-link {
   text-decoration: none;
   color: inherit;

@@ -4,17 +4,8 @@ const cartModel = require('../models/cartModel');
 const pedidoModel = require('../models/pedidoModel');
 const { preferenceClient, paymentClient, merchantOrderClient } = require('../../config/mercadopago');
 
-// Tempo máximo de cada chamada à API do Mercado Pago feita durante uma
-// requisição do usuário (retorno de pagamento / abrir Minhas Compras).
 const MP_TIMEOUT_MS = 8000;
 
-// O endereço do produto é gravado em `local` (e copiado para
-// pedidos.produto_local) no formato "cidade, bairro, rua, número,
-// complemento" — ver produtoController.postCadastrarProduto, que faz
-// [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ').
-// Aqui desmontamos de volta para exibir o endereço completo campo a campo.
-// Se o texto não tiver pelo menos cidade/bairro/rua/número (cadastros
-// antigos ou fora do padrão), devolvemos só o texto completo.
 function montarEndereco(local, estado) {
   const texto = (local || '').trim();
   const partes = texto ? texto.split(',').map(p => p.trim()).filter(Boolean) : [];
@@ -34,9 +25,6 @@ function montarEndereco(local, estado) {
   return { cidade: '', estado: estado || '', bairro: '', rua: '', numero: '', complemento: '', completo: texto };
 }
 
-// Adapta uma linha da tabela `pedidos` para o formato que as views já
-// esperavam (mesmos nomes de campo que os itens do carrinho usavam:
-// nome, imagem, local, preco, quantidade).
 function mapPedidoParaView(pedido) {
   const local = pedido.produto_local || pedido.produto_local_atual || '';
   return {
@@ -51,8 +39,6 @@ function mapPedidoParaView(pedido) {
   };
 }
 
-// Notifica o vendedor de um pedido pago (usado tanto no checkout imediato
-// quanto no fluxo de "pagar pendente" e no de "finalizar compra").
 async function notificarVendedor(item) {
   try {
     const produtoId = item.productId ?? item.produto_id;
@@ -69,15 +55,10 @@ async function notificarVendedor(item) {
   } catch (e) { console.error('Erro ao notificar vendedor sobre novo pedido:', e); }
 }
 
-// GET /minhascompras
 async function getMinhasCompras(req, res) {
   try {
     const userId = req.session.userId;
 
-    // Antes de listar, confere no Mercado Pago se algum pedido ainda
-    // "pendente" já foi pago (ex.: Pix aprovado depois do retorno, ou
-    // ambiente local, onde o webhook não chega). Falhas aqui não impedem a
-    // página de abrir.
     await reconciliarPendentesDoComprador(userId);
 
     const [pendentes, emTransito, concluidos] = await Promise.all([
@@ -96,9 +77,6 @@ async function getMinhasCompras(req, res) {
   }
 }
 
-// POST /minhascompras/finalizar — move itens do carrinho para pedidos pendentes
-// no banco (fluxo de "finalizar compra para pagar depois", independente do
-// checkout imediato pelo carrinho).
 async function finalizarCompra(req, res) {
   try {
     const userId = req.session.userId;
@@ -120,12 +98,7 @@ async function finalizarCompra(req, res) {
   }
 }
 
-// Monta o corpo da preferência do Mercado Pago a partir de uma lista de itens.
-// Centralizado aqui para não duplicar a lógica de back_urls/auto_return entre
-// criarPagamento e pagarPendente.
 function montarPreferenceBody(req, items) {
-  // Em produção (Render), usar sempre BASE_URL para não depender de
-  // req.protocol/req.get('host'), que podem variar conforme proxy/headers.
   const baseUrl = process.env.BASE_URL || `${req.protocol}://${req.get('host')}`;
   const isLocalhost = baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1');
 
@@ -139,8 +112,6 @@ function montarPreferenceBody(req, items) {
     notification_url: `${baseUrl}/pagamento/webhook`
   };
 
-  // auto_return só é aceito pelo Mercado Pago quando a back_url de sucesso
-  // é uma URL pública (não localhost). Em desenvolvimento local ele é omitido.
   if (!isLocalhost) {
     preferenceBody.auto_return = 'approved';
   }
@@ -148,17 +119,6 @@ function montarPreferenceBody(req, items) {
   return preferenceBody;
 }
 
-// ---------------------------------------------------------------------------
-// CONFIRMAÇÃO DE PAGAMENTO (Mercado Pago)
-//
-// Toda mudança pendente -> em_transito passa por aqui, seja vinda do
-// retorno do navegador (/pagamento/sucesso), do webhook
-// (/pagamento/webhook) ou da reconciliação ao abrir /minhascompras. Em
-// nenhum caso confiamos só no que veio na URL/corpo: o status é sempre
-// consultado na API do Mercado Pago com o nosso access token.
-// ---------------------------------------------------------------------------
-
-// O Mercado Pago às vezes manda os parâmetros como a string "null".
 function limparId(valor) {
   if (valor === undefined || valor === null) return null;
   const texto = String(valor).trim();
@@ -171,16 +131,6 @@ function temPagamentoAprovado(merchantOrder) {
     merchantOrder.payments.some(p => p && p.status === 'approved');
 }
 
-// Consulta o Mercado Pago e devolve { preferenceId, aprovado, status }.
-//  - paymentId: GET /v1/payments/:id  -> status real do pagamento; a
-//    preferência é descoberta pela merchant_order do pagamento
-//    (payment.order.id -> merchant_order.preference_id).
-//  - merchantOrderId: GET /merchant_orders/:id -> preference_id + lista de
-//    pagamentos com status.
-//  - preferenceId sozinho: busca as merchant_orders daquela preferência.
-// `preferenceEsperada` (a que veio na URL de retorno) é comparada com a
-// preferência real do pagamento, para impedir que alguém use o payment_id
-// aprovado de outra compra para "pagar" um pedido seu.
 async function consultarPagamentoMP({ paymentId, merchantOrderId, preferenceId }) {
   paymentId = limparId(paymentId);
   merchantOrderId = limparId(merchantOrderId);
@@ -235,12 +185,6 @@ async function consultarPagamentoMP({ paymentId, merchantOrderId, preferenceId }
   return { preferenceId: null, aprovado: false, status: null };
 }
 
-// Efeitos de um pagamento aprovado: pendente -> em_transito, remove os
-// produtos pagos do carrinho do comprador e notifica os vendedores.
-// Idempotente: pedidoModel.confirmarPagamentoPorPreference só devolve os
-// pedidos para a primeira chamada que os mudou de status; as demais
-// (webhook repetido, usuário recarregando /pagamento/sucesso, etc.)
-// recebem [] e não repetem remoção nem notificação.
 function pedidoIdDaReferencia(externalReference) {
   const m = /^pedido:(\d+)$/.exec(String(externalReference || ''));
   return m ? Number(m[1]) : null;
@@ -276,8 +220,6 @@ async function aplicarPagamentoAprovado(preferenceId, externalReference = null) 
   return confirmados;
 }
 
-// Consulta + aplica. Devolve o resultado da consulta e os pedidos que
-// foram efetivamente confirmados nesta chamada.
 async function verificarEConfirmarPagamento(ids) {
   const resultado = await consultarPagamentoMP(ids);
   let confirmados = [];
@@ -287,8 +229,6 @@ async function verificarEConfirmarPagamento(ids) {
   return { ...resultado, confirmados };
 }
 
-// Reconciliação ao abrir /minhascompras (limitada às preferências mais
-// recentes para não atrasar a página).
 async function reconciliarPendentesDoComprador(userId) {
   try {
     const preferences = await pedidoModel.listarPreferencesPendentes(userId);
@@ -304,7 +244,6 @@ async function reconciliarPendentesDoComprador(userId) {
   }
 }
 
-// POST /pagamento/criar
 async function criarPagamento(req, res) {
   console.log('>>> ROTA DE PAGAMENTO FOI CHAMADA!');
   try {
@@ -318,9 +257,6 @@ async function criarPagamento(req, res) {
       });
     }
 
-    // Exatamente os itens do carrinho gravado no banco — o mesmo que
-    // GET /carrinho exibe (quantidade normalizada do mesmo jeito, limitada
-    // ao estoque atual de cada produto).
     const estoques = await cartModel.estoquePorProduto(cart.map(item => item.productId));
     const limiteDe = (item) => (estoques.get(String(item.productId)) || { limite: 1 }).limite;
     const items = cart.map(item => ({
@@ -331,7 +267,6 @@ async function criarPagamento(req, res) {
       unit_price: Math.round(Number(item.preco) * 100) / 100
     }));
 
-    // Validação + log do que vai para o Mercado Pago.
     const invalidos = items.filter(i => !i.id || !Number.isInteger(i.quantity) || i.quantity < 1 ||
       !Number.isFinite(i.unit_price) || i.unit_price <= 0);
     if (invalidos.length > 0) {
@@ -359,14 +294,6 @@ async function criarPagamento(req, res) {
 
     console.log('Preference criada!', preference.id);
 
-    // IMPORTANTE: o carrinho NÃO é apagado aqui — só quando o pagamento for
-    // de fato aprovado (ver getSucesso). Em vez de guardar isso na sessão
-    // (que pode se perder entre o momento em que o comprador sai para o
-    // Mercado Pago e o momento em que ele volta — é exatamente isso que
-    // fazia o pedido nunca chegar em "em trânsito"), gravamos o pedido como
-    // "pendente" direto no banco, vinculado ao ID da preferência. O Mercado
-    // Pago devolve esse mesmo preference_id como query string nas back_urls,
-    // então conseguimos encontrar o pedido de novo mesmo sem sessão.
     if (req.session.userId) {
       await pedidoModel.criarPendentes(
         req.session.userId,
@@ -390,7 +317,6 @@ async function criarPagamento(req, res) {
   }
 }
 
-// POST /pagamento/pendente/pagar — gera um novo checkout do Mercado Pago para um pedido já pendente
 async function pagarPendente(req, res) {
   try {
     const userId = req.session.userId;
@@ -413,11 +339,6 @@ async function pagarPendente(req, res) {
     }];
 
     const preferenceBody = montarPreferenceBody(req, items);
-    // Identifica o pedido dentro do próprio pagamento (ver
-    // aplicarPagamentoAprovado): se o comprador clicar em "Efetuar
-    // Pagamento" mais de uma vez, o preference_id do pedido é trocado, mas
-    // um pagamento aprovado de uma tentativa anterior ainda encontra o
-    // pedido por aqui.
     preferenceBody.external_reference = `pedido:${pedido.id}`;
 
     const preference = await preferenceClient.create({
@@ -439,11 +360,6 @@ async function pagarPendente(req, res) {
   }
 }
 
-// GET /pagamento/sucesso
-// O Mercado Pago redireciona para cá com ?payment_id (ou collection_id),
-// &merchant_order_id, &preference_id, &status... Esses valores vêm do
-// navegador e podem ser forjados, então só servem para saber O QUE
-// consultar: o status real é conferido na API antes de mudar o pedido.
 async function getSucesso(req, res) {
   console.log('>>> RETORNO /pagamento/sucesso — query recebida:', req.query);
 
@@ -462,27 +378,17 @@ async function getSucesso(req, res) {
     });
 
     if (!resultado.aprovado && ['pending', 'in_process', 'authorized', 'in_mediation'].includes(resultado.status)) {
-      // Ainda em análise: o pedido continua pendente e será confirmado
-      // pelo webhook (ou ao abrir Minhas Compras) quando for aprovado.
       return res.render('pages/pagamento-pendente');
     }
   } catch (err) {
-    // Não conseguimos consultar o Mercado Pago agora (timeout, API fora do
-    // ar...). O pedido NÃO é alterado aqui; o webhook ou a próxima
-    // abertura de /minhascompras vão confirmar quando possível.
     console.error('Erro ao verificar pagamento no retorno de sucesso:', err.message || err);
   }
 
   res.render('pages/pagamento-sucesso');
 }
 
-// GET /pagamento/falha
 async function getFalha(req, res) {
   try {
-    // O comprador desistiu ou o pagamento foi recusado: o carrinho NUNCA foi
-    // apagado (ver criarPagamento), então ele continua disponível em
-    // /carrinho. Só marcamos o pedido pendente como cancelado, para não
-    // ficar poluindo a aba "Pendentes"/o painel admin para sempre.
     console.log('>>> RETORNO /pagamento/falha — query recebida:', req.query);
     const preferenceId = req.query.preference_id;
     await pedidoModel.atualizarStatusPorPreference(preferenceId, 'pendente', 'cancelado');
@@ -492,14 +398,7 @@ async function getFalha(req, res) {
   res.render('pages/pagamento-falha');
 }
 
-// GET /pagamento/pendente
 async function getPendente(req, res) {
-  // Pagamento ainda em análise (ex.: boleto/Pix aguardando compensação).
-  // O carrinho também não foi apagado neste caso, e o pedido continua
-  // "pendente" no banco até a confirmação pelo webhook
-  // (/pagamento/webhook) ou pela reconciliação ao abrir /minhascompras.
-  // Se por acaso o pagamento já estiver aprovado quando o comprador
-  // voltar, já confirmamos aqui (a verificação é feita na API do MP).
   try {
     const paymentId = req.query.payment_id || req.query.collection_id;
     if (limparId(paymentId) || limparId(req.query.merchant_order_id)) {
@@ -518,8 +417,6 @@ async function getPendente(req, res) {
   res.render('pages/pagamento-pendente');
 }
 
-// POST /minhascompras/cancelar — comprador cancela um pedido que ainda não
-// foi pago (aba "Pendentes").
 async function cancelarPendente(req, res) {
   try {
     const userId = req.session.userId;
@@ -540,8 +437,6 @@ async function cancelarPendente(req, res) {
   }
 }
 
-// POST /minhascompras/confirmar-recebimento — comprador confirma que recebeu
-// o produto, movendo o pedido de "em trânsito" para "concluído".
 async function confirmarRecebimento(req, res) {
   try {
     const userId = req.session.userId;
@@ -562,14 +457,6 @@ async function confirmarRecebimento(req, res) {
   }
 }
 
-// POST /pagamento/webhook
-// Aceita os dois formatos que o Mercado Pago usa:
-//  - Webhooks: corpo JSON { type: 'payment', action: 'payment.updated',
-//    data: { id } } e/ou query ?type=payment&data.id=...
-//  - IPN (legado): query ?topic=payment|merchant_order&id=... e corpo
-//    { resource, topic }.
-// O corpo da notificação NÃO é tratado como prova de pagamento — ele só diz
-// qual pagamento/merchant_order consultar na API.
 async function webhook(req, res) {
   const body = req.body || {};
   const query = req.query || {};
@@ -578,7 +465,6 @@ async function webhook(req, res) {
 
   let id = (body.data && body.data.id) || query['data.id'] || query.id || body.id || null;
   if (!id && body.resource) {
-    // IPN de merchant_order manda "https://api.mercadolibre.com/merchant_orders/123"
     id = String(body.resource).split('/').filter(Boolean).pop();
   }
 
@@ -592,7 +478,6 @@ async function webhook(req, res) {
   }
 
   if (!ids || !limparId(id)) {
-    // Outros tópicos (chargebacks, planos...) ou notificação sem id: nada a fazer.
     return res.sendStatus(200);
   }
 
@@ -608,11 +493,9 @@ async function webhook(req, res) {
   } catch (err) {
     const httpStatus = err && (err.status || (err.cause && err.cause.status));
     if (httpStatus === 404) {
-      // Id inexistente (ex.: notificação de teste do painel do MP).
       console.warn('>>> Webhook: recurso não encontrado no Mercado Pago:', ids);
       return res.sendStatus(200);
     }
-    // Erro temporário: responder != 2xx faz o Mercado Pago reenviar depois.
     console.error('Erro ao processar webhook do Mercado Pago:', err.message || err);
     return res.sendStatus(500);
   }

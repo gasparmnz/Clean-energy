@@ -61,7 +61,6 @@ main {
   gap: 30px;
 }
 
-/* Botão voltar */
 .back-button {
   all: unset;
   cursor: pointer;
@@ -141,7 +140,6 @@ main {
   margin-bottom: 10px;
 }
 
-/* Ações */
 .acoes {
   display: flex;
   justify-content: center;
@@ -266,7 +264,6 @@ main {
   }
 }
 
-/* Botão salvar desabilitado */
 .btn-primary:disabled,
 .btn-primary.btn-disabled {
   background-color: #6c757d;
@@ -342,7 +339,6 @@ main {
     min-width: 0;
   }
 
-  /* Modal responsivo */
   .modal-dialog {
     max-width: 95%;
     margin: 0.5rem auto;

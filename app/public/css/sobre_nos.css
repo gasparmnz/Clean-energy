@@ -70,7 +70,6 @@ main {
     flex-direction: row-reverse;
 }
  
-/* Imagem */
 .content-image {
     flex: 0 0 44%;
     display: flex;
@@ -86,7 +85,6 @@ main {
     border-radius: var(--radius);
 }
  
-/* Texto */
 .content-text {
     flex: 1;
 }

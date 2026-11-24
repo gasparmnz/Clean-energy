@@ -1,27 +1,9 @@
-/**
- * Service Worker - Clean Energy (Biomassa Hub)
- * ---------------------------------------------
- * Estratégias:
- *  - App shell (offline.html, manifest, ícones, CSS/JS core) -> pré-cache no install
- *  - Navegação (HTML)               -> Network First, fallback para cache e depois offline.html
- *  - CSS/JS do próprio site         -> Network First (sempre a versão mais nova; cache só offline)
- *  - Imagens/manifest same-origin   -> Cache First com atualização em segundo plano
- *  - Recursos de terceiros (CDNs: boxicons, google fonts, bootstrap, fontawesome) -> Stale While Revalidate
- *  - Requisições não-GET (POST/PUT/DELETE, ex: login, formularios) -> sempre vão direto para a rede
- *
- * A versão do cache deve ser incrementada sempre que os arquivos pré-cacheados mudarem,
- * para forçar a atualização dos clients.
- */
-
-// v3: invalida os caches da v2, que podiam servir versões antigas de
-// /js/cadastro-validation.js, /css/*.css e de páginas já visitadas.
 const SW_VERSION = 'v3';
 const STATIC_CACHE = `clean-energy-static-${SW_VERSION}`;
 const RUNTIME_CACHE = `clean-energy-runtime-${SW_VERSION}`;
 const CDN_CACHE = `clean-energy-cdn-${SW_VERSION}`;
 const OFFLINE_URL = '/offline.html';
 
-// Arquivos essenciais para o app funcionar minimamente offline.
 const APP_SHELL = [
   '/',
   '/offline.html',
@@ -40,7 +22,6 @@ const APP_SHELL = [
 
 const ALL_CACHES = [STATIC_CACHE, RUNTIME_CACHE, CDN_CACHE];
 
-// ── INSTALL ──────────────────────────────────────────────────────────
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(STATIC_CACHE)
@@ -50,7 +31,6 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// ── ACTIVATE ─────────────────────────────────────────────────────────
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
@@ -63,7 +43,6 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// ── HELPERS ──────────────────────────────────────────────────────────
 function isCdnRequest(url) {
   return [
     'unpkg.com',
@@ -74,9 +53,6 @@ function isCdnRequest(url) {
   ].some((host) => url.hostname.includes(host));
 }
 
-// CSS e JS mudam a cada deploy; servi-los do cache primeiro fazia o
-// navegador rodar o código antigo (ex.: validação de cadastro velha) até a
-// visita seguinte. O servidor já os entrega com Cache-Control: no-store.
 function isCodeAsset(url) {
   return url.origin === self.location.origin && (
     url.pathname.startsWith('/css/') ||
@@ -115,7 +91,6 @@ async function networkFirst(request) {
 async function cacheFirst(request, cacheName) {
   const cached = await caches.match(request);
   if (cached) {
-    // Atualiza em segundo plano (stale revalidate) sem bloquear a resposta.
     fetch(request).then((response) => {
       if (response && response.ok) {
         caches.open(cacheName).then((cache) => cache.put(request, response));
@@ -152,50 +127,41 @@ async function staleWhileRevalidate(request, cacheName) {
   return cached || networkPromise;
 }
 
-// ── FETCH ────────────────────────────────────────────────────────────
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
-  // Nunca interceptar métodos que não são GET (login, formulários, checkout, etc).
   if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
 
-  // Nunca cachear rotas administrativas ou de autenticação: sempre rede.
   if (url.pathname.startsWith('/adm') || url.pathname === '/logout') {
     event.respondWith(fetch(request).catch(() => caches.match(request)));
     return;
   }
 
-  // Navegação entre páginas (documentos HTML) -> network first.
   if (request.mode === 'navigate') {
     event.respondWith(networkFirst(request));
     return;
   }
 
-  // CDNs de terceiros (ícones, fontes, css de frameworks) -> stale-while-revalidate.
   if (isCdnRequest(url)) {
     event.respondWith(staleWhileRevalidate(request, CDN_CACHE));
     return;
   }
 
-  // CSS/JS do próprio site -> network first (cache apenas como fallback offline).
   if (isCodeAsset(url)) {
     event.respondWith(networkFirst(request));
     return;
   }
 
-  // Imagens e demais estáticos do próprio site -> cache first.
   if (isStaticAsset(url)) {
     event.respondWith(cacheFirst(request, STATIC_CACHE));
     return;
   }
 
-  // Qualquer outra requisição GET (ex: chamadas de dados) -> network first com fallback de cache.
   event.respondWith(networkFirst(request));
 });
 
-// ── MENSAGENS DO CLIENT (ex: forçar atualização) ────────────────────
 self.addEventListener('message', (event) => {
   if (event.data === 'SKIP_WAITING') {
     self.skipWaiting();

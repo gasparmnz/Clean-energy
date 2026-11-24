@@ -5,12 +5,10 @@ const BASE_URL = 'https://clean-energy.onrender.com';
 exports.getSitemap = async (req, res) => {
     try {
 
-        // Busca todos os produtos ativos
         const produtos = await produtosModel.findAll({
             apenasAtivos: true
         });
 
-        // URLs fixas do site
         const paginas = [
             '/',
             '/home',
@@ -24,7 +22,6 @@ exports.getSitemap = async (req, res) => {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 `;
 
-        // Adiciona as páginas fixas
         paginas.forEach(pagina => {
             xml += `
     <url>
@@ -33,7 +30,6 @@ exports.getSitemap = async (req, res) => {
 `;
         });
 
-        // Adiciona os produtos automaticamente
         produtos.forEach(produto => {
             xml += `
     <url>

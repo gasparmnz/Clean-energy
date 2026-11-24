@@ -28,7 +28,7 @@
   function saveSettings(settings) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-    } catch (e) { /* ignore */ }
+    } catch (e) { }
   }
 
   var settings = loadSettings();
@@ -86,7 +86,6 @@
     if (closeBtn) closeBtn.addEventListener('click', closePanel);
     if (overlay) overlay.addEventListener('click', closePanel);
 
-    // Tamanho do texto
     var decBtn = document.getElementById('a11yFontDec');
     var incBtn = document.getElementById('a11yFontInc');
     if (decBtn) decBtn.addEventListener('click', function () {
@@ -100,7 +99,6 @@
       applyAll();
     });
 
-    // Cards de toggle (leitura/navegação + ajuste de cor)
     document.querySelectorAll('[data-a11y-card]').forEach(function (card) {
       card.addEventListener('click', function () {
         var key = card.getAttribute('data-a11y-card');
@@ -110,7 +108,6 @@
       });
     });
 
-    // Seções colapsáveis
     document.querySelectorAll('[data-a11y-collapse]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var section = btn.closest('.a11y-section');
@@ -122,7 +119,6 @@
       });
     });
 
-    // Reset
     var resetBtn = document.getElementById('a11yReset');
     if (resetBtn) resetBtn.addEventListener('click', function () {
       settings = Object.assign({}, DEFAULTS);
@@ -130,7 +126,6 @@
       applyAll();
     });
 
-    // Guia de leitura: segue o cursor
     var guideEl = document.getElementById('a11yReadingGuide');
     if (guideEl) {
       document.addEventListener('mousemove', function (e) {
@@ -139,8 +134,6 @@
       });
     }
 
-    // Modo escuro (reaproveita o mecanismo já existente no site:
-    // classe body.dark-mode + localStorage('darkmode'))
     var darkCard = document.getElementById('a11yDarkModeCard');
     if (darkCard) {
       var syncDarkCard = function () {

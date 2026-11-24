@@ -19,13 +19,11 @@ body {
 
 
 
-/* Admin Container */
 .admin-container {
   display: flex;
   min-height: 100vh;
 }
 
-/* Main Content Area */
 .admin-main {
   flex-grow: 1;
   padding: 30px;
@@ -34,7 +32,6 @@ body {
   margin-top: 87px;
 }
 
-/* Header with Back Button */
 .details-header {
   display: flex;
   align-items: center;
@@ -78,7 +75,6 @@ body {
   font-weight: 400;
 }
 
-/* User Profile Card */
 .user-profile-card {
   background: #ffffff;
   border-radius: 12px;
@@ -182,7 +178,6 @@ body {
   color: #f59e0b;
 }
 
-/* Action Buttons */
 .profile-actions {
   display: flex;
   gap: 12px;
@@ -233,7 +228,6 @@ body {
   background: #fef2f2;
 }
 
-/* Information Sections */
 .info-section {
   margin-bottom: 40px;
 }
@@ -289,7 +283,6 @@ body {
   color: #555;
 }
 
-/* Statistics Section */
 .statistics-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -330,15 +323,12 @@ body {
   margin: 4px 0 0 0;
 }
 
-/* Reviews Section */
-/* ── Reviews container ────────────────────────────────────────────────── */
 .reviews-container {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* Card base */
 .review-card {
   background: #fff;
   border: 1.5px solid #e5e7eb;
@@ -352,14 +342,12 @@ body {
   box-shadow: 0 4px 16px rgba(0,0,0,.09);
 }
 
-/* Card suspenso — borda vermelha */
 .review-card.review-suspensa {
   border-color: #ef4444;
   background: linear-gradient(135deg, #fff5f5, #fff);
   box-shadow: 0 0 0 3px rgba(239,68,68,.1), 0 2px 8px rgba(0,0,0,.05);
 }
 
-/* Header do card */
 .review-header {
   display: flex;
   justify-content: space-between;
@@ -394,7 +382,6 @@ body {
   white-space: nowrap;
 }
 
-/* Estrelas */
 .review-rating {
   display: flex;
   gap: 3px;
@@ -402,7 +389,6 @@ body {
 }
 .review-rating i { color: #f59e0b; font-size: 1.05rem; }
 
-/* Comentário */
 .review-comment {
   color: #4b5563;
   line-height: 1.65;
@@ -423,7 +409,6 @@ body {
   margin-bottom: 12px;
 }
 
-/* Footer de ações */
 .review-footer {
   display: flex;
   align-items: center;
@@ -437,7 +422,6 @@ body {
   border-top-color: #fecaca;
 }
 
-/* Botão suspender */
 .btn-suspender-comment {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 7px 16px; border-radius: 8px;
@@ -448,7 +432,6 @@ body {
 }
 .btn-suspender-comment:hover { background: #fee2e2; transform: scale(1.02); }
 
-/* Botão reverter */
 .btn-reativar-comment {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 7px 16px; border-radius: 8px;
@@ -459,7 +442,6 @@ body {
 }
 .btn-reativar-comment:hover { background: #d1fae5; transform: scale(1.02); }
 
-/* Badge suspenso */
 .badge-suspensa {
   display: inline-flex; align-items: center; gap: 4px;
   padding: 3px 10px; border-radius: 20px;
@@ -468,7 +450,6 @@ body {
   letter-spacing: .02em;
 }
 
-/* review-product (mantém compatibilidade) */
 .review-product {
   background: #f3f4f6;
   color: var(--accent);
@@ -480,7 +461,6 @@ body {
   font-size: 0.85rem;
 }
 
-/* ── Modal de confirmação ─────────────────────────────────────────────── */
 .confirm-modal-overlay {
   display: none;
   position: fixed; inset: 0;
@@ -553,7 +533,6 @@ body {
   font-size: 1rem;
 }
 
-/* Modal Styles */
 .avaliacoes-modal {
   display: none;
   position: fixed;
@@ -662,7 +641,6 @@ body.modal-open {
   overflow: hidden;
 }
 
-/* Produtos Vendidos Section */
 .products-section {
   margin-bottom: 40px;
 }
@@ -787,8 +765,6 @@ body.modal-open {
   border-radius: 6px;
   cursor: pointer;
 }
-
-/* ========== RESPONSIVIDADE CORRIGIDA ========== */
 
 @media (max-width: 1024px) {
   .admin-main {
