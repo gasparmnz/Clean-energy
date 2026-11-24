@@ -1,6 +1,3 @@
-/* ============================================
-   RESET & VARIÁVEIS GLOBAIS
-   ============================================ */
 * {
   margin: 0;
   padding: 0;
@@ -24,7 +21,6 @@
   --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.2);
   --font-family: 'Inter', sans-serif;
 
-  /* Espaçamentos responsivos (usados em todo o site) */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
@@ -33,7 +29,6 @@
   --spacing-2xl: 3rem;
   --spacing-3xl: 4rem;
 
-  /* Tipografia responsiva */
   --font-xs: 0.75rem;
   --font-sm: 0.875rem;
   --font-base: 1rem;
@@ -44,19 +39,13 @@
   --font-4xl: 2.5rem;
 }
 
-/* ============================================
-   BASE
-   ============================================ */
 body {
   font-family: var(--font-family);
   background: linear-gradient(135deg, #f1faee 0%, #f9f9f9 100%);
   min-height: 100vh;
-  -webkit-text-size-adjust: 100%; /* Evita zoom automático de fonte no iOS */
+  -webkit-text-size-adjust: 100%;
 }
 
-/* ============================================
-   LAYOUT PRINCIPAL — DESKTOP FIRST
-   ============================================ */
 .cadastro-main {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -66,9 +55,6 @@ body {
   box-shadow: var(--shadow-heavy);
 }
 
-/* ============================================
-   HERO SECTION
-   ============================================ */
 .hero-section {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   color: #fff;
@@ -123,9 +109,6 @@ body {
   flex-shrink: 0;
 }
 
-/* ============================================
-   FORM SECTION
-   ============================================ */
 .form-section {
   background: var(--background);
   padding: var(--spacing-3xl);
@@ -152,9 +135,6 @@ body {
   font-size: var(--font-sm);
 }
 
-/* ============================================
-   FORMULÁRIO — CAMPOS
-   ============================================ */
 .form-fieldset {
   border: none;
   padding: 0;
@@ -192,7 +172,6 @@ body {
   background: var(--background);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
-  /* Evita zoom ao focar em inputs no iOS (fonte mínima 16px) */
   font-size: max(1rem, 16px);
 }
 
@@ -206,25 +185,20 @@ body {
   color: var(--text-light);
 }
 
-/* Estado de erro */
 .input-group.has-error .form-input {
   border-color: var(--error-color);
 }
 
-/* Estado de sucesso */
 .input-group.has-success .form-input {
   border-color: var(--success-color);
 }
 
-/* ============================================
-   SENHA
-   ============================================ */
 .password-input {
   position: relative;
 }
 
 .password-input .form-input {
-  padding-right: 3rem; /* Espaço para o botão de olho */
+  padding-right: 3rem;
 }
 
 .password-toggle {
@@ -239,7 +213,6 @@ body {
   padding: var(--spacing-xs);
   font-size: 1.2rem;
   line-height: 1;
-  /* Área de toque mínima de 44px para mobile */
   min-width: 44px;
   min-height: 44px;
   display: flex;
@@ -252,7 +225,6 @@ body {
   color: var(--primary-color);
 }
 
-/* Barra de força da senha */
 .password-strength {
   margin-top: var(--spacing-sm);
   display: flex;
@@ -283,9 +255,6 @@ body {
   white-space: nowrap;
 }
 
-/* ============================================
-   MENSAGENS DE ERRO / SUCESSO
-   ============================================ */
 .input-help {
   display: block;
   font-size: var(--font-xs);
@@ -298,11 +267,11 @@ body {
   font-size: var(--font-xs);
   color: var(--error-color);
   margin-top: var(--spacing-xs);
-  min-height: 1em; /* Reserva espaço para não deslocar layout */
+  min-height: 1em;
 }
 
 .success-message {
-  display: none; /* Controlado via JS */
+  display: none;
   align-items: center;
   gap: var(--spacing-xs);
   font-size: var(--font-xs);
@@ -314,9 +283,6 @@ body {
   font-size: 0.875rem;
 }
 
-/* ============================================
-   BOTÃO SUBMIT
-   ============================================ */
 .submit-btn {
   width: 100%;
   padding: 1rem;
@@ -334,7 +300,6 @@ body {
   gap: var(--spacing-sm);
   transition: background 0.3s ease, transform 0.1s ease;
   margin-top: var(--spacing-md);
-  /* Área de toque adequada */
   min-height: 52px;
 }
 
@@ -347,12 +312,9 @@ body {
 }
 
 .loading-icon {
-  display: none; /* Exibido via JS durante o envio */
+  display: none;
 }
 
-/* ============================================
-   RODAPÉ DO FORMULÁRIO
-   ============================================ */
 .form-footer {
   text-align: center;
   margin-top: var(--spacing-xl);
@@ -373,9 +335,6 @@ body {
   text-decoration: underline;
 }
 
-/* ============================================
-   ACESSIBILIDADE
-   ============================================ */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -387,30 +346,17 @@ body {
   border: 0;
 }
 
-/* Foco visível para navegação por teclado */
 :focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
 
-/* ============================================
-   RESPONSIVIDADE
-   Breakpoints:
-     - Desktop grande:  > 1200px
-     - Desktop:         769px – 1200px  (base)
-     - Tablet:          481px – 768px
-     - Mobile grande:   376px – 480px
-     - Mobile pequeno:  < 375px
-   ============================================ */
-
-/* --- Tablet (até 768px) --- */
 @media (max-width: 768px) {
   .cadastro-main {
     grid-template-columns: 1fr;
     min-height: 100vh;
   }
 
-  /* Hero vira um banner compacto horizontal no topo */
   .hero-section {
     padding: var(--spacing-xl) var(--spacing-xl);
     min-height: auto;
@@ -444,7 +390,6 @@ body {
     font-size: var(--font-sm);
   }
 
-  /* Formulário */
   .form-section {
     padding: var(--spacing-xl);
     justify-content: flex-start;
@@ -455,7 +400,6 @@ body {
   }
 }
 
-/* --- Mobile grande (até 480px) --- */
 @media (max-width: 480px) {
   .hero-section {
     padding: var(--spacing-lg) var(--spacing-md);
@@ -470,7 +414,6 @@ body {
     margin-bottom: var(--spacing-md);
   }
 
-  /* Esconde o hero em telas pequenas para dar espaço ao formulário */
   .hero-features {
     display: none;
   }
@@ -497,7 +440,6 @@ body {
   }
 }
 
-/* --- Mobile pequeno (até 375px) --- */
 @media (max-width: 375px) {
   .hero-section {
     padding: var(--spacing-md);
@@ -508,7 +450,7 @@ body {
   }
 
   .hero-subtitle {
-    display: none; /* Remove subtítulo para economizar espaço */
+    display: none;
   }
 
   .form-section {
@@ -520,7 +462,6 @@ body {
   }
 }
 
-/* --- Desktop grande (acima de 1200px) --- */
 @media (min-width: 1200px) {
   .hero-title {
     font-size: 2.8rem;

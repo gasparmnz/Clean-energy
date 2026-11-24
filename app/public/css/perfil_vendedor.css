@@ -1,6 +1,3 @@
-/* ══════════════════════════════════════════
-   PERFIL PÚBLICO DO VENDEDOR
-   ══════════════════════════════════════════ */
 :root {
   --primary: #37b65d;
   --primary-dark: #2fa553;
@@ -52,7 +49,6 @@ body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--tex
   padding: 100px 2rem 4rem;
 }
 
-/* ── HERO ── */
 .vend-hero {
   background: linear-gradient(135deg, #1e3a2e 0%, #386b52 100%);
   border-radius: var(--radius);
@@ -139,7 +135,6 @@ body.dark-mode .vend-hero { background: linear-gradient(135deg, #0f1f17 0%, #1a3
   text-align: center;
 }
 
-/* ── ESTATÍSTICAS ── */
 .vend-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -169,7 +164,6 @@ body.dark-mode .vend-stat-card { background: #1e1e1e; border-color: #2a2a2a; }
 body.dark-mode .vend-stat-card strong { color: #f3f4f6; }
 .vend-stat-card span { font-size: .78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
 
-/* ── CORPO: 2 COLUNAS ── */
 .vend-body {
   display: grid;
   grid-template-columns: 1fr 420px;
@@ -177,7 +171,6 @@ body.dark-mode .vend-stat-card strong { color: #f3f4f6; }
   align-items: start;
 }
 
-/* ── SECTION genérica ── */
 .vend-section {
   background: var(--white);
   border-radius: var(--radius);
@@ -206,7 +199,6 @@ body.dark-mode .vend-section-header { border-bottom-color: #2a2a2a; }
 body.dark-mode .vend-section-header h2 { color: #f3f4f6; }
 .vend-section-header h2 i { color: var(--primary); font-size: 1.2rem; }
 
-/* ── GRID DE PRODUTOS ── */
 .vend-produtos-grid {
   list-style: none;
   display: grid;
@@ -252,7 +244,6 @@ body.dark-mode .vend-produto-cat { background: #1a2e1a; color: #86efac; }
 .vend-produto-preco { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: .25rem; }
 .vend-produto-local { font-size: .75rem; color: var(--text-muted); display: flex; align-items: center; gap: .25rem; }
 
-/* ── FORMULÁRIO DE AVALIAÇÃO ── */
 .vend-form-section {
   margin-bottom: 1rem;
 }
@@ -319,7 +310,6 @@ body.dark-mode .vend-textarea { background: #1a1a1a; border-color: #374151; colo
 body.dark-mode .vend-login-msg { background: #2a1f00; border-color: #713f12; color: #fbbf24; }
 .vend-login-msg a { color: var(--primary); font-weight: 700; }
 
-/* Alertas */
 .vend-alert {
   display: flex;
   align-items: center;
@@ -335,7 +325,6 @@ body.dark-mode .vend-login-msg { background: #2a1f00; border-color: #713f12; col
 body.dark-mode .vend-alert-ok  { background: #1a2e1a; border-color: #2d5a2d; color: #86efac; }
 body.dark-mode .vend-alert-err { background: #2a0a0a; border-color: #7f1d1d; color: #fca5a5; }
 
-/* ── COMENTÁRIOS RECEBIDOS ── */
 .vend-comentarios { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
 
 .vend-comentario {
@@ -379,7 +368,6 @@ body.dark-mode .vend-com-texto { color: #9ca3af; }
   line-height: 2;
 }
 
-/* ── RESPONSIVO ── */
 @media (max-width: 1024px) {
   .vend-body { grid-template-columns: 1fr; }
   .vend-avaliacoes-col { order: -1; }

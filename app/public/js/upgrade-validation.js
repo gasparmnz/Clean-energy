@@ -50,7 +50,6 @@ class UpgradeValidator {
       const allValid = this.validateAllFields();
       if (!allValid) {
         e.preventDefault();
-        // Foca no primeiro campo inválido
         const firstInvalid = this.form.querySelector('.input-group.invalid .form-input');
         if (firstInvalid) firstInvalid.focus();
       } else {
@@ -99,8 +98,6 @@ class UpgradeValidator {
     }
   }
 
-  // ── Validadores ────────────────────────────────────────────────
-
   validateCompanyName(value) {
     if (!value || value.trim().length < 2)
       return { isValid: false, message: 'Nome da empresa deve ter pelo menos 2 caracteres' };
@@ -134,8 +131,6 @@ class UpgradeValidator {
     return { isValid: true };
   }
 
-  // ── Algoritmo CNPJ ─────────────────────────────────────────────
-
   isValidCNPJ(cnpj) {
     const w1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
     const w2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
@@ -151,8 +146,6 @@ class UpgradeValidator {
     return d2 === parseInt(cnpj[13]);
   }
 
-  // ── Formatação CNPJ ────────────────────────────────────────────
-
   formatCNPJ(input) {
     let v = input.value.replace(/\D/g, '').slice(0, 14);
     v = v.replace(/^(\d{2})(\d)/, '$1.$2');
@@ -161,8 +154,6 @@ class UpgradeValidator {
     v = v.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
     input.value = v;
   }
-
-  // ── Animações ──────────────────────────────────────────────────
 
   setupAnimations() {
     const groups = this.form.querySelectorAll('.input-group');
@@ -181,8 +172,6 @@ class UpgradeValidator {
     });
   }
 
-  // ── Utilitário debounce ────────────────────────────────────────
-
   debounce(fn, wait) {
     let t;
     return (...args) => {
@@ -192,7 +181,6 @@ class UpgradeValidator {
   }
 }
 
-// Inicialização
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => new UpgradeValidator());
 } else {

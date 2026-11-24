@@ -1,18 +1,12 @@
-/* ============================================================
-   Notificações — botão flutuante + painel lateral
-   (mesmo padrão visual do widget de acessibilidade)
-   ============================================================ */
-
 :root {
   --notif-accent: #0891b2;
   --notif-accent-dark: #0e7490;
 }
 
-/* ── Botão flutuante ── */
 .notif-fab {
   position: fixed;
   right: 20px;
-  bottom: 90px; /* empilhado acima do botão de acessibilidade */
+  bottom: 90px;
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -67,7 +61,6 @@
   }
 }
 
-/* ── Overlay ── */
 .notif-overlay {
   position: fixed;
   inset: 0;
@@ -83,7 +76,6 @@
   pointer-events: auto;
 }
 
-/* ── Painel lateral ── */
 .notif-panel {
   position: fixed;
   top: 0;

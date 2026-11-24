@@ -4,12 +4,8 @@ const bcrypt = require('bcryptjs');
 const models = require('../models/models');
 const { usuarioModel } = models;
 const { validarCPF } = require('../helpers/validacao');
-// Mesmas regras de senha usadas no navegador (app/public/js/senha-regras.js).
 const SenhaRegras = require('../public/js/senha-regras');
 
-// Validação de senha do cadastro (PF e PJ). O backend continua sendo a
-// autoridade final: isStrongPassword com as mesmas opções do frontend e,
-// em caso de erro, uma mensagem que diz exatamente o que está faltando.
 const regraSenha = () => body('senha')
   .notEmpty().withMessage('*Campo obrigatório!').bail()
   .isStrongPassword(SenhaRegras.OPCOES_VALIDATOR)
@@ -21,13 +17,12 @@ const regraSenha = () => body('senha')
   });
 const { sendResetPasswordEmail } = require('../helpers/mailer');
 
-const RESET_TOKEN_VALIDADE_MS = 60 * 60 * 1000; // 1 hora
+const RESET_TOKEN_VALIDADE_MS = 60 * 60 * 1000;
 
 function hashToken(token) {
   return crypto.createHash('sha256').update(token).digest('hex');
 }
 
-// GET /cadastro
 function getCadastro(req, res) {
   res.render('pages/cadastro', {
     valoresPessoaFisica: { nome: '', cpf: '', email: '', senha: '', confirmarSenha: '' },
@@ -38,23 +33,19 @@ function getCadastro(req, res) {
   });
 }
 
-// GET /cadastro_vendedor
 function getCadastroVendedorForm(req, res) {
   res.render('pages/cadastro_vendedor', { valoresEmpresa: { nome: '', cnpj: '', email: '', senha: '', confirmarSenha: '' }, erroValidacaoEmpresa: {}, msgErroEmpresa: {}, retorno: null });
 }
 
-// GET /login
 function getLogin(req, res) {
   if (req.session.userId) return res.redirect('/perfil');
   res.render('pages/login', { erro: null, valores: { usuarioDigitado: '', senhaDigitada: '' }, sucesso: false });
 }
 
-// GET /logout
 function getLogout(req, res) {
   req.session.destroy(() => res.redirect('/login'));
 }
 
-// Regras de validação do cadastro de comprador (PF)
 const validarCadastroUsuario = [
   body('nome').trim().notEmpty().withMessage('*Campo obrigatório!').isLength({ min: 3, max: 50 }).withMessage('*O Nome deve conter entre 3 e 50 caracteres!'),
   body('cpf').custom((value) => { if (validarCPF(value)) return true; throw new Error('CPF inválido!'); }),
@@ -63,7 +54,6 @@ const validarCadastroUsuario = [
   body('confirmarSenha').notEmpty().withMessage('*Campo obrigatório!').custom((value, { req }) => { if (value !== req.body.senha) throw new Error('*As senhas não conferem!'); return true; })
 ];
 
-// POST /cadastroUsuario — CADASTRO COMPRADOR (PF)
 async function postCadastroUsuario(req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -96,7 +86,6 @@ async function postCadastroUsuario(req, res) {
   }
 }
 
-// Regras de validação do cadastro de vendedor (PJ)
 const validarCadastroEmpresa = [
   body('nome').trim().notEmpty().withMessage('*Campo obrigatório!').isLength({ min: 3, max: 50 }).withMessage('*O Nome da empresa deve conter entre 3 e 50 caracteres!'),
   body('cnpj').notEmpty().withMessage('*Campo obrigatório!').custom((value) => { if (value.replace(/\D/g, '').length !== 14) throw new Error('*O CNPJ deve conter 14 números!'); return true; }),
@@ -105,7 +94,6 @@ const validarCadastroEmpresa = [
   body('confirmarSenha').notEmpty().withMessage('*Campo obrigatório!').custom((value, { req }) => { if (value !== req.body.senha) throw new Error('*As senhas não conferem!'); return true; })
 ];
 
-// POST /cadastroEmpresa — CADASTRO VENDEDOR (PJ)
 async function postCadastroEmpresa(req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -132,7 +120,6 @@ async function postCadastroEmpresa(req, res) {
   }
 }
 
-// POST /login
 async function postLogin(req, res) {
   const { usuarioDigitado, senhaDigitada } = req.body;
   try {
@@ -146,7 +133,7 @@ async function postLogin(req, res) {
 
     if (usuario.status === 'suspended') {
       return res.render('pages/login', {
-        erro: '⚠️ Sua conta foi suspensa pelo administrador. Entre em contato com o suporte para mais informações.',
+        erro: 'Sua conta foi suspensa pelo administrador. Entre em contato com o suporte para mais informações.',
         sucesso: false, valores: { usuarioDigitado, senhaDigitada: '' }
       });
     }
@@ -165,17 +152,14 @@ async function postLogin(req, res) {
   }
 }
 
-// GET /recuperar-senha
 function getRecuperarSenha(req, res) {
   res.render('pages/recuperar-senha', { erro: null, sucesso: false, email: '' });
 }
 
-// POST /recuperar-senha
 async function postRecuperarSenha(req, res) {
   const { email } = req.body;
   try {
     const usuario = await usuarioModel.findByEmail(email);
-    // Mesma resposta exista ou não o e-mail, para não revelar quais e-mails estão cadastrados
     if (usuario) {
       const token = crypto.randomBytes(32).toString('hex');
       const tokenHash = hashToken(token);
@@ -201,7 +185,6 @@ async function postRecuperarSenha(req, res) {
   }
 }
 
-// GET /redefinir-senha/:token
 async function getRedefinirSenha(req, res) {
   const { token } = req.params;
   const usuario = await usuarioModel.findByResetTokenHash(hashToken(token));
@@ -214,7 +197,6 @@ async function getRedefinirSenha(req, res) {
   res.render('pages/redefinir-senha', { erro: null, tokenValido: true, token, sucesso: false });
 }
 
-// POST /redefinir-senha/:token
 async function postRedefinirSenha(req, res) {
   const { token } = req.params;
   const { senha, confirmarSenha } = req.body;
@@ -227,7 +209,6 @@ async function postRedefinirSenha(req, res) {
     });
   }
 
-  // Mesmas regras de senha do cadastro.
   const erroSenha = SenhaRegras.mensagemErro(senha);
   if (erroSenha) {
     return res.render('pages/redefinir-senha', {

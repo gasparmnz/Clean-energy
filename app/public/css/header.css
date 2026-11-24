@@ -208,9 +208,8 @@ body {
     margin-left: 10px;
 }
 
-/* ── Dropdown guest (deslogado mobile/tablet) ──────────────── */
 .dropdown-guest {
-    display: none; /* escondido no desktop — login-links aparece */
+    display: none;
 }
 
 .dropdown-content--guest {
@@ -238,8 +237,6 @@ body {
     color: #1e8e3e;
 }
 
-/* ── Intermediário (largura ainda "desktop", mas sem espaço para o deslocamento
-   manual do navbar + botão de vendedor lado a lado sem risco de sobreposição) ── */
 @media (max-width: 1350px) {
     .header {
         padding: 0 2.5%;
@@ -271,7 +268,6 @@ body {
     .login-container {
         gap: 0.9rem;
     }
-    /* Esconde login-links texto, mostra ícone guest */
     .login-links {
         display: none;
     }
@@ -368,7 +364,6 @@ body {
     .login-container {
         gap: 0.8rem;
     }
-    /* Logado: esconde "Olá, Nome" — mantém só o avatar */
     .header-greeting {
         display: none;
     }
@@ -383,9 +378,6 @@ body {
     }
 }
 
-/* Avatar de perfil e carrinho do header: só no desktop/tablet.
-   No mobile (mesmo breakpoint da barra de navegação inferior),
-   essas ações já são cobertas pela barra inferior. */
 @media (max-width: 768px) {
     .header-desktop-only {
         display: none !important;

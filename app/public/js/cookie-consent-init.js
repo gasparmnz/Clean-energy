@@ -1,17 +1,5 @@
-/**
- * Configuração do banner de cookies (LGPD)
- * Biblioteca usada: CookieConsent v3 (orestbida/cookieconsent)
- * Docs oficiais: https://cookieconsent.orestbida.com
- *
- * Este arquivo só CONFIGURA e CHAMA a biblioteca.
- * Quem desenha o banner, salva a escolha do usuário e reabre
- * o painel de preferências é a biblioteca em si (cookieconsent.umd.js),
- * carregada no partial partial/cookie_consent.ejs.
- */
-
 CookieConsent.run({
 
-  // Onde e como o banner e o painel aparecem na tela
   guiOptions: {
     consentModal: {
       layout: 'box',
@@ -26,10 +14,6 @@ CookieConsent.run({
     }
   },
 
-  // Categorias de cookies do site.
-  // "necessary" fica travado (o site não funciona sem ele: sessão de login, carrinho etc).
-  // "analytics" é opcional — só existe pra quando vocês adicionarem
-  // Google Analytics ou outra ferramenta de métricas no futuro.
   categories: {
     necessary: {
       readOnly: true
@@ -44,13 +28,12 @@ CookieConsent.run({
     }
   },
 
-  // Todos os textos do banner, em português
   language: {
     default: 'pt',
     translations: {
       pt: {
         consentModal: {
-          title: 'Nós usamos cookies 🍪',
+          title: 'Nós usamos cookies',
           description: 'Usamos cookies essenciais para o funcionamento do site (como manter seu login e seu carrinho) e, opcionalmente, cookies de análise para entender como o site é usado. Você pode aceitar todos ou gerenciar suas preferências.',
           acceptAllBtn: 'Aceitar todos',
           acceptNecessaryBtn: 'Recusar',

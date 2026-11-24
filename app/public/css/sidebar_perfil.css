@@ -19,7 +19,6 @@ body.dark-mode .perfil-aside {
   border-right-color: #2a2a2a;
 }
 
-/* ── Header: avatar + nome ── */
 .perfil-aside__header {
   display: flex;
   align-items: center;
@@ -141,7 +140,6 @@ body.dark-mode .perfil-aside__link.is-active {
 .perfil-aside__link--danger:hover { background: #fef2f2; color: #b91c1c; }
 body.dark-mode .perfil-aside__link--danger:hover { background: #2d0a0a; color: #f87171; }
 
-/* ── Ícone colorido ── */
 .perfil-aside__icon {
   width: 32px;
   height: 32px;
@@ -178,11 +176,6 @@ body.dark-mode .perfil-layout { background: #111; }
 }
 
 @media (max-width: 768px) {
-  /* No mobile, a navegação global (Início/Carrinho/Vendedor/Perfil) no
-     rodapé já cobre a navegação principal, e a própria página de Perfil
-     já tem os atalhos (Minhas Compras, Meus Produtos, Configurações,
-     Sair, etc.) no corpo da página — então este menu lateral de conta
-     não é necessário no mobile, só no desktop. */
   .perfil-aside {
     display: none;
   }

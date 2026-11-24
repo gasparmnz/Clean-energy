@@ -3,7 +3,6 @@ const { vendedorModel, notificacoesModel } = require('../models/models.js');
 const { arquivoParaDataUri } = require('../helpers/imagem');
 const pedidoModel = require('../models/pedidoModel');
 
-// GET / — vitrine pública de produtos, com filtros de busca
 async function listarProdutos(req, res) {
   const { busca, estado, categoria, precoMin, precoMax } = req.query;
   try {
@@ -18,18 +17,14 @@ async function listarProdutos(req, res) {
   }
 }
 
-// GET /cadastrar_produto
 function getCadastrarProdutoForm(req, res) {
   res.render('pages/cadastrar_produto');
 }
 
-// POST /cadastrar_produto
 async function postCadastrarProduto(req, res) {
   const { nome, descricao, preco, quantidade, categoria, cidade, bairro, rua, numero, complemento, estado } = req.body;
   const local = [cidade, bairro, rua, numero, complemento].filter(Boolean).join(', ');
 
-  // Antes: nome do arquivo salvo em disco (req.file.filename).
-  // Agora: a imagem vira uma data URI e é salva direto na coluna `imagem`.
   const imagem = req.file ? arquivoParaDataUri(req.file) : 'sem-foto.png';
 
   let precoLimpo = (preco || '0').toString().trim()
@@ -54,7 +49,6 @@ async function postCadastrarProduto(req, res) {
   }
 }
 
-// GET /listaprodutos — produtos do vendedor logado
 async function getListaProdutos(req, res) {
   try {
     const produtos = await produtosModel.findByUsuario(req.session.userId);
@@ -65,7 +59,6 @@ async function getListaProdutos(req, res) {
   }
 }
 
-// GET /item/:id
 async function getItem(req, res) {
   try {
     const produto = await produtosModel.findById(req.params.id);
@@ -92,9 +85,6 @@ async function getItem(req, res) {
       ? { id: req.session.userId, nome: req.session.nomeUsuario, perfil: req.session.perfil }
       : null;
 
-    // "Comprou" considera tanto pedidos já concluídos quanto em trânsito
-    // (o pagamento já foi aprovado nos dois casos, só falta a entrega).
-    // Consultado no banco (tabela `pedidos`), não na sessão.
     const comprou = await pedidoModel.comprouProduto(req.session.userId, req.params.id);
 
     res.render('pages/item', { produto, avaliacoes, mediaNotas, vendedor, usuario: usuarioSessao, comprou });
@@ -104,7 +94,6 @@ async function getItem(req, res) {
   }
 }
 
-// POST /item/:id/avaliar
 async function avaliarItem(req, res) {
   const produtoId = req.params.id;
   const { nota, comentario } = req.body;
@@ -146,9 +135,6 @@ async function avaliarItem(req, res) {
   }
 }
 
-// ── Edição de produto pelo vendedor ──────────────────────────────────
-// Mesmas regras do modal de edição (app/public/js/listaprodutos.js); o
-// backend repete a validação porque é a autoridade final.
 function validarEdicaoProduto(body) {
   const erros = {};
   const nome = String(body.nome ?? '').trim();
@@ -188,7 +174,6 @@ function validarEdicaoProduto(body) {
   return { erros, dados: { nome, local, preco, quantidade } };
 }
 
-// PUT /produtos/:id — vendedor salva as alterações feitas no modal "Editar"
 async function atualizarProduto(req, res) {
   try {
     const produtoId = parseInt(req.params.id, 10);
@@ -200,8 +185,6 @@ async function atualizarProduto(req, res) {
     if (!produto) {
       return res.status(404).json({ sucesso: false, erro: 'Produto não encontrado.' });
     }
-    // O produto precisa ser do vendedor logado: trocar o ID na requisição
-    // não permite editar produto de outra pessoa.
     if (String(produto.usuario_id) !== String(req.session.userId)) {
       return res.status(403).json({ sucesso: false, erro: 'Você não tem permissão para editar este produto.' });
     }
@@ -211,7 +194,6 @@ async function atualizarProduto(req, res) {
       return res.status(400).json({ sucesso: false, erro: 'Corrija os campos destacados.', erros });
     }
 
-    // Segunda trava no próprio SQL (WHERE id = ? AND usuario_id = ?).
     const resultado = await produtosModel.update(produtoId, dados, { usuarioId: req.session.userId });
     if (!resultado.affectedRows) {
       return res.status(403).json({ sucesso: false, erro: 'Você não tem permissão para editar este produto.' });
@@ -234,7 +216,6 @@ async function atualizarProduto(req, res) {
   }
 }
 
-// DELETE /produtos/:id
 async function deleteProduto(req, res) {
   try {
     await produtosModel.delete(req.params.id);

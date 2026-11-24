@@ -1,13 +1,8 @@
-/* ============================================================
-   Widget de Acessibilidade — botão flutuante + painel lateral
-   ============================================================ */
-
 :root {
   --a11y-accent: #1b814e;
   --a11y-accent-dark: #145c38;
 }
 
-/* ── Botão flutuante ── */
 .a11y-fab {
   position: fixed;
   right: 20px;
@@ -48,7 +43,6 @@
   }
 }
 
-/* ── Overlay ── */
 .a11y-overlay {
   position: fixed;
   inset: 0;
@@ -64,7 +58,6 @@
   pointer-events: auto;
 }
 
-/* ── Painel lateral ── */
 .a11y-panel {
   position: fixed;
   top: 0;
@@ -168,7 +161,6 @@
   text-align: right;
 }
 
-/* ── Bloco "Tamanho do texto" ── */
 .a11y-fontsize {
   display: flex;
   align-items: center;
@@ -228,7 +220,6 @@
   background: #e6f4ec;
 }
 
-/* ── Cabeçalho de seção (colapsável) ── */
 .a11y-section {
   margin-bottom: 20px;
 }
@@ -272,7 +263,6 @@
   display: none;
 }
 
-/* ── Cards de opção (toggle) ── */
 .a11y-card {
   display: flex;
   flex-direction: column;
@@ -312,10 +302,6 @@
 .a11y-card.is-active i {
   color: var(--a11y-accent-dark);
 }
-
-/* ============================================================
-   Efeitos globais aplicados no <html>/<body> pelos toggles
-   ============================================================ */
 
 html.a11y-readable-font,
 html.a11y-readable-font body,
@@ -380,14 +366,6 @@ html.a11y-high-contrast i {
   filter: brightness(1.4) contrast(1.2);
 }
 
-/* O override acima ("body *") força a mesma cor em tudo, o que apagava
-   sinais visuais importantes (opção marcada como ativa, texto de
-   placeholder, indicador de notificação). Essas exceções vêm depois
-   para restaurar esses sinais sem abrir mão do alto contraste. */
-
-/* Opção ativa no painel de acessibilidade precisa continuar visível
-   enquanto o alto contraste está ligado — sem isso, dava pra saber
-   quais recursos estavam ligados só desligando o alto contraste. */
 html.a11y-high-contrast .a11y-card.is-active {
   background-color: #1a1a1a !important;
   border-color: #ffd700 !important;
@@ -397,39 +375,22 @@ html.a11y-high-contrast .a11y-card.is-active span {
   color: #ffd700 !important;
 }
 
-/* Texto de placeholder em campos de formulário (ficava com a mesma
-   cor do texto digitado e praticamente desaparecia) */
 html.a11y-high-contrast ::placeholder {
   color: #9ca3af !important;
   opacity: 1 !important;
 }
 
-/* Badges de notificação/alerta (ex: contador do chat) precisam manter
-   destaque visual, senão viram um círculo preto sobre fundo preto */
 html.a11y-high-contrast .chatbot-badge {
   background-color: #ffd700 !important;
   color: #000 !important;
   border-color: #000 !important;
 }
 
-/* O rodapé usa "background: linear-gradient(...)" (verde), que é uma
-   propriedade diferente de "background-color" — por isso a regra geral
-   lá em cima não conseguia trocá-lo para preto, e o rodapé ficava verde
-   no meio de uma página toda preta/branca. Forçamos o "background"
-   inteiro (não só a cor) para preto aqui. */
 html.a11y-high-contrast footer,
 html.a11y-high-contrast #footer_content {
   background: #000 !important;
 }
 
-/* O overlay escuro do carrossel (degradê que fica por cima da foto,
-   pra dar legibilidade ao texto) também usa "background:
-   linear-gradient(...)". A regra geral trocava só a cor de fundo por
-   trás do degradê, e como o degradê tem um trecho totalmente opaco
-   (rgba(0,0,0,.65)), o restante — que deveria ficar transparente pra
-   mostrar a foto — passava a mostrar o preto forçado, cobrindo a
-   imagem inteira. Aqui restauramos o degradê original, que já é
-   suficientemente escuro para o texto por cima ser lido. */
 html.a11y-high-contrast .carrossel-slide figure figcaption {
   background: linear-gradient(
     to right,
@@ -439,26 +400,12 @@ html.a11y-high-contrast .carrossel-slide figure figcaption {
   ) !important;
 }
 
-/* O botão "Torne-se Vendedor" tinha fundo branco de propósito para se
-   destacar dentro do header verde. Com o header virando preto e o
-   botão também virando preto (só com uma borda fina branca), ele
-   praticamente sumia. Aqui ele vira um botão sólido amarelo (mesma
-   cor de destaque usada nos links), bem visível sobre o preto. */
 html.a11y-high-contrast .btn-vendedor {
   background-color: #ffd700 !important;
   color: #000 !important;
   border-color: #000 !important;
 }
 
-/* O <nav class="navbar"> do header tem "position:relative; left:95px"
-   (um deslocamento que já existia antes, mas era invisível porque o
-   navbar nunca teve fundo próprio). Com o alto contraste forçando
-   fundo preto em TODO elemento, esse deslocamento passou a aparecer
-   como um retângulo preto sólido cobrindo o início do botão
-   "Torne-se Vendedor", ao lado. Containers que servem só para
-   organizar o layout (não são um "cartão"/botão/painel visual)
-   devem continuar transparentes, mostrando o preto do body por trás
-   sem criar essas caixas soltas. */
 html.a11y-high-contrast .navbar,
 html.a11y-high-contrast .login-container {
   background-color: transparent !important;
@@ -472,7 +419,6 @@ html.a11y-invert video {
   filter: invert(1) hue-rotate(180deg);
 }
 
-/* ── Guia de leitura ── */
 .a11y-reading-guide {
   position: fixed;
   left: 0;

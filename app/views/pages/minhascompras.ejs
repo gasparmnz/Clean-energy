@@ -34,11 +34,6 @@
       
 
         <%
-          // Endereço completo do produto (cidade, bairro, rua, número,
-          // complemento), montado em pagamentoController.mapPedidoParaView.
-          // Imagem do produto: novos cadastros salvam a imagem como Data URI
-          // (data:image/...;base64,...) direto no banco; cadastros antigos
-          // guardam só o nome do arquivo em /public/imagem.
           function srcImagem(imagem) {
             const valor = typeof imagem === 'string' ? imagem.trim() : '';
             if (valor.startsWith('data:image/')) return valor;
@@ -74,7 +69,6 @@
 
         <section class="tab-content" id="productTabsContent">
 
-          <!-- EM TRÂNSITO -->
           <section class="tab-pane fade show active" id="emAndamento" role="tabpanel" aria-labelledby="emAndamentoTab">
             <% if (!emTransito || emTransito.length === 0) { %>
               <div class="sem-itens">
@@ -119,7 +113,6 @@
             <% } %>
           </section>
 
-          <!-- PENDENTES -->
           <section class="tab-pane fade" id="pendentes" role="tabpanel" aria-labelledby="pendentesTab">
             <% if (!pendentes || pendentes.length === 0) { %>
               <div class="sem-itens">
@@ -155,7 +148,6 @@
             <% } %>
           </section>
 
-          <!-- CONCLUÍDOS -->
           <section class="tab-pane fade" id="concluidos" role="tabpanel" aria-labelledby="concluidosTab">
             <% if (!concluidos || concluidos.length === 0) { %>
               <div class="sem-itens">
@@ -202,7 +194,6 @@
     </main>
   </nav>
 
-  <!-- MODAL PAGAMENTO -->
   <section class="modal fade" id="pagamentoModal" tabindex="-1" aria-labelledby="pagamentoModalLabel" aria-hidden="true">
     <section class="modal-dialog modal-dialog-centered modal-xl">
       <section class="modal-content">
@@ -295,7 +286,6 @@
     </section>
   </section>
 
-  <!-- MODAL CANCELAR -->
   <section class="modal fade" id="cancelarModal" tabindex="-1" aria-labelledby="cancelarModalLabel" aria-hidden="true">
     <section class="modal-dialog modal-dialog-centered">
       <section class="modal-content">
@@ -316,7 +306,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Abre a aba indicada no endereço (ex.: /minhascompras#concluidos).
     (function abrirAbaDoHash() {
       const alvo = window.location.hash;
       if (!alvo) return;
@@ -330,7 +319,6 @@
     let produtoSelecionadoParaPagamento = null;
     let selectedPaymentMethod = 'pix';
 
-    // Cancelar
     document.querySelectorAll('.btn-cancelar').forEach(btn => {
       btn.addEventListener('click', function () {
         cardParaCancelar = this.closest('.produto-card');
@@ -358,7 +346,6 @@
         }
 
         card.remove();
-        // Se não há mais cards, mostra mensagem vazia
         const grid = document.querySelector('#pendentes .produtos-grid');
         if (grid && grid.querySelectorAll('.produto-card').length === 0) {
           grid.parentElement.innerHTML = `
@@ -378,7 +365,6 @@
       });
     });
 
-    // Confirmar Recebimento (em trânsito -> concluído)
     document.querySelectorAll('.btn-confirmar-recebimento').forEach(btn => {
       btn.addEventListener('click', function () {
         const card = this.closest('.produto-card');
@@ -398,7 +384,6 @@
           if (!resposta.ok || !dados.sucesso) {
             throw new Error(dados.erro || 'Não foi possível confirmar o recebimento.');
           }
-          // Recarrega já na aba "Concluídos", onde o pedido passa a aparecer.
           window.location.href = '/minhascompras#concluidos';
           window.location.reload();
         })
@@ -410,8 +395,6 @@
       });
     });
 
-    // Mostrar/Ocultar Endereço (em trânsito e concluídos): revela o
-    // endereço completo dentro do próprio card.
     document.querySelectorAll('.btn-mostrar-endereco').forEach(btn => {
       const textoMostrar = btn.innerHTML;
       btn.addEventListener('click', function () {
@@ -425,7 +408,6 @@
       });
     });
 
-    // Pagamento — redireciona ao checkout do Mercado Pago, igual no carrinho
     document.querySelectorAll('.btn-pagar').forEach(btn => {
       btn.addEventListener('click', function () {
         const card = this.closest('.produto-card');
@@ -514,7 +496,6 @@
         }
       }
 
-      // Pagamento ainda não real — apenas informa o usuário
       erroEl.textContent = 'Pagamento ainda não disponível. Em breve!';
       erroEl.style.display = 'block';
     });

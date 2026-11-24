@@ -9,8 +9,8 @@ const helmetMiddleware = helmet({
 const compressionMiddleware = compression();
 
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 20,                  // no máximo 20 requisições nesse período, por IP
+  windowMs: 15 * 60 * 1000,
+  max: 20,
   standardHeaders: true,
   legacyHeaders: false,
   message: {

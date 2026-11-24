@@ -41,7 +41,7 @@
         </button>
         <section id="dropdownMenu" class="dropdown-content">
           <span class="dropdown-nome"><%= usuario.nome %></span>
-          <span class="dropdown-perfil"><%= usuario.perfil === 'vendedor' ? '🏪 Vendedor' : '🛒 Comprador' %></span>
+          <span class="dropdown-perfil"><%= usuario.perfil === 'vendedor' ? 'Vendedor' : 'Comprador' %></span>
           <hr>
           <a href="/perfil">Meu Perfil</a>
           <a href="/logout" style="color:#e74c3c;">Sair</a>
@@ -55,12 +55,10 @@
         <img class="carrinho" src="/imagem/carrinho.png" alt="Carrinho">
       </a>
 
-      <!-- Desktop: links normais -->
       <span class="login-links">
         <a href="/login">LOGIN</a> | <a href="/cadastro">CADASTRE-SE</a>
       </span>
 
-      <!-- Mobile/Tablet: ícone avatar com dropdown -->
       <section class="dropdown dropdown-guest" id="dropdownGuest">
         <button class="dropdown-trigger" id="dropdownGuestBtn">
           <img src="/imagem/user.png" alt="Entrar" class="avatar">

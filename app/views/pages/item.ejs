@@ -9,7 +9,6 @@
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ── Avaliações ── */
     .community-main-title { font-size:1.2rem; font-weight:700; margin-bottom:1rem; color:var(--text,#222); }
     .avg-rating { display:flex; align-items:center; gap:.6rem; margin-bottom:1.2rem; padding:.8rem 1rem; background:#f9f9f9; border-radius:8px; }
     body.dark-mode .avg-rating { background:#2a2a2a; }
@@ -29,7 +28,6 @@
     .comment-body p { font-size:.9rem; color:#444; line-height:1.5; }
     body.dark-mode .comment-body p { color:#ccc; }
     .no-comments { text-align:center; padding:1.5rem; color:#aaa; font-size:.9rem; }
-    /* ── Formulário de avaliação ── */
     .review-form-section { margin-top:1.5rem; padding:1rem; background:#f0fdf4; border-radius:10px; border:1px solid #bbf7d0; }
     body.dark-mode .review-form-section { background:#1a2e1a; border-color:#2d5a2d; }
     .review-form-section h3 { font-size:1rem; font-weight:700; margin-bottom:.8rem; color:#166534; }
@@ -43,7 +41,6 @@
     .star-selector label:hover,
     .star-selector input:checked + label,
     .star-selector input:checked ~ label { color:#d1d5db; }
-    /* RTL trick for star rating */
     .star-selector { flex-direction:row-reverse; justify-content:flex-end; }
     .star-selector label:hover,
     .star-selector label:hover ~ label { color:#f59e0b; }
@@ -78,7 +75,6 @@
 
     <nav class="product-container">
 
-      <!-- COLUNA ESQUERDA -->
       <nav class="product-left-column">
         <section class="product-gallery" aria-labelledby="gallery-title">
           <h2 id="gallery-title" class="visually-hidden">Galeria do Produto</h2>
@@ -87,11 +83,9 @@
           </figure>
         </section>
 
-        <!-- COMENTÁRIOS DESKTOP -->
         <section class="product-community desktop-comments" id="comentarios" aria-labelledby="community-title">
           <h2 id="community-title" class="community-main-title">Comentários da Comunidade</h2>
 
-          <!-- Média -->
           <% if (avaliacoes && avaliacoes.length > 0) { %>
           <nav class="avg-rating">
             <span class="avg-number"><%= mediaNotas %></span>
@@ -129,9 +123,7 @@
           </nav>
           <% } %>
 
-          <!-- FORMULÁRIO DE AVALIAÇÃO -->
           <% if (typeof req !== 'undefined' && req.session && req.session.userId) { %>
-          <%# Fallback: verificar via usuario passado na view %>
           <% } %>
           <% if (typeof usuario !== 'undefined' && usuario && comprou) { %>
           <nav class="review-form-section">
@@ -144,7 +136,6 @@
               </nav>
             <% } %>
             <form action="/item/<%= produto.id %>/avaliar" method="POST">
-              <!-- Seletor de estrelas (RTL trick) -->
               <nav class="star-selector">
                 <% for(let i=5; i>=1; i--) { %>
                   <input type="radio" name="nota" id="star<%= i %>" value="<%= i %>">
@@ -171,7 +162,6 @@
         </section>
       </nav>
 
-      <!-- COLUNA DIREITA -->
       <nav class="product-right-column">
         <section class="product-info" aria-label="Informações do produto">
           <header class="product-header">
@@ -247,7 +237,7 @@
                   <i class='bx bx-package'></i> <%= vendedor.totalProdutos %> produto<%= vendedor.totalProdutos !== 1 ? 's' : '' %> cadastrado<%= vendedor.totalProdutos !== 1 ? 's' : '' %>
                 </span>
                 <span style="font-size:.8rem;color:#16a34a;font-weight:600;margin-top:.2rem;">
-                  Ver perfil completo →
+                  Ver perfil completo 
                 </span>
               </nav>
             </a>
@@ -264,7 +254,6 @@
             <% } %>
           </section>
 
-          <!-- COMENTÁRIOS MOBILE -->
           <section class="product-community mobile-comments" aria-labelledby="community-title-mobile">
             <h2 id="community-title-mobile" class="community-main-title">Comentários da Comunidade</h2>
 

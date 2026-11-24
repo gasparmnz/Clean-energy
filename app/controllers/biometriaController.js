@@ -9,7 +9,6 @@ const {
   verifyAuthenticationResponse
 } = require('../helpers/webauthn');
 
-// GET /perfil/biometria/listar — lista os dispositivos biométricos cadastrados do usuário logado
 async function listarCredenciais(req, res) {
   try {
     const credenciais = await webauthnModel.getCredentialsByUsuario(req.session.userId);
@@ -20,7 +19,6 @@ async function listarCredenciais(req, res) {
   }
 }
 
-// GET /perfil/biometria/opcoes-registro — gera o desafio para cadastrar biometria/Face ID neste dispositivo
 async function opcoesRegistro(req, res) {
   try {
     const existentes = await webauthnModel.getCredentialsByUsuario(req.session.userId);
@@ -35,7 +33,7 @@ async function opcoesRegistro(req, res) {
       authenticatorSelection: {
         residentKey: 'preferred',
         userVerification: 'preferred',
-        authenticatorAttachment: 'platform' // biometria/Face ID do próprio dispositivo
+        authenticatorAttachment: 'platform'
       }
     });
     req.session.webauthnChallenge = options.challenge;
@@ -46,7 +44,6 @@ async function opcoesRegistro(req, res) {
   }
 }
 
-// POST /perfil/biometria/verificar-registro — verifica e salva a credencial biométrica recém-criada no navegador
 async function verificarRegistro(req, res) {
   try {
     const expectedChallenge = req.session.webauthnChallenge;
@@ -64,7 +61,6 @@ async function verificarRegistro(req, res) {
     }
 
     const info = verification.registrationInfo;
-    // Compatibilidade entre versões da lib (algumas expõem `credential`, outras campos separados)
     const credential = info.credential || {
       id: info.credentialID,
       publicKey: info.credentialPublicKey,
@@ -96,7 +92,6 @@ async function verificarRegistro(req, res) {
   }
 }
 
-// POST /perfil/biometria/remover/:id — remove uma credencial biométrica cadastrada
 async function removerCredencial(req, res) {
   try {
     const ok = await webauthnModel.removerCredencial(req.params.id, req.session.userId);
@@ -107,7 +102,6 @@ async function removerCredencial(req, res) {
   }
 }
 
-// POST /login/biometria/opcoes — gera o desafio de login biométrico a partir do e-mail informado
 async function opcoesLoginBiometria(req, res) {
   try {
     const { email } = req.body;
@@ -137,7 +131,6 @@ async function opcoesLoginBiometria(req, res) {
   }
 }
 
-// POST /login/biometria/verificar — verifica a resposta biométrica e efetiva o login
 async function verificarLoginBiometria(req, res) {
   try {
     const expectedChallenge = req.session.webauthnChallenge;

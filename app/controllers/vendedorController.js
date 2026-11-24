@@ -1,7 +1,6 @@
 const models = require('../models/models');
 const { vendedorModel, notificacoesModel } = models;
 
-// GET /vendedor/:id
 async function getPerfilVendedor(req, res) {
   try {
     const vendedorId = req.params.id;
@@ -44,7 +43,6 @@ async function getPerfilVendedor(req, res) {
   }
 }
 
-// POST /vendedor/:id/avaliar
 async function avaliarVendedor(req, res) {
   const vendedorId = req.params.id;
   const { nota, comentario } = req.body;

@@ -1,20 +1,3 @@
-/**
- * Regras de senha da Clean Energy — FONTE ÚNICA.
- *
- * Este mesmo arquivo é usado:
- *  - no navegador (<script src="/js/senha-regras.js">), expondo window.SenhaRegras,
- *    para o feedback em tempo real do cadastro;
- *  - no servidor (require('../public/js/senha-regras')), em authController,
- *    que continua sendo a autoridade final da validação.
- *
- * As expressões abaixo são exatamente as usadas por validator.isStrongPassword
- * (dependência do express-validator), que o backend também aplica com as
- * opções OPCOES_VALIDATOR. Assim frontend e backend nunca divergem:
- *  - minúscula:  [a-z]
- *  - maiúscula:  [A-Z]
- *  - número:     [0-9]
- *  - especial:   - # ! $ @ £ % ^ & * ( ) _ + | ~ = ` { } [ ] : " ; ' < > ? , . / \ e espaço
- */
 (function (raiz, fabrica) {
   if (typeof module === 'object' && module.exports) {
     module.exports = fabrica();
@@ -36,7 +19,6 @@
     { id: 'especial',  texto: 'Um caractere especial',   falta: 'um caractere especial (ex.: ! @ # $ %)', teste: function (s) { return REGEX_SIMBOLO.test(s); } }
   ];
 
-  // Opções equivalentes para validator/express-validator isStrongPassword.
   var OPCOES_VALIDATOR = {
     minLength: TAMANHO_MINIMO,
     minLowercase: 1,
@@ -45,7 +27,6 @@
     minSymbols: 1
   };
 
-  // [{ id, texto, ok }] — um item por requisito, na ordem de exibição.
   function verificar(senha) {
     var s = typeof senha === 'string' ? senha : '';
     return REQUISITOS.map(function (r) {
@@ -58,7 +39,6 @@
     return lista.slice(0, -1).join(', ') + ' e ' + lista[lista.length - 1];
   }
 
-  // Mensagem dizendo exatamente o que falta; '' se a senha é válida.
   function mensagemErro(senha) {
     var s = typeof senha === 'string' ? senha : '';
     if (!s) return 'Senha é obrigatória';

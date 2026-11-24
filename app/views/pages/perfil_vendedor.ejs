@@ -27,7 +27,6 @@
       </button>
     </nav>
 
-    <!-- HERO DO VENDEDOR -->
     <header class="vend-hero">
       <div class="vend-hero-inner">
         <figure class="vend-avatar-wrap">
@@ -50,7 +49,6 @@
           <% } %>
         </div>
 
-        <!-- Estrelas ao lado do nome -->
         <div class="vend-hero-rating">
           <% if (vendedor.mediaAvaliacao) { %>
             <span class="vend-nota-num"><%= vendedor.mediaAvaliacao %></span>
@@ -67,7 +65,6 @@
       </div>
     </header>
 
-    <!-- ESTATÍSTICAS -->
     <section class="vend-stats" aria-label="Estatísticas do vendedor">
       <article class="vend-stat-card">
         <i class='bx bx-package'></i>
@@ -93,7 +90,6 @@
 
     <div class="vend-body">
 
-      <!-- COLUNA ESQUERDA: Produtos -->
       <section class="vend-section" aria-labelledby="produtos-title">
         <header class="vend-section-header">
           <h2 id="produtos-title"><i class='bx bx-package'></i> Produtos Cadastrados</h2>
@@ -128,10 +124,8 @@
         <% } %>
       </section>
 
-      <!-- COLUNA DIREITA: Avaliações + Formulário -->
       <aside class="vend-section vend-avaliacoes-col" aria-labelledby="avaliacoes-title" id="avaliacoes">
 
-        <!-- Formulário de avaliação -->
         <section class="vend-form-section" aria-label="Avaliar vendedor">
           <% if (typeof usuario !== 'undefined' && usuario && parseInt(usuario.id) !== parseInt(vendedor.Usuario_ID)) { %>
 
@@ -159,7 +153,6 @@
             </header>
 
             <form action="/vendedor/<%= vendedor.Usuario_ID %>/avaliar" method="POST" class="vend-form">
-              <!-- Seletor de estrelas RTL -->
               <div class="vend-stars-selector" role="group" aria-label="Selecione uma nota">
                 <% for(let i=5; i>=1; i--) { %>
                   <input type="radio" name="nota" id="vstar<%= i %>" value="<%= i %>"
@@ -194,7 +187,6 @@
           <% } %>
         </section>
 
-        <!-- Lista de avaliações recebidas -->
         <section aria-labelledby="lista-aval-title">
           <header class="vend-section-header" style="margin-top:1.5rem;">
             <h2 id="lista-aval-title"><i class='bx bx-message-detail'></i> Avaliações recebidas</h2>

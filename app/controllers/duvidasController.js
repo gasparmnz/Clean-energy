@@ -1,6 +1,5 @@
 const geminiChat = require('../helpers/geminiChat');
 
-// GET /duvidas
 function getDuvidas(req, res) {
   res.render('pages/duvidas');
 }

@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
       
-      // Confirmar exclusão
       if (confirm('Tem certeza que deseja excluir este produto? Esta ação não pode ser desfeita.')) {
         excluirProduto(produtoCard, produtoId);
       }
@@ -34,13 +33,11 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function excluirProduto(cardElement, produtoId) {
-  // Mostrar loading
   const botao = cardElement.querySelector('.btn-excluir');
   const textoBotao = botao.innerHTML;
   botao.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Deletando...';
   botao.disabled = true;
   
-  // Fazer requisição DELETE
   fetch(`/produtos/${produtoId}`, {
     method: 'DELETE',
     headers: {
@@ -77,7 +74,7 @@ function excluirProduto(cardElement, produtoId) {
         }
         
 
-        mostrarNotificacao('✓ Produto deletado com sucesso!', 'success');
+        mostrarNotificacao('Produto deletado com sucesso!', 'success');
       }, 300);
     } else {
       botao.innerHTML = textoBotao;

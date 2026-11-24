@@ -1,4 +1,3 @@
-// default mock data (usado só se o servidor não passar produtos)
 const MOCK_PRODUCTS = [
   { id: 'PROD-001', name: 'Serragem', description: 'Serragem compacta de alta densidade energética.', price: 150.00, stock: 200, status: 'active', image: '/imagem/serragem.png' },
   { id: 'PROD-002', name: 'Casca de Arroz', description: 'Subproduto do arroz com alto poder calorífico.', price: 80.00, stock: 500, status: 'active', image: '/imagem/cascadearroz.png' },
@@ -113,7 +112,6 @@ function closeModal() {
   currentEditingProduct = null;
 }
 
-// Salva edição no banco via POST
 async function saveProduct() {
   if (!currentEditingProduct) return;
 
@@ -136,7 +134,6 @@ async function saveProduct() {
       return;
     }
 
-    // Atualiza localmente após confirmar
     currentEditingProduct.name = updatedData.name;
     currentEditingProduct.stock = updatedData.stock;
 

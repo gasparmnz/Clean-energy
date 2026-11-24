@@ -37,14 +37,10 @@
       </header>
 
       <article id="userContent">
-        <!-- Conteúdo carregado pelo JavaScript -->
       </article>
     </main>
   </section>
 
-  <!-- ═══════════════════════════════════════════════
-       MODAL DE AVALIAÇÕES
-  ═══════════════════════════════════════════════ -->
   <dialog id="avaliacoesModal" class="avaliacoes-modal">
     <article class="avaliacoes-content">
       <button class="close-modal" onclick="closeModal()">&times;</button>
@@ -59,9 +55,6 @@
     </article>
   </dialog>
 
-  <!-- ═══════════════════════════════════════════════
-       MODAL PERSONALIZADO (suspender / excluir conta)
-  ═══════════════════════════════════════════════ -->
   <nav id="customModal" class="custom-modal">
     <nav class="modal-content">
       <h3 id="modalTitle">Confirmação</h3>
@@ -73,12 +66,9 @@
     </nav>
   </nav>
 
-  <!-- ═══════════════════════════════════════════════
-       MODAL DE CONFIRMAÇÃO DE AVALIAÇÃO
-  ═══════════════════════════════════════════════ -->
   <nav class="confirm-modal-overlay" id="confirmAvalModal" onclick="if(event.target===this) closeConfirmModal()">
     <nav class="confirm-modal">
-      <nav class="confirm-modal-icon" id="confirmAvalIcon">⚠️</nav>
+      <nav class="confirm-modal-icon" id="confirmAvalIcon"></nav>
       <h3 id="confirmAvalTitle">Suspender comentário?</h3>
       <p id="confirmAvalMsg">Este comentário ficará oculto para todos os usuários.</p>
       <nav class="confirm-modal-actions">
@@ -88,9 +78,6 @@
     </nav>
   </nav>
 
-  <!-- ═══════════════════════════════════════════════
-       DADOS DO SERVIDOR (EJS → JS)
-  ═══════════════════════════════════════════════ -->
   <script id="server-user-data" type="application/json">
     <%- JSON.stringify(typeof usuario !== 'undefined' ? usuario : null) %>
   </script>
@@ -98,11 +85,7 @@
     <%- JSON.stringify(typeof avaliacoesDadas !== 'undefined' ? avaliacoesDadas : []) %>
   </script>
 
-  <!-- ═══════════════════════════════════════════════
-       JAVASCRIPT PRINCIPAL
-  ═══════════════════════════════════════════════ -->
   <script>
-    /* ── Hidratação dos dados do servidor ── */
     window.__SERVER_USER__ = JSON.parse(
       document.getElementById('server-user-data').textContent
     );
@@ -126,7 +109,6 @@
       });
     }
 
-    /* ── Utilitários ── */
     function getUserIdFromUrl() {
       return new URLSearchParams(window.location.search).get('userId');
     }
@@ -153,7 +135,6 @@
       return d.length !== 14 ? v : d.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
     }
 
-    /* ── Renderização principal ── */
     function displayUserContent(userId) {
       var contentDiv = document.getElementById('userContent');
 
@@ -251,7 +232,6 @@
         '</section>' +
       '</section>';
 
-      /* ── Produtos Vendidos ── */
       if (user.products && user.products.length > 0) {
         html += '<section class="user-profile-card"><section class="products-section">' +
           '<header class="section-header"><h3><i class=\'bx bx-package\'></i> Produtos Vendidos</h3></header>' +
@@ -269,7 +249,6 @@
         html += '</section></section></section>';
       }
 
-      /* ── Produtos Comprados ── */
       if (user.purchasedProducts && user.purchasedProducts.length > 0) {
         html += '<section class="user-profile-card"><section class="products-section">' +
           '<header class="section-header"><h3><i class=\'bx bx-cart\'></i> Produtos Comprados</h3></header>' +
@@ -287,7 +266,6 @@
         html += '</section></section></section>';
       }
 
-      /* ── Avaliações Dadas ── */
       html += '<section class="user-profile-card"><section class="info-section">' +
         '<header class="section-header"><h3><i class=\'bx bxs-star\'></i> Avaliações Dadas</h3></header>';
 
@@ -325,13 +303,11 @@
       contentDiv.innerHTML = html;
     }
 
-    /* ── Modal de avaliações (legado) ── */
     function closeModal() {
       document.getElementById('avaliacoesModal').classList.remove('show');
       document.body.classList.remove('modal-open');
     }
 
-    /* ── Modal customizado (conta) ── */
     function openCustomModal(title, message, onConfirm) {
       var modal = document.getElementById('customModal');
       document.getElementById('modalTitle').textContent   = title;
@@ -345,7 +321,6 @@
       document.getElementById('customModal').classList.remove('show');
     }
 
-    /* ── Suspender / Reativar conta ── */
     async function suspendAccount(userId) {
       var s = window.__SERVER_USER__;
       if (!s || !s.id) { alert('Usuário não identificado.'); return; }
@@ -380,7 +355,6 @@
       });
     }
 
-    /* ── Excluir conta ── */
     async function deleteAccount(userId) {
       var s = window.__SERVER_USER__;
       if (!s || !s.id) { alert('Usuário não identificado.'); return; }
@@ -389,7 +363,7 @@
 
       openCustomModal(
         'Excluir Conta',
-        '⚠️ Deseja excluir permanentemente a conta de ' + nome + '?',
+        'Deseja excluir permanentemente a conta de ' + nome + '?',
         async function() {
           try {
             var res  = await fetch('/adm/usuarios/excluir', {
@@ -413,7 +387,6 @@
       );
     }
 
-    /* ── Toast ── */
     function showToastDU(msg, type) {
       var t = document.getElementById('duToast');
       if (!t) {
@@ -434,13 +407,12 @@
       }, 3000);
     }
 
-    /* ── Modal de confirmação de avaliação ── */
     var _confirmCb = null;
 
     function openConfirmModal(id, action, btn) {
       _confirmCb = { id: id, action: action, btn: btn };
       var isReativar = action === 'reativar';
-      document.getElementById('confirmAvalIcon').textContent  = isReativar ? '✅' : '⚠️';
+      document.getElementById('confirmAvalIcon').textContent  = isReativar ? '' : '';
       document.getElementById('confirmAvalTitle').textContent = isReativar ? 'Reverter suspensão?' : 'Suspender comentário?';
       document.getElementById('confirmAvalMsg').textContent   = isReativar
         ? 'O comentário voltará a ser exibido publicamente para todos os usuários.'
@@ -456,9 +428,7 @@
       _confirmCb = null;
     }
 
-    /* ── Init ── */
     document.addEventListener('DOMContentLoaded', function() {
-      /* Renderiza o conteúdo do usuário */
       var userId = getUserIdFromUrl();
       if (userId) {
         displayUserContent(userId);
@@ -467,7 +437,6 @@
           '<article class="empty-state"><p>Nenhum ID de usuário fornecido na URL.</p></article>';
       }
 
-      /* Listener do botão de confirmar avaliação */
       document.getElementById('confirmAvalBtn').addEventListener('click', async function() {
         if (!_confirmCb) return;
         var id         = _confirmCb.id;

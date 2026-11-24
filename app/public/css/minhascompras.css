@@ -17,7 +17,6 @@ body {
   color: var(--text-color);
 }
 
-/* Layout principal */
 main {
   display: flex;
   flex-direction: row;
@@ -25,7 +24,6 @@ main {
   margin-top: 87px;
 }
 
-/* Remove o padding do sidebar_perfil.css para o conteúdo ficar no topo */
 .perfil-layout__content {
   padding: 0 !important;
 }
@@ -38,7 +36,6 @@ main {
   gap: 30px;
 }
 
-/* Botão voltar */
 .back-button {
   all: unset;
   cursor: pointer;
@@ -68,7 +65,6 @@ main {
   gap: 25px;
 }
 
-/* Card de produto */
 .produto-card {
   
   background: #fff;
@@ -150,7 +146,6 @@ main {
   flex-shrink: 0;
 }
 
-/* Endereço completo revelado pelo botão "Mostrar Endereço" */
 .produto-info .endereco-completo {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -177,7 +172,6 @@ main {
   overflow-wrap: anywhere;
 }
 
-/* Ações */
 .acoes {
   display: flex;
   justify-content: center;
@@ -185,7 +179,6 @@ main {
   flex-wrap: wrap;
 }
 
-/* Botão Chat */
 .btn-chat {
   background-color: #38b000;
   border: none;
@@ -251,7 +244,6 @@ main {
     transition: color 0.2s;
   }
 
-  /* Quando uma estrela for selecionada ou anterior a ela */
   .avaliacao-estrelas input:checked ~ label,
   .avaliacao-estrelas label:hover,
   .avaliacao-estrelas label:hover ~ label {
@@ -296,7 +288,6 @@ main {
   margin-bottom: 10px;
 }
 
-/* círculo personalizado */
 #pagamentoModal .form-check-label::before {
   content: "";
   display: inline-block;
@@ -311,7 +302,6 @@ main {
   position: relative;
 }
 
-/* círculo preenchido quando selecionado */
 #pagamentoModal .form-check-input:checked + .form-check-label::before {
   border-color: #198754;
   background-color: #198754;
@@ -319,7 +309,6 @@ main {
 
 
 
-/* destaca o label selecionado com borda e fundo */
 #pagamentoModal .form-check-input:checked + .form-check-label {
   border-color: #198754;
   background-color: #d4edda;
@@ -328,15 +317,15 @@ main {
 
 
 #pix + label::before {
-  content: "💸";
+  content: "";
 }
 
 #cartao + label::before {
-  content: "💳";
+  content: "";
 }
 
 #boleto + label::before {
-  content: "🧾";
+  content: "";
 }
 
 #pagamentoModal .modal-footer {
@@ -404,13 +393,11 @@ main {
   padding: 0 !important;
 }
 
-/* O content interno também precisa do limite */
 .content {
   overflow: hidden;
   width: 100%;
 }
 
-/* O grid precisa de overflow-x apenas nele, não no pai */
 .produtos-grid {
   overflow-x: auto;
   overflow-y: visible;
@@ -474,14 +461,6 @@ body.dark-mode .produto-info .endereco-completo {
   background: rgba(134, 239, 172, 0.08);
 }
 
-/* ============================================
-   Card cresce com o conteúdo
-   Antes o card tinha height: 380px fixo, então ao clicar em "Mostrar
-   Endereço" o endereço transbordava e ficava por trás dos botões. Agora a
-   altura mínima continua 380px, mas o card cresce para caber o endereço e
-   volta ao tamanho normal quando ele é ocultado. align-items: start evita
-   que os outros cards da mesma linha estiquem junto.
-   ============================================ */
 .produtos-grid {
   align-items: start;
 }

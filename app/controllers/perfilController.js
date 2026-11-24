@@ -4,7 +4,6 @@ const { usuarioModel, vendedorModel } = models;
 const pedidoModel = require('../models/pedidoModel');
 const { arquivoParaDataUri } = require('../helpers/imagem');
 
-// GET /perfil
 async function getPerfil(req, res) {
   try {
     const usuarioDados = await usuarioModel.findById(req.session.userId);
@@ -24,7 +23,6 @@ async function getPerfil(req, res) {
   }
 }
 
-// POST /perfil/atualizar
 async function atualizarPerfil(req, res) {
   const { nome, biografia } = req.body;
   if (!nome || nome.trim().length < 2) {
@@ -40,7 +38,6 @@ async function atualizarPerfil(req, res) {
   }
 }
 
-// POST /perfil/foto
 async function atualizarFoto(req, res) {
   try {
     if (!req.file) {
@@ -64,7 +61,6 @@ async function atualizarFoto(req, res) {
   }
 }
 
-// GET /upgrade_vendedor
 function getUpgradeVendedorForm(req, res) {
   if (req.session.perfil !== 'comprador') {
     return res.redirect('/?erro=acesso_restrito');
@@ -76,7 +72,6 @@ function getUpgradeVendedorForm(req, res) {
   });
 }
 
-// Regras de validação para upgrade de vendedor
 const validarUpgradeVendedor = [
   body('company_name')
     .trim()
@@ -98,7 +93,6 @@ const validarUpgradeVendedor = [
     })
 ];
 
-// POST /upgrade_vendedor
 async function postUpgradeVendedor(req, res) {
   if (req.session.perfil !== 'comprador') {
     return res.redirect('/?erro=acesso_restrito');
@@ -143,7 +137,6 @@ async function postUpgradeVendedor(req, res) {
   }
 }
 
-// GET /dashboard
 async function getDashboard(req, res) {
   try {
     const userId = req.session.userId;
@@ -153,15 +146,12 @@ async function getDashboard(req, res) {
       return res.redirect('/login');
     }
 
-    // Identifica se é Vendedor (PJ)
     const isVendedor = (usuarioDados.Tipo === 'PJ' || usuarioDados.tipo === 'PJ' || req.session.tipo === 'PJ');
 
-    // Se o usuário for Comprador (PF), redireciona suavemente para a página de perfil
     if (!isVendedor) {
       return res.redirect('/perfil');
     }
 
-    // Organiza dados para não perder variáveis na view
     usuarioDados.perfil = req.session.perfil;
     usuarioDados.nome = usuarioDados.Nome || usuarioDados.nome || req.session.nomeUsuario;
     usuarioDados.Tipo = usuarioDados.Tipo || usuarioDados.tipo || req.session.tipo;
@@ -169,11 +159,6 @@ async function getDashboard(req, res) {
 
     res.locals.usuario = Object.assign({}, res.locals.usuario, usuarioDados);
 
-    // Métricas reais do vendedor. Antes o código chamava models.vendaModel,
-    // models.compraModel e models.avaliacaoModel, que não existem no
-    // projeto — por isso tudo aparecia como 0. Agora os dados vêm de:
-    //  - pedidos + produtos (produtos.usuario_id = vendedor) + Usuario;
-    //  - Avaliacao_Vendedor (avaliações do vendedor).
     const [resumo, avaliacao, vendas, compras] = await Promise.all([
       pedidoModel.resumoVendas(userId),
       vendedorModel.findMediaAvaliacao(userId),
@@ -202,7 +187,6 @@ async function getDashboard(req, res) {
   }
 }
 
-// EXPORTAÇÕES (Fundamental ter o getDashboard aqui para o Express encontrar)
 module.exports = {
   getPerfil,
   atualizarPerfil,

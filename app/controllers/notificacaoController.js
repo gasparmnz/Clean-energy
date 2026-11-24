@@ -1,7 +1,6 @@
 const models = require('../models/models');
 const { notificacoesModel } = models;
 
-// GET /notificacoes
 async function listar(req, res) {
   try {
     const notificacoes = await notificacoesModel.listarPorUsuario(req.session.userId, 20);
@@ -12,7 +11,6 @@ async function listar(req, res) {
   }
 }
 
-// GET /notificacoes/nao-lidas
 async function contarNaoLidas(req, res) {
   try {
     const total = await notificacoesModel.contarNaoLidas(req.session.userId);
@@ -23,7 +21,6 @@ async function contarNaoLidas(req, res) {
   }
 }
 
-// POST /notificacoes/:id/ler
 async function marcarLida(req, res) {
   try {
     await notificacoesModel.marcarLida(req.params.id, req.session.userId);
@@ -33,7 +30,6 @@ async function marcarLida(req, res) {
   }
 }
 
-// POST /notificacoes/marcar-todas-lidas
 async function marcarTodasLidas(req, res) {
   try {
     await notificacoesModel.marcarTodasLidas(req.session.userId);

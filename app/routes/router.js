@@ -16,7 +16,6 @@ const biometriaController = require("../controllers/biometriaController");
 const duvidasController = require("../controllers/duvidasController");
 const adminController = require("../controllers/adminController");
 const { authLimiter } = require("../middlewares/security");
-/* PÁGINAS / PRODUTOS */
 router.get("/", produtoController.listarProdutos);
 router.get("/home", paginaController.getHome);
 router.get("/transporte", paginaController.getTransporte);
@@ -33,30 +32,22 @@ router.post("/item/:id/avaliar", requireLogin, produtoController.avaliarItem);
 router.put("/produtos/:id", requireVendedor, produtoController.atualizarProduto);
 router.delete("/produtos/:id", requireVendedor, produtoController.deleteProduto);
 
-/* CARRINHO */
 router.get("/carrinho", carrinhoController.getCarrinho);
 router.post("/cart/add", carrinhoController.addToCart);
 router.post("/cart/remove", carrinhoController.removeFromCart);
 router.post("/cart/quantidade", carrinhoController.updateQuantity);
 
-/* PAGAMENTO / PEDIDOS */
 router.get("/minhascompras", requireLogin, pagamentoController.getMinhasCompras);
 router.post("/minhascompras/finalizar", requireLogin, pagamentoController.finalizarCompra);
 router.post("/minhascompras/confirmar-recebimento", requireLogin, pagamentoController.confirmarRecebimento);
 router.post("/minhascompras/cancelar", requireLogin, pagamentoController.cancelarPendente);
 router.post("/pagamento/criar", requireLogin, pagamentoController.criarPagamento);
 router.post("/pagamento/pendente/pagar", requireLogin, pagamentoController.pagarPendente);
-// Sem requireLogin: o Mercado Pago retorna para cá sem garantia de que o
-// cookie de sessão ainda esteja válido (ex.: sessão expirou/perdida durante
-// o tempo em que o comprador estava no site do Mercado Pago). O pedido é
-// localizado pelo preference_id que vem na própria URL de retorno, não pela
-// sessão — ver pagamentoController.getSucesso/getFalha.
 router.get("/pagamento/sucesso", pagamentoController.getSucesso);
 router.get("/pagamento/falha", pagamentoController.getFalha);
 router.get("/pagamento/pendente", pagamentoController.getPendente);
 router.post("/pagamento/webhook", pagamentoController.webhook);
 
-/* PERFIL */
 router.get("/dashboard", requireLogin, perfilController.getDashboard);
 router.get("/perfil", requireLogin, perfilController.getPerfil);
 router.post("/perfil/atualizar", requireLogin, perfilController.atualizarPerfil);
@@ -64,7 +55,6 @@ router.post("/perfil/foto", requireLogin, uploadFoto.single("foto"), perfilContr
 router.get("/upgrade_vendedor", requireLogin, perfilController.getUpgradeVendedorForm);
 router.post("/upgrade_vendedor", requireLogin, perfilController.validarUpgradeVendedor, perfilController.postUpgradeVendedor);
 
-/* AUTENTICAÇÃO */
 router.get("/cadastro", authController.getCadastro);
 router.get("/cadastro_vendedor", authController.getCadastroVendedorForm);
 router.get("/login", authController.getLogin);
@@ -77,21 +67,17 @@ router.post("/recuperar-senha", authLimiter, authController.postRecuperarSenha);
 router.get("/redefinir-senha/:token", authController.getRedefinirSenha);
 router.post("/redefinir-senha/:token", authLimiter, authController.postRedefinirSenha);
 
-/* ADMIN LOGIN (rota fica fora do prefixo /adm, então continua aqui) */
 router.get("/adm-login", adminController.getAdmLogin);
 router.post("/adm-login", authLimiter, adminController.postAdmLogin);
 
-/* PERFIL PÚBLICO DO VENDEDOR */
 router.get("/vendedor/:id", vendedorController.getPerfilVendedor);
 router.post("/vendedor/:id/avaliar", requireLogin, vendedorController.avaliarVendedor);
 
-/* NOTIFICAÇÕES */
 router.get("/notificacoes", requireLogin, notificacaoController.listar);
 router.get("/notificacoes/nao-lidas", requireLogin, notificacaoController.contarNaoLidas);
 router.post("/notificacoes/:id/ler", requireLogin, notificacaoController.marcarLida);
 router.post("/notificacoes/marcar-todas-lidas", requireLogin, notificacaoController.marcarTodasLidas);
 
-/* BIOMETRIA / FACE ID (WebAuthn) */
 router.get("/perfil/biometria/listar", requireLogin, biometriaController.listarCredenciais);
 router.get("/perfil/biometria/opcoes-registro", requireLogin, requireWebauthn, biometriaController.opcoesRegistro);
 router.post("/perfil/biometria/verificar-registro", requireLogin, requireWebauthn, biometriaController.verificarRegistro);
@@ -99,7 +85,6 @@ router.post("/perfil/biometria/remover/:id", requireLogin, biometriaController.r
 router.post("/login/biometria/opcoes", requireWebauthn, biometriaController.opcoesLoginBiometria);
 router.post("/login/biometria/verificar", requireWebauthn, biometriaController.verificarLoginBiometria);
 
-/* DÚVIDAS / CHATBOT */
 router.get("/duvidas", duvidasController.getDuvidas);
 router.post("/duvidas/chat", duvidasController.postChat);
 

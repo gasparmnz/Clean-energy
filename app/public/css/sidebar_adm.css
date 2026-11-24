@@ -5,7 +5,6 @@
     --accent-dark: #2f6b4e;
 }
 
-/* Container principal que envolve sidebar e conteúdo */
 .admin-container {
     display: flex;
     min-height: 100vh;

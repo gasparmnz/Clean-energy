@@ -25,7 +25,6 @@
     <main class="perfil-layout__content" id="main-content">
       <% if (usuario) { %>
 
-      <!-- ══ HERO ══ -->
       <section class="perfil-hero" aria-label="Dados do usuário">
         <nav class="perfil-hero__avatar-wrap">
           <img
@@ -34,13 +33,11 @@
             alt="Foto de perfil"
             class="perfil-hero__avatar"
           >
-          <!-- Botão câmera — só aparece quando NÃO há foto pendente -->
           <label class="perfil-hero__camera-btn" id="labelFoto" for="inputFoto" title="Trocar foto">
             <i class='bx bx-camera'></i>
           </label>
           <input type="file" id="inputFoto" accept="image/*" style="display:none">
 
-          <!-- Barra de confirmação — aparece após escolher foto -->
           <nav class="foto-actions" id="fotoActions" style="display:none">
             <button class="foto-btn foto-btn--confirmar" id="btnConfirmarFoto">
               <i class='bx bx-check'></i> Confirmar
@@ -76,13 +73,11 @@
         </button>
       </section>
 
-      <!-- ══ FORMULÁRIO DE EDIÇÃO ══ -->
       <section class="perfil-edit-card hidden" id="formEdicaoWrap" aria-label="Editar perfil">
         <h2 class="perfil-edit-card__title">
           <i class='bx bx-edit'></i> Editar Perfil
         </h2>
 
-        <!-- Dados gerais -->
         <form id="formEdicao" class="perfil-edit-card__form" novalidate>
           <p class="edit-section-label">DADOS PESSOAIS</p>
           <nav class="edit-row">
@@ -107,7 +102,6 @@
 
         <hr class="edit-divider">
 
-        <!-- Redefinir E-mail -->
         <nav class="edit-sub-section">
           <nav class="edit-sub-header">
             <nav class="edit-sub-icon" style="background:#0891b2;">
@@ -144,7 +138,6 @@
 
         <hr class="edit-divider">
 
-        <!-- Redefinir Senha -->
         <nav class="edit-sub-section">
           <nav class="edit-sub-header">
             <nav class="edit-sub-icon" style="background:#7c3aed;">
@@ -187,7 +180,6 @@
 
       </section>
 
-      <!-- ══ CARDS DE ATALHO ══ -->
       <section class="perfil-cards-grid" aria-label="Atalhos do perfil">
 
         <a href="/minhascompras" class="perfil-card">
@@ -240,7 +232,6 @@
 
       </section>
 
-      <!-- ══ CONFIGURAÇÕES ══ -->
       <section class="perfil-section" id="configuracoes" aria-label="Configurações">
         <h2 class="perfil-section__title">Configurações</h2>
 

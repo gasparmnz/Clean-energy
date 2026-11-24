@@ -1,4 +1,3 @@
-/* Reset e configurações base */
 * {
   margin: 0;
   padding: 0;
@@ -6,20 +5,17 @@
 }
 
 :root {
-  /* Cores principais */
   --primary-color: #28530b;
   --primary-hover: #357d12;
   --primary-light: #e8f5e8;
   --secondary-color: #1d3557;
   --accent-color: #f4c430;
   
-  /* Cores de status */
   --success-color: #22c55e;
   --error-color: #ef4444;
   --warning-color: #f59e0b;
   --info-color: #3b82f6;
   
-  /* Cores neutras */
   --text-primary: #1a1a1a;
   --text-secondary: #666666;
   --text-light: #888888;
@@ -31,7 +27,6 @@
   --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.15);
   --shadow-heavy: 0 8px 32px rgba(0, 0, 0, 0.2);
   
-  /* Tipografia */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-size-xs: 0.75rem;
   --font-size-sm: 0.875rem;
@@ -42,7 +37,6 @@
   --font-size-3xl: 1.875rem;
   --font-size-4xl: 2.25rem;
   
-  /* Espaçamentos */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
@@ -51,14 +45,12 @@
   --spacing-2xl: 3rem;
   --spacing-3xl: 4rem;
   
-  /* Bordas */
   --border-radius-sm: 0.375rem;
   --border-radius-md: 0.5rem;
   --border-radius-lg: 0.75rem;
   --border-radius-xl: 1rem;
   --border-radius-full: 9999px;
   
-  /* Transições */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
@@ -75,7 +67,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Utilitários */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -92,7 +83,6 @@ body {
   display: none !important;
 }
 
-/* Layout principal */
 .cadastro-main {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -102,7 +92,6 @@ body {
   box-shadow: var(--shadow-heavy);
 }
 
-/* Hero Section */
 .hero-section {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   color: var(--background);
@@ -170,7 +159,6 @@ body {
   color: var(--accent-color);
 }
 
-/*Formulário */
 .form-section {
   background: var(--background);
   padding: var(--spacing-3xl);
@@ -198,7 +186,6 @@ body {
   font-weight: 400;
 }
 
-/* Navegação entre formulários */
 .form-toggle {
   display: flex;
   background: var(--background-light);
@@ -242,7 +229,6 @@ body {
   font-size: var(--font-size-lg);
 }
 
-/* Formulários */
 .cadastro-form {
   animation: fadeIn 0.4s ease-in-out;
 }
@@ -264,7 +250,6 @@ body {
   margin: 0;
 }
 
-/* Grupos de input */
 .input-group {
   margin-bottom: var(--spacing-xl);
   position: relative;
@@ -286,7 +271,6 @@ body {
   font-size: var(--font-size-base);
 }
 
-/* Inputs */
 .form-input {
   width: 100%;
   padding: var(--spacing-md) var(--spacing-lg);
@@ -313,7 +297,6 @@ body {
   color: var(--text-light);
 }
 
-/* Estados de validação */
 .input-group.valid .form-input {
   border-color: var(--success-color);
   background: rgba(34, 197, 94, 0.05);
@@ -324,7 +307,6 @@ body {
   background: rgba(239, 68, 68, 0.05);
 }
 
-/* Input de senha com botão de toggle */
 .password-input {
   position: relative;
 }
@@ -352,7 +334,6 @@ body {
   font-size: var(--font-size-lg);
 }
 
-/* Indicador de força da senha */
 .password-strength {
   margin-top: var(--spacing-sm);
   display: none;
@@ -404,7 +385,6 @@ body {
   font-weight: 500;
 }
 
-/* Mensagens de ajuda */
 .input-help {
   display: block;
   font-size: var(--font-size-xs);
@@ -413,7 +393,6 @@ body {
   font-weight: 400;
 }
 
-/* Mensagens de erro e sucesso */
 .error-message,
 .success-message {
   display: none;
@@ -455,7 +434,6 @@ body {
   font-size: var(--font-size-base);
 }
 
-/* Botão de submit */
 .submit-btn {
   width: 100%;
   display: flex;
@@ -498,7 +476,6 @@ body {
   opacity: 0.7;
 }
 
-/* Footer do formulário */
 .form-footer {
   text-align: center;
 }
@@ -520,7 +497,6 @@ body {
   text-decoration: underline;
 }
 
-/* Responsividade para tablets */
 @media (max-width: 1024px) {
   .cadastro-main {
     grid-template-columns: 1fr;
@@ -546,7 +522,6 @@ body {
   }
 }
 
-/* Responsividade para mobile */
 @media (max-width: 768px) {
   .cadastro-main {
     box-shadow: none;
@@ -599,7 +574,6 @@ body {
   }
 }
 
-/* Responsividade para telas muito pequenas */
 @media (max-width: 480px) {
   .hero-section {
     padding: var(--spacing-lg);
@@ -627,7 +601,6 @@ body {
   }
 }
 
-/* Estados de foco para acessibilidade */
 .toggle-btn:focus,
 .form-input:focus,
 .password-toggle:focus,
@@ -636,7 +609,6 @@ body {
   outline-offset: 2px;
 }
 
-/* Animações de carregamento */
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -650,7 +622,6 @@ body {
   animation: spin 1s linear infinite;
 }
 
-/* Animações de entrada para elementos */
 .input-group {
   animation: fadeInUp 0.6s ease-out;
   animation-fill-mode: both;
@@ -673,7 +644,6 @@ body {
   }
 }
 
-/* Estilo para campos obrigatórios */
 .input-label::after {
   content: '*';
   color: var(--error-color);
@@ -681,7 +651,6 @@ body {
   font-weight: bold;
 }
 
-/* Melhorias de performance */
 * {
   will-change: auto;
 }
@@ -692,7 +661,6 @@ body {
   will-change: transform, box-shadow;
 }
 
-/* Compatibilidade com navegadores antigos */
 .cadastro-main {
   display: -ms-grid;
   -ms-grid-columns: 1fr 1fr;
@@ -711,9 +679,6 @@ body {
   }
 }
 
-/* ═══════════════════════════════════════════════
-   Logo dentro do painel hero
-   ═══════════════════════════════════════════════ */
 .hero-logo-link {
   display: inline-block;
   margin-bottom: 24px;
@@ -728,13 +693,9 @@ body {
   height: 56px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1); /* deixa branco para contrastar com o fundo verde escuro */
+  filter: brightness(0) invert(1);
 }
 
-/* ============================================
-   REQUISITOS DA SENHA (✓ atendido / ✗ pendente)
-   Atualizados em tempo real por cadastro-validation.js
-   ============================================ */
 .password-requirements {
   list-style: none;
   margin: var(--spacing-sm, 8px) 0 0;
